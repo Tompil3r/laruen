@@ -2,21 +2,23 @@
 #ifndef NDARRAY_H
 #define NDARRAY_H
 
+#include "laruen/ndarray/typenames.h"
 #include <vector>
-#include <cassert>
 #include <cstdint>
 
-#define MAX_NDIM 32
 
-
-template<class T>
+template <typename T>
 class NDArray
 {
     T *data;
-    std::vector<uint32_t> *shape;
-    std::vector<uint64_t> *strides;
+    Shape *shape;
+    Strides *strides;
     uint8_t ndim;
     uint64_t size;
+
+        
+    public:
+        NDArray(const Shape &shape);
 };
 
 
