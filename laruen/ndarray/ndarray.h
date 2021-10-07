@@ -19,13 +19,35 @@ class NDArray
         
     public:
         NDArray(const Shape &shape);
-
+        
+        const T* getData();
+        
 
         ~NDArray()
         {
             delete this->data;
             delete this->shape;
             delete this->strides;
+        }
+
+        const Shape* getShape()
+        {
+            return this->shape;
+        }
+
+        const Strides* getStrides()
+        {
+            return this->strides;
+        }
+
+        uint8_t getNDim()
+        {
+            return this->ndim;
+        }
+
+        uint64_t getSize()
+        {
+            return this->size;
         }
 
 };

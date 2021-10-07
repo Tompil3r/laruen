@@ -37,3 +37,9 @@ template <typename T> NDArray<T>::NDArray(const Shape &shape)
     this->size = size;
     this->strides = strides;
 }
+
+
+template <typename T> const T* NDArray<T>::getData()
+{
+    return this->data;
+}
