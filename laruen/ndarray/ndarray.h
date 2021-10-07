@@ -2,7 +2,6 @@
 #ifndef NDARRAY_H
 #define NDARRAY_H
 
-#include "laruen/ndarray/dtype.h"
 #include <vector>
 #include <cassert>
 #include <cstdint>
@@ -18,9 +17,7 @@ class NDArray
     std::vector<uint64_t> *strides;
     uint8_t ndim;
     uint64_t size;
-    DType::DType &dtype;
 };
-
 
 
 #endif
