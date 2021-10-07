@@ -19,6 +19,15 @@ class NDArray
         
     public:
         NDArray(const Shape &shape);
+
+
+        ~NDArray()
+        {
+            delete this->data;
+            delete this->shape;
+            delete this->strides;
+        }
+
 };
 
 
