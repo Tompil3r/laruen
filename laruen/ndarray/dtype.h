@@ -11,20 +11,20 @@ namespace DType
 {
     struct DType
     {
-        uint8_t id;
+        bool dtype_signed;
         uint8_t size;
     };
 
-    const DType INT8 = {0, sizeof(int8_t)};
-    const DType UINT8 = {1, sizeof(uint8_t)};
-    const DType INT16 = {2, sizeof(int16_t)};
-    const DType UINT16 = {3, sizeof(uint16_t)};
-    const DType INT32 = {4, sizeof(int32_t)};
-    const DType UINT32 = {5, sizeof(uint32_t)};
-    const DType INT64 = {6, sizeof(int64_t)};
-    const DType UINT64 = {7, sizeof(uint64_t)};
-    const DType FLOAT32 = {8, sizeof(float)};
-    const DType FLOAT64 = {10, sizeof(double)};
+    const DType INT8 = {true, sizeof(int8_t)};
+    const DType UINT8 = {false, sizeof(uint8_t)};
+    const DType INT16 = {true, sizeof(int16_t)};
+    const DType UINT16 = {false, sizeof(uint16_t)};
+    const DType INT32 = {true, sizeof(int32_t)};
+    const DType UINT32 = {false, sizeof(uint32_t)};
+    const DType INT64 = {true, sizeof(int64_t)};
+    const DType UINT64 = {false, sizeof(uint64_t)};
+    const DType FLOAT32 = {true, sizeof(float)};
+    const DType FLOAT64 = {true, sizeof(double)};
 
     const DType (&DTYPES)[] = {INT8, UINT8, INT16, UINT16, INT32, UINT32, INT64, UINT64, FLOAT32, FLOAT64};
 };
