@@ -39,6 +39,15 @@ template <typename T> NDArray<T>::NDArray(const Shape &shape)
 }
 
 
+template <typename T> NDArray<T>::NDArray(const Shape &shape, T fill_value) : NDArray<T>(shape)
+{
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        this->data[idx] = fill_value;
+    }    
+}
+
+
 template <typename T> const T* NDArray<T>::getData()
 {
     return this->data;

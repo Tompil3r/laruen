@@ -19,6 +19,7 @@ class NDArray
         
     public:
         NDArray(const Shape &shape);
+        NDArray(const Shape &shape, T fill_value);
         
         const T* getData();
         
