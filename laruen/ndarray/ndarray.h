@@ -5,10 +5,10 @@
 #include "laruen/ndarray/typenames.h"
 #include <vector>
 #include <cstdint>
+#include <ostream>
 
 
-template <typename T>
-class NDArray
+template <typename T> class NDArray
 {
     T *data;
     Shape *shape;
@@ -22,7 +22,6 @@ class NDArray
         NDArray(const Shape &shape, T fill_value);
         
         const T* getData();
-        
 
         ~NDArray()
         {
@@ -31,27 +30,25 @@ class NDArray
             delete this->strides;
         }
 
-        const Shape* getShape()
+        const Shape* getShape() const
         {
             return this->shape;
         }
 
-        const Strides* getStrides()
+        const Strides* getStrides() const
         {
             return this->strides;
         }
 
-        uint8_t getNDim()
+        uint8_t getNDim() const
         {
             return this->ndim;
         }
 
-        uint64_t getSize()
+        uint64_t getSize() const
         {
             return this->size;
         }
-
 };
-
 
 #endif

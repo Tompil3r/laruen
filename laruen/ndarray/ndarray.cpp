@@ -2,6 +2,7 @@
 #include "laruen/ndarray/ndarray.h"
 #include "laruen/ndarray/typenames.h"
 #include <cassert>
+#include <ostream>
 
 
 template class NDArray<int8_t>;
