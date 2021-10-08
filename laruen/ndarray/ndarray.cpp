@@ -27,7 +27,7 @@ template <typename T> NDArray<T>::NDArray(const Shape &shape)
     
     for(int idx = ndim - 1;idx-- > 0;)
     {
-        stride *= shape[idx];
+        stride *= shape[idx + 1];
         (*strides)[idx] = stride;
         size *= shape[idx];
     }
