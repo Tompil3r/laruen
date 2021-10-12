@@ -21,7 +21,7 @@ template <typename T> class NDArray
         NDArray(const Shape &shape);
         NDArray(const Shape &shape, T fill_value);
         
-        const T* getData();
+        const T* get_data();
 
         ~NDArray()
         {
@@ -30,22 +30,22 @@ template <typename T> class NDArray
             delete this->strides;
         }
 
-        const Shape* getShape() const
+        const Shape* get_shape() const
         {
             return this->shape;
         }
 
-        const Strides* getStrides() const
+        const Strides* get_strides() const
         {
             return this->strides;
         }
 
-        uint8_t getNDim() const
+        uint8_t get_ndim() const
         {
             return this->ndim;
         }
 
-        uint64_t getSize() const
+        uint64_t get_size() const
         {
             return this->size;
         }

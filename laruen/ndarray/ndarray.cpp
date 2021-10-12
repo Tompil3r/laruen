@@ -49,7 +49,7 @@ template <typename T> NDArray<T>::NDArray(const Shape &shape, T fill_value) : ND
 }
 
 
-template <typename T> const T* NDArray<T>::getData()
+template <typename T> const T* NDArray<T>::get_data()
 {
     return this->data;
 }
