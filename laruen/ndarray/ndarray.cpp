@@ -19,24 +19,23 @@ template class NDArray<float64_t>;
 
 template <typename T> NDArray<T>::NDArray(const Shape &shape)
 {
-    uint8_t ndim = shape.size();
     uint64_t stride = 1;
     uint64_t size = shape[ndim - 1];
-    Strides *strides = new Strides(ndim);
-    (*strides)[ndim - 1] = stride;
+
+    this->ndim = shape.size();
+    this->strides = Strides(ndim);
+    this->strides[ndim - 1] = stride;
     
-    for(int idx = ndim - 1;idx-- > 0;)
+    for(int idx = this->ndim - 1;idx-- > 0;)
     {
         stride *= shape[idx + 1];
-        (*strides)[idx] = stride;
+        this->strides[idx] = stride;
         size *= shape[idx];
     }
 
     this->data = new T[size];
-    this->ndim = ndim;
-    this->shape = new Shape(shape);
+    this->shape = Shape(shape);
     this->size = size;
-    this->strides = strides;
 }
 
 
