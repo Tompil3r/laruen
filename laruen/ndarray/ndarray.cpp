@@ -3,6 +3,7 @@
 #include "laruen/ndarray/typenames.h"
 #include <cassert>
 #include <ostream>
+#include <cmath>
 
 
 template class NDArray<int8_t>;
@@ -45,6 +46,19 @@ template <typename T> NDArray<T>::NDArray(const Shape &shape, T fill_value) : ND
     {
         this->data[idx] = fill_value;
     }    
+}
+
+
+template <typename T> NDArray<T>::NDArray(T start, T stop, T step) : NDArray<T>({(uint32_t)ceil((stop - start) / step)})
+{
+    uint64_t idx = 0;
+
+    while(start < stop)
+    {
+        this->data[idx] = start;
+        start += step;
+        idx++;
+    }
 }
 
 
