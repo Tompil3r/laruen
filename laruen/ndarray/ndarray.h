@@ -79,6 +79,27 @@ template <typename T> class NDArray
         }
 
 
+        void reshape(const Shape &shape)
+        {
+            uint64_t stride = this->strides[this->ndim - 1];
+            this->ndim = shape.size();
+            uint64_t size = shape[this->ndim - 1];
+
+            this->strides = Strides(this->ndim);
+            this->strides[this->ndim - 1] = stride;
+
+            for(uint8_t dim = this->ndim - 1;dim-- > 0;)
+            {
+                stride *= shape[dim + 1];
+                this->strides[dim] = stride;
+                size *= shape[dim];
+            }
+
+            assert(this->size == size);
+            this->shape = Shape(shape);
+        }
+
+
         void print(uint8_t dim = 0, uint64_t data_index = 0, bool not_first = false, bool not_last = true) const
         {
             uint32_t dim_idx;
