@@ -8,6 +8,7 @@
 #include <cassert>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 
 template <typename T> class NDArray
@@ -97,6 +98,22 @@ template <typename T> class NDArray
 
             assert(this->size == size);
             this->shape = Shape(shape);
+        }
+
+
+        std::string get_specs() const
+        {
+            std::ostringstream specs;
+            uint8_t dim;
+
+            specs << "shape=(";
+            for(dim = 0;dim < this->ndim - 1;dim++) specs << this->shape[dim] << ',' << ' ';
+            specs << this->shape[dim] << ")\nstrides=(";
+
+            for(dim = 0;dim < this->ndim - 1;dim++) specs << this->strides[dim] << ',' << ' ';
+            specs << this->strides[dim] << ")\nndim=" << (uint16_t)this->ndim << "\nsize=" << this->size;
+
+            return specs.str();
         }
 
 
