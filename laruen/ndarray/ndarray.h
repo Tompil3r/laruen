@@ -5,6 +5,7 @@
 #include "laruen/ndarray/typenames.h"
 #include <vector>
 #include <cstdint>
+#include <cassert>
 #include <iostream>
 #include <string>
 
@@ -60,15 +61,18 @@ template <typename T> class NDArray
         void print(uint8_t dim = 0, uint64_t data_index = 0, bool not_first = false, bool not_last = true) const
         {
             uint32_t dim_idx;
+            uint64_t stride;
 
             if(not_first) std::cout << std::string(dim, ' '); 
             std::cout << '[';
 
             if(dim == this->ndim - 1)
             {
+                stride = this->strides[dim];
+
                 for(dim_idx = 0;dim_idx < this->shape[dim] - 1;dim_idx++)
                 {
-                    std::cout << this->data[data_index + dim_idx] << ", ";
+                    std::cout << this->data[data_index + dim_idx * stride] << ',' << ' ';
                 }
 
                 std::cout << this->data[data_index + dim_idx] << ']';
