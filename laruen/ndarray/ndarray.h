@@ -62,16 +62,16 @@ template <typename T> class NDArray
         {
             this->ndim = shape.size();
             uint64_t stride = 1;
-            uint64_t size = shape[ndim - 1];
+            uint64_t size = shape[this->ndim - 1];
 
-            this->strides = Strides(ndim);
-            this->strides[ndim - 1] = stride;
+            this->strides = Strides(this->ndim);
+            this->strides[this->ndim - 1] = stride;
             
-            for(int idx = this->ndim - 1;idx-- > 0;)
+            for(uint8_t dim = this->ndim - 1;dim-- > 0;)
             {
-                stride *= shape[idx + 1];
-                this->strides[idx] = stride;
-                size *= shape[idx];
+                stride *= shape[dim + 1];
+                this->strides[dim] = stride;
+                size *= shape[dim];
             }
 
             this->shape = Shape(shape);
