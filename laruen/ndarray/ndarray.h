@@ -72,10 +72,11 @@ template <typename T> class NDArray
 
                 for(dim_idx = 0;dim_idx < this->shape[dim] - 1;dim_idx++)
                 {
-                    std::cout << this->data[data_index + dim_idx * stride] << ',' << ' ';
+                    std::cout << this->data[data_index] << ',' << ' ';
+                    data_index += stride;
                 }
 
-                std::cout << this->data[data_index + dim_idx] << ']';
+                std::cout << this->data[data_index] << ']';
                 if(not_last) std::cout << '\n';
                 
                 return;
