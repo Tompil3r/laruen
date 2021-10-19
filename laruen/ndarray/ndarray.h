@@ -111,13 +111,13 @@ template <typename T> class NDArray
             specs << this->shape[dim] << ")\nstrides=(";
 
             for(dim = 0;dim < this->ndim - 1;dim++) specs << this->strides[dim] << ',' << ' ';
-            specs << this->strides[dim] << ")\nndim=" << (uint16_t)this->ndim << "\nsize=" << this->size;
+            specs << this->strides[dim] << ")\nndim=" << (uint16_t)this->ndim << "\nsize=" << this->size << '\n';
 
             return specs.str();
         }
 
 
-        void print(uint8_t dim = 0, uint64_t data_index = 0, bool not_first = false, bool not_last = true) const
+        void print(bool specs=false, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const
         {
             uint32_t dim_idx;
             uint64_t stride;
@@ -141,20 +141,25 @@ template <typename T> class NDArray
                 return;
             }
 
-            this->print(dim + 1, data_index, false, true);
+            this->print(specs, dim + 1, data_index, false, true);
             data_index += this->strides[dim];            
 
             for(dim_idx = 1;dim_idx < this->shape[dim] - 1;dim_idx++)
             {
-                this->print(dim + 1, data_index, true, true);
+                this->print(specs, dim + 1, data_index, true, true);
                 data_index += this->strides[dim];
             }
 
-            this->print(dim + 1, data_index, true, false);
+            this->print(specs, dim + 1, data_index, true, false);
 
             std::cout << ']';
             
-            if(!dim) std::cout << '\n';
+            if(!dim)
+            {
+                std::cout << '\n';
+                if(specs) std::cout << '\n' << this->get_specs();
+            }
+
             else if(not_last) std::cout << std::string(this->ndim - dim, '\n');
         }
 };
