@@ -19,6 +19,7 @@ template <typename T> class NDArray
 
         
     public:
+        NDArray();
         NDArray(const Shape &shape);
         NDArray(const Shape &shape, T fill_value);
         NDArray(T start, T stop, T step);

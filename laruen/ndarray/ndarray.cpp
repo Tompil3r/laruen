@@ -18,6 +18,17 @@ template class NDArray<float32_t>;
 template class NDArray<float64_t>;
 
 
+
+template <typename T> NDArray<T>::NDArray()
+{
+    this->data = nullptr;
+    this->shape = {};
+    this->strides = {};
+    this->ndim = 0;
+    this->size = 0;
+}
+
+
 template <typename T> NDArray<T>::NDArray(const Shape &shape)
 {
     this->ndim = shape.size();
