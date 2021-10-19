@@ -27,6 +27,7 @@ template <typename T> class NDArray
         NDArray(T start, T stop, T step);
         
         const T* get_data();
+        NDArray* shallow_copy();
 
 
         ~NDArray()

@@ -62,3 +62,17 @@ template <typename T> const T* NDArray<T>::get_data()
 {
     return this->data;
 }
+
+
+template <typename T> NDArray<T>* NDArray<T>::shallow_copy()
+{
+    NDArray<T> *ndarray = new NDArray<T>();
+
+    ndarray->data = this->data;
+    ndarray->shape = this->shape;
+    ndarray->strides = this->strides;
+    ndarray->ndim = this->ndim;
+    ndarray->size = this->size;
+
+    return ndarray;
+}
