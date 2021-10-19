@@ -31,23 +31,8 @@ template <typename T> NDArray<T>::NDArray()
 
 template <typename T> NDArray<T>::NDArray(const Shape &shape)
 {
-    this->ndim = shape.size();
-    uint64_t stride = 1;
-    uint64_t size = shape[ndim - 1];
-
-    this->strides = Strides(ndim);
-    this->strides[ndim - 1] = stride;
-    
-    for(int idx = this->ndim - 1;idx-- > 0;)
-    {
-        stride *= shape[idx + 1];
-        this->strides[idx] = stride;
-        size *= shape[idx];
-    }
-
+    this->construct_shape(shape);
     this->data = new T[size];
-    this->shape = Shape(shape);
-    this->size = size;
 }
 
 

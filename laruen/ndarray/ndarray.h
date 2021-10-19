@@ -58,6 +58,27 @@ template <typename T> class NDArray
         }
 
 
+        void construct_shape(const Shape &shape)
+        {
+            this->ndim = shape.size();
+            uint64_t stride = 1;
+            uint64_t size = shape[ndim - 1];
+
+            this->strides = Strides(ndim);
+            this->strides[ndim - 1] = stride;
+            
+            for(int idx = this->ndim - 1;idx-- > 0;)
+            {
+                stride *= shape[idx + 1];
+                this->strides[idx] = stride;
+                size *= shape[idx];
+            }
+
+            this->shape = Shape(shape);
+            this->size = size;
+        }
+
+
         void print(uint8_t dim = 0, uint64_t data_index = 0, bool not_first = false, bool not_last = true) const
         {
             uint32_t dim_idx;
