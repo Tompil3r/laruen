@@ -73,3 +73,18 @@ uint8_t ndim, uint64_t size)
     this->ndim = ndim;
     this->size = size;
 }
+
+
+template <typename T> NDArray<T>::NDArray(const NDArray<T> &ndarray) : NDArray<T>(nullptr,
+ndarray.get_shape(), ndarray.get_strides(), ndarray.get_ndim(), ndarray.get_size())
+{
+    const T *data = ndarray.get_data();
+    T *copied_data = new T[this->size];
+
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        copied_data[idx] = data[idx];
+    }
+
+    this->data = copied_data;
+}
