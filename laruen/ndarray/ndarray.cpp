@@ -58,7 +58,7 @@ template <typename T> NDArray<T>::NDArray(T start, T stop, T step) : NDArray<T>(
 }
 
 
-template <typename T> T* NDArray<T>::get_data()
+template <typename T> const T* NDArray<T>::get_data() const
 {
     return this->data;
 }

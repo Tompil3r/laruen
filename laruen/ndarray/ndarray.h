@@ -27,7 +27,7 @@ template <typename T> class NDArray
         NDArray(T start, T stop, T step);
         NDArray(T *data, const Shape &shape, const Strides &strides, uint8_t ndim, uint64_t size);
 
-        T* get_data();
+        const T* get_data() const;
 
 
         ~NDArray()
