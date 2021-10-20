@@ -18,16 +18,16 @@ template <typename T> class NDArray
     Strides strides;
     uint8_t ndim;
     uint64_t size;
+    
 
-        
     public:
         NDArray();
         NDArray(const Shape &shape);
         NDArray(const Shape &shape, T fill_value);
         NDArray(T start, T stop, T step);
-        
+        NDArray(T *data, const Shape &shape, const Strides &strides, uint8_t ndim, uint64_t size);
+
         const T* get_data();
-        NDArray* shallow_copy();
 
 
         ~NDArray()

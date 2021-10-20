@@ -64,15 +64,12 @@ template <typename T> const T* NDArray<T>::get_data()
 }
 
 
-template <typename T> NDArray<T>* NDArray<T>::shallow_copy()
+template <typename T> NDArray<T>::NDArray(T *data, const Shape &shape, const Strides &strides,
+uint8_t ndim, uint64_t size)
 {
-    NDArray<T> *ndarray = new NDArray<T>();
-
-    ndarray->data = this->data;
-    ndarray->shape = this->shape;
-    ndarray->strides = this->strides;
-    ndarray->ndim = this->ndim;
-    ndarray->size = this->size;
-
-    return ndarray;
+    this->data = data;
+    this->shape = shape;
+    this->strides = strides;
+    this->ndim = ndim;
+    this->size = size;
 }
