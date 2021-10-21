@@ -18,6 +18,7 @@ template <typename T> class NDArray
     Strides strides;
     uint8_t ndim;
     uint64_t size;
+    bool delete_data;
     
 
     public:
@@ -25,7 +26,7 @@ template <typename T> class NDArray
         NDArray(const Shape &shape);
         NDArray(const Shape &shape, T fill_value);
         NDArray(T start, T stop, T step);
-        NDArray(T *data, const Shape &shape, const Strides &strides, uint8_t ndim, uint64_t size);
+        NDArray(T *data, const Shape &shape, const Strides &strides, uint8_t ndim, uint64_t size, bool delete_data);
         NDArray(const NDArray &ndarray);
 
         const T* get_data() const;
@@ -33,7 +34,10 @@ template <typename T> class NDArray
 
         ~NDArray()
         {
-            delete this->data;
+            if(this->delete_data)
+            {
+                delete this->data;
+            }
         }
 
 
@@ -58,6 +62,18 @@ template <typename T> class NDArray
         uint64_t get_size() const
         {
             return this->size;
+        }
+
+
+        bool does_delete_data()
+        {
+            return this->delete_data;
+        }
+
+
+        void set_delete_data(bool delete_date)
+        {
+            this->delete_data = delete_data;
         }
 
 
