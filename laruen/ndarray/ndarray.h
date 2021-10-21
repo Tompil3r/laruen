@@ -182,4 +182,11 @@ template <typename T> class NDArray
         }
 };
 
+
+namespace ndarray
+{
+    
+};
+
+
 #endif
