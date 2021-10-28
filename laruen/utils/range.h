@@ -3,17 +3,19 @@
 #define RANGE_H
 
 
-template <typename T> class Range
+namespace laruen::utils
 {
-    T start;
-    T end;
-    T step;
+    template <typename T> class Range
+    {
+        T start;
+        T end;
+        T step;
 
 
-    public:
-        Range(T start=0, T end=-1, T step=1);
+        public:
+            Range(T start=0, T end=-1, T step=1);
+    };
 };
-
 
 
 #endif

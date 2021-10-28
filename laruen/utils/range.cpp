@@ -4,6 +4,8 @@
 
 #include <cstdint>
 
+using namespace laruen::utils;
+
 template class Range<int8_t>;
 template class Range<uint8_t>;
 template class Range<int16_t>;
