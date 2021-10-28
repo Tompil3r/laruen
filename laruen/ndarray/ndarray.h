@@ -34,6 +34,8 @@ namespace laruen::ndarray
 
             T& operator[](uint64_t index);
             const T& operator[](uint64_t index) const;
+            T& operator[](const NDIndex &ndindex);
+            const T& operator[](const NDIndex &ndindex) const;
 
 
             ~NDArray()
