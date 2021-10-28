@@ -5,14 +5,13 @@
 
 namespace laruen::utils
 {
-    template <typename T> class Range
+    template <typename T> struct Range
     {
-        public:
-            T start;
-            T end;
-            T step;
+        T start;
+        T end;
+        T step;
 
-            Range(T start=0, T end=-1, T step=1);
+        Range(T start=0, T end=0, T step=1);
     };
 };
 
