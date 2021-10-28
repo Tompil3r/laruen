@@ -41,42 +41,35 @@ namespace laruen::ndarray
                 }
             }
 
-
             const Shape& get_shape() const
             {
                 return this->shape;
             }
-
 
             const Strides& get_strides() const
             {
                 return this->strides;
             }
 
-
             uint8_t get_ndim() const
             {
                 return this->ndim;
             }
-
 
             uint64_t get_size() const
             {
                 return this->size;
             }
 
-
             bool does_delete_data()
             {
                 return this->delete_data;
             }
 
-
             void set_delete_data(bool delete_date)
             {
                 this->delete_data = delete_data;
             }
-
 
             void construct_shape(const Shape &shape)
             {
@@ -98,7 +91,6 @@ namespace laruen::ndarray
                 this->size = size;
             }
 
-
             void reshape(const Shape &shape)
             {
                 uint64_t stride = this->strides[this->ndim - 1];
@@ -119,7 +111,6 @@ namespace laruen::ndarray
                 this->shape = Shape(shape);
             }
 
-
             std::string get_specs() const
             {
                 std::ostringstream specs;
@@ -134,7 +125,6 @@ namespace laruen::ndarray
 
                 return specs.str();
             }
-
 
             void print(bool specs=false, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const
             {
