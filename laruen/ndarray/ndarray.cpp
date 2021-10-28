@@ -85,3 +85,13 @@ template <typename T> const T* NDArray<T>::get_data() const
 {
     return this->data;
 }
+
+template <typename T> T& NDArray<T>::operator[](uint64_t index)
+{
+    return this->data[index];
+}
+
+template <typename T> const T& NDArray<T>::operator[](uint64_t index) const
+{
+    return this->data[index];
+}
