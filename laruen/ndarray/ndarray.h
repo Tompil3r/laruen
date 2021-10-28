@@ -171,6 +171,16 @@ namespace laruen::ndarray
 
                 else if(not_last) std::cout << std::string(this->ndim - dim, '\n');
             }
+
+            T& operator[](uint64_t index)
+            {
+                return this->data[index];
+            }
+
+            const T& operator[](uint64_t index) const
+            {
+                return this->data[index];
+            }
     };
 };
 
