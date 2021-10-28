@@ -5,6 +5,7 @@
 #include <ostream>
 #include <cmath>
 
+using namespace laruen::ndarray;
 
 template class NDArray<int8_t>;
 template class NDArray<uint8_t>;
