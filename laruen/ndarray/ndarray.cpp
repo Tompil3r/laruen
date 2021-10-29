@@ -19,6 +19,14 @@ template class NDArray<float32_t>;
 template class NDArray<float64_t>;
 
 
+template <typename T> NDArray<T>::~NDArray()
+{
+    if(this->delete_data)
+    {
+        delete this->data;
+    }
+}
+
 template <typename T> NDArray<T>::NDArray()
 {
     this->data = nullptr;
@@ -86,6 +94,56 @@ template <typename T> const T* NDArray<T>::get_data() const
     return this->data;
 }
 
+template <typename T> const Shape& NDArray<T>::get_shape() const
+{
+    return this->shape;
+}
+
+template <typename T> const Strides& NDArray<T>::get_strides() const
+{
+    return this->strides;
+}
+
+template <typename T> uint8_t NDArray<T>::get_ndim() const
+{
+    return this->ndim;
+}
+
+template <typename T> uint64_t NDArray<T>::get_size() const
+{
+    return this->size;
+}
+
+template <typename T> bool NDArray<T>::does_delete_data()
+{
+    return this->delete_data;
+}
+
+template <typename T> void NDArray<T>::set_delete_data(bool delete_date)
+{
+    this->delete_data = delete_data;
+}
+
+template <typename T> void NDArray<T>::reshape(const Shape &shape)
+{
+    uint64_t stride = this->strides[this->ndim - 1];
+    this->ndim = shape.size();
+    uint64_t size = shape[this->ndim - 1];
+
+    this->strides = Strides(this->ndim);
+    this->strides[this->ndim - 1] = stride;
+
+    for(uint8_t dim = this->ndim - 1;dim-- > 0;)
+    {
+        stride *= shape[dim + 1];
+        this->strides[dim] = stride;
+        size *= shape[dim];
+    }
+
+    assert(this->size == size);
+    this->shape = Shape(shape);
+}
+
 template <typename T> uint64_t NDArray<T>::ravel_ndindex(const NDIndex &ndindex) const
 {
     uint64_t index = 0;
@@ -113,6 +171,68 @@ template <typename T> NDIndex NDArray<T>::unravel_index(uint64_t index) const
     return ndindex;
 }
 
+template <typename T> std::string NDArray<T>::get_specs() const
+{
+    std::ostringstream specs;
+    uint8_t dim;
+
+    specs << "shape=(";
+    for(dim = 0;dim < this->ndim - 1;dim++) specs << this->shape[dim] << ',' << ' ';
+    specs << this->shape[dim] << ")\nstrides=(";
+
+    for(dim = 0;dim < this->ndim - 1;dim++) specs << this->strides[dim] << ',' << ' ';
+    specs << this->strides[dim] << ")\nndim=" << (uint16_t)this->ndim << "\nsize=" << this->size << '\n';
+
+    return specs.str();
+}
+
+template <typename T> void NDArray<T>::print(bool specs, uint8_t dim, uint64_t data_index,
+bool not_first, bool not_last) const
+{
+    uint32_t dim_idx;
+    uint64_t stride;
+
+    if(not_first) std::cout << std::string(dim, ' '); 
+    std::cout << '[';
+
+    if(dim == this->ndim - 1)
+    {
+        stride = this->strides[dim];
+
+        for(dim_idx = 0;dim_idx < this->shape[dim] - 1;dim_idx++)
+        {
+            std::cout << this->data[data_index] << ',' << ' ';
+            data_index += stride;
+        }
+
+        std::cout << this->data[data_index] << ']';
+        if(not_last) std::cout << '\n';
+        
+        return;
+    }
+
+    this->print(specs, dim + 1, data_index, false, true);
+    data_index += this->strides[dim];            
+
+    for(dim_idx = 1;dim_idx < this->shape[dim] - 1;dim_idx++)
+    {
+        this->print(specs, dim + 1, data_index, true, true);
+        data_index += this->strides[dim];
+    }
+
+    this->print(specs, dim + 1, data_index, true, false);
+
+    std::cout << ']';
+    
+    if(!dim)
+    {
+        std::cout << '\n';
+        if(specs) std::cout << '\n' << this->get_specs();
+    }
+
+    else if(not_last) std::cout << std::string(this->ndim - dim, '\n');
+}
+
 
 template <typename T> T& NDArray<T>::operator[](uint64_t index)
 {
@@ -132,4 +252,24 @@ template <typename T> T& NDArray<T>::operator[](const NDIndex &ndindex)
 template <typename T> const T& NDArray<T>::operator[](const NDIndex &ndindex) const
 {
     return this->data[this->ravel_ndindex(ndindex)];
+}
+
+template <typename T> void NDArray<T>::construct_shape(const Shape &shape)
+{
+    this->ndim = shape.size();
+    uint64_t stride = 1;
+    uint64_t size = shape[this->ndim - 1];
+
+    this->strides = Strides(this->ndim);
+    this->strides[this->ndim - 1] = stride;
+    
+    for(uint8_t dim = this->ndim - 1;dim-- > 0;)
+    {
+        stride *= shape[dim + 1];
+        this->strides[dim] = stride;
+        size *= shape[dim];
+    }
+
+    this->shape = Shape(shape);
+    this->size = size;
 }
