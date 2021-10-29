@@ -86,7 +86,7 @@ template <typename T> const T* NDArray<T>::get_data() const
     return this->data;
 }
 
-template <typename T> uint64_t NDArray<T>::ravel_ndindex(const NDIndex& ndindex)
+template <typename T> uint64_t NDArray<T>::ravel_ndindex(const NDIndex &ndindex) const
 {
     uint64_t index = 0;
     uint8_t nb_dims = ndindex.size();
@@ -99,7 +99,7 @@ template <typename T> uint64_t NDArray<T>::ravel_ndindex(const NDIndex& ndindex)
     return index;
 }
 
-template <typename T> NDIndex NDArray<T>::unravel_index(uint64_t index)
+template <typename T> NDIndex NDArray<T>::unravel_index(uint64_t index) const
 {
     NDIndex ndindex;
     ndindex.reserve(this->ndim);
