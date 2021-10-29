@@ -126,26 +126,10 @@ template <typename T> const T& NDArray<T>::operator[](uint64_t index) const
 
 template <typename T> T& NDArray<T>::operator[](const NDIndex &ndindex)
 {
-    uint64_t data_index = 0;
-    uint64_t nb_dims = ndindex.size();
-
-    for(uint32_t dim = 0;dim < nb_dims;dim++)
-    {
-        data_index += ndindex[dim] * this->strides[dim];
-    }
-
-    return this->data[data_index];
+    return this->data[this->ravel_ndindex(ndindex)];
 }
 
 template <typename T> const T& NDArray<T>::operator[](const NDIndex &ndindex) const
 {
-    uint64_t data_index = 0;
-    uint64_t nb_dims = ndindex.size();
-
-    for(uint32_t dim = 0;dim < nb_dims;dim++)
-    {
-        data_index += ndindex[dim] * this->strides[dim];
-    }
-
-    return this->data[data_index];
+    return this->data[this->ravel_ndindex(ndindex)];
 }
