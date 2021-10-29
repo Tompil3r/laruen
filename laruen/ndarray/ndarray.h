@@ -33,6 +33,7 @@ namespace laruen::ndarray
             const T* get_data() const;
 
             uint64_t ravel_ndindex(const NDIndex &ndindex);
+            NDIndex unravel_index(uint64_t index);
 
             T& operator[](uint64_t index);
             const T& operator[](uint64_t index) const;
