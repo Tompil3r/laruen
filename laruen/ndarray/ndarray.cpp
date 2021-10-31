@@ -30,8 +30,6 @@ template <typename T> NDArray<T>::~NDArray()
 template <typename T> NDArray<T>::NDArray()
 {
     this->data = nullptr;
-    this->shape = {};
-    this->strides = {};
     this->ndim = 0;
     this->size = 0;
     this->delete_data = true;
