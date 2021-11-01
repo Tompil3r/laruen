@@ -268,7 +268,7 @@ template <typename T> const T& NDArray<T>::operator[](const NDIndex &ndindex) co
 template <typename T> NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges)
 {
     NDArray<T> ndarray = this->shallow_copy();
-    ndarray->slice_array(slice_ranges);
+    ndarray.slice_array(slice_ranges);
     return ndarray;
 }
 
