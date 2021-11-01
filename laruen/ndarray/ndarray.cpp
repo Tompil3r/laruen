@@ -280,6 +280,30 @@ template <typename T> void NDArray<T>::operator+=(T value)
     }
 }
 
+template <typename T> void NDArray<T>::operator-=(T value)
+{
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        this->data[idx] -= value;
+    }
+}
+
+template <typename T> void NDArray<T>::operator*=(T value)
+{
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        this->data[idx] *= value;
+    }
+}
+
+template <typename T> void NDArray<T>::operator/=(T value)
+{
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        this->data[idx] /= value;
+    }
+}
+
 template <typename T> void NDArray<T>::shape_array(const Shape &shape)
 {
     this->ndim = shape.size();
