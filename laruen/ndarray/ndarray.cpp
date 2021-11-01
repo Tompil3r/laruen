@@ -265,6 +265,13 @@ template <typename T> const T& NDArray<T>::operator[](const NDIndex &ndindex) co
     return this->data[this->ravel_ndindex(ndindex)];
 }
 
+template <typename T> NDArray<T>* NDArray<T>::operator[](const SliceRanges &slice_ranges)
+{
+    NDArray<T> *ndarray = this->shallow_copy();
+    ndarray->slice_array(slice_ranges);
+    return ndarray;
+}
+
 template <typename T> void NDArray<T>::shape_array(const Shape &shape)
 {
     this->ndim = shape.size();

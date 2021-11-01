@@ -52,6 +52,7 @@ namespace laruen::ndarray
             const T& operator[](uint64_t index) const;
             T& operator[](const NDIndex &ndindex);
             const T& operator[](const NDIndex &ndindex) const;
+            NDArray* operator[](const SliceRanges &slice_ranges);
 
         private:
             void shape_array(const Shape &shape);
