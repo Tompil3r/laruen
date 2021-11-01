@@ -125,14 +125,14 @@ template <typename T> void NDArray<T>::set_delete_data(bool delete_date)
     this->delete_data = delete_data;
 }
 
-template <typename T> NDArray<T>* NDArray<T>::shallow_copy()
+template <typename T> NDArray<T> NDArray<T>::shallow_copy()
 {
-    return new NDArray<T>(this->data, this->shape, this->strides, this->ndim, this->size, false);
+    return NDArray<T>(this->data, this->shape, this->strides, this->ndim, this->size, false);
 }
 
-template <typename T> const NDArray<T>* NDArray<T>::shallow_copy() const
+template <typename T> const NDArray<T> NDArray<T>::shallow_copy() const
 {
-    return new NDArray<T>(this->data, this->shape, this->strides, this->ndim, this->size, false);
+    return NDArray<T>(this->data, this->shape, this->strides, this->ndim, this->size, false);
 }
 
 template <typename T> void NDArray<T>::reshape(const Shape &shape)
@@ -265,9 +265,9 @@ template <typename T> const T& NDArray<T>::operator[](const NDIndex &ndindex) co
     return this->data[this->ravel_ndindex(ndindex)];
 }
 
-template <typename T> NDArray<T>* NDArray<T>::operator[](const SliceRanges &slice_ranges)
+template <typename T> NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges)
 {
-    NDArray<T> *ndarray = this->shallow_copy();
+    NDArray<T> ndarray = this->shallow_copy();
     ndarray->slice_array(slice_ranges);
     return ndarray;
 }

@@ -38,8 +38,8 @@ namespace laruen::ndarray
             uint64_t get_size() const;
             bool does_delete_data();
             void set_delete_data(bool delete_date);
-            NDArray* shallow_copy();
-            const NDArray* shallow_copy() const;
+            NDArray shallow_copy();
+            const NDArray shallow_copy() const;
 
             void reshape(const Shape &shape);
             uint64_t ravel_ndindex(const NDIndex &ndindex) const;
@@ -52,7 +52,7 @@ namespace laruen::ndarray
             const T& operator[](uint64_t index) const;
             T& operator[](const NDIndex &ndindex);
             const T& operator[](const NDIndex &ndindex) const;
-            NDArray* operator[](const SliceRanges &slice_ranges);
+            NDArray operator[](const SliceRanges &slice_ranges);
             void operator+=(T value);
             void operator-=(T value);
             void operator*=(T value);
