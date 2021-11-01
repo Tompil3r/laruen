@@ -40,7 +40,7 @@ template <typename T> NDArray<T>::NDArray()
 
 template <typename T> NDArray<T>::NDArray(const Shape &shape)
 {
-    this->construct_shape(shape);
+    this->shape_array(shape);
     this->data = new T[size];
     this->delete_data = true;
 }
@@ -265,7 +265,7 @@ template <typename T> const T& NDArray<T>::operator[](const NDIndex &ndindex) co
     return this->data[this->ravel_ndindex(ndindex)];
 }
 
-template <typename T> void NDArray<T>::construct_shape(const Shape &shape)
+template <typename T> void NDArray<T>::shape_array(const Shape &shape)
 {
     this->ndim = shape.size();
     uint64_t stride = 1;

@@ -54,7 +54,7 @@ namespace laruen::ndarray
             const T& operator[](const NDIndex &ndindex) const;
 
         private:
-            void construct_shape(const Shape &shape);
+            void shape_array(const Shape &shape);
             void slice_array(const SliceRanges &slice_ranges);
     };
 };
