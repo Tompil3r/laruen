@@ -1,6 +1,6 @@
 
-#ifndef NDARRAY_H
-#define NDARRAY_H
+#ifndef NDARRAY_CORE_H
+#define NDARRAY_CORE_H
 
 #include "laruen/ndarray/typenames.h"
 #include <vector>
