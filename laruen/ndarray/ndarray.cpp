@@ -26,7 +26,7 @@ template <typename T> NDArray<T>::~NDArray()
 {
     if(this->delete_data)
     {
-        delete this->data;
+        delete[] this->data;
     }
 }
 
