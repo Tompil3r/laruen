@@ -6,6 +6,8 @@
 #include <cassert>
 #include <ostream>
 #include <cmath>
+#include <cstdint>
+#include <utility>
 
 using namespace laruen::ndarray;
 using namespace laruen::ndarray::utils;
@@ -21,6 +23,60 @@ template class NDArray<uint64_t>;
 template class NDArray<float32_t>;
 template class NDArray<float64_t>;
 
+
+template <typename T> NDArray<T>& NDArray<T>::operator=(const NDArray<T> &ndarray)
+{
+    if(this == &ndarray)
+    {
+        return *this;
+    }
+
+    if(this->size != ndarray.size)
+    {
+        if(this->delete_data)
+        {
+            delete[] this->data;
+        }
+        this->data = new T[ndarray.size];
+    }
+
+    this->shape = ndarray.shape;
+    this->strides = ndarray.strides;
+    this->ndim = ndarray.ndim;
+    this->size = ndarray.size;
+    this->delete_data = true;
+
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        this->data[idx] = ndarray.data[idx];
+    }
+
+    return *this;
+}
+
+template <typename T> NDArray<T>& NDArray<T>::operator=(NDArray<T> &&ndarray)
+{
+    if(this == &ndarray)
+    {
+        return *this;
+    }
+
+    if(this->delete_data)
+    {
+        delete[] this->data;
+    }
+    
+    this->shape = std::move(ndarray.shape);
+    this->strides = std::move(ndarray.strides);
+    this->ndim = ndarray.ndim;
+    this->size = ndarray.size;
+    this->delete_data = ndarray.delete_data;
+    
+    this->data = ndarray.data;
+    ndarray.data = nullptr;
+
+    return *this;
+}
 
 template <typename T> NDArray<T>::~NDArray()
 {
@@ -88,6 +144,12 @@ template <typename T> NDArray<T>::NDArray(T start, T stop, T step) : NDArray<T>(
         start += step;
         idx++;
     }
+}
+
+template <typename T> NDArray<T>::NDArray(NDArray &&ndarray) : data(ndarray.data), shape(std::move(ndarray.shape)),
+strides(std::move(ndarray.strides)), ndim(ndarray.ndim), size(ndarray.size), delete_data(ndarray.delete_data)
+{
+    ndarray.data = nullptr;
 }
 
 template <typename T> const T* NDArray<T>::get_data() const

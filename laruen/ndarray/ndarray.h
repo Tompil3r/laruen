@@ -23,6 +23,8 @@ namespace laruen::ndarray
         
 
         public:
+            NDArray& operator=(const NDArray &ndarray);
+            NDArray& operator=(NDArray &&ndarray);
             ~NDArray();
             NDArray();
             NDArray(const Shape &shape);
@@ -30,6 +32,7 @@ namespace laruen::ndarray
             NDArray(T start, T stop, T step);
             NDArray(T *data, const Shape &shape, const Strides &strides, uint8_t ndim, uint64_t size, bool delete_data);
             NDArray(const NDArray &ndarray);
+            NDArray(NDArray &&ndarray);
 
             const T* get_data() const;
             const Shape& get_shape() const;
