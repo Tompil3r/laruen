@@ -60,6 +60,10 @@ namespace laruen::ndarray
             void operator-=(T value);
             void operator*=(T value);
             void operator/=(T value);
+            NDArray operator+(T value) const;
+            NDArray operator-(T value) const;
+            NDArray operator*(T value) const;
+            NDArray operator/(T value) const;
 
         private:
             void shape_array(const Shape &shape);

@@ -366,6 +366,54 @@ template <typename T> void NDArray<T>::operator/=(T value)
     }
 }
 
+template <typename T> NDArray<T> NDArray<T>::operator+(T value) const
+{
+    NDArray<T> ndarray{new T[this->size], this->shape, this->strides, this->ndim, this->size, true};
+
+    for(uint64_t idx = 0;idx < ndarray.size;idx++)
+    {
+        ndarray.data[idx] = this->data[idx] + value;
+    }
+
+    return ndarray;
+}
+
+template <typename T> NDArray<T> NDArray<T>::operator-(T value) const
+{
+    NDArray<T> ndarray{new T[this->size], this->shape, this->strides, this->ndim, this->size, true};
+
+    for(uint64_t idx = 0;idx < ndarray.size;idx++)
+    {
+        ndarray.data[idx] = this->data[idx] - value;
+    }
+
+    return ndarray;
+}
+
+template <typename T> NDArray<T> NDArray<T>::operator*(T value) const
+{
+    NDArray<T> ndarray{new T[this->size], this->shape, this->strides, this->ndim, this->size, true};
+
+    for(uint64_t idx = 0;idx < ndarray.size;idx++)
+    {
+        ndarray.data[idx] = this->data[idx] * value;
+    }
+
+    return ndarray;
+}
+
+template <typename T> NDArray<T> NDArray<T>::operator/(T value) const
+{
+    NDArray<T> ndarray{new T[this->size], this->shape, this->strides, this->ndim, this->size, true};
+
+    for(uint64_t idx = 0;idx < ndarray.size;idx++)
+    {
+        ndarray.data[idx] = this->data[idx] / value;
+    }
+
+    return ndarray;
+}
+
 template <typename T> void NDArray<T>::shape_array(const Shape &shape)
 {
     this->ndim = shape.size();
