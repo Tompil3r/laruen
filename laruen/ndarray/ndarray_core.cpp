@@ -1,6 +1,6 @@
 
 #include "laruen/ndarray/ndarray_core.h"
-#include "laruen/ndarray/typenames.h"
+#include "laruen/ndarray/ndarray_typenames.h"
 #include "laruen/ndarray/ndarray_utils.h"
 #include "laruen/utils/range.h"
 #include <cassert>

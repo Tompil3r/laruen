@@ -2,7 +2,7 @@
 #ifndef NDARRAY_CORE_H
 #define NDARRAY_CORE_H
 
-#include "laruen/ndarray/typenames.h"
+#include "laruen/ndarray/ndarray_typenames.h"
 #include <vector>
 #include <cstdint>
 #include <cassert>

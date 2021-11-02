@@ -1,5 +1,5 @@
 
-#include "laruen/ndarray/typenames.h"
+#include "laruen/ndarray/ndarray_typenames.h"
 #include "laruen/utils/range.h"
 
 #include <cstdint>
