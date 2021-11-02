@@ -86,12 +86,8 @@ template <typename T> NDArray<T>::~NDArray()
     }
 }
 
-template <typename T> NDArray<T>::NDArray()
+template <typename T> NDArray<T>::NDArray() : data(nullptr), ndim(0), size(0), delete_data(true)
 {
-    this->data = nullptr;
-    this->ndim = 0;
-    this->size = 0;
-    this->delete_data = true;
 }
 
 template <typename T> NDArray<T>::NDArray(const Shape &shape)
@@ -110,31 +106,21 @@ template <typename T> NDArray<T>::NDArray(const Shape &shape, T fill_value) : ND
 }
 
 template <typename T> NDArray<T>::NDArray(T *data, const Shape &shape, const Strides &strides,
-uint8_t ndim, uint64_t size, bool delete_data)
+uint8_t ndim, uint64_t size, bool delete_data) : data(data), shape(shape), strides(strides),
+ndim(ndim), size(size), delete_data(delete_data)
 {
-    this->data = data;
-    this->shape = shape;
-    this->strides = strides;
-    this->ndim = ndim;
-    this->size = size;
-    this->delete_data = delete_data;
 }
 
-template <typename T> NDArray<T>::NDArray(const NDArray<T> &ndarray) : NDArray<T>(nullptr,
+template <typename T> NDArray<T>::NDArray(const NDArray<T> &ndarray) : NDArray<T>(new T[ndarray.size],
 ndarray.get_shape(), ndarray.get_strides(), ndarray.get_ndim(), ndarray.get_size(), true)
 {
-    const T *data = ndarray.get_data();
-    T *copied_data = new T[this->size];
-
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
-        copied_data[idx] = data[idx];
+        this->data[idx] = ndarray.data[idx];
     }
-
-    this->data = copied_data;
 }
 
-template <typename T> NDArray<T>::NDArray(T start, T stop, T step) : NDArray<T>({(uint32_t)ceil((stop - start) / step)})
+template <typename T> NDArray<T>::NDArray(T start, T stop, T step) : NDArray<T>({ceil_index((stop - start) / step)})
 {
     uint64_t idx = 0;
 
