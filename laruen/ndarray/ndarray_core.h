@@ -68,6 +68,27 @@ namespace laruen::ndarray
         private:
             void shape_array(const Shape &shape);
             void slice_array(const SliceRanges &slice_ranges);
+        
+        public:
+            inline friend NDArray operator+(T value, NDArray ndarray)
+            {
+                return ndarray + value;
+            }
+
+            inline friend NDArray operator-(T value, NDArray ndarray)
+            {
+                return ndarray + value;
+            }
+
+            inline friend NDArray operator*(T value, NDArray ndarray)
+            {
+                return ndarray + value;
+            }
+
+            inline friend NDArray operator/(T value, NDArray ndarray)
+            {
+                return ndarray + value;
+            }
     };
 };
 
