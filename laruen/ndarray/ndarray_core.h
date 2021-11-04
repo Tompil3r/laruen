@@ -50,7 +50,6 @@ namespace laruen::ndarray
             bool dims_equal(const NDArray &ndarray) const; 
 
             std::string get_specs() const;
-            void print(bool specs=false, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
 
             T& operator[](uint64_t index);
             const T& operator[](uint64_t index) const;
@@ -75,10 +74,16 @@ namespace laruen::ndarray
             NDArray operator/(const NDArray &ndarray) const;
 
         private:
+            void print(bool print_specs, uint8_t dim, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
             void shape_array(const Shape &shape);
             void slice_array(const SliceRanges &slice_ranges);
         
         public:
+            inline void print(bool print_specs=false) const
+            {
+                this->print(print_specs, 0);
+            }
+
             inline friend NDArray operator+(T value, NDArray ndarray)
             {
                 return ndarray + value;

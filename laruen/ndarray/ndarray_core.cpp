@@ -257,54 +257,6 @@ template <typename T> std::string NDArray<T>::get_specs() const
     return specs.str();
 }
 
-template <typename T> void NDArray<T>::print(bool specs, uint8_t dim, uint64_t data_index,
-bool not_first, bool not_last) const
-{
-    uint32_t dim_idx;
-    uint64_t stride;
-
-    if(not_first) std::cout << std::string(dim, ' '); 
-    std::cout << '[';
-
-    if(dim == this->ndim - 1)
-    {
-        stride = this->strides[dim];
-
-        for(dim_idx = 0;dim_idx < this->shape[dim] - 1;dim_idx++)
-        {
-            std::cout << this->data[data_index] << ',' << ' ';
-            data_index += stride;
-        }
-
-        std::cout << this->data[data_index] << ']';
-        if(not_last) std::cout << '\n';
-        
-        return;
-    }
-
-    this->print(specs, dim + 1, data_index, false, true);
-    data_index += this->strides[dim];            
-
-    for(dim_idx = 1;dim_idx < this->shape[dim] - 1;dim_idx++)
-    {
-        this->print(specs, dim + 1, data_index, true, true);
-        data_index += this->strides[dim];
-    }
-
-    this->print(specs, dim + 1, data_index, true, false);
-
-    std::cout << ']';
-    
-    if(!dim)
-    {
-        std::cout << '\n';
-        if(specs) std::cout << '\n' << this->get_specs();
-    }
-
-    else if(not_last) std::cout << std::string(this->ndim - dim, '\n');
-}
-
-
 template <typename T> T& NDArray<T>::operator[](uint64_t index)
 {
     return this->data[index];
@@ -502,6 +454,53 @@ template <typename T> NDArray<T> NDArray<T>::operator/(const NDArray<T> &ndarray
     }
 
     return result_array;
+}
+
+template <typename T> void NDArray<T>::print(bool print_specs, uint8_t dim, uint64_t data_index,
+bool not_first, bool not_last) const
+{
+    uint32_t dim_idx;
+    uint64_t stride;
+
+    if(not_first) std::cout << std::string(dim, ' '); 
+    std::cout << '[';
+
+    if(dim == this->ndim - 1)
+    {
+        stride = this->strides[dim];
+
+        for(dim_idx = 0;dim_idx < this->shape[dim] - 1;dim_idx++)
+        {
+            std::cout << this->data[data_index] << ',' << ' ';
+            data_index += stride;
+        }
+
+        std::cout << this->data[data_index] << ']';
+        if(not_last) std::cout << '\n';
+        
+        return;
+    }
+
+    this->print(print_specs, dim + 1, data_index, false, true);
+    data_index += this->strides[dim];            
+
+    for(dim_idx = 1;dim_idx < this->shape[dim] - 1;dim_idx++)
+    {
+        this->print(print_specs, dim + 1, data_index, true, true);
+        data_index += this->strides[dim];
+    }
+
+    this->print(print_specs, dim + 1, data_index, true, false);
+
+    std::cout << ']';
+    
+    if(!dim)
+    {
+        std::cout << '\n';
+        if(print_specs) std::cout << '\n' << this->get_specs();
+    }
+
+    else if(not_last) std::cout << std::string(this->ndim - dim, '\n');
 }
 
 template <typename T> void NDArray<T>::shape_array(const Shape &shape)
