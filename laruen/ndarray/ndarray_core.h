@@ -78,6 +78,7 @@ namespace laruen::ndarray
             void shape_array(const Shape &shape);
             void slice_array(const SliceRanges &slice_ranges);
             Shape broadcast_shapes(const NDArray &ndarray) const;
+            bool output_broadcastable(const NDArray &ndarray) const;
         
         public:
             inline void print(bool print_specs=false) const

@@ -576,3 +576,14 @@ template <typename T> Shape NDArray<T>::broadcast_shapes(const NDArray<T> &ndarr
     if(!broadcastable) shape.clear();
     return shape;
 }
+
+template <typename T> bool NDArray<T>::output_broadcastable(const NDArray<T> &ndarray) const
+{
+    bool broadcastable = this->ndim <= ndarray.ndim;
+    uint32_t odim;
+
+    for(uint8_t dim = 1;dim <= ndarray.ndim && (odim = ndarray.shape[ndarray.ndim - dim],
+    broadcastable = (this->shape[this->ndim - dim] == odim || odim == 1));dim++);
+
+    return broadcastable;
+}
