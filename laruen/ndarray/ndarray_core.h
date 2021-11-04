@@ -47,7 +47,7 @@ namespace laruen::ndarray
             void reshape(const Shape &shape);
             uint64_t ravel_ndindex(const NDIndex &ndindex) const;
             NDIndex unravel_index(uint64_t index) const;
-            bool dims_equal(const NDArray &ndarray) const; 
+            bool dims_equal(const NDArray &ndarray) const;
 
             std::string get_specs() const;
 
@@ -77,6 +77,7 @@ namespace laruen::ndarray
             void print(bool print_specs, uint8_t dim, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
             void shape_array(const Shape &shape);
             void slice_array(const SliceRanges &slice_ranges);
+            Shape broadcast_shapes(const NDArray &ndarray) const;
         
         public:
             inline void print(bool print_specs=false) const

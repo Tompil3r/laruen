@@ -544,3 +544,35 @@ template <typename T> void NDArray<T>::slice_array(const SliceRanges &slice_rang
 
     this->data += data_start;
 }
+
+template <typename T> Shape NDArray<T>::broadcast_shapes(const NDArray<T> &ndarray) const
+{
+    Shape shape;
+    uint8_t min_dims;
+    uint8_t shape_ndim;
+    bool broadcastable = true;
+    uint32_t tdim;
+    uint32_t odim;
+
+    if(this->ndim > ndarray.ndim)
+    {
+        shape = this->shape;
+        shape_ndim = this->ndim;
+        min_dims = ndarray.ndim;
+    }
+    else
+    {
+        shape = ndarray.shape;
+        shape_ndim = ndarray.ndim;
+        min_dims = this->ndim;
+    }
+
+    for(uint8_t dim = 1;dim <= min_dims && (tdim = this->shape[this->ndim - dim], odim = ndarray.shape[ndarray.ndim - dim],
+    broadcastable = (tdim == odim || tdim == 1 || odim == 1));dim++)
+    {
+        shape[shape_ndim - dim] = (tdim > odim ? tdim : odim);
+    }
+
+    if(!broadcastable) shape.clear();
+    return shape;
+}
