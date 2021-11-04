@@ -277,6 +277,18 @@ template <typename T> NDIndex NDArray<T>::ndindex_max() const
     return this->unravel_index(this->index_max());
 }
 
+template <typename T> T NDArray<T>::min() const
+{
+    uint64_t min = *this->data;
+
+    for(uint64_t idx = 1;idx < this->size;idx++)
+    {
+        min = common::min<T>(min, this->data[idx]);
+    }
+
+    return min;
+}
+
 template <typename T> std::string NDArray<T>::get_specs() const
 {
     std::ostringstream specs;
