@@ -412,6 +412,46 @@ template <typename T> NDArray<T> NDArray<T>::operator/(T value) const
     return ndarray;
 }
 
+template <typename T> void NDArray<T>::operator+=(const NDArray<T> &ndarray)
+{
+    assert(this->dims_equal(ndarray));
+
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        this->data[idx] += ndarray.data[idx];
+    }
+}
+
+template <typename T> void NDArray<T>::operator-=(const NDArray<T> &ndarray)
+{
+    assert(this->dims_equal(ndarray));
+
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        this->data[idx] -= ndarray.data[idx];
+    }
+}
+
+template <typename T> void NDArray<T>::operator*=(const NDArray<T> &ndarray)
+{
+    assert(this->dims_equal(ndarray));
+
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        this->data[idx] *= ndarray.data[idx];
+    }
+}
+
+template <typename T> void NDArray<T>::operator/=(const NDArray<T> &ndarray)
+{
+    assert(this->dims_equal(ndarray));
+
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        this->data[idx] /= ndarray.data[idx];
+    }
+}
+
 template <typename T> void NDArray<T>::shape_array(const Shape &shape)
 {
     this->ndim = shape.size();
