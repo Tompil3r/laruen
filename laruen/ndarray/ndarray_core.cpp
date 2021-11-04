@@ -245,7 +245,6 @@ template <typename T> bool NDArray<T>::dims_equal(const NDArray<T> &ndarray) con
 
 template <typename T> T NDArray<T>::max() const
 {
-    assert(this->size > 0);
     uint64_t max = *this->data;
 
     for(uint64_t idx = 1;idx < this->size;idx++)
@@ -254,6 +253,23 @@ template <typename T> T NDArray<T>::max() const
     }
 
     return max;
+}
+
+template <typename T> uint64_t NDArray<T>::index_max() const
+{
+    uint64_t max = *this->data;
+    uint64_t index_max = 0;
+
+    for(uint64_t idx = 1;idx < this->size;idx++)
+    {
+        if(this->data[idx] > max)
+        {
+            max = this->data[idx];
+            index_max = idx;
+        }
+    }
+
+    return index_max;
 }
 
 template <typename T> std::string NDArray<T>::get_specs() const
