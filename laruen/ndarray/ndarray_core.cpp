@@ -3,14 +3,15 @@
 #include "laruen/ndarray/ndarray_typenames.h"
 #include "laruen/ndarray/ndarray_utils.h"
 #include "laruen/utils/range.h"
+#include "laruen/math/common.h"
 #include <cassert>
 #include <ostream>
-#include <cmath>
 #include <cstdint>
 #include <utility>
 
 using namespace laruen::ndarray;
 using namespace laruen::ndarray::utils;
+using namespace laruen::math;
 
 template class NDArray<int8_t>;
 template class NDArray<uint8_t>;
@@ -240,6 +241,19 @@ template <typename T> bool NDArray<T>::dims_equal(const NDArray<T> &ndarray) con
     }
 
     return dims_equal;
+}
+
+template <typename T> T NDArray<T>::max() const
+{
+    assert(this->size > 0);
+    uint64_t max = *this->data;
+
+    for(uint64_t idx = 1;idx < this->size;idx++)
+    {
+        max = common::max<T>(max, this->data[idx]);
+    }
+
+    return max;
 }
 
 template <typename T> std::string NDArray<T>::get_specs() const

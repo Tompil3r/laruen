@@ -48,6 +48,7 @@ namespace laruen::ndarray
             uint64_t ravel_ndindex(const NDIndex &ndindex) const;
             NDIndex unravel_index(uint64_t index) const;
             bool dims_equal(const NDArray &ndarray) const;
+            T max() const;
 
             std::string get_specs() const;
 
