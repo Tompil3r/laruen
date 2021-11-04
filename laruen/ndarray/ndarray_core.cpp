@@ -272,6 +272,11 @@ template <typename T> uint64_t NDArray<T>::index_max() const
     return index_max;
 }
 
+template <typename T> NDIndex NDArray<T>::ndindex_max() const
+{
+    return this->unravel_index(this->index_max());
+}
+
 template <typename T> std::string NDArray<T>::get_specs() const
 {
     std::ostringstream specs;

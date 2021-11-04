@@ -50,6 +50,7 @@ namespace laruen::ndarray
             bool dims_equal(const NDArray &ndarray) const;
             T max() const;
             uint64_t index_max() const;
+            NDIndex ndindex_max() const;
 
             std::string get_specs() const;
 
