@@ -72,6 +72,12 @@ namespace laruen::ndarray
             NDArray operator-(const NDArray &ndarray) const;
             NDArray operator*(const NDArray &ndarray) const;
             NDArray operator/(const NDArray &ndarray) const;
+            bool operator==(const NDArray &ndarray) const;
+            bool operator!=(const NDArray &ndarray) const;
+            bool operator>=(const NDArray &ndarray) const;
+            bool operator<=(const NDArray &ndarray) const;
+            bool operator>(const NDArray &ndarray) const;
+            bool operator<(const NDArray &ndarray) const;
 
         private:
             void print(bool print_specs, uint8_t dim, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;

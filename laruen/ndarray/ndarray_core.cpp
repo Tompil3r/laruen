@@ -456,6 +456,57 @@ template <typename T> NDArray<T> NDArray<T>::operator/(const NDArray<T> &ndarray
     return result_array;
 }
 
+template <typename T> bool NDArray<T>::operator==(const NDArray<T> &ndarray) const
+{
+    bool eq = this->dims_equal(ndarray);
+
+    for(uint64_t idx = 0;idx < this->size && eq;idx++)
+    {
+        eq = (this->data[idx] == ndarray.data[idx]);
+    }
+
+    return eq;
+}
+
+template <typename T> bool NDArray<T>::operator!=(const NDArray<T> &ndarray) const
+{
+    return !(*this == ndarray);
+}
+
+template <typename T> bool NDArray<T>::operator>=(const NDArray<T> &ndarray) const
+{
+    bool ge = this->dims_equal(ndarray);
+
+    for(uint64_t idx = 0;idx < this->size && ge;idx++)
+    {
+        ge = (this->data[idx] >= ndarray.data[idx]);
+    }
+
+    return ge;
+}
+
+template <typename T> bool NDArray<T>::operator<=(const NDArray<T> &ndarray) const
+{
+    bool le = this->dims_equal(ndarray);
+
+    for(uint64_t idx = 0;idx < this->size && le;idx++)
+    {
+        le = (this->data[idx] <= ndarray.data[idx]);
+    }
+
+    return le;
+}
+
+template <typename T> bool NDArray<T>::operator>(const NDArray<T> &ndarray) const
+{
+    return !(*this <= ndarray);
+}
+
+template <typename T> bool NDArray<T>::operator<(const NDArray<T> &ndarray) const
+{
+    return !(*this >= ndarray);
+}
+
 template <typename T> void NDArray<T>::print(bool print_specs, uint8_t dim, uint64_t data_index,
 bool not_first, bool not_last) const
 {
