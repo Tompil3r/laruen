@@ -230,6 +230,18 @@ template <typename T> NDIndex NDArray<T>::unravel_index(uint64_t index) const
     return ndindex;
 }
 
+template <typename T> bool NDArray<T>::dims_equal(const NDArray<T> &ndarray) const
+{
+    bool dims_equal = this->ndim == ndarray.ndim;
+
+    for(uint8_t dim = 0;dim < this->ndim && dims_equal;dim++)
+    {
+        dims_equal = (this->shape[dim] == ndarray.shape[dim]);
+    }
+
+    return dims_equal;
+}
+
 template <typename T> std::string NDArray<T>::get_specs() const
 {
     std::ostringstream specs;
