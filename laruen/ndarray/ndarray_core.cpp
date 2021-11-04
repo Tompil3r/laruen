@@ -289,6 +289,23 @@ template <typename T> T NDArray<T>::min() const
     return min;
 }
 
+template <typename T> uint64_t NDArray<T>::index_min() const
+{
+    uint64_t min = *this->data;
+    uint64_t index_min = 0;
+
+    for(uint64_t idx = 1;idx < this->size;idx++)
+    {
+        if(this->data[idx] < min)
+        {
+            min = this->data[idx];
+            index_min = idx;
+        }
+    }
+
+    return index_min;
+}
+
 template <typename T> std::string NDArray<T>::get_specs() const
 {
     std::ostringstream specs;
