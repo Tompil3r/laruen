@@ -53,6 +53,7 @@ namespace laruen::ndarray
             NDIndex ndindex_max() const;
             T min() const;
             uint64_t index_min() const;
+            NDIndex ndindex_min() const;
 
             std::string get_specs() const;
 
