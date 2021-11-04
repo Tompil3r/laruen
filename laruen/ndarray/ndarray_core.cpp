@@ -452,6 +452,58 @@ template <typename T> void NDArray<T>::operator/=(const NDArray<T> &ndarray)
     }
 }
 
+template <typename T> NDArray<T> NDArray<T>::operator+(const NDArray<T> &ndarray) const
+{
+    assert(this->dims_equal(ndarray));
+    NDArray<T> result_array(this->shape);
+
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        result_array.data[idx] = this->data[idx] + ndarray.data[idx];
+    }
+
+    return result_array;
+}
+
+template <typename T> NDArray<T> NDArray<T>::operator-(const NDArray<T> &ndarray) const
+{
+    assert(this->dims_equal(ndarray));
+    NDArray<T> result_array(this->shape);
+
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        result_array.data[idx] = this->data[idx] - ndarray.data[idx];
+    }
+
+    return result_array;
+}
+
+template <typename T> NDArray<T> NDArray<T>::operator*(const NDArray<T> &ndarray) const
+{
+    assert(this->dims_equal(ndarray));
+    NDArray<T> result_array(this->shape);
+
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        result_array.data[idx] = this->data[idx] * ndarray.data[idx];
+    }
+
+    return result_array;
+}
+
+template <typename T> NDArray<T> NDArray<T>::operator/(const NDArray<T> &ndarray) const
+{
+    assert(this->dims_equal(ndarray));
+    NDArray<T> result_array(this->shape);
+
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        result_array.data[idx] = this->data[idx] / ndarray.data[idx];
+    }
+
+    return result_array;
+}
+
 template <typename T> void NDArray<T>::shape_array(const Shape &shape)
 {
     this->ndim = shape.size();
