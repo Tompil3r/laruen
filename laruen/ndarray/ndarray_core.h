@@ -47,6 +47,7 @@ namespace laruen::ndarray
             void reshape(const Shape &shape);
             uint64_t ravel_ndindex(const NDIndex &ndindex) const;
             NDIndex unravel_index(uint64_t index) const;
+            void shrink_dims();
             bool dims_equal(const NDArray &ndarray) const;
             T max() const;
             uint64_t index_max() const;

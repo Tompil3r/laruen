@@ -231,6 +231,22 @@ template <typename T> NDIndex NDArray<T>::unravel_index(uint64_t index) const
     return ndindex;
 }
 
+template <typename T> void NDArray<T>::shrink_dims()
+{
+    Shape shape;
+    shape.reserve(this->ndim);
+
+    for(uint8_t dim : this->shape)
+    {
+        if(dim > 1)
+        {
+            shape.push_back(dim);
+        }
+    }
+
+    this->reshape(shape);
+}
+
 template <typename T> bool NDArray<T>::dims_equal(const NDArray<T> &ndarray) const
 {
     bool dims_equal = this->ndim == ndarray.ndim;
