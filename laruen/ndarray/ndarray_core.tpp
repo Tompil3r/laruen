@@ -13,18 +13,6 @@ using namespace laruen::ndarray;
 using namespace laruen::ndarray::utils;
 using namespace laruen::math;
 
-template class NDArray<int8_t>;
-template class NDArray<uint8_t>;
-template class NDArray<int16_t>;
-template class NDArray<uint16_t>;
-template class NDArray<int32_t>;
-template class NDArray<uint32_t>;
-template class NDArray<int64_t>;
-template class NDArray<uint64_t>;
-template class NDArray<float32_t>;
-template class NDArray<float64_t>;
-
-
 template <typename T> NDArray<T>& NDArray<T>::operator=(const NDArray<T> &ndarray)
 {
     if(this == &ndarray)
