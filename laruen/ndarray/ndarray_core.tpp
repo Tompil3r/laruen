@@ -165,23 +165,25 @@ template <typename T, uint8_t NDim> const NDArray<T, NDim> NDArray<T, NDim>::sha
     return NDArray<T, NDim>(this->data, this->shape, this->strides, this->size, false);
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::reshape(const Shape &shape)
+template <typename T, uint8_t NDim> template <uint8_t NNDim> NDArray<T, NNDim> NDArray<T, NDim>::reshape(const Shape &shape) const
 {
+    NDArray<T, NNDim> ndarray(this->data, shape, Strides(NNDim), this->size, false);
+
     uint64_t stride = this->strides[NDim - 1];
     uint64_t size = shape[NDim - 1];
 
-    this->strides = Strides(NDim);
-    this->strides[NDim - 1] = stride;
+    ndarray.strides[NDim - 1] = stride;
 
     for(uint8_t dim = NDim - 1;dim-- > 0;)
     {
         stride *= shape[dim + 1];
-        this->strides[dim] = stride;
+        ndarray.strides[dim] = stride;
         size *= shape[dim];
     }
 
     assert(this->size == size);
-    this->shape = Shape(shape);
+
+    return ndarray;
 }
 
 template <typename T, uint8_t NDim> uint64_t NDArray<T, NDim>::ravel_ndindex(const NDIndex &ndindex) const
@@ -211,20 +213,22 @@ template <typename T, uint8_t NDim> NDIndex NDArray<T, NDim>::unravel_index(uint
     return ndindex;
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::shrink_dims()
+template <typename T, uint8_t NDim> template <uint8_t NNDim> NDArray<T, NNDim> NDArray<T, NDim>::shrink_dims() const
 {
-    Shape shape;
-    shape.reserve(NDim);
+    NDArray<T, NNDim> ndarray(this->data, Shape(NNDim), Strides(NNDim), this->size, false);
+    uint8_t new_dim = 0;
 
-    for(uint8_t dim : this->shape)
+    for(uint8_t dim = 0;dim < NDim;dim++)
     {
-        if(dim > 1)
+        if(this->shape[dim] > 1)
         {
-            shape.push_back(dim);
+            ndarray.shape[new_dim] = this->shape[dim];
+            ndarray.strides[new_dim] = this->strides[dim];
+            new_dim++;
         }
     }
 
-    this->reshape(shape);
+    return ndarray;
 }
 
 template <typename T, uint8_t NDim> bool NDArray<T, NDim>::dims_equal(const NDArray<T, NDim> &ndarray) const

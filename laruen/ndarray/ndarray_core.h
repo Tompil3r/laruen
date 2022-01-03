@@ -19,7 +19,8 @@ namespace laruen::ndarray
         Strides strides;
         uint64_t size;
         bool delete_data;
-        
+
+        template <typename, uint8_t> friend class NDArray;
 
         public:
             NDArray& operator=(const NDArray &ndarray);
@@ -42,10 +43,10 @@ namespace laruen::ndarray
             NDArray shallow_copy();
             const NDArray shallow_copy() const;
 
-            void reshape(const Shape &shape);
+            template <uint8_t NNDim> NDArray<T, NNDim> reshape(const Shape &shape) const;
             uint64_t ravel_ndindex(const NDIndex &ndindex) const;
             NDIndex unravel_index(uint64_t index) const;
-            void shrink_dims();
+            template <uint8_t NNDim> NDArray<T, NNDim> shrink_dims() const;
             bool dims_equal(const NDArray &ndarray) const;
             T max() const;
             uint64_t index_max() const;
