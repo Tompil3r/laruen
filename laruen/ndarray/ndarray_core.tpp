@@ -178,6 +178,15 @@ NDArray<T, NDim> NDArray<T, NDim>::shallow_copy()
 }
 
 template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::fill(T fill_value)
+{
+    for(uint64_t idx = 0;idx < this->size;idx++)
+    {
+        this->data[idx] = fill_value;
+    }
+}
+
+template <typename T, uint8_t NDim>
 const NDArray<T, NDim> NDArray<T, NDim>::shallow_copy() const
 {
     return NDArray<T, NDim>(this->data, this->shape, this->strides, this->size, false);

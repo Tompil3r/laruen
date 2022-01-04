@@ -42,6 +42,7 @@ namespace laruen::ndarray
             void set_delete_data(bool delete_date);
             NDArray shallow_copy();
             const NDArray shallow_copy() const;
+            void fill(T fill_value);
 
             template <uint8_t NNDim> NDArray<T, NNDim> reshape(const Shape &shape) const;
             uint64_t ravel_ndindex(const NDIndex &ndindex) const;
