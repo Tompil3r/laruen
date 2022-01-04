@@ -13,7 +13,8 @@ using namespace laruen::ndarray;
 using namespace laruen::ndarray::utils;
 using namespace laruen::math;
 
-template <typename T, uint8_t NDim> NDArray<T, NDim>& NDArray<T, NDim>::operator=(const NDArray<T, NDim> &ndarray)
+template <typename T, uint8_t NDim>
+NDArray<T, NDim>& NDArray<T, NDim>::operator=(const NDArray<T, NDim> &ndarray)
 {
     if(this == &ndarray)
     {
@@ -42,7 +43,8 @@ template <typename T, uint8_t NDim> NDArray<T, NDim>& NDArray<T, NDim>::operator
     return *this;
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim>& NDArray<T, NDim>::operator=(NDArray<T, NDim> &&ndarray)
+template <typename T, uint8_t NDim>
+NDArray<T, NDim>& NDArray<T, NDim>::operator=(NDArray<T, NDim> &&ndarray)
 {
     if(this == &ndarray)
     {
@@ -65,7 +67,8 @@ template <typename T, uint8_t NDim> NDArray<T, NDim>& NDArray<T, NDim>::operator
     return *this;
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim>::~NDArray()
+template <typename T, uint8_t NDim>
+NDArray<T, NDim>::~NDArray()
 {
     if(this->delete_data)
     {
@@ -73,18 +76,21 @@ template <typename T, uint8_t NDim> NDArray<T, NDim>::~NDArray()
     }
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim>::NDArray() : data(nullptr), size(0), delete_data(true)
+template <typename T, uint8_t NDim>
+NDArray<T, NDim>::NDArray() : data(nullptr), size(0), delete_data(true)
 {
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim>::NDArray(const Shape &shape)
+template <typename T, uint8_t NDim>
+NDArray<T, NDim>::NDArray(const Shape &shape)
 {
     this->shape_array(shape);
     this->data = new T[size];
     this->delete_data = true;
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim>::NDArray(const Shape &shape, T fill_value) : NDArray<T, NDim>(shape)
+template <typename T, uint8_t NDim>
+NDArray<T, NDim>::NDArray(const Shape &shape, T fill_value) : NDArray<T, NDim>(shape)
 {
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
@@ -92,13 +98,15 @@ template <typename T, uint8_t NDim> NDArray<T, NDim>::NDArray(const Shape &shape
     }    
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim>::NDArray(T *data, const Shape &shape, const Strides &strides,
+template <typename T, uint8_t NDim>
+NDArray<T, NDim>::NDArray(T *data, const Shape &shape, const Strides &strides,
 uint64_t size, bool delete_data) : data(data), shape(shape), strides(strides),
 size(size), delete_data(delete_data)
 {
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim>::NDArray(const NDArray<T, NDim> &ndarray) : NDArray<T, NDim>(new T[ndarray.size],
+template <typename T, uint8_t NDim>
+NDArray<T, NDim>::NDArray(const NDArray<T, NDim> &ndarray) : NDArray<T, NDim>(new T[ndarray.size],
 ndarray.get_shape(), ndarray.get_strides(), ndarray.get_size(), true)
 {
     for(uint64_t idx = 0;idx < this->size;idx++)
@@ -107,7 +115,8 @@ ndarray.get_shape(), ndarray.get_strides(), ndarray.get_size(), true)
     }
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim>::NDArray(T start, T stop, T step) : NDArray<T, NDim>({ceil_index((stop - start) / step)})
+template <typename T, uint8_t NDim>
+NDArray<T, NDim>::NDArray(T start, T stop, T step) : NDArray<T, NDim>({ceil_index((stop - start) / step)})
 {
     uint64_t idx = 0;
 
@@ -119,53 +128,63 @@ template <typename T, uint8_t NDim> NDArray<T, NDim>::NDArray(T start, T stop, T
     }
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim>::NDArray(NDArray<T, NDim> &&ndarray) : data(ndarray.data), shape(std::move(ndarray.shape)),
+template <typename T, uint8_t NDim>
+NDArray<T, NDim>::NDArray(NDArray<T, NDim> &&ndarray) : data(ndarray.data), shape(std::move(ndarray.shape)),
 strides(std::move(ndarray.strides)), size(ndarray.size), delete_data(ndarray.delete_data)
 {
     ndarray.data = nullptr;
 }
 
-template <typename T, uint8_t NDim> const T* NDArray<T, NDim>::get_data() const
+template <typename T, uint8_t NDim>
+const T* NDArray<T, NDim>::get_data() const
 {
     return this->data;
 }
 
-template <typename T, uint8_t NDim> const Shape& NDArray<T, NDim>::get_shape() const
+template <typename T, uint8_t NDim>
+const Shape& NDArray<T, NDim>::get_shape() const
 {
     return this->shape;
 }
 
-template <typename T, uint8_t NDim> const Strides& NDArray<T, NDim>::get_strides() const
+template <typename T, uint8_t NDim>
+const Strides& NDArray<T, NDim>::get_strides() const
 {
     return this->strides;
 }
 
-template <typename T, uint8_t NDim> uint64_t NDArray<T, NDim>::get_size() const
+template <typename T, uint8_t NDim>
+uint64_t NDArray<T, NDim>::get_size() const
 {
     return this->size;
 }
 
-template <typename T, uint8_t NDim> bool NDArray<T, NDim>::does_delete_data()
+template <typename T, uint8_t NDim>
+bool NDArray<T, NDim>::does_delete_data()
 {
     return this->delete_data;
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::set_delete_data(bool delete_date)
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::set_delete_data(bool delete_date)
 {
     this->delete_data = delete_data;
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::shallow_copy()
+template <typename T, uint8_t NDim>
+NDArray<T, NDim> NDArray<T, NDim>::shallow_copy()
 {
     return NDArray<T, NDim>(this->data, this->shape, this->strides, this->size, false);
 }
 
-template <typename T, uint8_t NDim> const NDArray<T, NDim> NDArray<T, NDim>::shallow_copy() const
+template <typename T, uint8_t NDim>
+const NDArray<T, NDim> NDArray<T, NDim>::shallow_copy() const
 {
     return NDArray<T, NDim>(this->data, this->shape, this->strides, this->size, false);
 }
 
-template <typename T, uint8_t NDim> template <uint8_t NNDim> NDArray<T, NNDim> NDArray<T, NDim>::reshape(const Shape &shape) const
+template <typename T, uint8_t NDim> template <uint8_t NNDim> NDArray<T, NNDim>
+NDArray<T, NDim>::reshape(const Shape &shape) const
 {
     NDArray<T, NNDim> ndarray(this->data, shape, Strides(NNDim), this->size, false);
 
@@ -186,7 +205,8 @@ template <typename T, uint8_t NDim> template <uint8_t NNDim> NDArray<T, NNDim> N
     return ndarray;
 }
 
-template <typename T, uint8_t NDim> uint64_t NDArray<T, NDim>::ravel_ndindex(const NDIndex &ndindex) const
+template <typename T, uint8_t NDim>
+uint64_t NDArray<T, NDim>::ravel_ndindex(const NDIndex &ndindex) const
 {
     uint64_t index = 0;
     uint8_t nb_dims = ndindex.size();
@@ -199,7 +219,8 @@ template <typename T, uint8_t NDim> uint64_t NDArray<T, NDim>::ravel_ndindex(con
     return index;
 }
 
-template <typename T, uint8_t NDim> NDIndex NDArray<T, NDim>::unravel_index(uint64_t index) const
+template <typename T, uint8_t NDim>
+NDIndex NDArray<T, NDim>::unravel_index(uint64_t index) const
 {
     NDIndex ndindex;
     ndindex.reserve(NDim);
@@ -213,7 +234,8 @@ template <typename T, uint8_t NDim> NDIndex NDArray<T, NDim>::unravel_index(uint
     return ndindex;
 }
 
-template <typename T, uint8_t NDim> template <uint8_t NNDim> NDArray<T, NNDim> NDArray<T, NDim>::shrink_dims() const
+template <typename T, uint8_t NDim> template <uint8_t NNDim>
+NDArray<T, NNDim> NDArray<T, NDim>::shrink_dims() const
 {
     NDArray<T, NNDim> ndarray(this->data, Shape(NNDim), Strides(NNDim), this->size, false);
     uint8_t new_dim = 0;
@@ -231,7 +253,8 @@ template <typename T, uint8_t NDim> template <uint8_t NNDim> NDArray<T, NNDim> N
     return ndarray;
 }
 
-template <typename T, uint8_t NDim> bool NDArray<T, NDim>::dims_equal(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+bool NDArray<T, NDim>::dims_equal(const NDArray<T, NDim> &ndarray) const
 {
     bool dims_equal = true;
 
@@ -243,7 +266,8 @@ template <typename T, uint8_t NDim> bool NDArray<T, NDim>::dims_equal(const NDAr
     return dims_equal;
 }
 
-template <typename T, uint8_t NDim> T NDArray<T, NDim>::max() const
+template <typename T, uint8_t NDim>
+T NDArray<T, NDim>::max() const
 {
     uint64_t max = *this->data;
 
@@ -255,7 +279,8 @@ template <typename T, uint8_t NDim> T NDArray<T, NDim>::max() const
     return max;
 }
 
-template <typename T, uint8_t NDim> uint64_t NDArray<T, NDim>::index_max() const
+template <typename T, uint8_t NDim>
+uint64_t NDArray<T, NDim>::index_max() const
 {
     uint64_t max = *this->data;
     uint64_t index_max = 0;
@@ -272,12 +297,14 @@ template <typename T, uint8_t NDim> uint64_t NDArray<T, NDim>::index_max() const
     return index_max;
 }
 
-template <typename T, uint8_t NDim> NDIndex NDArray<T, NDim>::ndindex_max() const
+template <typename T, uint8_t NDim>
+NDIndex NDArray<T, NDim>::ndindex_max() const
 {
     return this->unravel_index(this->index_max());
 }
 
-template <typename T, uint8_t NDim> T NDArray<T, NDim>::min() const
+template <typename T, uint8_t NDim>
+T NDArray<T, NDim>::min() const
 {
     uint64_t min = *this->data;
 
@@ -289,7 +316,8 @@ template <typename T, uint8_t NDim> T NDArray<T, NDim>::min() const
     return min;
 }
 
-template <typename T, uint8_t NDim> uint64_t NDArray<T, NDim>::index_min() const
+template <typename T, uint8_t NDim>
+uint64_t NDArray<T, NDim>::index_min() const
 {
     uint64_t min = *this->data;
     uint64_t index_min = 0;
@@ -306,12 +334,14 @@ template <typename T, uint8_t NDim> uint64_t NDArray<T, NDim>::index_min() const
     return index_min;
 }
 
-template <typename T, uint8_t NDim> NDIndex NDArray<T, NDim>::ndindex_min() const
+template <typename T, uint8_t NDim>
+NDIndex NDArray<T, NDim>::ndindex_min() const
 {
     return this->unravel_index(this->index_min());
 }
 
-template <typename T, uint8_t NDim> std::string NDArray<T, NDim>::get_specs() const
+template <typename T, uint8_t NDim>
+std::string NDArray<T, NDim>::get_specs() const
 {
     std::ostringstream specs;
     uint8_t dim;
@@ -326,34 +356,40 @@ template <typename T, uint8_t NDim> std::string NDArray<T, NDim>::get_specs() co
     return specs.str();
 }
 
-template <typename T, uint8_t NDim> T& NDArray<T, NDim>::operator[](uint64_t index)
+template <typename T, uint8_t NDim>
+T& NDArray<T, NDim>::operator[](uint64_t index)
 {
     return this->data[index];
 }
 
-template <typename T, uint8_t NDim> const T& NDArray<T, NDim>::operator[](uint64_t index) const
+template <typename T, uint8_t NDim>
+const T& NDArray<T, NDim>::operator[](uint64_t index) const
 {
     return this->data[index];
 }
 
-template <typename T, uint8_t NDim> T& NDArray<T, NDim>::operator[](const NDIndex &ndindex)
+template <typename T, uint8_t NDim>
+T& NDArray<T, NDim>::operator[](const NDIndex &ndindex)
 {
     return this->data[this->ravel_ndindex(ndindex)];
 }
 
-template <typename T, uint8_t NDim> const T& NDArray<T, NDim>::operator[](const NDIndex &ndindex) const
+template <typename T, uint8_t NDim>
+const T& NDArray<T, NDim>::operator[](const NDIndex &ndindex) const
 {
     return this->data[this->ravel_ndindex(ndindex)];
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator[](const SliceRanges &slice_ranges)
+template <typename T, uint8_t NDim>
+NDArray<T, NDim> NDArray<T, NDim>::operator[](const SliceRanges &slice_ranges)
 {
     NDArray<T, NDim> ndarray = this->shallow_copy();
     ndarray.slice_array(slice_ranges);
     return ndarray;
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator+=(T value)
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::operator+=(T value)
 {
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
@@ -361,7 +397,8 @@ template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator+=(T value)
     }
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator-=(T value)
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::operator-=(T value)
 {
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
@@ -369,7 +406,8 @@ template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator-=(T value)
     }
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator*=(T value)
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::operator*=(T value)
 {
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
@@ -377,7 +415,8 @@ template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator*=(T value)
     }
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator/=(T value)
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::operator/=(T value)
 {
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
@@ -385,7 +424,8 @@ template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator/=(T value)
     }
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator+(T value) const
+template <typename T, uint8_t NDim>
+NDArray<T, NDim> NDArray<T, NDim>::operator+(T value) const
 {
     NDArray<T, NDim> ndarray{new T[this->size], this->shape, this->strides, this->size, true};
 
@@ -397,7 +437,8 @@ template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator+
     return ndarray;
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator-(T value) const
+template <typename T, uint8_t NDim>
+NDArray<T, NDim> NDArray<T, NDim>::operator-(T value) const
 {
     NDArray<T, NDim> ndarray{new T[this->size], this->shape, this->strides, this->size, true};
 
@@ -409,7 +450,8 @@ template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator-
     return ndarray;
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator*(T value) const
+template <typename T, uint8_t NDim>
+NDArray<T, NDim> NDArray<T, NDim>::operator*(T value) const
 {
     NDArray<T, NDim> ndarray{new T[this->size], this->shape, this->strides, this->size, true};
 
@@ -421,7 +463,8 @@ template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator*
     return ndarray;
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator/(T value) const
+template <typename T, uint8_t NDim>
+NDArray<T, NDim> NDArray<T, NDim>::operator/(T value) const
 {
     NDArray<T, NDim> ndarray{new T[this->size], this->shape, this->strides, this->size, true};
 
@@ -433,7 +476,8 @@ template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator/
     return ndarray;
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator+=(const NDArray<T, NDim> &ndarray)
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::operator+=(const NDArray<T, NDim> &ndarray)
 {
     assert(this->dims_equal(ndarray));
 
@@ -443,7 +487,8 @@ template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator+=(const NDAr
     }
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator-=(const NDArray<T, NDim> &ndarray)
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::operator-=(const NDArray<T, NDim> &ndarray)
 {
     assert(this->dims_equal(ndarray));
 
@@ -453,7 +498,8 @@ template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator-=(const NDAr
     }
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator*=(const NDArray<T, NDim> &ndarray)
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::operator*=(const NDArray<T, NDim> &ndarray)
 {
     assert(this->dims_equal(ndarray));
 
@@ -463,7 +509,8 @@ template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator*=(const NDAr
     }
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator/=(const NDArray<T, NDim> &ndarray)
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::operator/=(const NDArray<T, NDim> &ndarray)
 {
     assert(this->dims_equal(ndarray));
 
@@ -473,7 +520,8 @@ template <typename T, uint8_t NDim> void NDArray<T, NDim>::operator/=(const NDAr
     }
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator+(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+NDArray<T, NDim> NDArray<T, NDim>::operator+(const NDArray<T, NDim> &ndarray) const
 {
     assert(this->dims_equal(ndarray));
     NDArray<T, NDim> result_array(this->shape);
@@ -486,7 +534,8 @@ template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator+
     return result_array;
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator-(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+NDArray<T, NDim> NDArray<T, NDim>::operator-(const NDArray<T, NDim> &ndarray) const
 {
     assert(this->dims_equal(ndarray));
     NDArray<T, NDim> result_array(this->shape);
@@ -499,7 +548,8 @@ template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator-
     return result_array;
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator*(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+NDArray<T, NDim> NDArray<T, NDim>::operator*(const NDArray<T, NDim> &ndarray) const
 {
     assert(this->dims_equal(ndarray));
     NDArray<T, NDim> result_array(this->shape);
@@ -512,7 +562,8 @@ template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator*
     return result_array;
 }
 
-template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator/(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+NDArray<T, NDim> NDArray<T, NDim>::operator/(const NDArray<T, NDim> &ndarray) const
 {
     assert(this->dims_equal(ndarray));
     NDArray<T, NDim> result_array(this->shape);
@@ -525,7 +576,8 @@ template <typename T, uint8_t NDim> NDArray<T, NDim> NDArray<T, NDim>::operator/
     return result_array;
 }
 
-template <typename T, uint8_t NDim> bool NDArray<T, NDim>::operator==(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+bool NDArray<T, NDim>::operator==(const NDArray<T, NDim> &ndarray) const
 {
     bool eq = this->dims_equal(ndarray);
 
@@ -537,12 +589,14 @@ template <typename T, uint8_t NDim> bool NDArray<T, NDim>::operator==(const NDAr
     return eq;
 }
 
-template <typename T, uint8_t NDim> bool NDArray<T, NDim>::operator!=(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+bool NDArray<T, NDim>::operator!=(const NDArray<T, NDim> &ndarray) const
 {
     return !(*this == ndarray);
 }
 
-template <typename T, uint8_t NDim> bool NDArray<T, NDim>::operator>=(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+bool NDArray<T, NDim>::operator>=(const NDArray<T, NDim> &ndarray) const
 {
     bool ge = this->dims_equal(ndarray);
 
@@ -554,7 +608,8 @@ template <typename T, uint8_t NDim> bool NDArray<T, NDim>::operator>=(const NDAr
     return ge;
 }
 
-template <typename T, uint8_t NDim> bool NDArray<T, NDim>::operator<=(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+bool NDArray<T, NDim>::operator<=(const NDArray<T, NDim> &ndarray) const
 {
     bool le = this->dims_equal(ndarray);
 
@@ -566,18 +621,20 @@ template <typename T, uint8_t NDim> bool NDArray<T, NDim>::operator<=(const NDAr
     return le;
 }
 
-template <typename T, uint8_t NDim> bool NDArray<T, NDim>::operator>(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+bool NDArray<T, NDim>::operator>(const NDArray<T, NDim> &ndarray) const
 {
     return !(*this <= ndarray);
 }
 
-template <typename T, uint8_t NDim> bool NDArray<T, NDim>::operator<(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+bool NDArray<T, NDim>::operator<(const NDArray<T, NDim> &ndarray) const
 {
     return !(*this >= ndarray);
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::print(bool print_specs, uint8_t dim, uint64_t data_index,
-bool not_first, bool not_last) const
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::print(bool print_specs, uint8_t dim, uint64_t data_index, bool not_first, bool not_last) const
 {
     uint32_t dim_idx;
     uint64_t stride;
@@ -623,7 +680,8 @@ bool not_first, bool not_last) const
     else if(not_last) std::cout << std::string(NDim - dim, '\n');
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::shape_array(const Shape &shape)
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::shape_array(const Shape &shape)
 {
     uint64_t stride = 1;
     uint64_t size = shape[NDim - 1];
@@ -642,7 +700,8 @@ template <typename T, uint8_t NDim> void NDArray<T, NDim>::shape_array(const Sha
     this->size = size;
 }
 
-template <typename T, uint8_t NDim> void NDArray<T, NDim>::slice_array(const SliceRanges &slice_ranges)
+template <typename T, uint8_t NDim>
+void NDArray<T, NDim>::slice_array(const SliceRanges &slice_ranges)
 {
     uint8_t nb_dims = slice_ranges.size() - 1;
     uint64_t stride = slice_ranges[nb_dims].step;
@@ -665,7 +724,8 @@ template <typename T, uint8_t NDim> void NDArray<T, NDim>::slice_array(const Sli
 }
 
 /*
-template <typename T, uint8_t NDim> Shape NDArray<T, NDim>::broadcast_shapes(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+Shape NDArray<T, NDim>::broadcast_shapes(const NDArray<T, NDim> &ndarray) const
 {
     Shape shape;
     uint8_t min_dims;
@@ -699,7 +759,8 @@ template <typename T, uint8_t NDim> Shape NDArray<T, NDim>::broadcast_shapes(con
 */
 
 /*
-template <typename T, uint8_t NDim> bool NDArray<T, NDim>::output_broadcastable(const NDArray<T, NDim> &ndarray) const
+template <typename T, uint8_t NDim>
+bool NDArray<T, NDim>::output_broadcastable(const NDArray<T, NDim> &ndarray) const
 {
     bool broadcastable = this->ndim <= ndarray.ndim;
     uint32_t odim;
