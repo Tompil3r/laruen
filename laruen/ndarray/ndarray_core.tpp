@@ -231,12 +231,11 @@ uint64_t NDArray<T, NDim>::ravel_ndindex(const NDIndex &ndindex) const
 template <typename T, uint8_t NDim>
 NDIndex NDArray<T, NDim>::unravel_index(uint64_t index) const
 {
-    NDIndex ndindex;
-    ndindex.reserve(NDim);
+    NDIndex ndindex(NDim);
 
     for(uint8_t dim = 0;dim < NDim;dim++)
     {
-        ndindex.push_back(index / this->strides[dim]);
+        ndindex[dim] = index / this->strides[dim];
         index -= ndindex[dim] * this->strides[dim];
     }
 
