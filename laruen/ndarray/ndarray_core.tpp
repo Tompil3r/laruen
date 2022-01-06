@@ -82,28 +82,23 @@ NDArray<T, NDim>::NDArray() : data(nullptr), size(0), delete_data(true)
 }
 
 template <typename T, uint8_t NDim>
-NDArray<T, NDim>::NDArray(const Shape &shape)
+NDArray<T, NDim>::NDArray(const Shape<NDim> &shape) : shape(shape), strides(Strides<NDim>()), delete_data(true)
 {
     this->shape_array(shape);
     this->data = new T[size];
-    this->delete_data = true;
 }
 
 template <typename T, uint8_t NDim>
-NDArray<T, NDim>::NDArray(const Shape &shape, T fill_value) : NDArray<T, NDim>(shape)
+NDArray<T, NDim>::NDArray(const Shape<NDim> &shape, T fill_value) : NDArray<T, NDim>(shape)
 {
-    for(uint64_t idx = 0;idx < this->size;idx++)
-    {
-        this->data[idx] = fill_value;
-    }    
+    this->fill(fill_value);
 }
 
 template <typename T, uint8_t NDim>
-NDArray<T, NDim>::NDArray(T *data, const Shape &shape, const Strides &strides,
+NDArray<T, NDim>::NDArray(T *data, const Shape<NDim> &shape, const Strides<NDim> &strides,
 uint64_t size, bool delete_data) : data(data), shape(shape), strides(strides),
 size(size), delete_data(delete_data)
-{
-}
+{}
 
 template <typename T, uint8_t NDim>
 NDArray<T, NDim>::NDArray(const NDArray<T, NDim> &ndarray) : NDArray<T, NDim>(new T[ndarray.size],
@@ -142,13 +137,13 @@ const T* NDArray<T, NDim>::get_data() const
 }
 
 template <typename T, uint8_t NDim>
-const Shape& NDArray<T, NDim>::get_shape() const
+const Shape<NDim>& NDArray<T, NDim>::get_shape() const
 {
     return this->shape;
 }
 
 template <typename T, uint8_t NDim>
-const Strides& NDArray<T, NDim>::get_strides() const
+const Strides<NDim>& NDArray<T, NDim>::get_strides() const
 {
     return this->strides;
 }
@@ -193,9 +188,9 @@ const NDArray<T, NDim> NDArray<T, NDim>::shallow_copy() const
 }
 
 template <typename T, uint8_t NDim> template <uint8_t NNDim> NDArray<T, NNDim>
-NDArray<T, NDim>::reshape(const Shape &shape) const
+NDArray<T, NDim>::reshape(const Shape<NDim> &shape) const
 {
-    NDArray<T, NNDim> ndarray(this->data, shape, Strides(NNDim), this->size, false);
+    NDArray<T, NNDim> ndarray(this->data, shape, Strides<NNDim>(), this->size, false);
 
     uint64_t stride = this->strides[NDim - 1];
     uint64_t size = shape[NDim - 1];
@@ -215,7 +210,7 @@ NDArray<T, NDim>::reshape(const Shape &shape) const
 }
 
 template <typename T, uint8_t NDim>
-uint64_t NDArray<T, NDim>::ravel_ndindex(const NDIndex &ndindex) const
+uint64_t NDArray<T, NDim>::ravel_ndindex(const NDIndex<NDim> &ndindex) const
 {
     uint64_t index = 0;
     uint8_t nb_dims = ndindex.size();
@@ -229,9 +224,9 @@ uint64_t NDArray<T, NDim>::ravel_ndindex(const NDIndex &ndindex) const
 }
 
 template <typename T, uint8_t NDim>
-NDIndex NDArray<T, NDim>::unravel_index(uint64_t index) const
+NDIndex<NDim> NDArray<T, NDim>::unravel_index(uint64_t index) const
 {
-    NDIndex ndindex(NDim);
+    NDIndex<NDim> ndindex;
 
     for(uint8_t dim = 0;dim < NDim;dim++)
     {
@@ -245,7 +240,7 @@ NDIndex NDArray<T, NDim>::unravel_index(uint64_t index) const
 template <typename T, uint8_t NDim> template <uint8_t NNDim>
 NDArray<T, NNDim> NDArray<T, NDim>::shrink_dims() const
 {
-    NDArray<T, NNDim> ndarray(this->data, Shape(NNDim), Strides(NNDim), this->size, false);
+    NDArray<T, NNDim> ndarray(this->data, Shape<NNDim>(), Strides<NNDim>(), this->size, false);
     uint8_t new_dim = 0;
 
     for(uint8_t dim = 0;dim < NDim;dim++)
@@ -306,7 +301,7 @@ uint64_t NDArray<T, NDim>::index_max() const
 }
 
 template <typename T, uint8_t NDim>
-NDIndex NDArray<T, NDim>::ndindex_max() const
+NDIndex<NDim> NDArray<T, NDim>::ndindex_max() const
 {
     return this->unravel_index(this->index_max());
 }
@@ -343,7 +338,7 @@ uint64_t NDArray<T, NDim>::index_min() const
 }
 
 template <typename T, uint8_t NDim>
-NDIndex NDArray<T, NDim>::ndindex_min() const
+NDIndex<NDim> NDArray<T, NDim>::ndindex_min() const
 {
     return this->unravel_index(this->index_min());
 }
@@ -377,19 +372,19 @@ const T& NDArray<T, NDim>::operator[](uint64_t index) const
 }
 
 template <typename T, uint8_t NDim>
-T& NDArray<T, NDim>::operator[](const NDIndex &ndindex)
+T& NDArray<T, NDim>::operator[](const NDIndex<NDim> &ndindex)
 {
     return this->data[this->ravel_ndindex(ndindex)];
 }
 
 template <typename T, uint8_t NDim>
-const T& NDArray<T, NDim>::operator[](const NDIndex &ndindex) const
+const T& NDArray<T, NDim>::operator[](const NDIndex<NDim> &ndindex) const
 {
     return this->data[this->ravel_ndindex(ndindex)];
 }
 
 template <typename T, uint8_t NDim>
-NDArray<T, NDim> NDArray<T, NDim>::operator[](const SliceRanges &slice_ranges)
+NDArray<T, NDim> NDArray<T, NDim>::operator[](const SliceRanges<NDim> &slice_ranges)
 {
     NDArray<T, NDim> ndarray = this->shallow_copy();
     ndarray.slice_array(slice_ranges);
@@ -689,12 +684,11 @@ void NDArray<T, NDim>::print(bool print_specs, uint8_t dim, uint64_t data_index,
 }
 
 template <typename T, uint8_t NDim>
-void NDArray<T, NDim>::shape_array(const Shape &shape)
+void NDArray<T, NDim>::shape_array(const Shape<NDim> &shape)
 {
     uint64_t stride = 1;
-    uint64_t size = shape[NDim - 1];
+    uint64_t size = (uint64_t)shape[NDim - 1];
 
-    this->strides = Strides(NDim);
     this->strides[NDim - 1] = stride;
     
     for(uint8_t dim = NDim - 1;dim-- > 0;)
@@ -704,12 +698,11 @@ void NDArray<T, NDim>::shape_array(const Shape &shape)
         size *= shape[dim];
     }
 
-    this->shape = Shape(shape);
     this->size = size;
 }
 
 template <typename T, uint8_t NDim>
-void NDArray<T, NDim>::slice_array(const SliceRanges &slice_ranges)
+void NDArray<T, NDim>::slice_array(const SliceRanges<NDim> &slice_ranges)
 {
     uint8_t nb_dims = slice_ranges.size() - 1;
     uint64_t stride = slice_ranges[nb_dims].step;
