@@ -1,6 +1,6 @@
 
-#ifndef NDARRAY_TYPENAMES_H
-#define NDARRAY_TYPENAMES_H
+#ifndef ndarray_types_H
+#define ndarray_types_H
 
 #include "laruen/utils/range.h"
 
