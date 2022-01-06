@@ -16,9 +16,15 @@ namespace laruen::utils
             Array();
             Array(T value);
             Array(const std::initializer_list<T> &init_list);
+            Array(const Array &array);
             Array& operator=(const std::initializer_list<T> &init_list);
 
             inline T& operator[](uint64_t index)
+            {
+                return this->data[index];
+            }
+
+            inline const T& operator[](uint64_t index) const
             {
                 return this->data[index];
             }
