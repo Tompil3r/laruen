@@ -2,6 +2,7 @@
 #ifndef RANGE_H
 #define RANGE_H
 
+#include <ostream>
 
 namespace laruen::utils
 {
@@ -15,5 +16,5 @@ namespace laruen::utils
     };
 };
 
-
+#include "laruen/utils/range.tpp"
 #endif
