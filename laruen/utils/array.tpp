@@ -49,6 +49,35 @@ Array<T, N>::Array(const Array<T, N> &array) : data(new T[N])
 }
 
 template <typename T, uint64_t N>
+Array<T, N>::Array(Array<T, N> &&array) : data(array.data)
+{
+    array.data = nullptr;
+}
+
+template <typename T, uint64_t N>
+Array<T, N>& Array<T, N>::operator=(const Array<T, N> &array)
+{
+    for(uint64_t idx = 0;idx < N;idx++)
+    {
+        this->data[idx] = array[idx];
+    }
+
+    return *this;
+}
+
+template <typename T, uint64_t N>
+Array<T, N>& Array<T, N>::operator=(Array<T, N> &&array)
+{
+    if(this == &array) {return this;}
+
+    delete[] this->data;
+    this->data = array.data;
+    array.data = nullptr;
+
+    return *this;
+}
+
+template <typename T, uint64_t N>
 Array<T, N>& Array<T, N>::operator=(const std::initializer_list<T> &init_list)
 {
     assert(init_list.size() == N);
