@@ -260,7 +260,7 @@ T NDArray<T, N>::max() const
 
     for(uint64_t idx = 1;idx < this->size;idx++)
     {
-        max = common::max<T, N>(max, this->data[idx]);
+        max = common::max(max, this->data[idx]);
     }
 
     return max;
@@ -297,7 +297,7 @@ T NDArray<T, N>::min() const
 
     for(uint64_t idx = 1;idx < this->size;idx++)
     {
-        min = common::min<T, N>(min, this->data[idx]);
+        min = common::min(min, this->data[idx]);
     }
 
     return min;
