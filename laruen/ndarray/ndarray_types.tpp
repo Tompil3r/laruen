@@ -3,52 +3,52 @@
 #include <ostream>
 
 // operator<< for Shape<N> is used as operator<< for NDIndex<N>
-template <uint8_t N>
-std::ostream& operator<<(std::ostream &strm, const Shape<N> &shape)
+std::ostream& operator<<(std::ostream &strm, const Shape &shape)
 {
+    uint8_t size = shape.size();
     strm << '(';
 
-    for(uint8_t idx = 0;idx < N - 1;idx++)
+    for(uint8_t idx = 0;idx < size - 1;idx++)
     {
         strm << shape[idx];
         strm << ", ";
     }
 
-    strm << shape[N - 1];
+    strm << shape[size - 1];
     strm << ')';
 
     return strm;
 }
 
-template <uint8_t N>
-std::ostream& operator<<(std::ostream &strm, const Strides<N> &strides)
+std::ostream& operator<<(std::ostream &strm, const Strides &strides)
 {
+    uint8_t size = strides.size();
     strm << '(';
 
-    for(uint8_t idx = 0;idx < N - 1;idx++)
+    for(uint8_t idx = 0;idx < size - 1;idx++)
     {
         strm << strides[idx];
         strm << ", ";
     }
 
-    strm << strides[N - 1];
+    strm << strides[size - 1];
     strm << ')';
 
     return strm;
 }
 
-template <uint8_t N>
-std::ostream& operator<<(std::ostream &strm, const SliceRanges<N> &slice_ranges)
+std::ostream& operator<<(std::ostream &strm, const SliceRanges &slice_ranges)
 {
+    uint8_t size = slice_ranges.size();
     strm << '(';
 
-    for(uint8_t idx = 0;idx < N - 1;idx++)
+    for(uint8_t idx = 0;idx < size - 1;idx++)
     {
         strm << slice_ranges[idx];
         strm << ", ";
     }
 
-    strm << slice_ranges[N - 1];
+    strm << slice_ranges[size - 1];
     strm << ')';
 
     return strm;
