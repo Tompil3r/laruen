@@ -121,5 +121,5 @@ namespace laruen::ndarray
     };
 };
 
-#include "laruen/ndarray/ndarray_core.tpp"
+#include "laruen/ndarray/ndarray.tpp"
 #endif
