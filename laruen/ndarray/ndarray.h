@@ -52,8 +52,6 @@ namespace laruen::ndarray {
 
             std::string specs_() const;
 
-            T& operator[](uint64_t index);
-            const T& operator[](uint64_t index) const;
             T& operator[](const NDIndex &ndindex);
             const T& operator[](const NDIndex &ndindex) const;
             NDArray operator[](const SliceRanges &slice_ranges);
@@ -118,6 +116,14 @@ namespace laruen::ndarray {
 
             inline void set_free_mem(bool free_mem) {
                 this->free_mem = free_mem;
+            }
+
+            inline T& operator[](uint64_t index) {
+                return this->data[index];
+            }
+
+            inline const T& operator[](uint64_t index) const {
+                return this->data[index];
             }
 
             inline friend NDArray operator+(T value, NDArray ndarray) {

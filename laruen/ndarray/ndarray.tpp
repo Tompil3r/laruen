@@ -283,16 +283,6 @@ std::string NDArray<T>::specs_() const {
 }
 
 template <typename T>
-T& NDArray<T>::operator[](uint64_t index) {
-    return this->data[index];
-}
-
-template <typename T>
-const T& NDArray<T>::operator[](uint64_t index) const {
-    return this->data[index];
-}
-
-template <typename T>
 T& NDArray<T>::operator[](const NDIndex &ndindex) {
     return this->data[this->ravel_ndindex(ndindex)];
 }
@@ -554,7 +544,7 @@ void NDArray<T>::print(bool print_specs, uint8_t dim, uint64_t data_index, bool 
     if(!dim) {
         std::cout << '\n';
         if(print_specs) {
-            std::cout << '\n' << this->get_specs();
+            std::cout << '\n' << this->specs_();
         }
     }
 
