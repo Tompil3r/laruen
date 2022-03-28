@@ -1,5 +1,6 @@
 **/.vscode
-**/Makefile
+**/*Makefile*
 *.o
 *.exe
 *test*
+**/base_array.*
