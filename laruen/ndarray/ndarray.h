@@ -19,7 +19,7 @@ namespace laruen::ndarray
         Strides strides;
         uint64_t size;
         uint8_t ndim;
-        bool delete_data;
+        bool free_mem;
 
         template <typename> friend class NDArray;
 
@@ -29,9 +29,9 @@ namespace laruen::ndarray
             ~NDArray();
             NDArray();
             NDArray(const Shape &shape);
-            NDArray(const Shape &shape, T fill_value);
+            NDArray(const Shape &shape, T fill);
             NDArray(T start, T end, T step);
-            NDArray(T *data, const Shape &shape, const Strides &strides, uint64_t size, uint8_t ndim, bool delete_data);
+            NDArray(T *data, const Shape &shape, const Strides &strides, uint64_t size, uint8_t ndim, bool free_mem);
             NDArray(const NDArray &ndarray);
             NDArray(NDArray &&ndarray);
 
@@ -39,17 +39,17 @@ namespace laruen::ndarray
             const Shape& get_shape() const;
             const Strides& get_strides() const;
             uint64_t get_size() const;
-            bool does_delete_data();
-            void set_delete_data(bool delete_date);
+            bool does_free_mem();
+            void set_free_mem(bool delete_date);
             NDArray shallow_copy();
             const NDArray shallow_copy() const;
-            void fill(T fill_value);
+            void fill(T fill);
 
-            NDArray reshape(const Shape &shape) const;
+            NDArray reshape(const Shape &shape);
             uint64_t ravel_ndindex(const NDIndex &ndindex) const;
             NDIndex unravel_index(uint64_t index) const;
             NDArray shrink_dims() const;
-            bool dims_equal(const NDArray &ndarray) const;
+            bool eq_dims(const NDArray &ndarray) const;
             T max() const;
             uint64_t index_max() const;
             NDIndex ndindex_max() const;
@@ -57,7 +57,7 @@ namespace laruen::ndarray
             uint64_t index_min() const;
             NDIndex ndindex_min() const;
 
-            std::string get_specs() const;
+            std::string specs_() const;
 
             T& operator[](uint64_t index);
             const T& operator[](uint64_t index) const;

@@ -20,7 +20,7 @@ NDArray<T>& NDArray<T>::operator=(const NDArray<T> &ndarray)
 
     if(this->size != ndarray.size)
     {
-        if(this->delete_data) { delete[] this->data; }
+        if(this->free_mem) { delete[] this->data; }
         this->data = new T[ndarray.size];
     }
 
@@ -28,7 +28,7 @@ NDArray<T>& NDArray<T>::operator=(const NDArray<T> &ndarray)
     this->strides = ndarray.strides;
     this->size = ndarray.size;
     this->ndim = ndarray.ndim;
-    this->delete_data = true;
+    this->free_mem = true;
 
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
@@ -43,13 +43,13 @@ NDArray<T>& NDArray<T>::operator=(NDArray<T> &&ndarray)
 {
     if(this == &ndarray) { return *this; }
 
-    if(this->delete_data) { delete[] this->data; }
+    if(this->free_mem) { delete[] this->data; }
     
     this->shape = std::move(ndarray.shape);
     this->strides = std::move(ndarray.strides);
     this->size = ndarray.size;
     this->ndim = ndarray.ndim;
-    this->delete_data = ndarray.delete_data;
+    this->free_mem = ndarray.free_mem;
     
     this->data = ndarray.data;
     ndarray.data = nullptr;
@@ -60,30 +60,30 @@ NDArray<T>& NDArray<T>::operator=(NDArray<T> &&ndarray)
 template <typename T>
 NDArray<T>::~NDArray()
 {
-    if(this->delete_data) { delete[] this->data; }
+    if(this->free_mem) { delete[] this->data; }
 }
 
 template <typename T>
-NDArray<T>::NDArray() : data(nullptr), size(0), ndim(0), delete_data(true)
+NDArray<T>::NDArray() : data(nullptr), size(0), ndim(0), free_mem(true)
 {}
 
 template <typename T>
-NDArray<T>::NDArray(const Shape &shape) : shape(shape), strides(Strides()), ndim(shape.size()), delete_data(true)
+NDArray<T>::NDArray(const Shape &shape) : shape(shape), strides(Strides()), ndim(shape.size()), free_mem(true)
 {
     this->shape_array(shape);
     this->data = new T[size];
 }
 
 template <typename T>
-NDArray<T>::NDArray(const Shape &shape, T fill_value) : NDArray<T>(shape)
+NDArray<T>::NDArray(const Shape &shape, T fill) : NDArray<T>(shape)
 {
-    this->fill(fill_value);
+    this->fill(fill);
 }
 
 template <typename T>
 NDArray<T>::NDArray(T *data, const Shape &shape, const Strides &strides,
-uint64_t size, uint8_t ndim, bool delete_data) : data(data), shape(shape), strides(strides),
-size(size), ndim(ndim), delete_data(delete_data)
+uint64_t size, uint8_t ndim, bool free_mem) : data(data), shape(shape), strides(strides),
+size(size), ndim(ndim), free_mem(free_mem)
 {}
 
 template <typename T>
@@ -111,7 +111,7 @@ NDArray<T>::NDArray(T start, T end, T step) : NDArray<T>({ceil_index((end - star
 
 template <typename T>
 NDArray<T>::NDArray(NDArray<T> &&ndarray) : data(ndarray.data), shape(std::move(ndarray.shape)),
-strides(std::move(ndarray.strides)), size(ndarray.size), ndim(ndarray.ndim), delete_data(ndarray.delete_data)
+strides(std::move(ndarray.strides)), size(ndarray.size), ndim(ndarray.ndim), free_mem(ndarray.free_mem)
 {
     ndarray.data = nullptr;
 }
@@ -141,15 +141,15 @@ uint64_t NDArray<T>::get_size() const
 }
 
 template <typename T>
-bool NDArray<T>::does_delete_data()
+bool NDArray<T>::does_free_mem()
 {
-    return this->delete_data;
+    return this->free_mem;
 }
 
 template <typename T>
-void NDArray<T>::set_delete_data(bool delete_date)
+void NDArray<T>::set_free_mem(bool delete_date)
 {
-    this->delete_data = delete_data;
+    this->free_mem = free_mem;
 }
 
 template <typename T>
@@ -159,11 +159,11 @@ NDArray<T> NDArray<T>::shallow_copy()
 }
 
 template <typename T>
-void NDArray<T>::fill(T fill_value)
+void NDArray<T>::fill(T fill)
 {
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
-        this->data[idx] = fill_value;
+        this->data[idx] = fill;
     }
 }
 
@@ -174,7 +174,7 @@ const NDArray<T> NDArray<T>::shallow_copy() const
 }
 
 template <typename T>
-NDArray<T> NDArray<T>::reshape(const Shape &shape) const
+NDArray<T> NDArray<T>::reshape(const Shape &shape)
 {
     uint8_t ndim = shape.size();
     NDArray<T> ndarray(this->data, shape, Strides(), this->size, ndim, false);
@@ -246,16 +246,16 @@ NDArray<T> NDArray<T>::shrink_dims() const
 }
 
 template <typename T>
-bool NDArray<T>::dims_equal(const NDArray<T> &ndarray) const
+bool NDArray<T>::eq_dims(const NDArray<T> &ndarray) const
 {
-    bool dims_equal = this->ndim == ndarray.ndim;
+    bool eq_dims = this->ndim == ndarray.ndim;
 
-    for(uint8_t dim = 0;dim < this->ndim && dims_equal;dim++)
+    for(uint8_t dim = 0;dim < this->ndim && eq_dims;dim++)
     {
-        dims_equal = (this->shape[dim] == ndarray.shape[dim]);
+        eq_dims = (this->shape[dim] == ndarray.shape[dim]);
     }
 
-    return dims_equal;
+    return eq_dims;
 }
 
 template <typename T>
@@ -333,7 +333,7 @@ NDIndex NDArray<T>::ndindex_min() const
 }
 
 template <typename T>
-std::string NDArray<T>::get_specs() const
+std::string NDArray<T>::specs_() const
 {
     std::ostringstream specs;
     uint8_t dim;
@@ -471,7 +471,7 @@ NDArray<T> NDArray<T>::operator/(T value) const
 template <typename T>
 void NDArray<T>::operator+=(const NDArray<T> &ndarray)
 {
-    assert(this->dims_equal(ndarray)); // needs broadcasting
+    assert(this->eq_dims(ndarray)); // needs broadcasting
 
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
@@ -482,7 +482,7 @@ void NDArray<T>::operator+=(const NDArray<T> &ndarray)
 template <typename T>
 void NDArray<T>::operator-=(const NDArray<T> &ndarray)
 {
-    assert(this->dims_equal(ndarray)); // needs broadcasting
+    assert(this->eq_dims(ndarray)); // needs broadcasting
 
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
@@ -493,7 +493,7 @@ void NDArray<T>::operator-=(const NDArray<T> &ndarray)
 template <typename T>
 void NDArray<T>::operator*=(const NDArray<T> &ndarray)
 {
-    assert(this->dims_equal(ndarray)); // needs broadcasting
+    assert(this->eq_dims(ndarray)); // needs broadcasting
 
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
@@ -504,7 +504,7 @@ void NDArray<T>::operator*=(const NDArray<T> &ndarray)
 template <typename T>
 void NDArray<T>::operator/=(const NDArray<T> &ndarray)
 {
-    assert(this->dims_equal(ndarray)); // needs broadcasting
+    assert(this->eq_dims(ndarray)); // needs broadcasting
 
     for(uint64_t idx = 0;idx < this->size;idx++)
     {
@@ -515,7 +515,7 @@ void NDArray<T>::operator/=(const NDArray<T> &ndarray)
 template <typename T>
 NDArray<T> NDArray<T>::operator+(const NDArray<T> &ndarray) const
 {
-    assert(this->dims_equal(ndarray));  // needs broadcasting
+    assert(this->eq_dims(ndarray));  // needs broadcasting
     NDArray<T> result_array(this->shape);
 
     for(uint64_t idx = 0;idx < this->size;idx++)
@@ -529,7 +529,7 @@ NDArray<T> NDArray<T>::operator+(const NDArray<T> &ndarray) const
 template <typename T>
 NDArray<T> NDArray<T>::operator-(const NDArray<T> &ndarray) const
 {
-    assert(this->dims_equal(ndarray)); // needs broadcasting
+    assert(this->eq_dims(ndarray)); // needs broadcasting
     NDArray<T> result_array(this->shape);
 
     for(uint64_t idx = 0;idx < this->size;idx++)
@@ -543,7 +543,7 @@ NDArray<T> NDArray<T>::operator-(const NDArray<T> &ndarray) const
 template <typename T>
 NDArray<T> NDArray<T>::operator*(const NDArray<T> &ndarray) const
 {
-    assert(this->dims_equal(ndarray)); // needs broadcasting
+    assert(this->eq_dims(ndarray)); // needs broadcasting
     NDArray<T> result_array(this->shape);
 
     for(uint64_t idx = 0;idx < this->size;idx++)
@@ -557,7 +557,7 @@ NDArray<T> NDArray<T>::operator*(const NDArray<T> &ndarray) const
 template <typename T>
 NDArray<T> NDArray<T>::operator/(const NDArray<T> &ndarray) const
 {
-    assert(this->dims_equal(ndarray)); // needs broadcasting
+    assert(this->eq_dims(ndarray)); // needs broadcasting
     NDArray<T> result_array(this->shape);
 
     for(uint64_t idx = 0;idx < this->size;idx++)
@@ -571,7 +571,7 @@ NDArray<T> NDArray<T>::operator/(const NDArray<T> &ndarray) const
 template <typename T> // allow comparison of different types
 bool NDArray<T>::operator==(const NDArray<T> &ndarray) const
 {
-    bool eq = this->dims_equal(ndarray);
+    bool eq = this->eq_dims(ndarray);
 
     for(uint64_t idx = 0;idx < this->size && eq;idx++)
     {
@@ -590,7 +590,7 @@ bool NDArray<T>::operator!=(const NDArray<T> &ndarray) const
 template <typename T> // allow comparison of different types
 bool NDArray<T>::operator>=(const NDArray<T> &ndarray) const
 {
-    bool ge = this->dims_equal(ndarray);
+    bool ge = this->eq_dims(ndarray);
 
     for(uint64_t idx = 0;idx < this->size && ge;idx++)
     {
@@ -603,7 +603,7 @@ bool NDArray<T>::operator>=(const NDArray<T> &ndarray) const
 template <typename T> // allow comparison of different types
 bool NDArray<T>::operator<=(const NDArray<T> &ndarray) const
 {
-    bool le = this->dims_equal(ndarray);
+    bool le = this->eq_dims(ndarray);
 
     for(uint64_t idx = 0;idx < this->size && le;idx++)
     {
