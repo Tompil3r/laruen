@@ -95,30 +95,29 @@ namespace laruen::ndarray
             // bool output_broadcastable(const NDArray &ndarray) const;
         
         public:
-            inline void print(bool print_specs=false) const
-            {
-                this->print(print_specs, 0);
-            }
+            inline void print(bool print_specs=false) const { this->print(print_specs, 0); }
 
-            inline friend NDArray operator+(T value, NDArray ndarray)
-            {
-                return ndarray + value;
-            }
+            inline const T* get_data() const { return this->data; }
 
-            inline friend NDArray operator-(T value, NDArray ndarray)
-            {
-                return ndarray + value;
-            }
+            inline const Shape& get_shape() const { return this->shape; }
 
-            inline friend NDArray operator*(T value, NDArray ndarray)
-            {
-                return ndarray + value;
-            }
+            inline const Strides& get_strides() const { return this->strides; }
 
-            inline friend NDArray operator/(T value, NDArray ndarray)
-            {
-                return ndarray + value;
-            }
+            inline uint64_t get_size() const { return this->size; }
+
+            inline uint8_t get_ndim() const { return this->ndim; }
+
+            inline bool does_free_mem() const { return this->free_mem; }
+
+            inline void set_free_mem(bool free_mem) { this->free_mem = free_mem; }
+
+            inline friend NDArray operator+(T value, NDArray ndarray) { return ndarray + value; }
+
+            inline friend NDArray operator-(T value, NDArray ndarray) { return ndarray + value; }
+
+            inline friend NDArray operator*(T value, NDArray ndarray) { return ndarray + value; }
+
+            inline friend NDArray operator/(T value, NDArray ndarray) { return ndarray + value; }
     };
 };
 

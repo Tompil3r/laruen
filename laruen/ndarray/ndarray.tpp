@@ -117,42 +117,6 @@ strides(std::move(ndarray.strides)), size(ndarray.size), ndim(ndarray.ndim), fre
 }
 
 template <typename T>
-const T* NDArray<T>::get_data() const
-{
-    return this->data;
-}
-
-template <typename T>
-const Shape& NDArray<T>::get_shape() const
-{
-    return this->shape;
-}
-
-template <typename T>
-const Strides& NDArray<T>::get_strides() const
-{
-    return this->strides;
-}
-
-template <typename T>
-uint64_t NDArray<T>::get_size() const
-{
-    return this->size;
-}
-
-template <typename T>
-bool NDArray<T>::does_free_mem()
-{
-    return this->free_mem;
-}
-
-template <typename T>
-void NDArray<T>::set_free_mem(bool delete_date)
-{
-    this->free_mem = free_mem;
-}
-
-template <typename T>
 NDArray<T> NDArray<T>::shallow_copy()
 {
     return NDArray<T>(this->data, this->shape, this->strides, this->size, this->ndim, false);
