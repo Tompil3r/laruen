@@ -628,7 +628,7 @@ bool NDArray<T>::operator<(const NDArray<T> &ndarray) const
 template <typename T>
 void NDArray<T>::print(bool print_specs, uint8_t dim, uint64_t data_index, bool not_first, bool not_last) const
 {
-    uint32_t dim_idx;
+    uint64_t dim_idx;
     uint64_t stride;
 
     if(not_first) std::cout << std::string(dim, ' '); 

@@ -2,7 +2,7 @@
 #include "laruen/ndarray/ndarray_types.h"
 #include <ostream>
 
-// operator<< for Shape<N> is used as operator<< for NDIndex<N>
+// operator<< for Shape is used as operator<< for NDIndex and Strides 
 std::ostream& operator<<(std::ostream &strm, const Shape &shape)
 {
     uint8_t size = shape.size();
@@ -15,23 +15,6 @@ std::ostream& operator<<(std::ostream &strm, const Shape &shape)
     }
 
     strm << shape[size - 1];
-    strm << ')';
-
-    return strm;
-}
-
-std::ostream& operator<<(std::ostream &strm, const Strides &strides)
-{
-    uint8_t size = strides.size();
-    strm << '(';
-
-    for(uint8_t idx = 0;idx < size - 1;idx++)
-    {
-        strm << strides[idx];
-        strm << ", ";
-    }
-
-    strm << strides[size - 1];
     strm << ')';
 
     return strm;
