@@ -33,13 +33,7 @@ namespace laruen::ndarray {
             NDArray(T *data, const Shape &shape, const Strides &strides, uint64_t size, uint8_t ndim, bool free_mem);
             NDArray(const NDArray &ndarray);
             NDArray(NDArray &&ndarray);
-
-            const T* get_data() const;
-            const Shape& get_shape() const;
-            const Strides& get_strides() const;
-            uint64_t get_size() const;
-            bool does_free_mem();
-            void set_free_mem(bool delete_date);
+;
             NDArray shallow_copy();
             const NDArray shallow_copy() const;
             void fill(T fill);
@@ -94,29 +88,53 @@ namespace laruen::ndarray {
             // bool output_broadcastable(const NDArray &ndarray) const;
         
         public:
-            inline void print(bool print_specs=false) const { this->print(print_specs, 0); }
+            inline void print(bool print_specs=false) const {
+                this->print(print_specs, 0);
+            }
 
-            inline const T* get_data() const { return this->data; }
+            inline const T* get_data() const {
+                return this->data;
+            }
 
-            inline const Shape& get_shape() const { return this->shape; }
+            inline const Shape& get_shape() const {
+                return this->shape;
+            }
 
-            inline const Strides& get_strides() const { return this->strides; }
+            inline const Strides& get_strides() const {
+                return this->strides;
+            }
 
-            inline uint64_t get_size() const { return this->size; }
+            inline uint64_t get_size() const {
+                return this->size;
+            }
 
-            inline uint8_t get_ndim() const { return this->ndim; }
+            inline uint8_t get_ndim() const {
+                return this->ndim;
+            }
 
-            inline bool does_free_mem() const { return this->free_mem; }
+            inline bool does_free_mem() const {
+                return this->free_mem;
+            }
 
-            inline void set_free_mem(bool free_mem) { this->free_mem = free_mem; }
+            inline void set_free_mem(bool free_mem) {
+                this->free_mem = free_mem;
+            }
 
-            inline friend NDArray operator+(T value, NDArray ndarray) { return ndarray + value; }
+            inline friend NDArray operator+(T value, NDArray ndarray) {
+                return ndarray + value;
+            }
 
-            inline friend NDArray operator-(T value, NDArray ndarray) { return ndarray + value; }
+            inline friend NDArray operator-(T value, NDArray ndarray) {
+                return ndarray + value;
+            }
 
-            inline friend NDArray operator*(T value, NDArray ndarray) { return ndarray + value; }
+            inline friend NDArray operator*(T value, NDArray ndarray) {
+                return ndarray + value;
+            }
 
-            inline friend NDArray operator/(T value, NDArray ndarray) { return ndarray + value; }
+            inline friend NDArray operator/(T value, NDArray ndarray) {
+                return ndarray + value;
+            }
     };
 };
 

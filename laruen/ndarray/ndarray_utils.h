@@ -7,8 +7,8 @@
 
 
 namespace laruen::ndarray::utils {
-    inline uint32_t ceil_index(float64_t index) {
-        return (uint32_t)index + ((uint32_t)index < index);
+    inline uint64_t ceil_index(float64_t index) {
+        return (uint64_t)index + ((uint64_t)index < index);
     }
 }
 

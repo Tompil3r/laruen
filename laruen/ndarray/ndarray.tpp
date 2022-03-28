@@ -141,7 +141,7 @@ NDArray<T> NDArray<T>::reshape(const Shape &shape) {
 
     ndarray.strides[ndim - 1] = stride;
 
-    for(uint8_t dim = ndim - 1;dim-- > 0) {
+    for(uint8_t dim = ndim - 1;dim-- > 0;) {
         stride *= shape[dim + 1];
         ndarray.strides[dim] = stride;
         size *= shape[dim];
@@ -571,7 +571,7 @@ void NDArray<T>::shape_array(const Shape &shape) {
 
     this->strides[this->ndim - 1] = stride;
     
-    for(uint8_t dim = this->ndim - 1;dim-- > 0) {
+    for(uint8_t dim = this->ndim - 1;dim-- > 0;) {
         stride *= shape[dim + 1];
         this->strides[dim] = stride;
         size *= shape[dim];
@@ -582,7 +582,7 @@ void NDArray<T>::shape_array(const Shape &shape) {
 
 template <typename T>
 void NDArray<T>::slice_array(const SliceRanges &slice_ranges) {
-    
+
     uint8_t ndim = slice_ranges.size() - 1;
     uint64_t stride = slice_ranges[ndim].step;
     uint64_t data_start = slice_ranges[ndim].start * this->strides[ndim];
