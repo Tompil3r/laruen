@@ -12,7 +12,7 @@
 
 namespace laruen::ndarray
 {
-    template <typename T> class NDArray
+    template <typename T = float64_t> class NDArray
     {
         T *data;
         Shape shape;
