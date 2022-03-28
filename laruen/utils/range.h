@@ -4,10 +4,9 @@
 
 #include <ostream>
 
-namespace laruen::utils
-{
-    template <typename T> struct Range
-    {
+namespace laruen::utils {
+    
+    template <typename T> struct Range {
         T start;
         T end;
         T step;

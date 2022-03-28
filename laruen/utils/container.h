@@ -5,10 +5,8 @@
 #include <cstdint>
 #include <initializer_list>
 
-namespace laruen::utils
-{
-    template <typename T, typename U, U N> class Container
-    {
+namespace laruen::utils {
+    template <typename T, typename U, U N> class Container {
         T *data;
 
         public:
@@ -22,18 +20,15 @@ namespace laruen::utils
             Container& operator=(Container &&container);
             Container& operator=(const std::initializer_list<T> &init_list);
 
-            inline T& operator[](U index)
-            {
+            inline T& operator[](U index) {
                 return this->data[index];
             }
 
-            inline const T& operator[](U index) const
-            {
+            inline const T& operator[](U index) const {
                 return this->data[index];
             }
 
-            inline constexpr U size() const
-            {
+            inline constexpr U size() const {
                 return N;
             }
     };

@@ -3,13 +3,11 @@
 #include <ostream>
 
 // operator<< for Shape is used as operator<< for NDIndex and Strides 
-std::ostream& operator<<(std::ostream &strm, const Shape &shape)
-{
+std::ostream& operator<<(std::ostream &strm, const Shape &shape) {
     uint8_t size = shape.size();
     strm << '(';
 
-    for(uint8_t idx = 0;idx < size - 1;idx++)
-    {
+    for(uint8_t idx = 0;idx < size - 1;idx++) {
         strm << shape[idx];
         strm << ", ";
     }
@@ -20,13 +18,11 @@ std::ostream& operator<<(std::ostream &strm, const Shape &shape)
     return strm;
 }
 
-std::ostream& operator<<(std::ostream &strm, const SliceRanges &slice_ranges)
-{
+std::ostream& operator<<(std::ostream &strm, const SliceRanges &slice_ranges) {
     uint8_t size = slice_ranges.size();
     strm << '(';
 
-    for(uint8_t idx = 0;idx < size - 1;idx++)
-    {
+    for(uint8_t idx = 0;idx < size - 1;idx++) {
         strm << slice_ranges[idx];
         strm << ", ";
     }

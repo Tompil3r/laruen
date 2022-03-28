@@ -10,10 +10,9 @@
 #include <string>
 #include <sstream>
 
-namespace laruen::ndarray
-{
-    template <typename T = float64_t> class NDArray
-    {
+namespace laruen::ndarray {
+    
+    template <typename T = float64_t> class NDArray {
         T *data;
         Shape shape;
         Strides strides;
