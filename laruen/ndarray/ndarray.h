@@ -33,7 +33,7 @@ namespace laruen::ndarray {
             NDArray(T *data, const Shape &shape, const Strides &strides, uint64_t size, uint8_t ndim, bool free_mem);
             NDArray(const NDArray &ndarray);
             NDArray(NDArray &&ndarray);
-;
+
             NDArray shallow_copy();
             const NDArray shallow_copy() const;
             void fill(T fill);
@@ -82,8 +82,6 @@ namespace laruen::ndarray {
             void print(bool print_specs, uint8_t dim, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
             void shape_array(const Shape &shape);
             void slice_array(const SliceRanges &slice_ranges);
-            // Shape broadcast_shapes(const NDArray &ndarray) const;
-            // bool output_broadcastable(const NDArray &ndarray) const;
         
         public:
             inline void print(bool print_specs=false) const {
