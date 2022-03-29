@@ -50,7 +50,7 @@ namespace laruen::ndarray {
             uint64_t index_min() const;
             NDIndex ndindex_min() const;
 
-            std::string specs_() const;
+            std::string info() const;
 
             T& operator[](const NDIndex &ndindex);
             const T& operator[](const NDIndex &ndindex) const;

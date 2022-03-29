@@ -268,7 +268,7 @@ NDIndex NDArray<T>::ndindex_min() const {
 }
 
 template <typename T>
-std::string NDArray<T>::specs_() const {
+std::string NDArray<T>::info() const {
     std::ostringstream specs;
     uint8_t dim;
 
