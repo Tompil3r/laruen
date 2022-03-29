@@ -3,7 +3,6 @@
 #define ndarray_types_H
 
 #include "laruen/utils/range.h"
-#include "laruen/utils/container.h"
 #include <cstdint>
 #include <vector>
 
