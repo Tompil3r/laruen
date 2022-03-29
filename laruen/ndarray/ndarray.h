@@ -80,13 +80,15 @@ namespace laruen::ndarray {
             bool operator<(const NDArray &ndarray) const;
 
         private:
-            void print(bool print_specs, uint8_t dim, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
+            void str_(std::string &str, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
             void shape_array(const Shape &shape);
             void slice_array(const SliceRanges &slice_ranges);
         
         public:
-            inline void print(bool print_specs=false) const {
-                this->print(print_specs, 0);
+            inline std::string str() const {
+                std::string str;
+                this->str_(str);
+                return str;
             }
 
             inline const T* get_data() const {

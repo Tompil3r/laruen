@@ -513,56 +513,6 @@ bool NDArray<T>::operator<(const NDArray<T> &ndarray) const {
 }
 
 template <typename T>
-void NDArray<T>::print(bool print_specs, uint8_t dim, uint64_t data_index, bool not_first, bool not_last) const {
-    uint64_t dim_idx;
-    uint64_t stride;
-
-    if(not_first) {
-        std::cout << std::string(dim, ' ');
-    }
-    std::cout << '[';
-
-    if(dim == this->ndim - 1) {
-        stride = this->strides[dim];
-
-        for(dim_idx = 0;dim_idx < this->shape[dim] - 1;dim_idx++) {
-            std::cout << this->data[data_index] << ',' << ' ';
-            data_index += stride;
-        }
-
-        std::cout << this->data[data_index] << ']';
-        if(not_last) {
-            std::cout << '\n';
-        }
-        
-        return;
-    }
-
-    this->print(print_specs, dim + 1, data_index, false, true);
-    data_index += this->strides[dim];            
-
-    for(dim_idx = 1;dim_idx < this->shape[dim] - 1;dim_idx++) {
-        this->print(print_specs, dim + 1, data_index, true, true);
-        data_index += this->strides[dim];
-    }
-
-    this->print(print_specs, dim + 1, data_index, true, false);
-
-    std::cout << ']';
-    
-    if(!dim) {
-        std::cout << '\n';
-        if(print_specs) {
-            std::cout << '\n' << this->specs_();
-        }
-    }
-
-    else if(not_last) {
-        std::cout << std::string(this->ndim - dim, '\n');
-    }
-}
-
-template <typename T>
 void NDArray<T>::shape_array(const Shape &shape) {
     uint64_t stride = 1;
     uint64_t size = shape[this->ndim - 1];
@@ -599,4 +549,55 @@ void NDArray<T>::slice_array(const SliceRanges &slice_ranges) {
     }
 
     this->data += data_start;
+}
+
+template <typename T>
+void NDArray<T>::str_(std::string &str, uint8_t dim, uint64_t data_index, bool not_first, bool not_last) const {
+    uint64_t dim_idx;
+    uint64_t stride;
+
+    if(not_first) {
+        str += std::string(dim, ' ');
+    }
+
+    str.push_back('[');
+
+    if(dim == this->ndim - 1) {
+        stride = this->strides[dim];
+
+        for(dim_idx = 0;dim_idx < this->shape[dim] - 1;dim_idx++) {
+            str += std::to_string(this->data[data_index]);
+            str.push_back(',');
+            str.push_back(' ');
+            data_index += stride;
+        }
+
+        str += std::to_string(this->data[data_index]);
+        str.push_back(']');
+        if(not_last) {
+            str.push_back('\n');
+        }
+        
+        return;
+    }
+
+    this->str_(str, dim + 1, data_index, false, true);
+    data_index += this->strides[dim];            
+
+    for(dim_idx = 1;dim_idx < this->shape[dim] - 1;dim_idx++) {
+        this->str_(str, dim + 1, data_index, true, true);
+        data_index += this->strides[dim];
+    }
+
+    this->str_(str, dim + 1, data_index, true, false);
+
+    str.push_back(']');
+    
+    if(!dim) {
+        str.push_back('\n');
+    }
+
+    else if(not_last) {
+        str += std::string(this->ndim - dim, '\n');
+    }
 }
