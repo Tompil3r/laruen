@@ -293,6 +293,13 @@ const T& NDArray<T>::operator[](const NDIndex &ndindex) const {
 }
 
 template <typename T>
+const NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges) const {
+    NDArray<T> ndarray = this->shallow_copy();
+    ndarray.slice_array(slice_ranges);
+    return ndarray;
+}
+
+template <typename T>
 NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges) {
     NDArray<T> ndarray = this->shallow_copy();
     ndarray.slice_array(slice_ranges);

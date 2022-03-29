@@ -55,6 +55,7 @@ namespace laruen::ndarray {
             T& operator[](const NDIndex &ndindex);
             const T& operator[](const NDIndex &ndindex) const;
             NDArray operator[](const SliceRanges &slice_ranges);
+            const NDArray operator[](const SliceRanges &slice_ranges) const;
             void operator+=(T value);
             void operator-=(T value);
             void operator*=(T value);
