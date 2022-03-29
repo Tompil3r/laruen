@@ -11,6 +11,7 @@
 #include <utility>
 #include <stdexcept>
 
+using namespace laruen;
 using namespace laruen::ndarray;
 using namespace laruen::ndarray::utils;
 using namespace laruen::math;
