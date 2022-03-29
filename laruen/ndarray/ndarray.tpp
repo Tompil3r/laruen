@@ -309,31 +309,39 @@ NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges) {
 */
 
 template <typename T>
-void NDArray<T>::operator+=(T value) {
+NDArray<T>& NDArray<T>::operator+=(T value) {
     for(uint64_t i = 0;i < this->size;i++) {
         this->data[i] += value;
     }
+
+    return *this;
 }
 
 template <typename T>
-void NDArray<T>::operator-=(T value) {
+NDArray<T>& NDArray<T>::operator-=(T value) {
     for(uint64_t i = 0;i < this->size;i++) {
         this->data[i] -= value;
     }
+
+    return *this;
 }
 
 template <typename T>
-void NDArray<T>::operator*=(T value) {
+NDArray<T>& NDArray<T>::operator*=(T value) {
     for(uint64_t i = 0;i < this->size;i++) {
         this->data[i] *= value;
     }
+    
+    return *this;
 }
 
 template <typename T>
-void NDArray<T>::operator/=(T value) {
+NDArray<T>& NDArray<T>::operator/=(T value) {
     for(uint64_t i = 0;i < this->size;i++) {
         this->data[i] /= value;
     }
+
+    return *this;
 }
 
 template <typename T>
@@ -381,39 +389,47 @@ NDArray<T> NDArray<T>::operator/(T value) const {
 }
 
 template <typename T>
-void NDArray<T>::operator+=(const NDArray<T> &ndarray) {
+NDArray<T>& NDArray<T>::operator+=(const NDArray<T> &ndarray) {
     assert(this->eq_dims(ndarray)); // needs broadcasting
 
     for(uint64_t i = 0;i < this->size;i++) {
         this->data[i] += ndarray.data[i];
     }
+
+    return *this;
 }
 
 template <typename T>
-void NDArray<T>::operator-=(const NDArray<T> &ndarray) {
+NDArray<T>& NDArray<T>::operator-=(const NDArray<T> &ndarray) {
     assert(this->eq_dims(ndarray)); // needs broadcasting
 
     for(uint64_t i = 0;i < this->size;i++) {
         this->data[i] -= ndarray.data[i];
     }
+
+    return *this;
 }
 
 template <typename T>
-void NDArray<T>::operator*=(const NDArray<T> &ndarray) {
+NDArray<T>& NDArray<T>::operator*=(const NDArray<T> &ndarray) {
     assert(this->eq_dims(ndarray)); // needs broadcasting
 
     for(uint64_t i = 0;i < this->size;i++) {
         this->data[i] *= ndarray.data[i];
     }
+
+    return *this;
 }
 
 template <typename T>
-void NDArray<T>::operator/=(const NDArray<T> &ndarray) {
+NDArray<T>& NDArray<T>::operator/=(const NDArray<T> &ndarray) {
     assert(this->eq_dims(ndarray)); // needs broadcasting
 
     for(uint64_t i = 0;i < this->size;i++) {
         this->data[i] /= ndarray.data[i];
     }
+
+    return *this;
 }
 
 template <typename T>
