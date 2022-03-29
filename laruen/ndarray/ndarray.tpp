@@ -32,8 +32,8 @@ NDArray<T>& NDArray<T>::operator=(const NDArray<T> &ndarray) {
     this->ndim = ndarray.ndim;
     this->free_mem = true;
 
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        this->data[idx] = ndarray.data[idx];
+    for(uint64_t i = 0;i < this->size;i++) {
+        this->data[i] = ndarray.data[i];
     }
 
     return *this;
@@ -91,19 +91,19 @@ template <typename T>
 NDArray<T>::NDArray(const NDArray<T> &ndarray) : NDArray<T>(new T[ndarray.size],
 ndarray.get_shape(), ndarray.get_strides(), ndarray.get_size(), ndim, true)
 {
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        this->data[idx] = ndarray.data[idx];
+    for(uint64_t i = 0;i < this->size;i++) {
+        this->data[i] = ndarray.data[i];
     }
 }
 
 template <typename T>
 NDArray<T>::NDArray(T start, T end, T step) : NDArray<T>({ceil_index((end - start) / step)}) {
-    uint64_t idx = 0;
+    uint64_t i = 0;
 
     while(start < end) {
-        this->data[idx] = start;
+        this->data[i] = start;
         start += step;
-        idx++;
+        i++;
     }
 }
 
@@ -121,8 +121,8 @@ NDArray<T> NDArray<T>::shallow_copy() {
 
 template <typename T>
 void NDArray<T>::fill(T fill) {
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        this->data[idx] = fill;
+    for(uint64_t i = 0;i < this->size;i++) {
+        this->data[i] = fill;
     }
 }
 
@@ -209,8 +209,8 @@ template <typename T>
 T NDArray<T>::max() const {
     uint64_t max = *this->data;
 
-    for(uint64_t idx = 1;idx < this->size;idx++) {
-        max = common::max(max, this->data[idx]);
+    for(uint64_t i = 1;i < this->size;i++) {
+        max = common::max(max, this->data[i]);
     }
 
     return max;
@@ -221,10 +221,10 @@ uint64_t NDArray<T>::index_max() const {
     uint64_t max = *this->data;
     uint64_t index_max = 0;
 
-    for(uint64_t idx = 1;idx < this->size;idx++) {
-        if(this->data[idx] > max) {
-            max = this->data[idx];
-            index_max = idx;
+    for(uint64_t i = 1;i < this->size;i++) {
+        if(this->data[i] > max) {
+            max = this->data[i];
+            index_max = i;
         }
     }
 
@@ -240,8 +240,8 @@ template <typename T>
 T NDArray<T>::min() const {
     uint64_t min = *this->data;
 
-    for(uint64_t idx = 1;idx < this->size;idx++) {
-        min = common::min(min, this->data[idx]);
+    for(uint64_t i = 1;i < this->size;i++) {
+        min = common::min(min, this->data[i]);
     }
 
     return min;
@@ -252,10 +252,10 @@ uint64_t NDArray<T>::index_min() const {
     uint64_t min = *this->data;
     uint64_t index_min = 0;
 
-    for(uint64_t idx = 1;idx < this->size;idx++) {
-        if(this->data[idx] < min) {
-            min = this->data[idx];
-            index_min = idx;
+    for(uint64_t i = 1;i < this->size;i++) {
+        if(this->data[i] < min) {
+            min = this->data[i];
+            index_min = i;
         }
     }
 
@@ -301,29 +301,29 @@ NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges) {
 
 template <typename T>
 void NDArray<T>::operator+=(T value) {
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        this->data[idx] += value;
+    for(uint64_t i = 0;i < this->size;i++) {
+        this->data[i] += value;
     }
 }
 
 template <typename T>
 void NDArray<T>::operator-=(T value) {
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        this->data[idx] -= value;
+    for(uint64_t i = 0;i < this->size;i++) {
+        this->data[i] -= value;
     }
 }
 
 template <typename T>
 void NDArray<T>::operator*=(T value) {
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        this->data[idx] *= value;
+    for(uint64_t i = 0;i < this->size;i++) {
+        this->data[i] *= value;
     }
 }
 
 template <typename T>
 void NDArray<T>::operator/=(T value) {
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        this->data[idx] /= value;
+    for(uint64_t i = 0;i < this->size;i++) {
+        this->data[i] /= value;
     }
 }
 
@@ -331,8 +331,8 @@ template <typename T>
 NDArray<T> NDArray<T>::operator+(T value) const {
     NDArray<T> ndarray(new T[this->size], this->shape, this->strides, this->size, this->ndim, true);
 
-    for(uint64_t idx = 0;idx < ndarray.size;idx++) {
-        ndarray.data[idx] = this->data[idx] + value;
+    for(uint64_t i = 0;i < ndarray.size;i++) {
+        ndarray.data[i] = this->data[i] + value;
     }
 
     return ndarray;
@@ -342,8 +342,8 @@ template <typename T>
 NDArray<T> NDArray<T>::operator-(T value) const {
     NDArray<T> ndarray(new T[this->size], this->shape, this->strides, this->size, true);
 
-    for(uint64_t idx = 0;idx < ndarray.size;idx++) {
-        ndarray.data[idx] = this->data[idx] - value;
+    for(uint64_t i = 0;i < ndarray.size;i++) {
+        ndarray.data[i] = this->data[i] - value;
     }
 
     return ndarray;
@@ -353,8 +353,8 @@ template <typename T>
 NDArray<T> NDArray<T>::operator*(T value) const {
     NDArray<T> ndarray(new T[this->size], this->shape, this->strides, this->size, true);
 
-    for(uint64_t idx = 0;idx < ndarray.size;idx++) {
-        ndarray.data[idx] = this->data[idx] * value;
+    for(uint64_t i = 0;i < ndarray.size;i++) {
+        ndarray.data[i] = this->data[i] * value;
     }
 
     return ndarray;
@@ -364,8 +364,8 @@ template <typename T>
 NDArray<T> NDArray<T>::operator/(T value) const {
     NDArray<T> ndarray(new T[this->size], this->shape, this->strides, this->size, true);
 
-    for(uint64_t idx = 0;idx < ndarray.size;idx++) {
-        ndarray.data[idx] = this->data[idx] / value;
+    for(uint64_t i = 0;i < ndarray.size;i++) {
+        ndarray.data[i] = this->data[i] / value;
     }
 
     return ndarray;
@@ -375,8 +375,8 @@ template <typename T>
 void NDArray<T>::operator+=(const NDArray<T> &ndarray) {
     assert(this->eq_dims(ndarray)); // needs broadcasting
 
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        this->data[idx] += ndarray.data[idx];
+    for(uint64_t i = 0;i < this->size;i++) {
+        this->data[i] += ndarray.data[i];
     }
 }
 
@@ -384,8 +384,8 @@ template <typename T>
 void NDArray<T>::operator-=(const NDArray<T> &ndarray) {
     assert(this->eq_dims(ndarray)); // needs broadcasting
 
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        this->data[idx] -= ndarray.data[idx];
+    for(uint64_t i = 0;i < this->size;i++) {
+        this->data[i] -= ndarray.data[i];
     }
 }
 
@@ -393,8 +393,8 @@ template <typename T>
 void NDArray<T>::operator*=(const NDArray<T> &ndarray) {
     assert(this->eq_dims(ndarray)); // needs broadcasting
 
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        this->data[idx] *= ndarray.data[idx];
+    for(uint64_t i = 0;i < this->size;i++) {
+        this->data[i] *= ndarray.data[i];
     }
 }
 
@@ -402,8 +402,8 @@ template <typename T>
 void NDArray<T>::operator/=(const NDArray<T> &ndarray) {
     assert(this->eq_dims(ndarray)); // needs broadcasting
 
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        this->data[idx] /= ndarray.data[idx];
+    for(uint64_t i = 0;i < this->size;i++) {
+        this->data[i] /= ndarray.data[i];
     }
 }
 
@@ -412,8 +412,8 @@ NDArray<T> NDArray<T>::operator+(const NDArray<T> &ndarray) const {
     assert(this->eq_dims(ndarray));  // needs broadcasting
     NDArray<T> result_array(this->shape);
 
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        result_array.data[idx] = this->data[idx] + ndarray.data[idx];
+    for(uint64_t i = 0;i < this->size;i++) {
+        result_array.data[i] = this->data[i] + ndarray.data[i];
     }
 
     return result_array;
@@ -424,8 +424,8 @@ NDArray<T> NDArray<T>::operator-(const NDArray<T> &ndarray) const {
     assert(this->eq_dims(ndarray)); // needs broadcasting
     NDArray<T> result_array(this->shape);
 
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        result_array.data[idx] = this->data[idx] - ndarray.data[idx];
+    for(uint64_t i = 0;i < this->size;i++) {
+        result_array.data[i] = this->data[i] - ndarray.data[i];
     }
 
     return result_array;
@@ -436,8 +436,8 @@ NDArray<T> NDArray<T>::operator*(const NDArray<T> &ndarray) const {
     assert(this->eq_dims(ndarray)); // needs broadcasting
     NDArray<T> result_array(this->shape);
 
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        result_array.data[idx] = this->data[idx] * ndarray.data[idx];
+    for(uint64_t i = 0;i < this->size;i++) {
+        result_array.data[i] = this->data[i] * ndarray.data[i];
     }
 
     return result_array;
@@ -448,8 +448,8 @@ NDArray<T> NDArray<T>::operator/(const NDArray<T> &ndarray) const {
     assert(this->eq_dims(ndarray)); // needs broadcasting
     NDArray<T> result_array(this->shape);
 
-    for(uint64_t idx = 0;idx < this->size;idx++) {
-        result_array.data[idx] = this->data[idx] / ndarray.data[idx];
+    for(uint64_t i = 0;i < this->size;i++) {
+        result_array.data[i] = this->data[i] / ndarray.data[i];
     }
 
     return result_array;
@@ -459,8 +459,8 @@ template <typename T> // allow comparison of different types
 bool NDArray<T>::operator==(const NDArray<T> &ndarray) const {
     bool eq = this->eq_dims(ndarray);
 
-    for(uint64_t idx = 0;idx < this->size && eq;idx++) {
-        eq = (this->data[idx] == ndarray.data[idx]);
+    for(uint64_t i = 0;i < this->size && eq;i++) {
+        eq = (this->data[i] == ndarray.data[i]);
     }
 
     return eq;
@@ -475,8 +475,8 @@ template <typename T> // allow comparison of different types
 bool NDArray<T>::operator>=(const NDArray<T> &ndarray) const {
     bool ge = this->eq_dims(ndarray);
 
-    for(uint64_t idx = 0;idx < this->size && ge;idx++) {
-        ge = (this->data[idx] >= ndarray.data[idx]);
+    for(uint64_t i = 0;i < this->size && ge;i++) {
+        ge = (this->data[i] >= ndarray.data[i]);
     }
 
     return ge;
@@ -486,8 +486,8 @@ template <typename T> // allow comparison of different types
 bool NDArray<T>::operator<=(const NDArray<T> &ndarray) const {
     bool le = this->eq_dims(ndarray);
 
-    for(uint64_t idx = 0;idx < this->size && le;idx++) {
-        le = (this->data[idx] <= ndarray.data[idx]);
+    for(uint64_t i = 0;i < this->size && le;i++) {
+        le = (this->data[i] <= ndarray.data[i]);
     }
 
     return le;

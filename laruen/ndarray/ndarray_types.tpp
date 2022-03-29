@@ -7,8 +7,8 @@ std::ostream& operator<<(std::ostream &strm, const Shape &shape) {
     uint8_t size = shape.size();
     strm << '(';
 
-    for(uint8_t idx = 0;idx < size - 1;idx++) {
-        strm << shape[idx];
+    for(uint8_t i = 0;i < size - 1;i++) {
+        strm << shape[i];
         strm << ", ";
     }
 
@@ -22,8 +22,8 @@ std::ostream& operator<<(std::ostream &strm, const SliceRanges &slice_ranges) {
     uint8_t size = slice_ranges.size();
     strm << '(';
 
-    for(uint8_t idx = 0;idx < size - 1;idx++) {
-        strm << slice_ranges[idx];
+    for(uint8_t i = 0;i < size - 1;i++) {
+        strm << slice_ranges[i];
         strm << ", ";
     }
 
