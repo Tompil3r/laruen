@@ -468,50 +468,46 @@ NDArray<T>& NDArray<T>::operator/=(const NDArray<T> &ndarray) {
 
 template <typename T>
 NDArray<T> NDArray<T>::operator+(const NDArray<T> &ndarray) const {
-    assert(this->eq_dims(ndarray)); // needs broadcasting
-    NDArray<T> result_array(this->shape);
+    Shape output_shape(ndarray::broadcast(this->shape, ndarray.shape));
+    NDArray<T> output_array(output_shape, 0);
 
-    for(uint64_t i = 0;i < this->size;i++) {
-        result_array.data[i] = this->data[i] + ndarray.data[i];
-    }
+    output_array += *this;
+    output_array += ndarray;
 
-    return result_array;
+    return output_array;
 }
 
 template <typename T>
 NDArray<T> NDArray<T>::operator-(const NDArray<T> &ndarray) const {
-    assert(this->eq_dims(ndarray)); // needs broadcasting
-    NDArray<T> result_array(this->shape);
+    Shape output_shape(ndarray::broadcast(this->shape, ndarray.shape));
+    NDArray<T> output_array(output_shape, 0);
 
-    for(uint64_t i = 0;i < this->size;i++) {
-        result_array.data[i] = this->data[i] - ndarray.data[i];
-    }
+    output_array += *this;
+    output_array -= ndarray;
 
-    return result_array;
+    return output_array;
 }
 
 template <typename T>
 NDArray<T> NDArray<T>::operator*(const NDArray<T> &ndarray) const {
-    assert(this->eq_dims(ndarray)); // needs broadcasting
-    NDArray<T> result_array(this->shape);
+    Shape output_shape(ndarray::broadcast(this->shape, ndarray.shape));
+    NDArray<T> output_array(output_shape, 0);
 
-    for(uint64_t i = 0;i < this->size;i++) {
-        result_array.data[i] = this->data[i] * ndarray.data[i];
-    }
+    output_array += *this;
+    output_array *= ndarray;
 
-    return result_array;
+    return output_array;
 }
 
 template <typename T>
 NDArray<T> NDArray<T>::operator/(const NDArray<T> &ndarray) const {
-    assert(this->eq_dims(ndarray)); // needs broadcasting
-    NDArray<T> result_array(this->shape);
+    Shape output_shape(ndarray::broadcast(this->shape, ndarray.shape));
+    NDArray<T> output_array(output_shape, 0);
 
-    for(uint64_t i = 0;i < this->size;i++) {
-        result_array.data[i] = this->data[i] / ndarray.data[i];
-    }
+    output_array += *this;
+    output_array /= ndarray;
 
-    return result_array;
+    return output_array;
 }
 
 template <typename T> // allow comparison of different types
