@@ -292,6 +292,7 @@ const T& NDArray<T>::operator[](const NDIndex &ndindex) const {
     return this->data[this->ravel_ndindex(ndindex)];
 }
 
+/*
 template <typename T>
 const NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges) const {
     NDArray<T> ndarray = this->shallow_copy();
@@ -305,6 +306,7 @@ NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges) {
     ndarray.slice_array(slice_ranges);
     return ndarray;
 }
+*/
 
 template <typename T>
 void NDArray<T>::operator+=(T value) {
