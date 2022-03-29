@@ -468,7 +468,7 @@ NDArray<T>& NDArray<T>::operator/=(const NDArray<T> &ndarray) {
 
 template <typename T>
 NDArray<T> NDArray<T>::operator+(const NDArray<T> &ndarray) const {
-    assert(this->eq_dims(ndarray));  // needs broadcasting
+    assert(this->eq_dims(ndarray)); // needs broadcasting
     NDArray<T> result_array(this->shape);
 
     for(uint64_t i = 0;i < this->size;i++) {
@@ -615,14 +615,17 @@ void NDArray<T>::str_(std::string &str, uint8_t dim, uint64_t data_index, bool n
     if(dim == this->ndim - 1) {
         stride = this->strides[dim];
 
-        for(dim_idx = 0;dim_idx < this->shape[dim] - 1;dim_idx++) {
+        if(this->shape[dim]) {
+            for(dim_idx = 0;dim_idx < this->shape[dim] - 1;dim_idx++) {
+                str += std::to_string(this->data[data_index]);
+                str.push_back(',');
+                str.push_back(' ');
+                data_index += stride;
+            }
+
             str += std::to_string(this->data[data_index]);
-            str.push_back(',');
-            str.push_back(' ');
-            data_index += stride;
         }
 
-        str += std::to_string(this->data[data_index]);
         str.push_back(']');
         if(not_last) {
             str.push_back('\n');
@@ -631,16 +634,20 @@ void NDArray<T>::str_(std::string &str, uint8_t dim, uint64_t data_index, bool n
         return;
     }
 
-    this->str_(str, dim + 1, data_index, false, true);
-    data_index += this->strides[dim];            
-
-    for(dim_idx = 1;dim_idx < this->shape[dim] - 1;dim_idx++) {
-        this->str_(str, dim + 1, data_index, true, true);
+    if(this->shape[dim]) {
+        this->str_(str, dim + 1, data_index, false, this->shape[dim] > 1);
         data_index += this->strides[dim];
+
+        for(dim_idx = 1;dim_idx < this->shape[dim] - 1;dim_idx++) {
+            this->str_(str, dim + 1, data_index, true, true);
+            data_index += this->strides[dim];
+        }
     }
 
-    this->str_(str, dim + 1, data_index, true, false);
-
+    if(this->shape[dim] > 1) {
+        this->str_(str, dim + 1, data_index, true, false);
+    }
+    
     str.push_back(']');
     
     if(!dim) {
