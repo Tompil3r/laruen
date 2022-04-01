@@ -511,8 +511,8 @@ NDArray<T> NDArray<T>::operator/(const NDArray<T> &ndarray) const {
     return output_array;
 }
 
-template <typename T> // allow comparison of different types
-bool NDArray<T>::operator==(const NDArray<T> &ndarray) const {
+template <typename T> template <typename U>
+bool NDArray<T>::operator==(const NDArray<U> &ndarray) const {
     bool eq = this->eq_dims(ndarray);
 
     for(uint64_t i = 0;i < this->size && eq;i++) {
@@ -522,13 +522,13 @@ bool NDArray<T>::operator==(const NDArray<T> &ndarray) const {
     return eq;
 }
 
-template <typename T> // allow comparison of different types
-bool NDArray<T>::operator!=(const NDArray<T> &ndarray) const {
+template <typename T> template <typename U>
+bool NDArray<T>::operator!=(const NDArray<U> &ndarray) const {
     return !(*this == ndarray);
 }
 
-template <typename T> // allow comparison of different types
-bool NDArray<T>::operator>=(const NDArray<T> &ndarray) const {
+template <typename T> template <typename U>
+bool NDArray<T>::operator>=(const NDArray<U> &ndarray) const {
     bool ge = this->eq_dims(ndarray);
 
     for(uint64_t i = 0;i < this->size && ge;i++) {
@@ -538,8 +538,8 @@ bool NDArray<T>::operator>=(const NDArray<T> &ndarray) const {
     return ge;
 }
 
-template <typename T> // allow comparison of different types
-bool NDArray<T>::operator<=(const NDArray<T> &ndarray) const {
+template <typename T> template <typename U>
+bool NDArray<T>::operator<=(const NDArray<U> &ndarray) const {
     bool le = this->eq_dims(ndarray);
 
     for(uint64_t i = 0;i < this->size && le;i++) {
@@ -549,13 +549,13 @@ bool NDArray<T>::operator<=(const NDArray<T> &ndarray) const {
     return le;
 }
 
-template <typename T> // allow comparison of different types
-bool NDArray<T>::operator>(const NDArray<T> &ndarray) const {
+template <typename T> template <typename U>
+bool NDArray<T>::operator>(const NDArray<U> &ndarray) const {
     return !(*this <= ndarray);
 }
 
-template <typename T> // allow comparison of different types
-bool NDArray<T>::operator<(const NDArray<T> &ndarray) const {
+template <typename T> template <typename U>
+bool NDArray<T>::operator<(const NDArray<U> &ndarray) const {
     return !(*this >= ndarray);
 }
 

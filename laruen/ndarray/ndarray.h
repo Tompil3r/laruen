@@ -72,12 +72,12 @@ namespace laruen::ndarray {
             NDArray operator-(const NDArray &ndarray) const;
             NDArray operator*(const NDArray &ndarray) const;
             NDArray operator/(const NDArray &ndarray) const;
-            bool operator==(const NDArray &ndarray) const;
-            bool operator!=(const NDArray &ndarray) const;
-            bool operator>=(const NDArray &ndarray) const;
-            bool operator<=(const NDArray &ndarray) const;
-            bool operator>(const NDArray &ndarray) const;
-            bool operator<(const NDArray &ndarray) const;
+            template <typename U> bool operator==(const NDArray<U> &ndarray) const;
+            template <typename U> bool operator!=(const NDArray<U> &ndarray) const;
+            template <typename U> bool operator>=(const NDArray<U> &ndarray) const;
+            template <typename U> bool operator<=(const NDArray<U> &ndarray) const;
+            template <typename U> bool operator>(const NDArray<U> &ndarray) const;
+            template <typename U> bool operator<(const NDArray<U> &ndarray) const;
 
         private:
             void str_(std::string &str, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
