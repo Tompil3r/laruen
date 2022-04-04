@@ -1,6 +1,8 @@
 
 #include "laruen/ndarray/ndarray_types.h"
 #include <ostream>
+#include <tuple>
+#include <cstdint>
 
 // operator<< for Shape is used as operator<< for NDIndex and Strides 
 std::ostream& operator<<(std::ostream &strm, const Shape &shape) {
@@ -49,5 +51,21 @@ namespace types {
     constexpr uint64_t type_id() {
         return Type<T, std::tuple<int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t,
         int64_t, uint64_t, float32_t, float64_t>>::id;
+    }
+
+    constexpr bool type_signed(uint64_t type_id) {
+        return type_id % 2;
+    }
+
+    constexpr bool type_decimal(uint64_t type_id) {
+        return type_id > 8;
+    }
+
+    template <typename T, typename U>
+    constexpr bool type_contained() {
+        constexpr uint64_t id_t = type_id<T>();
+        constexpr uint64_t id_u = type_id<U>();
+
+        return id_t >= id_u && (type_decimal(id_t) || (type_signed(id_t) || type_signed(id_t) == type_signed(id_u)));
     }
 }
