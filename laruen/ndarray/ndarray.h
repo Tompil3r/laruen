@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <type_traits>
 
 namespace laruen::ndarray {
     
@@ -64,14 +65,14 @@ namespace laruen::ndarray {
             NDArray operator-(T value) const;
             NDArray operator*(T value) const;
             NDArray operator/(T value) const;
-            NDArray& operator+=(const NDArray &ndarray);
-            NDArray& operator-=(const NDArray &ndarray);
-            NDArray& operator*=(const NDArray &ndarray);
-            NDArray& operator/=(const NDArray &ndarray);
             NDArray operator+(const NDArray &ndarray) const;
             NDArray operator-(const NDArray &ndarray) const;
             NDArray operator*(const NDArray &ndarray) const;
             NDArray operator/(const NDArray &ndarray) const;
+            template <typename U, typename = std::enable_if_t<types::type_contained<T, U>()>()> NDArray& operator+=(const NDArray<U> &ndarray);
+            template <typename U, typename = std::enable_if_t<types::type_contained<T, U>()>()> NDArray& operator-=(const NDArray<U> &ndarray);
+            template <typename U, typename = std::enable_if_t<types::type_contained<T, U>()>()> NDArray& operator*=(const NDArray<U> &ndarray);
+            template <typename U, typename = std::enable_if_t<types::type_contained<T, U>()>()> NDArray& operator/=(const NDArray<U> &ndarray);
             template <typename U> bool operator==(const NDArray<U> &ndarray) const;
             template <typename U> bool operator!=(const NDArray<U> &ndarray) const;
             template <typename U> bool operator>=(const NDArray<U> &ndarray) const;

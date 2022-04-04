@@ -392,82 +392,6 @@ NDArray<T> NDArray<T>::operator/(T value) const {
 }
 
 template <typename T>
-NDArray<T>& NDArray<T>::operator+=(const NDArray<T> &ndarray) {
-    if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
-        throw std::invalid_argument("shapes cannot be broadcasted");
-    }
-
-    uint64_t size_ratio = this->size / ndarray.size;
-    uint64_t d_idx = 0; // destination index
-
-    for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-        for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-            this->data[d_idx] += ndarray[s_idx];
-            d_idx++;
-        }
-    }
-
-    return *this;
-}
-
-template <typename T>
-NDArray<T>& NDArray<T>::operator-=(const NDArray<T> &ndarray) {
-    if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
-        throw std::invalid_argument("shapes cannot be broadcasted");
-    }
-
-    uint64_t size_ratio = this->size / ndarray.size;
-    uint64_t d_idx = 0; // destination index
-
-    for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-        for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-            this->data[d_idx] -= ndarray[s_idx];
-            d_idx++;
-        }
-    }
-
-    return *this;
-}
-
-template <typename T>
-NDArray<T>& NDArray<T>::operator*=(const NDArray<T> &ndarray) {
-    if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
-        throw std::invalid_argument("shapes cannot be broadcasted");
-    }
-
-    uint64_t size_ratio = this->size / ndarray.size;
-    uint64_t d_idx = 0; // destination index
-
-    for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-        for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-            this->data[d_idx] *= ndarray[s_idx];
-            d_idx++;
-        }
-    }
-
-    return *this;
-}
-
-template <typename T>
-NDArray<T>& NDArray<T>::operator/=(const NDArray<T> &ndarray) {
-    if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
-        throw std::invalid_argument("shapes cannot be broadcasted");
-    }
-
-    uint64_t size_ratio = this->size / ndarray.size;
-    uint64_t d_idx = 0; // destination index
-
-    for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-        for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-            this->data[d_idx] /= ndarray[s_idx];
-            d_idx++;
-        }
-    }
-
-    return *this;
-}
-
-template <typename T>
 NDArray<T> NDArray<T>::operator+(const NDArray<T> &ndarray) const {
     Shape output_shape(ndarray::broadcast(this->shape, ndarray.shape));
     NDArray<T> output_array(output_shape, 0);
@@ -509,6 +433,82 @@ NDArray<T> NDArray<T>::operator/(const NDArray<T> &ndarray) const {
     output_array /= ndarray;
 
     return output_array;
+}
+
+template <typename T> template <typename U, typename>
+NDArray<T>& NDArray<T>::operator+=(const NDArray<U> &ndarray) {
+    if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        throw std::invalid_argument("shapes cannot be broadcasted");
+    }
+
+    uint64_t size_ratio = this->size / ndarray.size;
+    uint64_t d_idx = 0; // destination index
+
+    for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
+        for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
+            this->data[d_idx] += ndarray[s_idx];
+            d_idx++;
+        }
+    }
+
+    return *this;
+}
+
+template <typename T> template <typename U, typename>
+NDArray<T>& NDArray<T>::operator-=(const NDArray<U> &ndarray) {
+    if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        throw std::invalid_argument("shapes cannot be broadcasted");
+    }
+
+    uint64_t size_ratio = this->size / ndarray.size;
+    uint64_t d_idx = 0; // destination index
+
+    for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
+        for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
+            this->data[d_idx] -= ndarray[s_idx];
+            d_idx++;
+        }
+    }
+
+    return *this;
+}
+
+template <typename T> template <typename U, typename>
+NDArray<T>& NDArray<T>::operator*=(const NDArray<U> &ndarray) {
+    if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        throw std::invalid_argument("shapes cannot be broadcasted");
+    }
+
+    uint64_t size_ratio = this->size / ndarray.size;
+    uint64_t d_idx = 0; // destination index
+
+    for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
+        for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
+            this->data[d_idx] *= ndarray[s_idx];
+            d_idx++;
+        }
+    }
+
+    return *this;
+}
+
+template <typename T> template <typename U, typename>
+NDArray<T>& NDArray<T>::operator/=(const NDArray<U> &ndarray) {
+    if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        throw std::invalid_argument("shapes cannot be broadcasted");
+    }
+
+    uint64_t size_ratio = this->size / ndarray.size;
+    uint64_t d_idx = 0; // destination index
+
+    for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
+        for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
+            this->data[d_idx] /= ndarray[s_idx];
+            d_idx++;
+        }
+    }
+
+    return *this;
 }
 
 template <typename T> template <typename U>
