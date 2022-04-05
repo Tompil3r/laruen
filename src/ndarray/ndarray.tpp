@@ -436,8 +436,8 @@ namespace laruen::ndarray {
         return output_array;
     }
 
-    template <typename T> template <typename U, typename>
-    NDArray<T>& NDArray<T>::operator+=(const NDArray<U> &ndarray) {
+    template <typename T> template <typename T2, typename>
+    NDArray<T>& NDArray<T>::operator+=(const NDArray<T2> &ndarray) {
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
@@ -455,8 +455,8 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename U, typename>
-    NDArray<T>& NDArray<T>::operator-=(const NDArray<U> &ndarray) {
+    template <typename T> template <typename T2, typename>
+    NDArray<T>& NDArray<T>::operator-=(const NDArray<T2> &ndarray) {
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
@@ -474,8 +474,8 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename U, typename>
-    NDArray<T>& NDArray<T>::operator*=(const NDArray<U> &ndarray) {
+    template <typename T> template <typename T2, typename>
+    NDArray<T>& NDArray<T>::operator*=(const NDArray<T2> &ndarray) {
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
@@ -493,8 +493,8 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename U, typename>
-    NDArray<T>& NDArray<T>::operator/=(const NDArray<U> &ndarray) {
+    template <typename T> template <typename T2, typename>
+    NDArray<T>& NDArray<T>::operator/=(const NDArray<T2> &ndarray) {
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
@@ -512,8 +512,8 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename U>
-    bool NDArray<T>::operator==(const NDArray<U> &ndarray) const {
+    template <typename T> template <typename T2>
+    bool NDArray<T>::operator==(const NDArray<T2> &ndarray) const {
         bool eq = this->eq_dims(ndarray);
 
         for(uint64_t i = 0;i < this->size && eq;i++) {
@@ -523,13 +523,13 @@ namespace laruen::ndarray {
         return eq;
     }
 
-    template <typename T> template <typename U>
-    bool NDArray<T>::operator!=(const NDArray<U> &ndarray) const {
+    template <typename T> template <typename T2>
+    bool NDArray<T>::operator!=(const NDArray<T2> &ndarray) const {
         return !(*this == ndarray);
     }
 
-    template <typename T> template <typename U>
-    bool NDArray<T>::operator>=(const NDArray<U> &ndarray) const {
+    template <typename T> template <typename T2>
+    bool NDArray<T>::operator>=(const NDArray<T2> &ndarray) const {
         bool ge = this->eq_dims(ndarray);
 
         for(uint64_t i = 0;i < this->size && ge;i++) {
@@ -539,8 +539,8 @@ namespace laruen::ndarray {
         return ge;
     }
 
-    template <typename T> template <typename U>
-    bool NDArray<T>::operator<=(const NDArray<U> &ndarray) const {
+    template <typename T> template <typename T2>
+    bool NDArray<T>::operator<=(const NDArray<T2> &ndarray) const {
         bool le = this->eq_dims(ndarray);
 
         for(uint64_t i = 0;i < this->size && le;i++) {
@@ -550,13 +550,13 @@ namespace laruen::ndarray {
         return le;
     }
 
-    template <typename T> template <typename U>
-    bool NDArray<T>::operator>(const NDArray<U> &ndarray) const {
+    template <typename T> template <typename T2>
+    bool NDArray<T>::operator>(const NDArray<T2> &ndarray) const {
         return !(*this <= ndarray);
     }
 
-    template <typename T> template <typename U>
-    bool NDArray<T>::operator<(const NDArray<U> &ndarray) const {
+    template <typename T> template <typename T2>
+    bool NDArray<T>::operator<(const NDArray<T2> &ndarray) const {
         return !(*this >= ndarray);
     }
 

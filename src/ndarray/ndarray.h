@@ -69,16 +69,16 @@ namespace laruen::ndarray {
             NDArray operator-(const NDArray &ndarray) const;
             NDArray operator*(const NDArray &ndarray) const;
             NDArray operator/(const NDArray &ndarray) const;
-            template <typename U, typename = std::enable_if_t<types::type_contained<T, U>()>()> NDArray& operator+=(const NDArray<U> &ndarray);
-            template <typename U, typename = std::enable_if_t<types::type_contained<T, U>()>()> NDArray& operator-=(const NDArray<U> &ndarray);
-            template <typename U, typename = std::enable_if_t<types::type_contained<T, U>()>()> NDArray& operator*=(const NDArray<U> &ndarray);
-            template <typename U, typename = std::enable_if_t<types::type_contained<T, U>()>()> NDArray& operator/=(const NDArray<U> &ndarray);
-            template <typename U> bool operator==(const NDArray<U> &ndarray) const;
-            template <typename U> bool operator!=(const NDArray<U> &ndarray) const;
-            template <typename U> bool operator>=(const NDArray<U> &ndarray) const;
-            template <typename U> bool operator<=(const NDArray<U> &ndarray) const;
-            template <typename U> bool operator>(const NDArray<U> &ndarray) const;
-            template <typename U> bool operator<(const NDArray<U> &ndarray) const;
+            template <typename T2, typename = std::enable_if_t<types::type_contained<T, T2>()>()> NDArray& operator+=(const NDArray<T2> &ndarray);
+            template <typename T2, typename = std::enable_if_t<types::type_contained<T, T2>()>()> NDArray& operator-=(const NDArray<T2> &ndarray);
+            template <typename T2, typename = std::enable_if_t<types::type_contained<T, T2>()>()> NDArray& operator*=(const NDArray<T2> &ndarray);
+            template <typename T2, typename = std::enable_if_t<types::type_contained<T, T2>()>()> NDArray& operator/=(const NDArray<T2> &ndarray);
+            template <typename T2> bool operator==(const NDArray<T2> &ndarray) const;
+            template <typename T2> bool operator!=(const NDArray<T2> &ndarray) const;
+            template <typename T2> bool operator>=(const NDArray<T2> &ndarray) const;
+            template <typename T2> bool operator<=(const NDArray<T2> &ndarray) const;
+            template <typename T2> bool operator>(const NDArray<T2> &ndarray) const;
+            template <typename T2> bool operator<(const NDArray<T2> &ndarray) const;
 
         private:
             void str_(std::string &str, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
