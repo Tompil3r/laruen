@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <vector>
 #include <tuple>
+#include <string>
 
 using namespace laruen::utils;
 
@@ -17,8 +18,8 @@ using Strides = std::vector<uint64_t>;
 using NDIndex = std::vector<uint32_t>;
 using SliceRanges = std::vector<Range<uint32_t>>;
 
-std::ostream& operator<<(std::ostream &strm, const Shape &shape);
-std::ostream& operator<<(std::ostream &strm, const SliceRanges &slice_ranges);
+std::string str(const Shape &shape);
+std::string str(const SliceRanges &slice_ranges);
 
 // ** experimental **
 namespace types {

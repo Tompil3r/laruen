@@ -1,38 +1,44 @@
 
 #include "src/ndarray/ndarray_types.h"
-#include <ostream>
+#include <string>
 #include <tuple>
 #include <cstdint>
 
 // operator<< for Shape is used as operator<< for NDIndex and Strides 
-std::ostream& operator<<(std::ostream &strm, const Shape &shape) {
+std::string str(const Shape &shape) {
+    std::string str;
+
     uint8_t size = shape.size();
-    strm << '(';
+    str.push_back('(');
 
     for(uint8_t i = 0;i < size - 1;i++) {
-        strm << shape[i];
-        strm << ", ";
+        str += std::to_string(shape[i]);
+        str.push_back(',');
+        str.push_back(' ');
     }
 
-    strm << shape[size - 1];
-    strm << ')';
+    str += std::to_string(shape[size - 1]);
+    str.push_back(')');
 
-    return strm;
+    return str;
 }
 
-std::ostream& operator<<(std::ostream &strm, const SliceRanges &slice_ranges) {
+std::string str(const SliceRanges &slice_ranges) {
+    std::string str;
+
     uint8_t size = slice_ranges.size();
-    strm << '(';
+    str.push_back('(');
 
     for(uint8_t i = 0;i < size - 1;i++) {
-        strm << slice_ranges[i];
-        strm << ", ";
+        str += slice_ranges[i].str();
+        str.push_back(',');
+        str.push_back(' ');
     }
 
-    strm << slice_ranges[size - 1];
-    strm << ')';
+    str += slice_ranges[size - 1].str();
+    str.push_back(')');
 
-    return strm;
+    return str;
 }
 
 // ** experimental **
