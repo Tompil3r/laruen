@@ -5,17 +5,18 @@
 #include <cstdint>
 #include <ostream>
 
-using namespace laruen::utils;
+namespace laruen::utils {
+    
+    template <typename T>
+    Range<T>::Range(T start, T end, T step) {
+        this->start = start;
+        this->end = end;
+        this->step = step;
+    }
 
-template <typename T>
-Range<T>::Range(T start, T end, T step) {
-    this->start = start;
-    this->end = end;
-    this->step = step;
-}
-
-template <typename T>
-std::ostream& operator<<(std::ostream &strm, const Range<T> &range) {
-    strm << range.start << ':' << range.end << ':' << range.step;
-    return strm;
+    template <typename T>
+    std::ostream& operator<<(std::ostream &strm, const Range<T> &range) {
+        strm << range.start << ':' << range.end << ':' << range.step;
+        return strm;
+    }
 }
