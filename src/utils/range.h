@@ -11,7 +11,7 @@ namespace laruen::utils {
         T end;
         T step;
 
-        Range(T start=0, T end=0, T step=1);
+        constexpr Range(T start=0, T end=0, T step=1);
     };
 };
 

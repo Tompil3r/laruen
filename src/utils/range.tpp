@@ -6,9 +6,9 @@
 #include <ostream>
 
 namespace laruen::utils {
-    
+
     template <typename T>
-    Range<T>::Range(T start, T end, T step) {
+    constexpr Range<T>::Range(T start, T end, T step) {
         this->start = start;
         this->end = end;
         this->step = step;
