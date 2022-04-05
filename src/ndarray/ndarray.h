@@ -2,7 +2,7 @@
 #ifndef NDARRAY_CORE_H
 #define NDARRAY_CORE_H
 
-#include "laruen/ndarray/ndarray_types.h"
+#include "src/ndarray/ndarray_types.h"
 #include <vector>
 #include <cstdint>
 #include <cassert>
@@ -146,5 +146,5 @@ namespace laruen::ndarray {
     };
 };
 
-#include "laruen/ndarray/ndarray.tpp"
+#include "src/ndarray/ndarray.tpp"
 #endif

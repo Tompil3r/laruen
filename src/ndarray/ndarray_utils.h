@@ -2,7 +2,7 @@
 #ifndef NDARRAY_UTILS_H
 #define NDARRAY_UTILS_H
 
-#include "laruen/ndarray/ndarray_types.h"
+#include "src/ndarray/ndarray_types.h"
 #include <cstdint>
 
 

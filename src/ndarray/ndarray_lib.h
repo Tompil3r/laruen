@@ -2,7 +2,7 @@
 #ifndef NDARRAY_LIB_H
 #define NDARRAY_LIB_H
 
-#include "laruen/ndarray/ndarray_types.h"
+#include "src/ndarray/ndarray_types.h"
 #include <cstdint>
 
 namespace laruen::ndarray {
@@ -16,5 +16,5 @@ namespace laruen::ndarray {
    bool eq_dims(const Shape &shape1, const Shape &shape2);
 };
 
-#include "laruen/ndarray/ndarray_lib.tpp"
+#include "src/ndarray/ndarray_lib.tpp"
 #endif

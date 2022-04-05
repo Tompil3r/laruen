@@ -1,6 +1,6 @@
 
-#include "laruen/ndarray/ndarray_types.h"
-#include "laruen/utils/range.h"
+#include "src/ndarray/ndarray_types.h"
+#include "src/utils/range.h"
 
 #include <cstdint>
 #include <ostream>

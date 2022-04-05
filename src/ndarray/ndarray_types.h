@@ -2,7 +2,7 @@
 #ifndef ndarray_types_H
 #define ndarray_types_H
 
-#include "laruen/utils/range.h"
+#include "src/utils/range.h"
 #include <cstdint>
 #include <vector>
 #include <tuple>
@@ -38,5 +38,5 @@ namespace types {
     template <typename T, typename U> constexpr bool type_contained();
 }
 
-#include "laruen/ndarray/ndarray_types.tpp"
+#include "src/ndarray/ndarray_types.tpp"
 #endif

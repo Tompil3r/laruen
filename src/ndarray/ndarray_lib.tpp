@@ -1,7 +1,7 @@
 
-#include "laruen/ndarray/ndarray_lib.h"
-#include "laruen/ndarray/ndarray_types.h"
-#include "laruen/math/common.h"
+#include "src/ndarray/ndarray_lib.h"
+#include "src/ndarray/ndarray_types.h"
+#include "src/math/common.h"
 #include <cstdint>
 #include <initializer_list>
 #include <stdexcept>

@@ -1,5 +1,5 @@
 
-#include "laruen/ndarray/ndarray_types.h"
+#include "src/ndarray/ndarray_types.h"
 #include <ostream>
 #include <tuple>
 #include <cstdint>

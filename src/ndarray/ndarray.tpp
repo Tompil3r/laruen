@@ -1,10 +1,10 @@
 
-#include "laruen/ndarray/ndarray.h"
-#include "laruen/ndarray/ndarray_types.h"
-#include "laruen/ndarray/ndarray_utils.h"
-#include "laruen/ndarray/ndarray_lib.h"
-#include "laruen/utils/range.h"
-#include "laruen/math/common.h"
+#include "src/ndarray/ndarray.h"
+#include "src/ndarray/ndarray_types.h"
+#include "src/ndarray/ndarray_utils.h"
+#include "src/ndarray/ndarray_lib.h"
+#include "src/utils/range.h"
+#include "src/math/common.h"
 #include <cassert>
 #include <ostream>
 #include <cstdint>
