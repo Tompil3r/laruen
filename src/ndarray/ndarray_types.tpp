@@ -44,6 +44,15 @@ std::string str(const SliceRanges &slice_ranges) {
 
 // ** experimental **
 namespace types {
+    template <> struct next_signed<uint8_t> { typedef int16_t type; };
+    template <> struct next_signed<uint16_t> { typedef int32_t type; };
+    template <> struct next_signed<uint32_t> { typedef int64_t type; };
+    template <> struct next_signed<uint64_t> { typedef float32_t type; };
+    template <> struct next_unsigned<int8_t> { typedef uint16_t type; };
+    template <> struct next_unsigned<int16_t> { typedef uint32_t type; };
+    template <> struct next_unsigned<int32_t> { typedef uint64_t type; };
+    template <> struct next_unsigned<int64_t> { typedef float32_t type; };
+
     template <typename T, typename T2>
     constexpr bool type_contained() {
         return sizeof(T) >= sizeof(T2) && (std::is_floating_point<T>::value || (std::is_signed<T>::value

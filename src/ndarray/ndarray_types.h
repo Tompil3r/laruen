@@ -23,7 +23,10 @@ std::string str(const SliceRanges &slice_ranges);
 
 // ** experimental **
 namespace types {
+    template <typename T> struct next_signed;
+    template <typename T> struct next_unsigned;
     template <typename T, typename T2> constexpr bool type_contained();
+    template <typename T, typename T2> constexpr auto combined_type();
 }
 
 #include "src/ndarray/ndarray_types.tpp"
