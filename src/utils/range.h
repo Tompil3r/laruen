@@ -2,7 +2,7 @@
 #ifndef RANGE_H
 #define RANGE_H
 
-#include <ostream>
+#include <string>
 
 namespace laruen::utils {
     
@@ -12,6 +12,7 @@ namespace laruen::utils {
         T step;
 
         constexpr Range(T start=0, T end=0, T step=1);
+        std::string str() const;
     };
 };
 

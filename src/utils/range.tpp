@@ -3,7 +3,7 @@
 #include "src/utils/range.h"
 
 #include <cstdint>
-#include <ostream>
+#include <string>
 
 namespace laruen::utils {
 
@@ -15,8 +15,7 @@ namespace laruen::utils {
     }
 
     template <typename T>
-    std::ostream& operator<<(std::ostream &strm, const Range<T> &range) {
-        strm << range.start << ':' << range.end << ':' << range.step;
-        return strm;
+    std::string Range<T>::str() const {
+        return std::to_string(this->start) + ':' + std::to_string(this->end) + ':' + std::to_string(this->step);
     }
 }
