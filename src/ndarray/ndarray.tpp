@@ -436,8 +436,10 @@ namespace laruen::ndarray {
         return output_array;
     }
 
-    template <typename T> template <typename T2, typename>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator+=(const NDArray<T2> &ndarray) {
+        static_assert(std::is_arithmetic<T2>::value && types::type_contained<T, T2>(), "operand types not compatible");
+
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
@@ -455,8 +457,10 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator-=(const NDArray<T2> &ndarray) {
+        static_assert(std::is_arithmetic<T2>::value && types::type_contained<T, T2>(), "operand types not compatible");
+
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
@@ -474,8 +478,10 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator*=(const NDArray<T2> &ndarray) {
+        static_assert(std::is_arithmetic<T2>::value && types::type_contained<T, T2>(), "operand types not compatible");
+
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
@@ -493,8 +499,10 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator/=(const NDArray<T2> &ndarray) {
+        static_assert(std::is_arithmetic<T2>::value && types::type_contained<T, T2>(), "operand types not compatible");
+
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
