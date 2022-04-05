@@ -15,8 +15,8 @@ typedef double float64_t;
 
 using Shape = std::vector<uint64_t>;
 using Strides = std::vector<uint64_t>;
-using NDIndex = std::vector<uint32_t>;
-using SliceRanges = std::vector<Range<uint32_t>>;
+using NDIndex = std::vector<uint64_t>;
+using SliceRanges = std::vector<Range<uint64_t>>;
 
 std::string str(const Shape &shape);
 std::string str(const SliceRanges &slice_ranges);
