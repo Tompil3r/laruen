@@ -44,7 +44,15 @@ std::string str(const SliceRanges &slice_ranges) {
 
 // ** experimental **
 namespace types {
-    template <typename T, typename T2> struct max_type { typedef typename std::conditional<sizeof(T) >= sizeof(T2), T, T2> type; };
+    template <typename T, typename T2>
+    struct max_type<T, T2, std::enable_if_t<std::is_integral<T>::value == std::is_integral<T2>::value>> {
+        typedef typename std::conditional<sizeof(T) >= sizeof(T2), T, T2>::type type;
+    };
+    template <typename T, typename T2>
+    struct max_type<T, T2, std::enable_if_t<std::is_integral<T>::value != std::is_integral<T2>::value>> {
+        typedef typename std::conditional<std::is_floating_point<T>::value, T, T2>::type type;
+    };
+
     template <> struct next_signed<uint8_t> { typedef int16_t type; };
     template <> struct next_signed<int8_t> { typedef int8_t type; };
     template <> struct next_signed<uint16_t> { typedef int32_t type; };
