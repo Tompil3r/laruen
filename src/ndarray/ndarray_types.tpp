@@ -53,16 +53,16 @@ namespace types {
         typedef typename std::conditional<std::is_floating_point<T>::value, T, T2>::type type;
     };
 
-    template <> struct next_signed<uint8_t> { typedef int16_t type; };
-    template <> struct next_signed<int8_t> { typedef int8_t type; };
-    template <> struct next_signed<uint16_t> { typedef int32_t type; };
-    template <> struct next_signed<int16_t> { typedef int16_t type; };
-    template <> struct next_signed<uint32_t> { typedef int64_t type; };
-    template <> struct next_signed<int32_t> { typedef int32_t type; };
-    template <> struct next_signed<uint64_t> { typedef float32_t type; };
-    template <> struct next_signed<int64_t> { typedef int64_t type; };
-    template <> struct next_signed<float32_t> { typedef float32_t type; };
-    template <> struct next_signed<float64_t> { typedef float64_t type; };
+    template <bool B> struct next_signed<uint8_t, B> { typedef int16_t type; };
+    template <bool B> struct next_signed<int8_t, B> { typedef typename std::conditional<B, int16_t, int8_t>::type type; };
+    template <bool B> struct next_signed<uint16_t, B> { typedef int32_t type; };
+    template <bool B> struct next_signed<int16_t, B> { typedef typename std::conditional<B, int32_t, int16_t>::type type; };
+    template <bool B> struct next_signed<uint32_t, B> { typedef int64_t type; };
+    template <bool B> struct next_signed<int32_t, B> { typedef typename std::conditional<B, int64_t, int32_t>::type type; };
+    template <bool B> struct next_signed<uint64_t, B> { typedef float64_t type; };
+    template <bool B> struct next_signed<int64_t, B> { typedef typename std::conditional<B, float64_t, int64_t>::type type; };
+    template <bool B> struct next_signed<float32_t, B> { typedef typename std::conditional<B, float64_t, float32_t>::type type; };
+    template <bool B> struct next_signed<float64_t, B> { typedef float64_t type; };
 
     template <typename T, typename T2>
     constexpr bool type_contained() {
