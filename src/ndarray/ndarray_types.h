@@ -23,6 +23,7 @@ std::string str(const SliceRanges &slice_ranges);
 
 // ** experimental **
 namespace types {
+    template <typename T, typename T2> struct max_type;
     template <typename T, typename T2> constexpr bool type_contained();
 }
 
