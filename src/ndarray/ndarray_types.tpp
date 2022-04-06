@@ -75,8 +75,7 @@ namespace types {
     };
 
     template <typename T, typename T2> struct float_type {
-        typedef typename std::conditional<std::is_floating_point<T>::value, T, T2>::type ftype;
-        typedef typename std::conditional<std::is_floating_point<T>::value, T2, T>::type other;
+        typedef typename std::conditional<std::is_floating_point<T>::value, T, T2>::type type;
     };
 
     template <typename T, typename T2>
