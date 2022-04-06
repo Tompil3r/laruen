@@ -27,6 +27,7 @@ namespace types {
     template <typename T, typename T2, typename = void> struct max_type;
     template <typename T, typename T2, typename = void> struct min_type;
     template <typename T, typename T2> struct float_type;
+    template <typename T, typename T2> struct integer_type;
     template <typename T, typename T2> constexpr bool type_contained();
 }
 
