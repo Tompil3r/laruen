@@ -44,15 +44,6 @@ std::string str(const SliceRanges &slice_ranges) {
 
 // ** experimental **
 namespace types {
-    template <typename T, typename T2>
-    struct max_type<T, T2, std::enable_if_t<std::is_integral<T>::value == std::is_integral<T2>::value>> {
-        typedef typename std::conditional<sizeof(T) >= sizeof(T2), T, T2>::type type;
-    };
-    template <typename T, typename T2>
-    struct max_type<T, T2, std::enable_if_t<std::is_integral<T>::value != std::is_integral<T2>::value>> {
-        typedef typename std::conditional<std::is_floating_point<T>::value, T, T2>::type type;
-    };
-
     template <bool B> struct next_signed<uint8_t, B> { typedef int16_t type; };
     template <bool B> struct next_signed<int8_t, B> { typedef typename std::conditional<B, int16_t, int8_t>::type type; };
     template <bool B> struct next_signed<uint16_t, B> { typedef int32_t type; };
@@ -63,6 +54,15 @@ namespace types {
     template <bool B> struct next_signed<int64_t, B> { typedef typename std::conditional<B, float64_t, int64_t>::type type; };
     template <bool B> struct next_signed<float32_t, B> { typedef typename std::conditional<B, float64_t, float32_t>::type type; };
     template <bool B> struct next_signed<float64_t, B> { typedef float64_t type; };
+
+    template <typename T, typename T2>
+    struct max_type<T, T2, std::enable_if_t<std::is_integral<T>::value == std::is_integral<T2>::value>> {
+        typedef typename std::conditional<sizeof(T) >= sizeof(T2), T, T2>::type type;
+    };
+    template <typename T, typename T2>
+    struct max_type<T, T2, std::enable_if_t<std::is_integral<T>::value != std::is_integral<T2>::value>> {
+        typedef typename std::conditional<std::is_floating_point<T>::value, T, T2>::type type;
+    };
 
     template <typename T, typename T2>
     constexpr bool type_contained() {
