@@ -64,6 +64,16 @@ namespace types {
         typedef typename std::conditional<std::is_floating_point<T>::value, T, T2>::type type;
     };
 
+    template <typename T, typename T2>
+    struct min_type<T, T2, std::enable_if_t<std::is_integral<T>::value == std::is_integral<T2>::value>> {
+        typedef typename std::conditional<sizeof(T) <= sizeof(T2), T, T2>::type type;
+    };
+
+    template <typename T, typename T2>
+    struct min_type<T, T2, std::enable_if_t<std::is_integral<T>::value != std::is_integral<T2>::value>> {
+        typedef typename std::conditional<std::is_floating_point<T>::value, T2, T>::type type;
+    };
+
     template <typename T, typename T2> struct float_type {
         typedef typename std::conditional<std::is_floating_point<T>::value, T, T2>::type ftype;
         typedef typename std::conditional<std::is_floating_point<T>::value, T2, T>::type other;
