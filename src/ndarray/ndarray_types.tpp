@@ -94,6 +94,44 @@ namespace types {
     };
 
     template <typename T, typename T2>
+    struct combine_types {
+    /*
+        code simplification:
+        if(is_int(T) == is_int(T2)) {
+            if(is_signed(T) == is_signed(T2) || (is_signed(max_type(T, T2)) && sizeof(T) != sizeof(T2))) {
+                type = max_type(T, T2);
+            }
+            else {
+                type = next_signed(max(T, T2));
+            }
+        }
+        else {
+            if(sizeof(int_type(T, T2)) >= sizeof(float_type(T, T2))) {
+                type = next_signed(max_type(T, T2));
+            }   
+            else {
+                type = max_type(T, T2)
+            }
+        }
+    */
+    typedef typename std::conditional<std::is_integral<T>::value == std::is_integral<T2>::value,
+        // group a - both ints or both floats
+        typename std::conditional<std::is_signed<T>::value == std::is_signed<T2>::value ||
+            (std::is_signed<typename max_type<T, T2>::type>::value && sizeof(T) != sizeof(T2)),
+            // sub group a1 - (both signed or both unsigned) or (one signed and one unsigned and have different sizes)
+            typename max_type<T, T2>::type,
+            // sub group a2 - one signed and one unsigned (order does not matter) and max or equal size is unsigned
+            typename next_signed<typename max_type<T, T2>::type>::type>::type,
+
+        // group b - one int and one float (order does not matter)
+        typename std::conditional<sizeof(typename integer_type<T, T2>::type) >= sizeof(typename float_type<T, T2>::type),
+            // sub group b1 - the size of the integer type is bigger or equal to the size of the float type
+            typename next_signed<typename max_type<T, T2>::type>::type,
+            // sub group b2 - the size of the integer type is smaller than the size of the float type
+            typename max_type<T, T2>::type>::type>::type type;
+};
+
+    template <typename T, typename T2>
     constexpr bool type_contained() {
         return sizeof(T) >= sizeof(T2) && (std::is_floating_point<T>::value || (std::is_signed<T>::value
         || std::is_signed<T>::value == std::is_signed<T2>::value));
