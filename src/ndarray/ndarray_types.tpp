@@ -106,11 +106,5 @@ namespace types {
             next_signed_t<max_type_t<T, T2>>,
             // sub group b2 - the size of the integer type is smaller than the size of the float type
             max_type_t<T, T2>>> type;
-};
-
-    template <typename T, typename T2>
-    constexpr bool type_contained() {
-        return sizeof(T) >= sizeof(T2) && (std::is_floating_point<T>::value || (std::is_signed<T>::value
-        || std::is_signed<T>::value == std::is_signed<T2>::value));
-    }
+    };
 }

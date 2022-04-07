@@ -28,7 +28,6 @@ namespace types {
     template <typename T, typename T2> struct float_type;
     template <typename T, typename T2> struct integer_type;
     template <typename T, typename T2> struct combine_types;
-    template <typename T, typename T2> constexpr bool type_contained();
 
     template <typename T> using next_signed_t = typename next_signed<T>::type;
     template <typename T, typename T2> using max_type_t = typename max_type<T, T2>::type;
