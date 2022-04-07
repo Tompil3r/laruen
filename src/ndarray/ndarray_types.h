@@ -23,7 +23,6 @@ std::string str(const SliceRanges &slice_ranges);
 
 // ** experimental **
 namespace types {
-    template <typename T> struct snext_signed;
     template <typename T> struct next_signed;
     template <typename T, typename T2, typename = void> struct max_type;
     template <typename T, typename T2, typename = void> struct min_type;
