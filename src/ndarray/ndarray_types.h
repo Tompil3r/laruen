@@ -29,6 +29,12 @@ namespace types {
     template <typename T, typename T2> struct integer_type;
     template <typename T, typename T2> struct combine_types;
     template <typename T, typename T2> constexpr bool type_contained();
+
+    template <typename T> using next_signed_t = typename next_signed<T>::type;
+    template <typename T, typename T2> using max_type_t = typename max_type<T, T2>::type;
+    template <typename T, typename T2> using float_type_t = typename float_type<T, T2>::type;
+    template <typename T, typename T2> using integer_type_t = typename integer_type<T, T2>::type;
+    template <typename T, typename T2> using combine_types_t = typename combine_types<T, T2>::type;
 }
 
 #include "src/ndarray/ndarray_types.tpp"
