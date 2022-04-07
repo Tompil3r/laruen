@@ -56,12 +56,10 @@ namespace types {
     template <> struct next_signed<float64_t> { typedef float64_t type; };
 
     template <typename T, typename T2>
-    struct max_type<T, T2, std::enable_if_t<std::is_integral<T>::value == std::is_integral<T2>::value>> {
-        typedef typename std::conditional<sizeof(T) >= sizeof(T2), T, T2>::type type;
-    };
-    template <typename T, typename T2>
-    struct max_type<T, T2, std::enable_if_t<std::is_integral<T>::value != std::is_integral<T2>::value>> {
-        typedef typename std::conditional<std::is_floating_point<T>::value, T, T2>::type type;
+    struct max_type {
+        typedef typename std::conditional<std::is_integral<T>::value == std::is_integral<T2>::value,
+            typename std::conditional<sizeof(T) >= sizeof(T2), T, T2>::type,
+            typename std::conditional<std::is_floating_point<T>::value, T, T2>::type>::type type;
     };
 
     template <typename T, typename T2> struct float_type {
