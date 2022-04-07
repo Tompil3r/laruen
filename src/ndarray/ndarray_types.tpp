@@ -57,17 +57,17 @@ namespace types {
 
     template <typename T, typename T2>
     struct max_type {
-        typedef typename std::conditional<std::is_integral<T>::value == std::is_integral<T2>::value,
-            typename std::conditional<sizeof(T) >= sizeof(T2), T, T2>::type,
-            typename std::conditional<std::is_floating_point<T>::value, T, T2>::type>::type type;
+        typedef std::conditional_t<std::is_integral_v<T> == std::is_integral_v<T2>,
+            std::conditional_t<sizeof(T) >= sizeof(T2), T, T2>,
+            std::conditional_t<std::is_floating_point_v<T>, T, T2>> type;
     };
 
     template <typename T, typename T2> struct float_type {
-        typedef typename std::conditional<std::is_floating_point<T>::value, T, T2>::type type;
+        typedef std::conditional_t<std::is_floating_point_v<T>, T, T2> type;
     };
 
     template <typename T, typename T2> struct integer_type {
-        typedef typename std::conditional<std::is_integral<T>::value, T, T2>::type type;
+        typedef std::conditional_t<std::is_integral_v<T>, T, T2> type;
     };
 
     template <typename T, typename T2>
@@ -91,21 +91,21 @@ namespace types {
             }
         }
     */
-    typedef typename std::conditional<std::is_integral<T>::value == std::is_integral<T2>::value,
+    typedef std::conditional_t<std::is_integral_v<T> == std::is_integral_v<T2>,
         // group a - both ints or both floats
-        typename std::conditional<std::is_signed<T>::value == std::is_signed<T2>::value ||
-            (std::is_signed<typename max_type<T, T2>::type>::value && sizeof(T) != sizeof(T2)),
+        std::conditional_t<std::is_signed_v<T> == std::is_signed_v<T2> ||
+            (std::is_signed_v<max_type_t<T, T2>> && sizeof(T) != sizeof(T2)),
             // sub group a1 - (both signed or both unsigned) or (one signed and one unsigned and have different sizes)
-            typename max_type<T, T2>::type,
+            max_type_t<T, T2>,
             // sub group a2 - one signed and one unsigned (order does not matter) and max or equal size is unsigned
-            typename next_signed<typename max_type<T, T2>::type>::type>::type,
+            next_signed_t<max_type_t<T, T2>>>,
 
         // group b - one int and one float (order does not matter)
-        typename std::conditional<sizeof(typename integer_type<T, T2>::type) >= sizeof(typename float_type<T, T2>::type),
+        std::conditional_t<sizeof(integer_type_t<T, T2>) >= sizeof(float_type_t<T, T2>),
             // sub group b1 - the size of the integer type is bigger or equal to the size of the float type
-            typename next_signed<typename max_type<T, T2>::type>::type,
+            next_signed_t<max_type_t<T, T2>>,
             // sub group b2 - the size of the integer type is smaller than the size of the float type
-            typename max_type<T, T2>::type>::type>::type type;
+            max_type_t<T, T2>>> type;
 };
 
     template <typename T, typename T2>
