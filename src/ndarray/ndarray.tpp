@@ -392,10 +392,10 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
-    template <typename T>
-    NDArray<T> NDArray<T>::operator+(const NDArray<T> &ndarray) const {
+    template <typename T> template <typename T2>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator+(const NDArray<T2> &ndarray) const {
         Shape output_shape(ndarray::broadcast(this->shape, ndarray.shape));
-        NDArray<T> output_array(output_shape, 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(output_shape, 0);
 
         output_array += *this;
         output_array += ndarray;
@@ -403,10 +403,10 @@ namespace laruen::ndarray {
         return output_array;
     }
 
-    template <typename T>
-    NDArray<T> NDArray<T>::operator-(const NDArray<T> &ndarray) const {
+    template <typename T> template <typename T2>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator-(const NDArray<T2> &ndarray) const {
         Shape output_shape(ndarray::broadcast(this->shape, ndarray.shape));
-        NDArray<T> output_array(output_shape, 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(output_shape, 0);
 
         output_array += *this;
         output_array -= ndarray;
@@ -414,10 +414,10 @@ namespace laruen::ndarray {
         return output_array;
     }
 
-    template <typename T>
-    NDArray<T> NDArray<T>::operator*(const NDArray<T> &ndarray) const {
+    template <typename T> template <typename T2>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator*(const NDArray<T2> &ndarray) const {
         Shape output_shape(ndarray::broadcast(this->shape, ndarray.shape));
-        NDArray<T> output_array(output_shape, 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(output_shape, 0);
 
         output_array += *this;
         output_array *= ndarray;
@@ -425,10 +425,10 @@ namespace laruen::ndarray {
         return output_array;
     }
 
-    template <typename T>
-    NDArray<T> NDArray<T>::operator/(const NDArray<T> &ndarray) const {
+    template <typename T> template <typename T2>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator/(const NDArray<T2> &ndarray) const {
         Shape output_shape(ndarray::broadcast(this->shape, ndarray.shape));
-        NDArray<T> output_array(output_shape, 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(output_shape, 0);
 
         output_array += *this;
         output_array /= ndarray;
@@ -438,8 +438,6 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator+=(const NDArray<T2> &ndarray) {
-        static_assert(std::is_arithmetic<T2>::value && types::type_contained<T, T2>(), "operand types not compatible");
-
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
@@ -459,8 +457,6 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator-=(const NDArray<T2> &ndarray) {
-        static_assert(std::is_arithmetic<T2>::value && types::type_contained<T, T2>(), "operand types not compatible");
-
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
@@ -480,8 +476,6 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator*=(const NDArray<T2> &ndarray) {
-        static_assert(std::is_arithmetic<T2>::value && types::type_contained<T, T2>(), "operand types not compatible");
-
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
@@ -501,8 +495,6 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator/=(const NDArray<T2> &ndarray) {
-        static_assert(std::is_arithmetic<T2>::value && types::type_contained<T, T2>(), "operand types not compatible");
-
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
