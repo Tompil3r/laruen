@@ -18,7 +18,60 @@ using namespace laruen::math;
 namespace laruen::ndarray {
 
     template <typename T>
-    NDArray<T>& NDArray<T>::operator=(const NDArray<T> &ndarray) {
+    NDArray<T>::~NDArray() {
+        if(this->free_mem) {
+            delete[] this->data;
+        }
+    }
+
+    template <typename T>
+    NDArray<T>::NDArray() : data(nullptr), size(0), ndim(0), free_mem(true) {}
+
+    template <typename T>
+    NDArray<T>::NDArray(const Shape &shape) : shape(shape), strides(Strides()), ndim(shape.size()), free_mem(true) {
+        this->shape_array(shape);
+        this->data = new T[size];
+    }
+
+    template <typename T>
+    NDArray<T>::NDArray(const Shape &shape, T fill) : NDArray<T>(shape) {
+        this->fill(fill);
+    }
+
+    template <typename T>
+    NDArray<T>::NDArray(T start, T end, T step) : NDArray<T>({ceil_index((end - start) / step)}) {
+        uint64_t i = 0;
+
+        while(start < end) {
+            this->data[i] = start;
+            start += step;
+            i++;
+        }
+    }
+
+    template <typename T>
+    NDArray<T>::NDArray(T *data, const Shape &shape, const Strides &strides,
+    uint64_t size, uint8_t ndim, bool free_mem) : data(data), shape(shape), strides(strides),
+    size(size), ndim(ndim), free_mem(free_mem) {}
+
+    template <typename T> template <typename T2>
+    NDArray<T>::NDArray(const NDArray<T2> &ndarray) : NDArray<T>(new T[ndarray.size],
+    ndarray.get_shape(), ndarray.get_strides(), ndarray.get_size(), ndim, true)
+    {
+        for(uint64_t i = 0;i < this->size;i++) {
+            this->data[i] = ndarray.data[i];
+        }
+    }
+
+    template <typename T>
+    NDArray<T>::NDArray(NDArray<T> &&ndarray) : data(ndarray.data), shape(std::move(ndarray.shape)),
+    strides(std::move(ndarray.strides)), size(ndarray.size), ndim(ndarray.ndim), free_mem(ndarray.free_mem)
+    {
+        ndarray.data = nullptr;
+    }
+
+    template <typename T> template <typename T2>
+    NDArray<T>& NDArray<T>::operator=(const NDArray<T2> &ndarray) {
         if(this == &ndarray) {
             return *this;
         }
@@ -63,59 +116,6 @@ namespace laruen::ndarray {
         ndarray.data = nullptr;
 
         return *this;
-    }
-
-    template <typename T>
-    NDArray<T>::~NDArray() {
-        if(this->free_mem) {
-            delete[] this->data;
-        }
-    }
-
-    template <typename T>
-    NDArray<T>::NDArray() : data(nullptr), size(0), ndim(0), free_mem(true) {}
-
-    template <typename T>
-    NDArray<T>::NDArray(const Shape &shape) : shape(shape), strides(Strides()), ndim(shape.size()), free_mem(true) {
-        this->shape_array(shape);
-        this->data = new T[size];
-    }
-
-    template <typename T>
-    NDArray<T>::NDArray(const Shape &shape, T fill) : NDArray<T>(shape) {
-        this->fill(fill);
-    }
-
-    template <typename T>
-    NDArray<T>::NDArray(T *data, const Shape &shape, const Strides &strides,
-    uint64_t size, uint8_t ndim, bool free_mem) : data(data), shape(shape), strides(strides),
-    size(size), ndim(ndim), free_mem(free_mem) {}
-
-    template <typename T>
-    NDArray<T>::NDArray(const NDArray<T> &ndarray) : NDArray<T>(new T[ndarray.size],
-    ndarray.get_shape(), ndarray.get_strides(), ndarray.get_size(), ndim, true)
-    {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] = ndarray.data[i];
-        }
-    }
-
-    template <typename T>
-    NDArray<T>::NDArray(T start, T end, T step) : NDArray<T>({ceil_index((end - start) / step)}) {
-        uint64_t i = 0;
-
-        while(start < end) {
-            this->data[i] = start;
-            start += step;
-            i++;
-        }
-    }
-
-    template <typename T>
-    NDArray<T>::NDArray(NDArray<T> &&ndarray) : data(ndarray.data), shape(std::move(ndarray.shape)),
-    strides(std::move(ndarray.strides)), size(ndarray.size), ndim(ndarray.ndim), free_mem(ndarray.free_mem)
-    {
-        ndarray.data = nullptr;
     }
 
     template <typename T>
@@ -198,8 +198,8 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
-    template <typename T>
-    bool NDArray<T>::eq_dims(const NDArray<T> &ndarray) const {
+    template <typename T> template <typename T2>
+    bool NDArray<T>::eq_dims(const NDArray<T2> &ndarray) const {
         bool eq_dims = this->ndim == ndarray.ndim;
 
         for(uint8_t dim = 0;dim < this->ndim && eq_dims;dim++) {
@@ -312,8 +312,8 @@ namespace laruen::ndarray {
     }
     */
 
-    template <typename T>
-    NDArray<T>& NDArray<T>::operator+=(T value) {
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<T>& NDArray<T>::operator+=(T2 value) {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] += value;
         }
@@ -321,8 +321,8 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T>
-    NDArray<T>& NDArray<T>::operator-=(T value) {
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<T>& NDArray<T>::operator-=(T2 value) {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] -= value;
         }
@@ -330,8 +330,8 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T>
-    NDArray<T>& NDArray<T>::operator*=(T value) {
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<T>& NDArray<T>::operator*=(T2 value) {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] *= value;
         }
@@ -339,8 +339,8 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T>
-    NDArray<T>& NDArray<T>::operator/=(T value) {
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<T>& NDArray<T>::operator/=(T2 value) {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] /= value;
         }
@@ -348,9 +348,11 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T>
-    NDArray<T> NDArray<T>::operator+(T value) const {
-        NDArray<T> ndarray(new T[this->size], this->shape, this->strides, this->size, this->ndim, true);
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator+(T2 value) const {
+
+        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
+        this->shape, this->strides, this->size, this->ndim, true);
 
         for(uint64_t i = 0;i < ndarray.size;i++) {
             ndarray.data[i] = this->data[i] + value;
@@ -359,9 +361,11 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
-    template <typename T>
-    NDArray<T> NDArray<T>::operator-(T value) const {
-        NDArray<T> ndarray(new T[this->size], this->shape, this->strides, this->size, true);
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator-(T2 value) const {
+
+        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
+        this->shape, this->strides, this->size, this->ndim, true);
 
         for(uint64_t i = 0;i < ndarray.size;i++) {
             ndarray.data[i] = this->data[i] - value;
@@ -370,9 +374,11 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
-    template <typename T>
-    NDArray<T> NDArray<T>::operator*(T value) const {
-        NDArray<T> ndarray(new T[this->size], this->shape, this->strides, this->size, true);
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator*(T2 value) const {
+
+        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
+        this->shape, this->strides, this->size, this->ndim, true);
 
         for(uint64_t i = 0;i < ndarray.size;i++) {
             ndarray.data[i] = this->data[i] * value;
@@ -381,9 +387,11 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
-    template <typename T>
-    NDArray<T> NDArray<T>::operator/(T value) const {
-        NDArray<T> ndarray(new T[this->size], this->shape, this->strides, this->size, true);
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator/(T2 value) const {
+
+        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
+        this->shape, this->strides, this->size, this->ndim, true);
 
         for(uint64_t i = 0;i < ndarray.size;i++) {
             ndarray.data[i] = this->data[i] / value;

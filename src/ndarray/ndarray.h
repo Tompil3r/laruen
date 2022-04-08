@@ -24,16 +24,16 @@ namespace laruen::ndarray {
         template <typename> friend class NDArray;
 
         public:
-            NDArray& operator=(const NDArray &ndarray);
-            NDArray& operator=(NDArray &&ndarray);
             ~NDArray();
             NDArray();
             NDArray(const Shape &shape);
             NDArray(const Shape &shape, T fill);
             NDArray(T start, T end, T step);
             NDArray(T *data, const Shape &shape, const Strides &strides, uint64_t size, uint8_t ndim, bool free_mem);
-            NDArray(const NDArray &ndarray);
-            NDArray(NDArray &&ndarray);
+            template <typename T2> NDArray(const NDArray<T2> &ndarray);
+            NDArray(NDArray<T> &&ndarray);
+            template <typename T2> NDArray& operator=(const NDArray<T2> &ndarray);
+            NDArray& operator=(NDArray<T> &&ndarray);
 
             NDArray shallow_copy();
             const NDArray shallow_copy() const;
@@ -43,7 +43,7 @@ namespace laruen::ndarray {
             uint64_t ravel_ndindex(const NDIndex &ndindex) const;
             NDIndex unravel_index(uint64_t index) const;
             NDArray shrink_dims() const;
-            bool eq_dims(const NDArray &ndarray) const;
+            template <typename T2> bool eq_dims(const NDArray<T2> &ndarray) const;
             T max() const;
             uint64_t index_max() const;
             NDIndex ndindex_max() const;
@@ -57,14 +57,14 @@ namespace laruen::ndarray {
             const T& operator[](const NDIndex &ndindex) const;
             // NDArray operator[](const SliceRanges &slice_ranges);
             // const NDArray operator[](const SliceRanges &slice_ranges) const;
-            NDArray& operator+=(T value);
-            NDArray& operator-=(T value);
-            NDArray& operator*=(T value);
-            NDArray& operator/=(T value);
-            NDArray operator+(T value) const;
-            NDArray operator-(T value) const;
-            NDArray operator*(T value) const;
-            NDArray operator/(T value) const;
+            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator+=(T2 value);
+            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator-=(T2 value);
+            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator*=(T2 value);
+            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator/=(T2 value);
+            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray<types::combine_types_t<T, T2>> operator+(T2 value) const;
+            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray<types::combine_types_t<T, T2>> operator-(T2 value) const;
+            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray<types::combine_types_t<T, T2>> operator*(T2 value) const;
+            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray<types::combine_types_t<T, T2>> operator/(T2 value) const;
             template <typename T2> NDArray<types::combine_types_t<T, T2>> operator+(const NDArray<T2> &ndarray) const;
             template <typename T2> NDArray<types::combine_types_t<T, T2>> operator-(const NDArray<T2> &ndarray) const;
             template <typename T2> NDArray<types::combine_types_t<T, T2>> operator*(const NDArray<T2> &ndarray) const;
