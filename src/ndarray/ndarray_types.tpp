@@ -1,9 +1,12 @@
 
 #include "src/ndarray/ndarray_types.h"
+#include "src/ndarray/ndarray.h"
 #include <string>
 #include <tuple>
 #include <cstdint>
 #include <type_traits>
+
+using laruen::ndarray::NDArray;
 
 // operator<< for Shape is used as operator<< for NDIndex and Strides 
 std::string str(const Shape &shape) {
@@ -106,5 +109,13 @@ namespace types {
             next_signed_t<max_type_t<T, T2>>,
             // sub group b2 - the size of the integer type is smaller than the size of the float type
             max_type_t<T, T2>>> type;
+    };
+  
+    template <typename T> struct is_ndarray {
+        static constexpr bool value = false;
+    };
+
+    template <typename T> struct is_ndarray<NDArray<T>> {
+        static constexpr bool value = true;
     };
 }
