@@ -136,24 +136,15 @@ namespace laruen::ndarray {
     }
 
     template <typename T>
-    NDArray<T> NDArray<T>::reshape(const Shape &shape) {
-        uint8_t ndim = shape.size();
-        NDArray<T> ndarray(this->data, shape, Strides(), this->size, ndim, false);
+    void NDArray<T>::reshape(const Shape &shape) {
+        uint64_t prev_size = this->size;
+        this->ndim = shape.size();
+        this->shape = shape;
+        this->shape_array(shape);
 
-        uint64_t stride = this->strides[ndim - 1];
-        uint64_t size = shape[ndim - 1];
-
-        ndarray.strides[ndim - 1] = stride;
-
-        for(uint8_t dim = ndim - 1;dim-- > 0;) {
-            stride *= shape[dim + 1];
-            ndarray.strides[dim] = stride;
-            size *= shape[dim];
+        if(this->size != prev_size) {
+            throw std::invalid_argument("invalid shape - number of elements do not match");
         }
-
-        assert(this->size == size);
-
-        return ndarray;
     }
 
     template <typename T>

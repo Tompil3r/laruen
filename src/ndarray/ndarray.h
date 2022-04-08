@@ -39,7 +39,7 @@ namespace laruen::ndarray {
             const NDArray shallow_copy() const;
             void fill(T fill);
 
-            NDArray reshape(const Shape &shape);
+            void reshape(const Shape &shape);
             uint64_t ravel_ndindex(const NDIndex &ndindex) const;
             NDIndex unravel_index(uint64_t index) const;
             NDArray shrink_dims() const;
