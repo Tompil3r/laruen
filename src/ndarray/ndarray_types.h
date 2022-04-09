@@ -37,8 +37,7 @@ namespace types {
     template <typename T, typename T2> using combine_types_t = typename combine_types<T, T2>::type;
 
     template <typename T> inline constexpr bool is_ndarray_v = is_ndarray<T>::value;
-    // both integers or both floating point numbers
-    template <typename T, typename T2> inline constexpr bool same_num_types_v = (std::is_integral_v<T> == std::is_integral_v<T2>);
+    template <typename T, typename T2> inline constexpr bool both_integers_v = (std::is_integral_v<T> && std::is_integral_v<T2>);
 }
 
 #include "src/ndarray/ndarray_types.tpp"
