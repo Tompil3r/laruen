@@ -50,9 +50,8 @@ namespace laruen::ndarray {
     }
 
     template <typename T>
-    NDArray<T>::NDArray(T *data, const Shape &shape, const Strides &strides,
-    uint64_t size, uint8_t ndim, bool free_mem) : data(data), shape(shape), strides(strides),
-    size(size), ndim(ndim), free_mem(free_mem) {}
+    NDArray<T>::NDArray(T *data, const Shape &shape, const Strides &strides, uint64_t size, uint8_t ndim, bool free_mem) :
+    data(data), shape(shape), strides(strides), size(size), ndim(ndim), free_mem(free_mem) {}
 
     template <typename T>
     NDArray<T>::NDArray(const NDArray<T> &ndarray) :
@@ -64,8 +63,8 @@ namespace laruen::ndarray {
     }
 
     template <typename T> template <typename T2, typename ENABLE>
-    NDArray<T>::NDArray(const NDArray<T2> &ndarray) : NDArray<T>(new T[ndarray.size],
-    ndarray.shape, ndarray.strides, ndarray.size, ndarray.ndim, true)
+    NDArray<T>::NDArray(const NDArray<T2> &ndarray) :
+    NDArray<T>(new T[ndarray.size], ndarray.shape, ndarray.strides, ndarray.size, ndarray.ndim, true)
     {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] = ndarray.data[i];
@@ -73,8 +72,9 @@ namespace laruen::ndarray {
     }
 
     template <typename T>
-    NDArray<T>::NDArray(NDArray<T> &&ndarray) : data(ndarray.data), shape(std::move(ndarray.shape)),
-    strides(std::move(ndarray.strides)), size(ndarray.size), ndim(ndarray.ndim), free_mem(ndarray.free_mem)
+    NDArray<T>::NDArray(NDArray<T> &&ndarray) :
+    data(ndarray.data), shape(std::move(ndarray.shape)), strides(std::move(ndarray.strides)), size(ndarray.size),
+    ndim(ndarray.ndim), free_mem(ndarray.free_mem)
     {
         ndarray.data = nullptr;
     }
