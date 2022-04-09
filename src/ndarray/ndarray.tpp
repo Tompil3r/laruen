@@ -57,9 +57,7 @@ namespace laruen::ndarray {
     NDArray<T>::NDArray(const NDArray<T> &ndarray) :
     NDArray<T>(new T[ndarray.size], ndarray.shape, ndarray.strides, ndarray.size, ndarray.ndim, true)
     {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] = ndarray.data[i];
-        }
+        this->copy_data_from(ndarray);
     }
 
     template <typename T>
@@ -74,9 +72,7 @@ namespace laruen::ndarray {
     NDArray<T>::NDArray(const NDArray<T2> &ndarray) :
     NDArray<T>(new T[ndarray.size], ndarray.shape, ndarray.strides, ndarray.size, ndarray.ndim, true)
     {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] = ndarray.data[i];
-        }
+        this->copy_data_from(ndarray);
     }
 
     template <typename T> template <typename T2, typename ENABLE>
@@ -84,9 +80,7 @@ namespace laruen::ndarray {
     data(new T[ndarray.size]), shape(std::move(ndarray.shape)), strides(std::move(ndarray.strides)), size(ndarray.size),
     ndim(ndarray.ndim), free_mem(true)
     {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] = ndarray.data[i];
-        }
+        this->copy_data_from(ndarray);
     }
 
     template <typename T>
@@ -108,9 +102,7 @@ namespace laruen::ndarray {
         this->ndim = ndarray.ndim;
         this->free_mem = true;
 
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] = ndarray.data[i];
-        }
+        this->copy_data_from(ndarray);
 
         return *this;
     }
@@ -152,9 +144,7 @@ namespace laruen::ndarray {
         this->ndim = ndarray.ndim;
         this->free_mem = true;
 
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] = ndarray.data[i];
-        }
+        this->copy_data_from(ndarray);
 
         return *this;
     }
@@ -168,9 +158,7 @@ namespace laruen::ndarray {
         this->ndim = ndarray.ndim;
         this->free_mem = true;
 
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] = ndarray.data[i];
-        }
+        this->copy_data_from(ndarray);
 
         return *this;
     }
