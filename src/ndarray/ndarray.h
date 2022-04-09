@@ -85,6 +85,11 @@ namespace laruen::ndarray {
             template <typename T2> bool operator<=(const NDArray<T2> &ndarray) const;
             template <typename T2> bool operator>(const NDArray<T2> &ndarray) const;
             template <typename T2> bool operator<(const NDArray<T2> &ndarray) const;
+            template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray& operator^=(T2 value);
+            template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray& operator&=(T2 value);
+            template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray& operator|=(T2 value);
+            template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray& operator<<=(T2 value);
+            template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray& operator>>=(T2 value);
 
         private:
             void str_(std::string &str, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;

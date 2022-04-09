@@ -611,6 +611,51 @@ namespace laruen::ndarray {
         return !(*this >= ndarray);
     }
 
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<T>& NDArray<T>::operator^=(T2 value) {
+        for(uint64_t i = 0;i < this->size;i++) {
+            this->data[i] ^= value;
+        }
+        
+        return *this;
+    }
+
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<T>& NDArray<T>::operator&=(T2 value) {
+        for(uint64_t i = 0;i < this->size;i++) {
+            this->data[i] &= value;
+        }
+        
+        return *this;
+    }
+
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<T>& NDArray<T>::operator|=(T2 value) {
+        for(uint64_t i = 0;i < this->size;i++) {
+            this->data[i] |= value;
+        }
+        
+        return *this;
+    }
+
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<T>& NDArray<T>::operator<<=(T2 value) {
+        for(uint64_t i = 0;i < this->size;i++) {
+            this->data[i] <<= value;
+        }
+        
+        return *this;
+    }
+
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<T>& NDArray<T>::operator>>=(T2 value) {
+        for(uint64_t i = 0;i < this->size;i++) {
+            this->data[i] >>= value;
+        }
+        
+        return *this;
+    }
+
     template <typename T>
     void NDArray<T>::shape_array(const Shape &shape) {
         uint64_t stride = 1;
