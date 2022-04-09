@@ -90,6 +90,11 @@ namespace laruen::ndarray {
             template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray& operator|=(T2 value);
             template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray& operator<<=(T2 value);
             template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray& operator>>=(T2 value);
+            template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray<types::combine_types_t<T, T2>> operator^(T2 value) const;
+            template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray<types::combine_types_t<T, T2>> operator&(T2 value) const;
+            template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray<types::combine_types_t<T, T2>> operator|(T2 value) const;
+            template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray<types::combine_types_t<T, T2>> operator<<(T2 value) const;
+            template <typename T2, typename = std::enable_if_t<std::is_integral_v<T> && std::is_integral_v<T2>>> NDArray<types::combine_types_t<T, T2>> operator>>(T2 value) const;
 
         private:
             void str_(std::string &str, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;

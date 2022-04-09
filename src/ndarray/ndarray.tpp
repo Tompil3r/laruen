@@ -656,6 +656,66 @@ namespace laruen::ndarray {
         return *this;
     }
 
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator^(T2 value) const {
+        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
+        this->shape, this->strides, this->size, this->ndim, true);
+
+        for(uint64_t i = 0;i < this->size;i++) {
+            ndarray.data[i] = this->data[i] ^ value;
+        }
+        
+        return ndarray;
+    }
+
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator&(T2 value) const {
+        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
+        this->shape, this->strides, this->size, this->ndim, true);
+
+        for(uint64_t i = 0;i < this->size;i++) {
+            ndarray.data[i] = this->data[i] & value;
+        }
+        
+        return ndarray;
+    }
+
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator|(T2 value) const {
+        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
+        this->shape, this->strides, this->size, this->ndim, true);
+
+        for(uint64_t i = 0;i < this->size;i++) {
+            ndarray.data[i] = this->data[i] | value;
+        }
+        
+        return ndarray;
+    }
+
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator<<(T2 value) const {
+        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
+        this->shape, this->strides, this->size, this->ndim, true);
+
+        for(uint64_t i = 0;i < this->size;i++) {
+            ndarray.data[i] = this->data[i] << value;
+        }
+        
+        return ndarray;
+    }
+
+    template <typename T> template <typename T2, typename ENABLE>
+    NDArray<types::combine_types_t<T, T2>> NDArray<T>::operator>>(T2 value) const {
+        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
+        this->shape, this->strides, this->size, this->ndim, true);
+
+        for(uint64_t i = 0;i < this->size;i++) {
+            ndarray.data[i] = this->data[i] >> value;
+        }
+        
+        return ndarray;
+    }
+
     template <typename T>
     void NDArray<T>::shape_array(const Shape &shape) {
         uint64_t stride = 1;
