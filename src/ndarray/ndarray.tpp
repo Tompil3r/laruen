@@ -56,7 +56,7 @@ namespace laruen::ndarray {
 
     template <typename T>
     NDArray<T>::NDArray(const NDArray<T> &ndarray) :
-    NDArray<T>(new T[ndarray.size], ndarray.get_shape(), ndarray.get_strides(), ndarray.get_size(), ndim, true)
+    NDArray<T>(new T[ndarray.size], ndarray.get_shape(), ndarray.get_strides(), ndarray.get_size(), ndarray.ndim, true)
     {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] = ndarray.data[i];
@@ -65,7 +65,7 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>::NDArray(const NDArray<T2> &ndarray) : NDArray<T>(new T[ndarray.size],
-    ndarray.get_shape(), ndarray.get_strides(), ndarray.get_size(), ndim, true)
+    ndarray.get_shape(), ndarray.get_strides(), ndarray.get_size(), ndarray.ndim, true)
     {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] = ndarray.data[i];
