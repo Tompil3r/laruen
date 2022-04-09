@@ -54,7 +54,16 @@ namespace laruen::ndarray {
     uint64_t size, uint8_t ndim, bool free_mem) : data(data), shape(shape), strides(strides),
     size(size), ndim(ndim), free_mem(free_mem) {}
 
-    template <typename T> template <typename T2>
+    template <typename T>
+    NDArray<T>::NDArray(const NDArray<T> &ndarray) :
+    NDArray<T>(new T[ndarray.size], ndarray.get_shape(), ndarray.get_strides(), ndarray.get_size(), ndim, true)
+    {
+        for(uint64_t i = 0;i < this->size;i++) {
+            this->data[i] = ndarray.data[i];
+        }
+    }
+
+    template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>::NDArray(const NDArray<T2> &ndarray) : NDArray<T>(new T[ndarray.size],
     ndarray.get_shape(), ndarray.get_strides(), ndarray.get_size(), ndim, true)
     {
@@ -70,7 +79,33 @@ namespace laruen::ndarray {
         ndarray.data = nullptr;
     }
 
-    template <typename T> template <typename T2>
+    template <typename T>
+    NDArray<T>& NDArray<T>::operator=(const NDArray<T> &ndarray) {
+        if(this == &ndarray) {
+            return *this;
+        }
+
+        if(this->size != ndarray.size) {
+            if(this->free_mem) {
+                delete[] this->data;
+            }
+            this->data = new T[ndarray.size];
+        }
+
+        this->shape = ndarray.shape;
+        this->strides = ndarray.strides;
+        this->size = ndarray.size;
+        this->ndim = ndarray.ndim;
+        this->free_mem = true;
+
+        for(uint64_t i = 0;i < this->size;i++) {
+            this->data[i] = ndarray.data[i];
+        }
+
+        return *this;
+    }
+
+    template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>& NDArray<T>::operator=(const NDArray<T2> &ndarray) {
         if(this == &ndarray) {
             return *this;

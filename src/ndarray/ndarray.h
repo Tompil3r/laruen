@@ -30,9 +30,11 @@ namespace laruen::ndarray {
             NDArray(const Shape &shape, T fill);
             NDArray(T start, T end, T step);
             NDArray(T *data, const Shape &shape, const Strides &strides, uint64_t size, uint8_t ndim, bool free_mem);
-            template <typename T2> NDArray(const NDArray<T2> &ndarray);
+            NDArray(const NDArray &ndarray);
+            template <typename T2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray(const NDArray<T2> &ndarray);
             NDArray(NDArray<T> &&ndarray);
-            template <typename T2> NDArray& operator=(const NDArray<T2> &ndarray);
+            NDArray& operator=(const NDArray &ndarray);
+            template <typename T2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(const NDArray<T2> &ndarray);
             NDArray& operator=(NDArray<T> &&ndarray);
 
             NDArray shallow_copy();
