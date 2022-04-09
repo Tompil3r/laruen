@@ -712,6 +712,17 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
+    template <typename T> template <typename ENABLE>
+    NDArray<T> NDArray<T>::operator~() const {
+        NDArray<T> ndarray(new T[this->size], this->shape, this->strides, this->size, this->ndim, true);
+
+        for(uint64_t i = 0;i < this->size;i++) {
+            ndarray.data[i] = ~this->data[i];
+        }
+
+        return ndarray;
+    }
+
     template <typename T>
     void NDArray<T>::shape_array(const Shape &shape) {
         uint64_t stride = 1;
