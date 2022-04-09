@@ -175,6 +175,13 @@ namespace laruen::ndarray {
         return *this;
     }
 
+    template <typename T> template <typename T2>
+    void NDArray<T>::copy_data_from(const NDArray<T2> &ndarray) {
+        for(uint64_t i = 0;i < this->size;i++) {
+            this->data[i] = ndarray.data[i];
+        }
+    }
+
     template <typename T>
     NDArray<T> NDArray<T>::shallow_copy() {
         return NDArray<T>(this->data, this->shape, this->strides, this->size, this->ndim, false);

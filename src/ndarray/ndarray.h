@@ -40,6 +40,7 @@ namespace laruen::ndarray {
             template <typename T2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(const NDArray<T2> &ndarray);
             template <typename T2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(NDArray<T2> &&ndarray);
 
+            template <typename T2> void copy_data_from(const NDArray<T2> &ndarray);
             NDArray shallow_copy();
             const NDArray shallow_copy() const;
             void fill(T fill);
