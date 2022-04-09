@@ -101,6 +101,11 @@ namespace laruen::ndarray {
             template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> NDArray& operator|=(const NDArray<T2> &ndarray);
             template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> NDArray& operator<<=(const NDArray<T2> &ndarray);
             template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> NDArray& operator>>=(const NDArray<T2> &ndarray);
+            template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> auto operator^(const NDArray<T2> &ndarray) const;
+            template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> auto operator&(const NDArray<T2> &ndarray) const;
+            template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> auto operator|(const NDArray<T2> &ndarray) const;
+            template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> auto operator<<(const NDArray<T2> &ndarray) const;
+            template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> auto operator>>(const NDArray<T2> &ndarray) const;
 
         private:
             void str_(std::string &str, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
