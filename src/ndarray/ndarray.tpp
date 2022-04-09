@@ -712,7 +712,7 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
-    template <typename T> template <typename ENABLE>
+    template <typename T>
     NDArray<T> NDArray<T>::operator~() const {
         NDArray<T> ndarray(new T[this->size], this->shape, this->strides, this->size, this->ndim, true);
 

@@ -95,7 +95,7 @@ namespace laruen::ndarray {
             template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> auto operator|(T2 value) const;
             template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> auto operator<<(T2 value) const;
             template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> auto operator>>(T2 value) const;
-            template <typename = std::enable_if_t<std::is_integral_v<T>>> NDArray operator~() const;
+            NDArray operator~() const;
             template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> NDArray& operator^=(const NDArray<T2> &ndarray);
             template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> NDArray& operator&=(const NDArray<T2> &ndarray);
             template <typename T2, typename = std::enable_if_t<types::both_integers_v<T, T2>>> NDArray& operator|=(const NDArray<T2> &ndarray);
