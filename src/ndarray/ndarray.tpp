@@ -139,10 +139,6 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>& NDArray<T>::operator=(const NDArray<T2> &ndarray) {
-        if(this == &ndarray) {
-            return *this;
-        }
-
         if(this->size != ndarray.size) {
             if(this->free_mem) {
                 delete[] this->data;
@@ -165,10 +161,6 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>& NDArray<T>::operator=(NDArray<T2> &&ndarray) {
-        if(this->free_mem) {
-            delete[] this->data;
-        }
-
         this->data = new T[ndarray.size];
         this->shape = std::move(ndarray.shape);
         this->strides = std::move(ndarray.strides);
