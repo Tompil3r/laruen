@@ -111,6 +111,7 @@ namespace laruen::ndarray {
             template <typename T2> auto operator%(T2 value) const;
             template <typename T2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(const NDArray<T2> &ndarray);
             template <typename T2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(const NDArray<T2> &ndarray);
+            template <typename T2> auto operator%(const NDArray<T2> &ndarray) const;
 
         private:
             void str_(std::string &str, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
