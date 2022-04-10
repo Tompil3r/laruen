@@ -38,6 +38,7 @@ namespace types {
 
     template <typename T> inline constexpr bool is_ndarray_v = is_ndarray<T>::value;
     template <typename T, typename T2> inline constexpr bool both_integers_v = (std::is_integral_v<T> && std::is_integral_v<T2>);
+    template <typename T, typename T2> inline constexpr bool atleast_one_float_v = (std::is_floating_point_v<T> || std::is_floating_point_v<T2>);
 }
 
 #include "src/ndarray/ndarray_types.tpp"
