@@ -887,6 +887,15 @@ namespace laruen::ndarray {
         return *this;
     }
 
+    template <typename T> template <typename T2>
+    auto NDArray<T>::operator%(T2 value) const {
+
+        NDArray<types::combine_types_t<T, T2>> ndarray(*this);
+        ndarray %= value;
+
+        return ndarray;
+    }
+
     template <typename T>
     void NDArray<T>::shape_array(const Shape &shape) {
         uint64_t stride = 1;
