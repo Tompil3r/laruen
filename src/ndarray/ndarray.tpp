@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <utility>
 #include <stdexcept>
+#include <cmath>
 
 using namespace laruen;
 using namespace laruen::ndarray::utils;
@@ -866,6 +867,24 @@ namespace laruen::ndarray {
         output_array >>= ndarray;
 
         return output_array;
+    }
+
+    template <typename T> template <typename T2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int> ENABLE>
+    NDArray<T>& NDArray<T>::operator%=(T2 value) {
+        for(uint64_t i = 0;i < this->size;i++) {
+            this->data[i] %= value;
+        }
+
+        return *this;
+    }
+
+    template <typename T> template <typename T2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int> ENABLE>
+    NDArray<T>& NDArray<T>::operator%=(T2 value) {
+        for(uint64_t i = 0;i < this->size;i++) {
+            this->data[i] = (T)fmod((float64_t)this->data[i], (float64_t)value);
+        }
+
+        return *this;
     }
 
     template <typename T>
