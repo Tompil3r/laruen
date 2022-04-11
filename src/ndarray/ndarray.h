@@ -1,6 +1,6 @@
 
-#ifndef NDARRAY_CORE_H
-#define NDARRAY_CORE_H
+#ifndef NDARRAY_H
+#define NDARRAY_H
 
 #include "src/ndarray/ndarray_types.h"
 #include <vector>
