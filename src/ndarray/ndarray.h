@@ -63,8 +63,8 @@ namespace laruen::ndarray {
 
             T& operator[](const NDIndex &ndindex);
             const T& operator[](const NDIndex &ndindex) const;
-            // NDArray operator[](const SliceRanges &slice_ranges);
-            // const NDArray operator[](const SliceRanges &slice_ranges) const;
+            NDArray operator[](const SliceRanges &slice_ranges);
+            const NDArray operator[](const SliceRanges &slice_ranges) const;
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator+=(T2 value);
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator-=(T2 value);
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator*=(T2 value);

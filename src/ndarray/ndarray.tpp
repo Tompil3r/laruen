@@ -358,7 +358,6 @@ namespace laruen::ndarray {
         return this->data[this->ravel_ndindex(ndindex)];
     }
 
-    /*
     template <typename T>
     const NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges) const {
         NDArray<T> ndarray = this->shallow_copy();
@@ -372,7 +371,6 @@ namespace laruen::ndarray {
         ndarray.slice_array(slice_ranges);
         return ndarray;
     }
-    */
 
     template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>& NDArray<T>::operator+=(T2 value) {
