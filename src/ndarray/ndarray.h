@@ -115,6 +115,8 @@ namespace laruen::ndarray {
             template <typename T2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(const NDArray<T2> &ndarray);
             template <typename T2> auto operator%(const NDArray<T2> &ndarray) const;
 
+            
+
         private:
             void str_(std::string &str, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
             void shape_array(const Shape &shape);
@@ -161,22 +163,6 @@ namespace laruen::ndarray {
 
             inline const T& operator[](uint64_t index) const {
                 return this->data[index];
-            }
-
-            inline friend NDArray operator+(T value, NDArray ndarray) {
-                return ndarray + value;
-            }
-
-            inline friend NDArray operator-(T value, NDArray ndarray) {
-                return ndarray + value;
-            }
-
-            inline friend NDArray operator*(T value, NDArray ndarray) {
-                return ndarray + value;
-            }
-
-            inline friend NDArray operator/(T value, NDArray ndarray) {
-                return ndarray + value;
             }
     };
 };
