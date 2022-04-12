@@ -225,21 +225,20 @@ namespace laruen::ndarray {
     }
 
     template <typename T>
-    NDArray<T> NDArray<T>::shrink_dims() const {
-        NDArray<T> ndarray(this->data, Shape(), Strides(), this->size, this->ndim, false);
-        uint8_t new_ndim = 0;
+    void NDArray<T>::squeeze() {
+        Shape shape;
+        Strides strides;
 
         for(uint8_t dim = 0;dim < this->ndim;dim++) {
             if(this->shape[dim] > 1) {
-                ndarray.shape.push_back(this->shape[dim]);
-                ndarray.strides.push_back(this->strides[dim]);
-                new_ndim++;
+                shape.push_back(this->shape[dim]);
+                strides.push_back(this->strides[dim]);
             }
         }
 
-        ndarray.ndim = new_ndim;
-
-        return ndarray;
+        this->ndim = shape.size();
+        this->shape = shape;
+        this->strides = strides;
     }
 
     template <typename T> template <typename T2>
