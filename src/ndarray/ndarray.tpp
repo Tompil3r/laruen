@@ -608,7 +608,7 @@ namespace laruen::ndarray {
         return !(*this >= ndarray);
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator^=(T2 value) {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] ^= value;
@@ -617,7 +617,7 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator&=(T2 value) {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] &= value;
@@ -626,7 +626,7 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator|=(T2 value) {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] |= value;
@@ -635,7 +635,7 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator<<=(T2 value) {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] <<= value;
@@ -644,7 +644,7 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator>>=(T2 value) {
         for(uint64_t i = 0;i < this->size;i++) {
             this->data[i] >>= value;
@@ -653,7 +653,7 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     auto NDArray<T>::operator^(T2 value) const {
         NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
         this->shape, this->strides, this->size, this->ndim, true);
@@ -665,7 +665,7 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     auto NDArray<T>::operator&(T2 value) const {
         NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
         this->shape, this->strides, this->size, this->ndim, true);
@@ -677,7 +677,7 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     auto NDArray<T>::operator|(T2 value) const {
         NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
         this->shape, this->strides, this->size, this->ndim, true);
@@ -689,7 +689,7 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     auto NDArray<T>::operator<<(T2 value) const {
         NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
         this->shape, this->strides, this->size, this->ndim, true);
@@ -701,7 +701,7 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     auto NDArray<T>::operator>>(T2 value) const {
         NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
         this->shape, this->strides, this->size, this->ndim, true);
@@ -724,7 +724,7 @@ namespace laruen::ndarray {
         return ndarray;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator^=(const NDArray<T2> &ndarray) {
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
@@ -743,7 +743,7 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator&=(const NDArray<T2> &ndarray) {
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
@@ -762,7 +762,7 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator|=(const NDArray<T2> &ndarray) {
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
@@ -781,7 +781,7 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator<<=(const NDArray<T2> &ndarray) {
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
@@ -800,7 +800,7 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator>>=(const NDArray<T2> &ndarray) {
         if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
@@ -819,7 +819,7 @@ namespace laruen::ndarray {
         return *this;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     auto NDArray<T>::operator^(const NDArray<T2> &ndarray) const {
         NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
 
@@ -829,7 +829,7 @@ namespace laruen::ndarray {
         return output_array;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     auto NDArray<T>::operator&(const NDArray<T2> &ndarray) const {
         NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
 
@@ -839,7 +839,7 @@ namespace laruen::ndarray {
         return output_array;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     auto NDArray<T>::operator|(const NDArray<T2> &ndarray) const {
         NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
 
@@ -849,7 +849,7 @@ namespace laruen::ndarray {
         return output_array;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     auto NDArray<T>::operator<<(const NDArray<T2> &ndarray) const {
         NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
 
@@ -859,7 +859,7 @@ namespace laruen::ndarray {
         return output_array;
     }
 
-    template <typename T> template <typename T2, typename ENABLE>
+    template <typename T> template <typename T2>
     auto NDArray<T>::operator>>(const NDArray<T2> &ndarray) const {
         NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
 
