@@ -31,23 +31,12 @@ namespace laruen::ndarray {
     template <typename T>
     NDArray<T>::NDArray(const Shape &shape) : shape(shape), strides(Strides()), ndim(shape.size()), free_mem(true) {
         this->shape_array(shape);
-        this->data = new T[size];
+        this->data = new T[this->size];
     }
 
     template <typename T>
     NDArray<T>::NDArray(const Shape &shape, T fill) : NDArray<T>(shape) {
         this->fill(fill);
-    }
-
-    template <typename T>
-    NDArray<T>::NDArray(T start, T end, T step) : NDArray<T>({ceil_index((end - start) / step)}) {
-        uint64_t i = 0;
-
-        while(start < end) {
-            this->data[i] = start;
-            start += step;
-            i++;
-        }
     }
 
     template <typename T>
@@ -67,6 +56,36 @@ namespace laruen::ndarray {
     ndim(ndarray.ndim), free_mem(ndarray.free_mem)
     {
         ndarray.data = nullptr;
+    }
+
+    template <typename T>
+    NDArray<T>::NDArray(T end) : NDArray<T>(Shape({ceil_index(end)})) {
+        T value = 0;
+
+        for(uint64_t i = 0;i < this->shape[0];i++) {
+            this->data[i] = value;
+            value += 1;
+        }
+    }
+
+    template <typename T>
+    NDArray<T>::NDArray(T start, T end) : NDArray<T>(Shape({ceil_index(end - start)})) {
+        T value = start;
+
+        for(uint64_t i = 0;i < this->shape[0];i++) {
+            this->data[i] = value;
+            value += 1;
+        }
+    }
+
+    template <typename T>
+    NDArray<T>::NDArray(T start, T end, T step) : NDArray<T>(Shape({ceil_index((end - start) / step)})) {
+        T value = start;
+
+        for(uint64_t i = 0;i < this->shape[0];i++) {
+            this->data[i] = value;
+            value += step;
+        }
     }
 
     template <typename T> template <typename T2, typename ENABLE>
