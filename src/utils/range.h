@@ -11,7 +11,9 @@ namespace laruen::utils {
         T end;
         T step;
 
-        constexpr Range(T start=0, T end=0, T step=1);
+        constexpr Range(T end);
+        constexpr Range(T start, T end);
+        constexpr Range(T start, T end, T step);
         std::string str() const;
     };
 };
