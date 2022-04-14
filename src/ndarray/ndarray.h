@@ -3,6 +3,7 @@
 #define NDARRAY_H
 
 #include "src/ndarray/ndarray_types.h"
+#include "src/ndarray/nditerator.h"
 #include <vector>
 #include <cstdint>
 #include <cassert>
@@ -22,6 +23,7 @@ namespace laruen::ndarray {
         bool free_mem;
 
         template <typename> friend class NDArray;
+        friend class NDIterator<NDArray<T>>;
 
         public:
             ~NDArray();
