@@ -980,23 +980,19 @@ namespace laruen::ndarray {
     template <typename T>
     void NDArray<T>::slice_array(const SliceRanges &slice_ranges) {
 
-        uint8_t ndim = slice_ranges.size() - 1;
-        uint64_t stride = slice_ranges[ndim].step;
-        uint64_t data_start = slice_ranges[ndim].start * this->strides[ndim];
-        this->size = ceil_index((float64_t)(slice_ranges[ndim].end - slice_ranges[ndim].start) / slice_ranges[ndim].step);
+        uint8_t ndim = slice_ranges.size();
 
-        this->strides[ndim] = stride;
-        this->shape[ndim] = size;
+        float64_t size_ratio = 1;
 
-        for(uint8_t dim = ndim;dim-- >= 1;) {
-            data_start += slice_ranges[dim].start * this->strides[dim];
-            stride *= this->shape[dim + 1] * slice_ranges[dim].step;
-            this->strides[dim] = stride;
-            this->shape[dim] = ceil_index((float64_t)(slice_ranges[dim].end - slice_ranges[dim].start) / slice_ranges[dim].step);
-            this->size *= this->shape[dim];
+        for(uint8_t dim = 0;dim < ndim;dim++) {
+            size_ratio *= this->shape[dim];
+            this->data += slice_ranges[dim].start * this->strides[dim];
+            this->strides[dim] = this->strides[dim] * slice_ranges[dim].step;
+            this->shape[dim] = ceil_index((float64_t)(slice_ranges[dim].end - slice_ranges[dim].start) / (float64_t)slice_ranges[dim].step);
+            size_ratio /= this->shape[dim];
         }
 
-        this->data += data_start;
+        this->size /= size_ratio;
     }
 
     template <typename T>
