@@ -15,6 +15,7 @@ namespace laruen::ndarray {
             NDIterator(T &ndarray);
 
             auto& next();
+            void reset();
 
             inline bool has_next() {
                 return this->ndindex[0] < this->ndarray.shape[0];

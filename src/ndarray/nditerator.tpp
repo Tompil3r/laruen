@@ -27,4 +27,14 @@ namespace laruen::ndarray {
 
         return value;
     }
+
+    template <typename T>
+    void NDIterator<T>::reset() {
+        this->index = 0;
+        uint8_t ndim = this->ndindex.size();
+
+        for(uint8_t i = 0;i < ndim;i++) {
+            this->ndindex[i] = 0;
+        }
+    }
 };
