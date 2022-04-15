@@ -24,6 +24,7 @@ namespace laruen::ndarray {
 
         template <typename> friend class NDArray;
         friend class NDIterator<NDArray<T>>;
+        friend class NDIterator<const NDArray<T>>;
 
         public:
             ~NDArray();
