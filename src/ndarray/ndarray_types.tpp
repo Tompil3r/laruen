@@ -118,4 +118,8 @@ namespace types {
     template <typename T> struct is_ndarray<NDArray<T>> {
         static constexpr bool value = true;
     };
+
+    template <typename T> struct is_ndarray<const NDArray<T>> {
+        static constexpr bool value = true;
+    };
 }
