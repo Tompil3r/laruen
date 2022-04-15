@@ -17,7 +17,7 @@ namespace laruen::ndarray {
             auto& next();
             void reset();
 
-            inline bool has_next() {
+            inline bool has_next() const {
                 return this->ndindex[0] < this->ndarray.shape[0];
             }
     };
