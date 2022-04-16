@@ -233,7 +233,7 @@ namespace laruen::ndarray {
 
     template <typename T>
     NDIndex NDArray<T>::unravel_index(uint64_t index) const {
-        NDIndex ndindex;
+        NDIndex ndindex(this->ndim);
 
         for(uint8_t dim = 0;dim < this->ndim;dim++) {
             ndindex[dim] = index / this->strides[dim];
