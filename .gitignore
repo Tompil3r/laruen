@@ -3,4 +3,3 @@
 *.o
 *.exe
 *test*
-**/base_array.*
