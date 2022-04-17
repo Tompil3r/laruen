@@ -48,6 +48,10 @@ class ArrayBase {
         inline const bool& free_mem() const {
             return this->m_free_mem;
         }
+
+        inline void modify_mem_release(bool free_mem) {
+            this->m_free_mem = free_mem;
+        }
 };
 
 
