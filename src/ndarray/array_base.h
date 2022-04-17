@@ -50,6 +50,28 @@ class ArrayBase {
             }
         }
 
+        uint64_t ravel_ndindex(const NDIndex &ndindex) const {
+            uint64_t index = 0;
+            uint8_t ndim = ndindex.size();
+
+            for(uint8_t dim = 0;dim < ndim;dim++) {
+                index += ndindex[dim] * this->m_strides[dim];
+            }
+
+            return index;
+        }
+
+        NDIndex unravel_index(uint64_t index) const {
+            NDIndex ndindex(this->m_ndim);
+
+            for(uint8_t dim = 0;dim < this->m_ndim;dim++) {
+                ndindex[dim] = index / this->m_strides[dim];
+                index -= ndindex[dim] * this->m_strides[dim];
+            }
+
+            return ndindex;
+        }
+
         inline const Shape& shape() const {
             return this->m_shape;
         }
