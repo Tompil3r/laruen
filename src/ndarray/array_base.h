@@ -5,6 +5,7 @@
 #include "src/ndarray/ndarray_types.h"
 #include <cstdint>
 #include <utility>
+#include <stdexcept>
 
 class ArrayBase {
     protected:
@@ -26,6 +27,26 @@ class ArrayBase {
                 this->m_strides[dim] = stride;
                 this->m_size *= shape[dim];
                 stride *= shape[dim];
+            }
+        }
+
+        void reshape(const Shape &shape) {
+            uint64_t prev_size = this->m_size;
+            this->m_ndim = shape.size();
+            this->m_shape = shape;
+            this->m_strides.resize(this->m_ndim);
+            this->m_size = (this->m_ndim > 0);
+
+            uint64_t stride = 1;
+            
+            for(uint8_t dim = this->m_ndim; dim-- > 0;) {
+                this->m_strides[dim] = stride;
+                this->m_size *= shape[dim];
+                stride *= shape[dim];
+            }
+
+            if(this->m_size != prev_size) {
+                throw std::invalid_argument("invalid shape - number of elements do not match");
             }
         }
 
