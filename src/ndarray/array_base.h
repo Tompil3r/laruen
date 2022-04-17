@@ -29,23 +29,23 @@ class ArrayBase {
             }
         }
 
-        inline const Shape& shape() {
+        inline const Shape& shape() const {
             return this->m_shape;
         }
 
-        inline const Strides& strides() {
+        inline const Strides& strides() const {
             return this->m_strides;
         }
 
-        inline const uint64_t& size() {
+        inline const uint64_t& size() const {
             return this->m_size;
         }
 
-        inline const uint8_t& ndim() {
+        inline const uint8_t& ndim() const {
             return this->m_ndim;
         }
 
-        inline const bool& free_mem() {
+        inline const bool& free_mem() const {
             return this->m_free_mem;
         }
 };
