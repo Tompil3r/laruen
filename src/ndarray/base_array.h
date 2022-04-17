@@ -6,11 +6,11 @@
 #include <cstdint>
 
 class BaseArray {
-    Shape shape;
-    Strides strides;
-    uint64_t size;
-    uint8_t ndim;
-    bool free_mem;
+    Shape m_shape;
+    Strides m_strides;
+    uint64_t m_size;
+    uint8_t m_ndim;
+    bool m_free_mem;
 };
 
 
