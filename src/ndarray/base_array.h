@@ -28,6 +28,26 @@ class BaseArray {
                 stride *= shape[dim];
             }
         }
+
+        inline const Shape& shape() {
+            return this->m_shape;
+        }
+
+        inline const Strides& strides() {
+            return this->m_strides;
+        }
+
+        inline const uint64_t& size() {
+            return this->m_size;
+        }
+
+        inline const uint8_t& ndim() {
+            return this->m_ndim;
+        }
+
+        inline const bool& free_mem() {
+            return this->m_free_mem;
+        }
 };
 
 
