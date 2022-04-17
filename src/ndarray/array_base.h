@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <utility>
 
-class BaseArray {
+class ArrayBase {
     protected:
         Shape m_shape;
         Strides m_strides;
@@ -16,7 +16,7 @@ class BaseArray {
 
 
     public:
-        BaseArray(const Shape &shape) : m_shape(shape),
+        ArrayBase(const Shape &shape) : m_shape(shape),
         m_strides(shape.size()), m_ndim(shape.size()), m_free_mem(true)
         {
             uint64_t stride = 1;
