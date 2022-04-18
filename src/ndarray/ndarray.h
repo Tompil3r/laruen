@@ -25,6 +25,7 @@ namespace laruen::ndarray {
             NDArray();
             NDArray(const Shape &shape);
             NDArray(const Shape &shape, T fill);
+            NDArray(NDArray &ndarray, const SliceRanges &ranges);
             NDArray(T *data, const ArrayBase &base);
             NDArray(T *data, const ArrayBase &base, bool free_mem);
             NDArray(const NDArray &ndarray);
@@ -52,8 +53,8 @@ namespace laruen::ndarray {
 
             T& operator[](const NDIndex &ndindex);
             const T& operator[](const NDIndex &ndindex) const;
-            NDArray operator[](const SliceRanges &slice_ranges);
-            const NDArray operator[](const SliceRanges &slice_ranges) const;
+            NDArray operator[](const SliceRanges &ranges);
+            const NDArray operator[](const SliceRanges &ranges) const;
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator+=(T2 value);
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator-=(T2 value);
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator*=(T2 value);
@@ -108,7 +109,6 @@ namespace laruen::ndarray {
 
         private:
             void str_(std::string &str, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
-            void slice_array(const SliceRanges &slice_ranges);
         
         public:
             inline std::string str() const {

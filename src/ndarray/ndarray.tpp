@@ -38,6 +38,24 @@ namespace laruen::ndarray {
     }
 
     template <typename T>
+    NDArray<T>::NDArray(NDArray<T> &ndarray, const SliceRanges &ranges)
+    : NDArray<T>(ndarray.m_data, ndarray, false)
+    {
+        uint8_t ndim = ranges.size();
+        float64_t size_ratio = 1;
+
+        for(uint8_t dim = 0;dim < ndim;dim++) {
+            size_ratio *= this->m_shape[dim];
+            this->m_data += ranges[dim].start * this->m_strides[dim];
+            this->m_strides[dim] = this->m_strides[dim] * ranges[dim].step;
+            this->m_shape[dim] = ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
+            size_ratio /= this->m_shape[dim];
+        }
+
+        this->m_size /= size_ratio;
+    }
+
+    template <typename T>
     NDArray<T>::NDArray(T *data, const ArrayBase &base)
     : ArrayBase(base), m_data(data) {}
     
@@ -270,17 +288,13 @@ namespace laruen::ndarray {
     }
 
     template <typename T>
-    const NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges) const {
-        NDArray<T> ndarray(this->m_data, *this, false);
-        ndarray.slice_array(slice_ranges);
-        return ndarray;
+    const NDArray<T> NDArray<T>::operator[](const SliceRanges &ranges) const {
+        return NDArray<T>(*this, ranges);
     }
 
     template <typename T>
-    NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges) {
-        NDArray<T> ndarray(this->m_data, *this, false);
-        ndarray.slice_array(slice_ranges);
-        return ndarray;
+    NDArray<T> NDArray<T>::operator[](const SliceRanges &ranges) {
+        return NDArray<T>(*this, ranges);
     }
 
     template <typename T> template <typename T2, typename ENABLE>
@@ -489,7 +503,7 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     bool NDArray<T>::operator==(const NDArray<T2> &ndarray) const {
-        bool eq = this->eq_dims(ndarray);
+        bool eq = this->equal_dims(ndarray);
 
         for(uint64_t i = 0;i < this->m_size && eq;i++) {
             eq = (this->m_data[i] == ndarray.m_data[i]);
@@ -869,24 +883,6 @@ namespace laruen::ndarray {
         output_array %= ndarray;
 
         return output_array;
-    }
-
-    template <typename T>
-    void NDArray<T>::slice_array(const SliceRanges &slice_ranges) {
-
-        uint8_t ndim = slice_ranges.size();
-
-        float64_t size_ratio = 1;
-
-        for(uint8_t dim = 0;dim < ndim;dim++) {
-            size_ratio *= this->m_shape[dim];
-            this->m_data += slice_ranges[dim].start * this->m_strides[dim];
-            this->m_strides[dim] = this->m_strides[dim] * slice_ranges[dim].step;
-            this->m_shape[dim] = ceil_index((float64_t)(slice_ranges[dim].end - slice_ranges[dim].start) / (float64_t)slice_ranges[dim].step);
-            size_ratio /= this->m_shape[dim];
-        }
-
-        this->m_size /= size_ratio;
     }
 
     template <typename T>
