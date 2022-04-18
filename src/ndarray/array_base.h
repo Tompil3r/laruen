@@ -72,6 +72,22 @@ class ArrayBase {
             return ndindex;
         }
 
+        void squeeze() {
+            uint8_t new_ndim = 0;
+
+            for(uint8_t dim = 0;dim < this->m_ndim;dim++) {
+                if(this->m_shape[dim] > 1) {
+                    this->m_shape[new_ndim] = this->m_shape[dim];
+                    this->m_strides[new_ndim] = this->m_strides[dim];
+                    new_ndim++;
+                }
+            }
+
+            this->m_ndim = new_ndim;
+            this->m_shape.resize(this->m_ndim);
+            this->m_strides.resize(this->m_ndim);
+        }
+
         inline const Shape& shape() const {
             return this->m_shape;
         }
