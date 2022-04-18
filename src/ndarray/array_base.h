@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <utility>
 #include <stdexcept>
+#include <string>
 
 class ArrayBase {
     protected:
@@ -96,6 +97,30 @@ class ArrayBase {
             }
 
             return equal;
+        }
+
+        std::string str() {
+            std::string str("shape = (");
+            uint8_t dim = 0;
+
+            for(dim = 0;dim < this->m_ndim - 1;dim++) {
+                str += std::to_string(this->m_shape[dim]);
+                str.push_back(',');
+                str.push_back(' ');
+            }
+            str += std::to_string(this->m_shape[dim]) + ")\nstrides = (";
+
+            for(dim = 0;dim < this->m_ndim - 1;dim++) {
+                str += std::to_string(this->m_strides[dim]);
+                str.push_back(',');
+                str.push_back(' ');
+            }
+            str += std::to_string(this->m_strides[dim]) + ")\nsize = " + 
+            std::to_string(this->m_size) + "\nndim = " +
+            std::to_string(this->m_ndim);
+            str.push_back('\n');
+
+            return str;
         }
 
         inline const Shape& shape() const {
