@@ -99,7 +99,7 @@ class ArrayBase {
             return equal;
         }
 
-        std::string str() {
+        std::string str() const {
             std::string str("shape = (");
             uint8_t dim = 0;
 
