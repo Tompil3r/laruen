@@ -123,6 +123,21 @@ class ArrayBase {
             return str;
         }
 
+        uint64_t physical_index(uint64_t logical_index) const {
+            uint64_t cstride = this->m_size;
+            uint64_t physical_index = 0;
+            uint64_t dim_index;
+
+            for(uint8_t dim = 0;dim < this->m_ndim;dim++) {
+                cstride /= this->m_shape[dim];
+                dim_index = logical_index / cstride;
+                physical_index += this->m_strides[dim] * dim_index;
+                logical_index -= cstride * dim_index;
+            }
+
+            return physical_index;
+        }
+
         inline const Shape& shape() const {
             return this->m_shape;
         }
