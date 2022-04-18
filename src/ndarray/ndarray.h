@@ -4,23 +4,17 @@
 
 #include "src/ndarray/ndarray_types.h"
 #include "src/ndarray/nditerator.h"
+#include "src/ndarray/array_base.h"
 #include <vector>
 #include <cstdint>
 #include <cassert>
-#include <iostream>
 #include <string>
-#include <sstream>
 #include <type_traits>
 
 namespace laruen::ndarray {
     
-    template <typename T = float64_t> class NDArray {
-        T *data;
-        Shape shape;
-        Strides strides;
-        uint64_t size;
-        uint8_t ndim;
-        bool free_mem;
+    template <typename T = float64_t> class NDArray : public ArrayBase {
+        T *m_data;
 
         template <typename> friend class NDArray;
         friend class NDIterator<NDArray<T>>;
@@ -31,7 +25,8 @@ namespace laruen::ndarray {
             NDArray();
             NDArray(const Shape &shape);
             NDArray(const Shape &shape, T fill);
-            NDArray(T *data, const Shape &shape, const Strides &strides, uint64_t size, uint8_t ndim, bool free_mem);
+            NDArray(T *data, const ArrayBase &base);
+            NDArray(T *data, const ArrayBase &base, bool free_mem);
             NDArray(const NDArray &ndarray);
             NDArray(NDArray &&ndarray);
             NDArray(T end);
@@ -46,23 +41,14 @@ namespace laruen::ndarray {
             template <typename T2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(NDArray<T2> &&ndarray);
 
             template <typename T2> void copy_data_from(const NDArray<T2> &ndarray);
-            NDArray shallow_copy();
-            const NDArray shallow_copy() const;
             void fill(T fill);
 
-            void reshape(const Shape &shape);
-            uint64_t ravel_ndindex(const NDIndex &ndindex) const;
-            NDIndex unravel_index(uint64_t index) const;
-            void squeeze();
-            template <typename T2> bool eq_dims(const NDArray<T2> &ndarray) const;
             T max() const;
             uint64_t index_max() const;
             NDIndex ndindex_max() const;
             T min() const;
             uint64_t index_min() const;
             NDIndex ndindex_min() const;
-
-            std::string info() const;
 
             T& operator[](const NDIndex &ndindex);
             const T& operator[](const NDIndex &ndindex) const;
@@ -122,7 +108,6 @@ namespace laruen::ndarray {
 
         private:
             void str_(std::string &str, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const;
-            void shape_array(const Shape &shape);
             void slice_array(const SliceRanges &slice_ranges);
         
         public:
@@ -132,40 +117,16 @@ namespace laruen::ndarray {
                 return str;
             }
 
-            inline const T* get_data() const {
-                return this->data;
-            }
-
-            inline const Shape& get_shape() const {
-                return this->shape;
-            }
-
-            inline const Strides& get_strides() const {
-                return this->strides;
-            }
-
-            inline uint64_t get_size() const {
-                return this->size;
-            }
-
-            inline uint8_t get_ndim() const {
-                return this->ndim;
-            }
-
-            inline bool does_free_mem() const {
-                return this->free_mem;
-            }
-
-            inline void set_free_mem(bool free_mem) {
-                this->free_mem = free_mem;
+            inline const T* data() const {
+                return this->m_data;
             }
 
             inline T& operator[](uint64_t index) {
-                return this->data[index];
+                return this->m_data[index];
             }
 
             inline const T& operator[](uint64_t index) const {
-                return this->data[index];
+                return this->m_data[index];
             }
     };
 };

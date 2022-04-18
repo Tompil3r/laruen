@@ -20,19 +20,17 @@ namespace laruen::ndarray {
 
     template <typename T>
     NDArray<T>::~NDArray() {
-        if(this->free_mem) {
-            delete[] this->data;
+        if(this->m_free_mem) {
+            delete[] this->m_data;
         }
     }
 
     template <typename T>
-    NDArray<T>::NDArray() : data(nullptr), size(0), ndim(0), free_mem(true) {}
+    NDArray<T>::NDArray() : ArrayBase(), m_data(nullptr) {}
 
     template <typename T>
-    NDArray<T>::NDArray(const Shape &shape) : shape(shape), strides(Strides()), ndim(shape.size()), free_mem(true) {
-        this->shape_array(shape);
-        this->data = new T[this->size];
-    }
+    NDArray<T>::NDArray(const Shape &shape)
+    : ArrayBase(shape), m_data(new T[this->m_size]) {}
 
     template <typename T>
     NDArray<T>::NDArray(const Shape &shape, T fill) : NDArray<T>(shape) {
@@ -40,30 +38,33 @@ namespace laruen::ndarray {
     }
 
     template <typename T>
-    NDArray<T>::NDArray(T *data, const Shape &shape, const Strides &strides, uint64_t size, uint8_t ndim, bool free_mem) :
-    data(data), shape(shape), strides(strides), size(size), ndim(ndim), free_mem(free_mem) {}
+    NDArray<T>::NDArray(T *data, const ArrayBase &base)
+    : ArrayBase(base), m_data(data) {}
+    
+    template <typename T>
+    NDArray<T>::NDArray(T *data, const ArrayBase &base, bool free_mem)
+    : ArrayBase(base, free_mem), m_data(data) {}
 
     template <typename T>
-    NDArray<T>::NDArray(const NDArray<T> &ndarray) :
-    NDArray<T>(new T[ndarray.size], ndarray.shape, ndarray.strides, ndarray.size, ndarray.ndim, true)
+    NDArray<T>::NDArray(const NDArray<T> &ndarray)
+    : NDArray<T>(new T[ndarray.m_size], ndarray)
     {
         this->copy_data_from(ndarray);
     }
 
     template <typename T>
-    NDArray<T>::NDArray(NDArray<T> &&ndarray) :
-    data(ndarray.data), shape(std::move(ndarray.shape)), strides(std::move(ndarray.strides)), size(ndarray.size),
-    ndim(ndarray.ndim), free_mem(ndarray.free_mem)
+    NDArray<T>::NDArray(NDArray<T> &&ndarray)
+    : ArrayBase(std::move(ndarray)), m_data(ndarray.m_data)
     {
-        ndarray.data = nullptr;
+        ndarray.m_data = nullptr;
     }
 
     template <typename T>
     NDArray<T>::NDArray(T end) : NDArray<T>(Shape({ceil_index(end)})) {
         T value = 0;
 
-        for(uint64_t i = 0;i < this->shape[0];i++) {
-            this->data[i] = value;
+        for(uint64_t i = 0;i < this->m_shape[0];i++) {
+            this->m_data[i] = value;
             value += 1;
         }
     }
@@ -72,8 +73,8 @@ namespace laruen::ndarray {
     NDArray<T>::NDArray(T start, T end) : NDArray<T>(Shape({ceil_index(end - start)})) {
         T value = start;
 
-        for(uint64_t i = 0;i < this->shape[0];i++) {
-            this->data[i] = value;
+        for(uint64_t i = 0;i < this->m_shape[0];i++) {
+            this->m_data[i] = value;
             value += 1;
         }
     }
@@ -82,23 +83,22 @@ namespace laruen::ndarray {
     NDArray<T>::NDArray(T start, T end, T step) : NDArray<T>(Shape({ceil_index((end - start) / step)})) {
         T value = start;
 
-        for(uint64_t i = 0;i < this->shape[0];i++) {
-            this->data[i] = value;
+        for(uint64_t i = 0;i < this->m_shape[0];i++) {
+            this->m_data[i] = value;
             value += step;
         }
     }
 
     template <typename T> template <typename T2, typename ENABLE>
-    NDArray<T>::NDArray(const NDArray<T2> &ndarray) :
-    NDArray<T>(new T[ndarray.size], ndarray.shape, ndarray.strides, ndarray.size, ndarray.ndim, true)
+    NDArray<T>::NDArray(const NDArray<T2> &ndarray)
+    : NDArray<T>(new T[ndarray.m_size], ndarray)
     {
         this->copy_data_from(ndarray);
     }
 
     template <typename T> template <typename T2, typename ENABLE>
-    NDArray<T>::NDArray(NDArray<T2> &&ndarray) :
-    data(new T[ndarray.size]), shape(std::move(ndarray.shape)), strides(std::move(ndarray.strides)), size(ndarray.size),
-    ndim(ndarray.ndim), free_mem(true)
+    NDArray<T>::NDArray(NDArray<T2> &&ndarray)
+    : ArrayBase(std::move(ndarray)), m_data(new T[ndarray.m_size])
     {
         this->copy_data_from(ndarray);
     }
@@ -109,18 +109,18 @@ namespace laruen::ndarray {
             return *this;
         }
 
-        if(this->size != ndarray.size) {
-            if(this->free_mem) {
-                delete[] this->data;
+        if(this->m_size != ndarray.m_size) {
+            if(this->m_free_mem) {
+                delete[] this->m_data;
             }
-            this->data = new T[ndarray.size];
+            this->m_data = new T[ndarray.m_size];
         }
 
-        this->shape = ndarray.shape;
-        this->strides = ndarray.strides;
-        this->size = ndarray.size;
-        this->ndim = ndarray.ndim;
-        this->free_mem = true;
+        this->m_shape = ndarray.m_shape;
+        this->m_strides = ndarray.strides;
+        this->m_size = ndarray.m_size;
+        this->m_ndim = ndarray.m_ndim;
+        this->m_free_mem = true;
 
         this->copy_data_from(ndarray);
 
@@ -133,36 +133,36 @@ namespace laruen::ndarray {
             return *this;
         }
 
-        if(this->free_mem) {
-            delete[] this->data;
+        if(this->m_free_mem) {
+            delete[] this->m_data;
         }
         
-        this->shape = std::move(ndarray.shape);
-        this->strides = std::move(ndarray.strides);
-        this->size = ndarray.size;
-        this->ndim = ndarray.ndim;
-        this->free_mem = ndarray.free_mem;
+        this->m_shape = std::move(ndarray.m_shape);
+        this->m_strides = std::move(ndarray.strides);
+        this->m_size = ndarray.m_size;
+        this->m_ndim = ndarray.m_ndim;
+        this->m_free_mem = ndarray.m_free_mem;
         
-        this->data = ndarray.data;
-        ndarray.data = nullptr;
+        this->m_data = ndarray.m_data;
+        ndarray.m_data = nullptr;
 
         return *this;
     }
 
     template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>& NDArray<T>::operator=(const NDArray<T2> &ndarray) {
-        if(this->size != ndarray.size) {
-            if(this->free_mem) {
-                delete[] this->data;
+        if(this->m_size != ndarray.m_size) {
+            if(this->m_free_mem) {
+                delete[] this->m_data;
             }
-            this->data = new T[ndarray.size];
+            this->m_data = new T[ndarray.m_size];
         }
 
-        this->shape = ndarray.shape;
-        this->strides = ndarray.strides;
-        this->size = ndarray.size;
-        this->ndim = ndarray.ndim;
-        this->free_mem = true;
+        this->m_shape = ndarray.m_shape;
+        this->m_strides = ndarray.strides;
+        this->m_size = ndarray.m_size;
+        this->m_ndim = ndarray.m_ndim;
+        this->m_free_mem = true;
 
         this->copy_data_from(ndarray);
 
@@ -171,12 +171,12 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>& NDArray<T>::operator=(NDArray<T2> &&ndarray) {
-        this->data = new T[ndarray.size];
-        this->shape = std::move(ndarray.shape);
-        this->strides = std::move(ndarray.strides);
-        this->size = ndarray.size;
-        this->ndim = ndarray.ndim;
-        this->free_mem = true;
+        this->m_data = new T[ndarray.m_size];
+        this->m_shape = std::move(ndarray.m_shape);
+        this->m_strides = std::move(ndarray.strides);
+        this->m_size = ndarray.m_size;
+        this->m_ndim = ndarray.m_ndim;
+        this->m_free_mem = true;
 
         this->copy_data_from(ndarray);
 
@@ -185,98 +185,24 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     void NDArray<T>::copy_data_from(const NDArray<T2> &ndarray) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] = ndarray.data[i];
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] = ndarray.m_data[i];
         }
-    }
-
-    template <typename T>
-    NDArray<T> NDArray<T>::shallow_copy() {
-        return NDArray<T>(this->data, this->shape, this->strides, this->size, this->ndim, false);
     }
 
     template <typename T>
     void NDArray<T>::fill(T fill) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] = fill;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] = fill;
         }
-    }
-
-    template <typename T>
-    const NDArray<T> NDArray<T>::shallow_copy() const {
-        return NDArray<T>(this->data, this->shape, this->strides, this->size, this->ndim, false);
-    }
-
-    template <typename T>
-    void NDArray<T>::reshape(const Shape &shape) {
-        uint64_t prev_size = this->size;
-        this->ndim = shape.size();
-        this->shape = shape;
-        this->shape_array(shape);
-
-        if(this->size != prev_size) {
-            throw std::invalid_argument("invalid shape - number of elements do not match");
-        }
-    }
-
-    template <typename T>
-    uint64_t NDArray<T>::ravel_ndindex(const NDIndex &ndindex) const {
-        uint64_t index = 0;
-        uint8_t ndim = ndindex.size();
-
-        for(uint8_t dim = 0;dim < ndim;dim++) {
-            index += ndindex[dim] * this->strides[dim];
-        }
-
-        return index;
-    }
-
-    template <typename T>
-    NDIndex NDArray<T>::unravel_index(uint64_t index) const {
-        NDIndex ndindex(this->ndim);
-
-        for(uint8_t dim = 0;dim < this->ndim;dim++) {
-            ndindex[dim] = index / this->strides[dim];
-            index -= ndindex[dim] * this->strides[dim];
-        }
-
-        return ndindex;
-    }
-
-    template <typename T>
-    void NDArray<T>::squeeze() {
-        Shape shape;
-        Strides strides;
-
-        for(uint8_t dim = 0;dim < this->ndim;dim++) {
-            if(this->shape[dim] > 1) {
-                shape.push_back(this->shape[dim]);
-                strides.push_back(this->strides[dim]);
-            }
-        }
-
-        this->ndim = shape.size();
-        this->shape = shape;
-        this->strides = strides;
-    }
-
-    template <typename T> template <typename T2>
-    bool NDArray<T>::eq_dims(const NDArray<T2> &ndarray) const {
-        bool eq_dims = this->ndim == ndarray.ndim;
-
-        for(uint8_t dim = 0;dim < this->ndim && eq_dims;dim++) {
-            eq_dims = (this->shape[dim] == ndarray.shape[dim]);
-        }
-
-        return eq_dims;
     }
 
     template <typename T>
     T NDArray<T>::max() const {
-        uint64_t max = *this->data;
+        uint64_t max = *this->m_data;
 
-        for(uint64_t i = 1;i < this->size;i++) {
-            max = common::max(max, this->data[i]);
+        for(uint64_t i = 1;i < this->m_size;i++) {
+            max = common::max(max, this->m_data[i]);
         }
 
         return max;
@@ -284,12 +210,12 @@ namespace laruen::ndarray {
 
     template <typename T>
     uint64_t NDArray<T>::index_max() const {
-        uint64_t max = *this->data;
+        uint64_t max = *this->m_data;
         uint64_t index_max = 0;
 
-        for(uint64_t i = 1;i < this->size;i++) {
-            if(this->data[i] > max) {
-                max = this->data[i];
+        for(uint64_t i = 1;i < this->m_size;i++) {
+            if(this->m_data[i] > max) {
+                max = this->m_data[i];
                 index_max = i;
             }
         }
@@ -304,10 +230,10 @@ namespace laruen::ndarray {
 
     template <typename T>
     T NDArray<T>::min() const {
-        uint64_t min = *this->data;
+        uint64_t min = *this->m_data;
 
-        for(uint64_t i = 1;i < this->size;i++) {
-            min = common::min(min, this->data[i]);
+        for(uint64_t i = 1;i < this->m_size;i++) {
+            min = common::min(min, this->m_data[i]);
         }
 
         return min;
@@ -315,12 +241,12 @@ namespace laruen::ndarray {
 
     template <typename T>
     uint64_t NDArray<T>::index_min() const {
-        uint64_t min = *this->data;
+        uint64_t min = *this->m_data;
         uint64_t index_min = 0;
 
-        for(uint64_t i = 1;i < this->size;i++) {
-            if(this->data[i] < min) {
-                min = this->data[i];
+        for(uint64_t i = 1;i < this->m_size;i++) {
+            if(this->m_data[i] < min) {
+                min = this->m_data[i];
                 index_min = i;
             }
         }
@@ -334,48 +260,33 @@ namespace laruen::ndarray {
     }
 
     template <typename T>
-    std::string NDArray<T>::info() const {
-        std::ostringstream specs;
-        uint8_t dim;
-
-        specs << "shape=(";
-        for(dim = 0;dim < this->ndim - 1;dim++) specs << this->shape[dim] << ',' << ' ';
-        specs << this->shape[dim] << ")\nstrides=(";
-
-        for(dim = 0;dim < this->ndim - 1;dim++) specs << this->strides[dim] << ',' << ' ';
-        specs << this->strides[dim] << ")\nndim=" << (uint16_t)this->ndim << "\nsize=" << this->size << '\n';
-
-        return specs.str();
-    }
-
-    template <typename T>
     T& NDArray<T>::operator[](const NDIndex &ndindex) {
-        return this->data[this->ravel_ndindex(ndindex)];
+        return this->m_data[this->ravel_ndindex(ndindex)];
     }
 
     template <typename T>
     const T& NDArray<T>::operator[](const NDIndex &ndindex) const {
-        return this->data[this->ravel_ndindex(ndindex)];
+        return this->m_data[this->ravel_ndindex(ndindex)];
     }
 
     template <typename T>
     const NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges) const {
-        NDArray<T> ndarray = this->shallow_copy();
+        NDArray<T> ndarray(this->m_data, *this, false);
         ndarray.slice_array(slice_ranges);
         return ndarray;
     }
 
     template <typename T>
     NDArray<T> NDArray<T>::operator[](const SliceRanges &slice_ranges) {
-        NDArray<T> ndarray = this->shallow_copy();
+        NDArray<T> ndarray(this->m_data, *this, false);
         ndarray.slice_array(slice_ranges);
         return ndarray;
     }
 
     template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>& NDArray<T>::operator+=(T2 value) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] += value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] += value;
         }
 
         return *this;
@@ -383,8 +294,8 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>& NDArray<T>::operator-=(T2 value) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] -= value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] -= value;
         }
 
         return *this;
@@ -392,8 +303,8 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>& NDArray<T>::operator*=(T2 value) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] *= value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] *= value;
         }
         
         return *this;
@@ -401,8 +312,8 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2, typename ENABLE>
     NDArray<T>& NDArray<T>::operator/=(T2 value) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] /= value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] /= value;
         }
 
         return *this;
@@ -411,11 +322,11 @@ namespace laruen::ndarray {
     template <typename T> template <typename T2, typename ENABLE>
     auto NDArray<T>::operator+(T2 value) const {
 
-        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
-        this->shape, this->strides, this->size, this->ndim, true);
+        NDArray<types::combine_types_t<T, T2>> ndarray(
+            new types::combine_types_t<T, T2>[this->m_size], *this, true);
 
-        for(uint64_t i = 0;i < ndarray.size;i++) {
-            ndarray.data[i] = this->data[i] + value;
+        for(uint64_t i = 0;i < ndarray.m_size;i++) {
+            ndarray.m_data[i] = this->m_data[i] + value;
         }
 
         return ndarray;
@@ -424,11 +335,11 @@ namespace laruen::ndarray {
     template <typename T> template <typename T2, typename ENABLE>
     auto NDArray<T>::operator-(T2 value) const {
 
-        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
-        this->shape, this->strides, this->size, this->ndim, true);
+        NDArray<types::combine_types_t<T, T2>> ndarray(
+            new types::combine_types_t<T, T2>[this->m_size], *this, true);
 
-        for(uint64_t i = 0;i < ndarray.size;i++) {
-            ndarray.data[i] = this->data[i] - value;
+        for(uint64_t i = 0;i < ndarray.m_size;i++) {
+            ndarray.m_data[i] = this->m_data[i] - value;
         }
 
         return ndarray;
@@ -437,11 +348,11 @@ namespace laruen::ndarray {
     template <typename T> template <typename T2, typename ENABLE>
     auto NDArray<T>::operator*(T2 value) const {
 
-        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
-        this->shape, this->strides, this->size, this->ndim, true);
+        NDArray<types::combine_types_t<T, T2>> ndarray(
+            new types::combine_types_t<T, T2>[this->m_size], *this, true);
 
-        for(uint64_t i = 0;i < ndarray.size;i++) {
-            ndarray.data[i] = this->data[i] * value;
+        for(uint64_t i = 0;i < ndarray.m_size;i++) {
+            ndarray.m_data[i] = this->m_data[i] * value;
         }
 
         return ndarray;
@@ -450,11 +361,11 @@ namespace laruen::ndarray {
     template <typename T> template <typename T2, typename ENABLE>
     auto NDArray<T>::operator/(T2 value) const {
 
-        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
-        this->shape, this->strides, this->size, this->ndim, true);
+        NDArray<types::combine_types_t<T, T2>> ndarray(
+            new types::combine_types_t<T, T2>[this->m_size], *this, true);
 
-        for(uint64_t i = 0;i < ndarray.size;i++) {
-            ndarray.data[i] = this->data[i] / value;
+        for(uint64_t i = 0;i < ndarray.m_size;i++) {
+            ndarray.m_data[i] = this->m_data[i] / value;
         }
 
         return ndarray;
@@ -462,7 +373,7 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator+(const NDArray<T2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array += ndarray;
@@ -472,7 +383,7 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator-(const NDArray<T2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array -= ndarray;
@@ -482,7 +393,7 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator*(const NDArray<T2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array *= ndarray;
@@ -492,7 +403,7 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator/(const NDArray<T2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array /= ndarray;
@@ -502,16 +413,16 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator+=(const NDArray<T2> &ndarray) {
-        if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        if(!ndarray::eq_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        uint64_t size_ratio = this->size / ndarray.size;
+        uint64_t size_ratio = this->m_size / ndarray.m_size;
         uint64_t d_idx = 0; // destination index
 
         for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-            for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-                this->data[d_idx] += ndarray[s_idx];
+            for(uint64_t s_idx = 0;s_idx < ndarray.m_size;s_idx++) { // s_idx - source index
+                this->m_data[d_idx] += ndarray[s_idx];
                 d_idx++;
             }
         }
@@ -521,16 +432,16 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator-=(const NDArray<T2> &ndarray) {
-        if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        if(!ndarray::eq_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        uint64_t size_ratio = this->size / ndarray.size;
+        uint64_t size_ratio = this->m_size / ndarray.m_size;
         uint64_t d_idx = 0; // destination index
 
         for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-            for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-                this->data[d_idx] -= ndarray[s_idx];
+            for(uint64_t s_idx = 0;s_idx < ndarray.m_size;s_idx++) { // s_idx - source index
+                this->m_data[d_idx] -= ndarray[s_idx];
                 d_idx++;
             }
         }
@@ -540,16 +451,16 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator*=(const NDArray<T2> &ndarray) {
-        if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        if(!ndarray::eq_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        uint64_t size_ratio = this->size / ndarray.size;
+        uint64_t size_ratio = this->m_size / ndarray.m_size;
         uint64_t d_idx = 0; // destination index
 
         for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-            for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-                this->data[d_idx] *= ndarray[s_idx];
+            for(uint64_t s_idx = 0;s_idx < ndarray.m_size;s_idx++) { // s_idx - source index
+                this->m_data[d_idx] *= ndarray[s_idx];
                 d_idx++;
             }
         }
@@ -559,16 +470,16 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator/=(const NDArray<T2> &ndarray) {
-        if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        if(!ndarray::eq_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        uint64_t size_ratio = this->size / ndarray.size;
+        uint64_t size_ratio = this->m_size / ndarray.m_size;
         uint64_t d_idx = 0; // destination index
 
         for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-            for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-                this->data[d_idx] /= ndarray[s_idx];
+            for(uint64_t s_idx = 0;s_idx < ndarray.m_size;s_idx++) { // s_idx - source index
+                this->m_data[d_idx] /= ndarray[s_idx];
                 d_idx++;
             }
         }
@@ -580,8 +491,8 @@ namespace laruen::ndarray {
     bool NDArray<T>::operator==(const NDArray<T2> &ndarray) const {
         bool eq = this->eq_dims(ndarray);
 
-        for(uint64_t i = 0;i < this->size && eq;i++) {
-            eq = (this->data[i] == ndarray.data[i]);
+        for(uint64_t i = 0;i < this->m_size && eq;i++) {
+            eq = (this->m_data[i] == ndarray.m_data[i]);
         }
 
         return eq;
@@ -596,8 +507,8 @@ namespace laruen::ndarray {
     bool NDArray<T>::operator>=(const NDArray<T2> &ndarray) const {
         bool ge = this->eq_dims(ndarray);
 
-        for(uint64_t i = 0;i < this->size && ge;i++) {
-            ge = (this->data[i] >= ndarray.data[i]);
+        for(uint64_t i = 0;i < this->m_size && ge;i++) {
+            ge = (this->m_data[i] >= ndarray.m_data[i]);
         }
 
         return ge;
@@ -607,8 +518,8 @@ namespace laruen::ndarray {
     bool NDArray<T>::operator<=(const NDArray<T2> &ndarray) const {
         bool le = this->eq_dims(ndarray);
 
-        for(uint64_t i = 0;i < this->size && le;i++) {
-            le = (this->data[i] <= ndarray.data[i]);
+        for(uint64_t i = 0;i < this->m_size && le;i++) {
+            le = (this->m_data[i] <= ndarray.m_data[i]);
         }
 
         return le;
@@ -626,8 +537,8 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator^=(T2 value) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] ^= value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] ^= value;
         }
         
         return *this;
@@ -635,8 +546,8 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator&=(T2 value) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] &= value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] &= value;
         }
         
         return *this;
@@ -644,8 +555,8 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator|=(T2 value) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] |= value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] |= value;
         }
         
         return *this;
@@ -653,8 +564,8 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator<<=(T2 value) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] <<= value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] <<= value;
         }
         
         return *this;
@@ -662,8 +573,8 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator>>=(T2 value) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] >>= value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] >>= value;
         }
         
         return *this;
@@ -671,11 +582,11 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator^(T2 value) const {
-        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
-        this->shape, this->strides, this->size, this->ndim, true);
+        NDArray<types::combine_types_t<T, T2>> ndarray(
+            new types::combine_types_t<T, T2>[this->m_size], *this, true);
 
-        for(uint64_t i = 0;i < this->size;i++) {
-            ndarray.data[i] = this->data[i] ^ value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            ndarray.m_data[i] = this->m_data[i] ^ value;
         }
         
         return ndarray;
@@ -683,11 +594,11 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator&(T2 value) const {
-        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
-        this->shape, this->strides, this->size, this->ndim, true);
+        NDArray<types::combine_types_t<T, T2>> ndarray(
+            new types::combine_types_t<T, T2>[this->m_size], *this, true);
 
-        for(uint64_t i = 0;i < this->size;i++) {
-            ndarray.data[i] = this->data[i] & value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            ndarray.m_data[i] = this->m_data[i] & value;
         }
         
         return ndarray;
@@ -695,11 +606,11 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator|(T2 value) const {
-        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
-        this->shape, this->strides, this->size, this->ndim, true);
+        NDArray<types::combine_types_t<T, T2>> ndarray(
+            new types::combine_types_t<T, T2>[this->m_size], *this, true);
 
-        for(uint64_t i = 0;i < this->size;i++) {
-            ndarray.data[i] = this->data[i] | value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            ndarray.m_data[i] = this->m_data[i] | value;
         }
         
         return ndarray;
@@ -707,11 +618,11 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator<<(T2 value) const {
-        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
-        this->shape, this->strides, this->size, this->ndim, true);
+        NDArray<types::combine_types_t<T, T2>> ndarray(
+            new types::combine_types_t<T, T2>[this->m_size], *this, true);
 
-        for(uint64_t i = 0;i < this->size;i++) {
-            ndarray.data[i] = this->data[i] << value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            ndarray.m_data[i] = this->m_data[i] << value;
         }
         
         return ndarray;
@@ -719,11 +630,11 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator>>(T2 value) const {
-        NDArray<types::combine_types_t<T, T2>> ndarray(new types::combine_types_t<T, T2>[this->size],
-        this->shape, this->strides, this->size, this->ndim, true);
+        NDArray<types::combine_types_t<T, T2>> ndarray(
+            new types::combine_types_t<T, T2>[this->m_size], *this, true);
 
-        for(uint64_t i = 0;i < this->size;i++) {
-            ndarray.data[i] = this->data[i] >> value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            ndarray.m_data[i] = this->m_data[i] >> value;
         }
         
         return ndarray;
@@ -731,10 +642,10 @@ namespace laruen::ndarray {
 
     template <typename T>
     NDArray<T> NDArray<T>::operator~() const {
-        NDArray<T> ndarray(new T[this->size], this->shape, this->strides, this->size, this->ndim, true);
+        NDArray<T> ndarray(new T[this->m_size], *this, true);
 
-        for(uint64_t i = 0;i < this->size;i++) {
-            ndarray.data[i] = ~this->data[i];
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            ndarray.m_data[i] = ~this->m_data[i];
         }
 
         return ndarray;
@@ -742,16 +653,16 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator^=(const NDArray<T2> &ndarray) {
-        if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        if(!ndarray::eq_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        uint64_t size_ratio = this->size / ndarray.size;
+        uint64_t size_ratio = this->m_size / ndarray.m_size;
         uint64_t d_idx = 0; // destination index
 
         for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-            for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-                this->data[d_idx] ^= ndarray[s_idx];
+            for(uint64_t s_idx = 0;s_idx < ndarray.m_size;s_idx++) { // s_idx - source index
+                this->m_data[d_idx] ^= ndarray[s_idx];
                 d_idx++;
             }
         }
@@ -761,16 +672,16 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator&=(const NDArray<T2> &ndarray) {
-        if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        if(!ndarray::eq_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        uint64_t size_ratio = this->size / ndarray.size;
+        uint64_t size_ratio = this->m_size / ndarray.m_size;
         uint64_t d_idx = 0; // destination index
 
         for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-            for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-                this->data[d_idx] &= ndarray[s_idx];
+            for(uint64_t s_idx = 0;s_idx < ndarray.m_size;s_idx++) { // s_idx - source index
+                this->m_data[d_idx] &= ndarray[s_idx];
                 d_idx++;
             }
         }
@@ -780,16 +691,16 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator|=(const NDArray<T2> &ndarray) {
-        if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        if(!ndarray::eq_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        uint64_t size_ratio = this->size / ndarray.size;
+        uint64_t size_ratio = this->m_size / ndarray.m_size;
         uint64_t d_idx = 0; // destination index
 
         for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-            for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-                this->data[d_idx] |= ndarray[s_idx];
+            for(uint64_t s_idx = 0;s_idx < ndarray.m_size;s_idx++) { // s_idx - source index
+                this->m_data[d_idx] |= ndarray[s_idx];
                 d_idx++;
             }
         }
@@ -799,16 +710,16 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator<<=(const NDArray<T2> &ndarray) {
-        if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        if(!ndarray::eq_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        uint64_t size_ratio = this->size / ndarray.size;
+        uint64_t size_ratio = this->m_size / ndarray.m_size;
         uint64_t d_idx = 0; // destination index
 
         for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-            for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-                this->data[d_idx] <<= ndarray[s_idx];
+            for(uint64_t s_idx = 0;s_idx < ndarray.m_size;s_idx++) { // s_idx - source index
+                this->m_data[d_idx] <<= ndarray[s_idx];
                 d_idx++;
             }
         }
@@ -818,16 +729,16 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     NDArray<T>& NDArray<T>::operator>>=(const NDArray<T2> &ndarray) {
-        if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        if(!ndarray::eq_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        uint64_t size_ratio = this->size / ndarray.size;
+        uint64_t size_ratio = this->m_size / ndarray.m_size;
         uint64_t d_idx = 0; // destination index
 
         for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-            for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-                this->data[d_idx] >>= ndarray[s_idx];
+            for(uint64_t s_idx = 0;s_idx < ndarray.m_size;s_idx++) { // s_idx - source index
+                this->m_data[d_idx] >>= ndarray[s_idx];
                 d_idx++;
             }
         }
@@ -837,7 +748,7 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator^(const NDArray<T2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array ^= ndarray;
@@ -847,7 +758,7 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator&(const NDArray<T2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array &= ndarray;
@@ -857,7 +768,7 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator|(const NDArray<T2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array |= ndarray;
@@ -867,7 +778,7 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator<<(const NDArray<T2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array <<= ndarray;
@@ -877,7 +788,7 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator>>(const NDArray<T2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array >>= ndarray;
@@ -887,8 +798,8 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int> ENABLE>
     NDArray<T>& NDArray<T>::operator%=(T2 value) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] %= value;
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] %= value;
         }
 
         return *this;
@@ -896,8 +807,8 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int> ENABLE>
     NDArray<T>& NDArray<T>::operator%=(T2 value) {
-        for(uint64_t i = 0;i < this->size;i++) {
-            this->data[i] = (T)fmod((float64_t)this->data[i], (float64_t)value);
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] = (T)fmod((float64_t)this->m_data[i], (float64_t)value);
         }
 
         return *this;
@@ -914,16 +825,16 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int>>
     NDArray<T>& NDArray<T>::operator%=(const NDArray<T2> &ndarray) {
-        if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        if(!ndarray::eq_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        uint64_t size_ratio = this->size / ndarray.size;
+        uint64_t size_ratio = this->m_size / ndarray.m_size;
         uint64_t d_idx = 0; // destination index
 
         for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-            for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-                this->data[d_idx] %= ndarray[s_idx];
+            for(uint64_t s_idx = 0;s_idx < ndarray.m_size;s_idx++) { // s_idx - source index
+                this->m_data[d_idx] %= ndarray[s_idx];
                 d_idx++;
             }
         }
@@ -933,16 +844,16 @@ namespace laruen::ndarray {
     
     template <typename T> template <typename T2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int>>
     NDArray<T>& NDArray<T>::operator%=(const NDArray<T2> &ndarray) {
-        if(!ndarray::eq_dims(this->shape, ndarray::d_broadcast(this->shape, ndarray.shape))) {
+        if(!ndarray::eq_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        uint64_t size_ratio = this->size / ndarray.size;
+        uint64_t size_ratio = this->m_size / ndarray.m_size;
         uint64_t d_idx = 0; // destination index
 
         for(uint64_t br_idx = 0;br_idx < size_ratio;br_idx++) { // br_idx - broadcasting index
-            for(uint64_t s_idx = 0;s_idx < ndarray.size;s_idx++) { // s_idx - source index
-                this->data[d_idx] = (T)fmod((T)this->data[d_idx], (T2)ndarray[s_idx]);
+            for(uint64_t s_idx = 0;s_idx < ndarray.m_size;s_idx++) { // s_idx - source index
+                this->m_data[d_idx] = (T)fmod((T)this->m_data[d_idx], (T2)ndarray[s_idx]);
                 d_idx++;
             }
         }
@@ -952,29 +863,12 @@ namespace laruen::ndarray {
 
     template <typename T> template <typename T2>
     auto NDArray<T>::operator%(const NDArray<T2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->shape, ndarray.shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array %= ndarray;
 
         return output_array;
-    }
-
-    template <typename T>
-    void NDArray<T>::shape_array(const Shape &shape) {
-        uint64_t stride = 1;
-        uint64_t size = shape[this->ndim - 1];
-        this->strides.resize(this->ndim);
-
-        this->strides[this->ndim - 1] = stride;
-        
-        for(uint8_t dim = this->ndim - 1;dim-- > 0;) {
-            stride *= shape[dim + 1];
-            this->strides[dim] = stride;
-            size *= shape[dim];
-        }
-
-        this->size = size;
     }
 
     template <typename T>
@@ -985,14 +879,14 @@ namespace laruen::ndarray {
         float64_t size_ratio = 1;
 
         for(uint8_t dim = 0;dim < ndim;dim++) {
-            size_ratio *= this->shape[dim];
-            this->data += slice_ranges[dim].start * this->strides[dim];
-            this->strides[dim] = this->strides[dim] * slice_ranges[dim].step;
-            this->shape[dim] = ceil_index((float64_t)(slice_ranges[dim].end - slice_ranges[dim].start) / (float64_t)slice_ranges[dim].step);
-            size_ratio /= this->shape[dim];
+            size_ratio *= this->m_shape[dim];
+            this->m_data += slice_ranges[dim].start * this->m_strides[dim];
+            this->m_strides[dim] = this->m_strides[dim] * slice_ranges[dim].step;
+            this->m_shape[dim] = ceil_index((float64_t)(slice_ranges[dim].end - slice_ranges[dim].start) / (float64_t)slice_ranges[dim].step);
+            size_ratio /= this->m_shape[dim];
         }
 
-        this->size /= size_ratio;
+        this->m_size /= size_ratio;
     }
 
     template <typename T>
@@ -1006,18 +900,18 @@ namespace laruen::ndarray {
 
         str.push_back('[');
 
-        if(dim == this->ndim - 1) {
-            stride = this->strides[dim];
+        if(dim == this->m_ndim - 1) {
+            stride = this->m_strides[dim];
 
-            if(this->shape[dim]) {
-                for(dim_idx = 0;dim_idx < this->shape[dim] - 1;dim_idx++) {
-                    str += std::to_string(this->data[data_index]);
+            if(this->m_shape[dim]) {
+                for(dim_idx = 0;dim_idx < this->m_shape[dim] - 1;dim_idx++) {
+                    str += std::to_string(this->m_data[data_index]);
                     str.push_back(',');
                     str.push_back(' ');
                     data_index += stride;
                 }
 
-                str += std::to_string(this->data[data_index]);
+                str += std::to_string(this->m_data[data_index]);
             }
 
             str.push_back(']');
@@ -1028,17 +922,17 @@ namespace laruen::ndarray {
             return;
         }
 
-        if(this->shape[dim]) {
-            this->str_(str, dim + 1, data_index, false, this->shape[dim] > 1);
-            data_index += this->strides[dim];
+        if(this->m_shape[dim]) {
+            this->str_(str, dim + 1, data_index, false, this->m_shape[dim] > 1);
+            data_index += this->m_strides[dim];
 
-            for(dim_idx = 1;dim_idx < this->shape[dim] - 1;dim_idx++) {
+            for(dim_idx = 1;dim_idx < this->m_shape[dim] - 1;dim_idx++) {
                 this->str_(str, dim + 1, data_index, true, true);
-                data_index += this->strides[dim];
+                data_index += this->m_strides[dim];
             }
         }
 
-        if(this->shape[dim] > 1) {
+        if(this->m_shape[dim] > 1) {
             this->str_(str, dim + 1, data_index, true, false);
         }
         
@@ -1049,7 +943,7 @@ namespace laruen::ndarray {
         }
 
         else if(not_last) {
-            str += std::string(this->ndim - dim, '\n');
+            str += std::string(this->m_ndim - dim, '\n');
         }
     }
 }
