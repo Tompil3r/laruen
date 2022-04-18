@@ -31,6 +31,9 @@ class ArrayBase {
             }
         }
 
+        ArrayBase(const ArrayBase &base, bool free_mem) : m_shape(base.m_shape),
+        m_strides(base.m_strides), size(base.m_size), m_ndim(base.m_ndim), m_free_mem(free_mem) {}
+
         void reshape(const Shape &shape) {
             uint64_t prev_size = this->m_size;
             this->m_ndim = shape.size();
