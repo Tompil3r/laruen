@@ -13,12 +13,12 @@
 
 namespace laruen::ndarray {
     
-    template <typename T = float64_t> class NDArray : public ArrayBase {
+    template <typename T = float64_t, bool C = true> class NDArray : public ArrayBase {
         T *m_data;
 
-        template <typename> friend class NDArray;
-        friend class NDIterator<NDArray<T>>;
-        friend class NDIterator<const NDArray<T>>;
+        template <typename, bool> friend class NDArray;
+        friend class NDIterator<NDArray<T, C>>;
+        friend class NDIterator<const NDArray<T, C>>;
 
         public:
             ~NDArray();
@@ -33,15 +33,15 @@ namespace laruen::ndarray {
             NDArray(T end);
             NDArray(T start, T end);
             NDArray(T start, T end, T step);
-            template <typename T2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray(const NDArray<T2> &ndarray);
-            template <typename T2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray(NDArray<T2> &&ndarray);
+            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray(NDArray<T2, C2> &&ndarray);
 
             NDArray& operator=(const NDArray &ndarray);
             NDArray& operator=(NDArray &&ndarray);
-            template <typename T2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(const NDArray<T2> &ndarray);
-            template <typename T2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(NDArray<T2> &&ndarray);
+            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(NDArray<T2, C2> &&ndarray);
 
-            template <typename T2> void copy_data_from(const NDArray<T2> &ndarray);
+            template <typename T2, bool C2> void copy_data_from(const NDArray<T2, C2> &ndarray);
             void fill(T fill);
 
             T max() const;
@@ -63,20 +63,20 @@ namespace laruen::ndarray {
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> auto operator-(T2 value) const;
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> auto operator*(T2 value) const;
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> auto operator/(T2 value) const;
-            template <typename T2> auto operator+(const NDArray<T2> &ndarray) const;
-            template <typename T2> auto operator-(const NDArray<T2> &ndarray) const;
-            template <typename T2> auto operator*(const NDArray<T2> &ndarray) const;
-            template <typename T2> auto operator/(const NDArray<T2> &ndarray) const;
-            template <typename T2> NDArray& operator+=(const NDArray<T2> &ndarray);
-            template <typename T2> NDArray& operator-=(const NDArray<T2> &ndarray);
-            template <typename T2> NDArray& operator*=(const NDArray<T2> &ndarray);
-            template <typename T2> NDArray& operator/=(const NDArray<T2> &ndarray);
-            template <typename T2> bool operator==(const NDArray<T2> &ndarray) const;
-            template <typename T2> bool operator!=(const NDArray<T2> &ndarray) const;
-            template <typename T2> bool operator>=(const NDArray<T2> &ndarray) const;
-            template <typename T2> bool operator<=(const NDArray<T2> &ndarray) const;
-            template <typename T2> bool operator>(const NDArray<T2> &ndarray) const;
-            template <typename T2> bool operator<(const NDArray<T2> &ndarray) const;
+            template <typename T2, bool C2> auto operator+(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> auto operator-(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> auto operator*(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> auto operator/(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> NDArray& operator+=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2> NDArray& operator-=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2> NDArray& operator*=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2> NDArray& operator/=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2> bool operator==(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> bool operator!=(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> bool operator>=(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> bool operator<=(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> bool operator>(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> bool operator<(const NDArray<T2, C2> &ndarray) const;
             template <typename T2> NDArray& operator^=(T2 value);
             template <typename T2> NDArray& operator&=(T2 value);
             template <typename T2> NDArray& operator|=(T2 value);
@@ -88,22 +88,22 @@ namespace laruen::ndarray {
             template <typename T2> auto operator<<(T2 value) const;
             template <typename T2> auto operator>>(T2 value) const;
             NDArray operator~() const;
-            template <typename T2> NDArray& operator^=(const NDArray<T2> &ndarray);
-            template <typename T2> NDArray& operator&=(const NDArray<T2> &ndarray);
-            template <typename T2> NDArray& operator|=(const NDArray<T2> &ndarray);
-            template <typename T2> NDArray& operator<<=(const NDArray<T2> &ndarray);
-            template <typename T2> NDArray& operator>>=(const NDArray<T2> &ndarray);
-            template <typename T2> auto operator^(const NDArray<T2> &ndarray) const;
-            template <typename T2> auto operator&(const NDArray<T2> &ndarray) const;
-            template <typename T2> auto operator|(const NDArray<T2> &ndarray) const;
-            template <typename T2> auto operator<<(const NDArray<T2> &ndarray) const;
-            template <typename T2> auto operator>>(const NDArray<T2> &ndarray) const;
+            template <typename T2, bool C2> NDArray& operator^=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2> NDArray& operator&=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2> NDArray& operator|=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2> NDArray& operator<<=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2> NDArray& operator>>=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2> auto operator^(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> auto operator&(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> auto operator|(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> auto operator<<(const NDArray<T2, C2> &ndarray) const;
+            template <typename T2, bool C2> auto operator>>(const NDArray<T2, C2> &ndarray) const;
             template <typename T2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(T2 value);
             template <typename T2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(T2 value);
             template <typename T2> auto operator%(T2 value) const;
-            template <typename T2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(const NDArray<T2> &ndarray);
-            template <typename T2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(const NDArray<T2> &ndarray);
-            template <typename T2> auto operator%(const NDArray<T2> &ndarray) const;
+            template <typename T2, bool C2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2> auto operator%(const NDArray<T2, C2> &ndarray) const;
 
             
 
