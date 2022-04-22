@@ -31,6 +31,10 @@ namespace laruen::ndarray {
             inline bool has_next() const {
                 return this->m_index < this->m_ndarray.m_size;
             }
+
+            inline auto& current() {
+                return this->m_ndarray.m_data[this->m_index];
+            }
     };
 
     template <template <typename, bool> typename A, typename T>
@@ -48,6 +52,10 @@ namespace laruen::ndarray {
 
             inline bool has_next() const {
                 return this->m_ndindex[0] < this->m_ndarray.m_shape[0];
+            }
+
+            inline auto& current() {
+                return this->m_ndarray.m_data[this->m_index];
             }
     };
 

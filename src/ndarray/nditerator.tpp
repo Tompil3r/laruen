@@ -20,7 +20,7 @@ namespace laruen::ndarray {
     template <template <typename, bool> typename A, typename T>
     auto& NDIterator<A, T, false>::next() {
         bool check_next = true;
-        auto& value = this->m_ndarray[this->m_index];
+        auto& value = this->m_ndarray.m_data[this->m_index];
         this->m_ndindex[this->m_ndarray.m_ndim - 1]++;
         this->m_index += this->m_ndarray.m_strides[this->m_ndarray.m_ndim - 1];
         
