@@ -35,6 +35,10 @@ namespace laruen::ndarray {
             inline auto& current() {
                 return this->m_ndarray.m_data[this->m_index];
             }
+
+            inline const uint64_t& index() {
+                return this->m_index;
+            }
     };
 
     template <template <typename, bool> typename A, typename T>
@@ -56,6 +60,10 @@ namespace laruen::ndarray {
 
             inline auto& current() {
                 return this->m_ndarray.m_data[this->m_index];
+            }
+
+            inline const uint64_t& index() {
+                return this->m_index;
             }
     };
 
