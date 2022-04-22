@@ -115,11 +115,11 @@ namespace types {
         static constexpr bool value = false;
     };
 
-    template <typename T> struct is_ndarray<NDArray<T>> {
+    template <typename T, bool C> struct is_ndarray<NDArray<T, C>> {
         static constexpr bool value = true;
     };
 
-    template <typename T> struct is_ndarray<const NDArray<T>> {
+    template <typename T, bool C> struct is_ndarray<const NDArray<T, C>> {
         static constexpr bool value = true;
     };
 }
