@@ -5,36 +5,42 @@
 
 namespace laruen::ndarray {
 
-
-    template <typename T>
-    NDIterator<T>::NDIterator(T &ndarray) : ndarray(ndarray), index(0), ndindex(ndarray.ndim, 0) {
-        static_assert(types::is_ndarray_v<T>, "NDIterator only support laruen::ndarray::NDArray");
+    template <template <typename, bool> typename A, typename T>
+    NDIterator<A, T, true>::NDIterator(A<T, true> &ndarray) : m_ndarray(ndarray), m_index(0) {
+        static_assert(types::is_ndarray_v<A<T, true>>, "NDIterator only support laruen::ndarray::NDArray");
     }
 
-    template <typename T>
-    auto& NDIterator<T>::next() {
-        auto& value = this->ndarray[this->index];
-        this->ndindex[this->ndarray.ndim - 1]++;
-        this->index += this->ndarray.strides[ndarray.ndim - 1];
+    template <template <typename, bool> typename A, typename T>
+    NDIterator<A, T, false>::NDIterator(A<T, false> &ndarray)
+    : m_ndarray(ndarray), m_index(0), m_ndindex(ndarray.m_ndim, 0)
+    {
+        static_assert(types::is_ndarray_v<A<T, false>>, "NDIterator only support laruen::ndarray::NDArray");
+    }
+
+    template <template <typename, bool> typename A, typename T>
+    auto& NDIterator<A, T, false>::next() {
+        auto& value = this->m_ndarray[this->m_index];
+        this->m_ndindex[this->m_ndarray.m_ndim - 1]++;
+        this->m_index += this->m_ndarray.m_strides[this->m_ndarray.m_ndim - 1];
         
-        for(uint8_t dim = this->ndarray.ndim;dim-- > 1;) {
-            if(this->ndindex[dim] >= this->ndarray.shape[dim]) {
-                this->ndindex[dim] = 0;
-                this->ndindex[dim - 1]++;
-                this->index += this->ndarray.strides[dim - 1] - this->ndarray.shape[dim] * this->ndarray.strides[dim];
+        for(uint8_t dim = this->m_ndarray.m_ndim;dim-- > 1;) {
+            if(this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]) {
+                this->m_ndindex[dim] = 0;
+                this->m_ndindex[dim - 1]++;
+                this->m_index += this->m_ndarray.m_strides[dim - 1] - this->m_ndarray.m_shape[dim] * this->m_ndarray.m_strides[dim];
             }
         }
 
         return value;
     }
 
-    template <typename T>
-    void NDIterator<T>::reset() {
-        this->index = 0;
-        uint8_t ndim = this->ndindex.size();
+    template <template <typename, bool> typename A, typename T>
+    void NDIterator<A, T, false>::reset() {
+        this->m_index = 0;
+        uint8_t ndim = this->m_ndindex.size();
 
         for(uint8_t i = 0;i < ndim;i++) {
-            this->ndindex[i] = 0;
+            this->m_ndindex[i] = 0;
         }
     }
 };
