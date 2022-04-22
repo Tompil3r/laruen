@@ -38,24 +38,6 @@ namespace laruen::ndarray {
     }
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(NDArray<T, C> &ndarray, const SliceRanges &ranges)
-    : NDArray<T, C>(ndarray.m_data, ndarray, false)
-    {
-        uint8_t ndim = ranges.size();
-        float64_t size_ratio = 1;
-
-        for(uint8_t dim = 0;dim < ndim;dim++) {
-            size_ratio *= this->m_shape[dim];
-            this->m_data += ranges[dim].start * this->m_strides[dim];
-            this->m_strides[dim] = this->m_strides[dim] * ranges[dim].step;
-            this->m_shape[dim] = ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
-            size_ratio /= this->m_shape[dim];
-        }
-
-        this->m_size /= size_ratio;
-    }
-
-    template <typename T, bool C>
     NDArray<T, C>::NDArray(T *data, const ArrayBase &base)
     : ArrayBase(base), m_data(data) {}
     
@@ -105,6 +87,26 @@ namespace laruen::ndarray {
             this->m_data[i] = value;
             value += step;
         }
+    }
+
+    template <typename T, bool C> template <bool C2>
+    NDArray<T, C>::NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges)
+    : NDArray<T, C>(ndarray.m_data, ndarray, false)
+    {
+        static_assert(!C, "cannot create sliced array with non-sliced type");
+
+        uint8_t ndim = ranges.size();
+        float64_t size_ratio = 1;
+
+        for(uint8_t dim = 0;dim < ndim;dim++) {
+            size_ratio *= this->m_shape[dim];
+            this->m_data += ranges[dim].start * this->m_strides[dim];
+            this->m_strides[dim] = this->m_strides[dim] * ranges[dim].step;
+            this->m_shape[dim] = ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
+            size_ratio /= this->m_shape[dim];
+        }
+
+        this->m_size /= size_ratio;
     }
 
     template <typename T, bool C> template <typename T2, bool C2, typename ENABLE>
@@ -288,13 +290,13 @@ namespace laruen::ndarray {
     }
 
     template <typename T, bool C>
-    const NDArray<T, C> NDArray<T, C>::operator[](const SliceRanges &ranges) const {
-        return NDArray<T, C>(*this, ranges);
+    const NDArray<T, false> NDArray<T, C>::operator[](const SliceRanges &ranges) const {
+        return NDArray<T, false>(*this, ranges);
     }
 
     template <typename T, bool C>
-    NDArray<T, C> NDArray<T, C>::operator[](const SliceRanges &ranges) {
-        return NDArray<T, C>(*this, ranges);
+    NDArray<T, false> NDArray<T, C>::operator[](const SliceRanges &ranges) {
+        return NDArray<T, false>(*this, ranges);
     }
 
     template <typename T, bool C> template <typename T2, typename ENABLE>

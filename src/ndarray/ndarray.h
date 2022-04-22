@@ -24,7 +24,6 @@ namespace laruen::ndarray {
             NDArray();
             NDArray(const Shape &shape);
             NDArray(const Shape &shape, T fill);
-            NDArray(NDArray &ndarray, const SliceRanges &ranges);
             NDArray(T *data, const ArrayBase &base);
             NDArray(T *data, const ArrayBase &base, bool free_mem);
             NDArray(const NDArray &ndarray);
@@ -32,6 +31,7 @@ namespace laruen::ndarray {
             NDArray(T end);
             NDArray(T start, T end);
             NDArray(T start, T end, T step);
+            template <bool C2> NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges);
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray(const NDArray<T2, C2> &ndarray);
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray(NDArray<T2, C2> &&ndarray);
 
@@ -52,8 +52,8 @@ namespace laruen::ndarray {
 
             T& operator[](const NDIndex &ndindex);
             const T& operator[](const NDIndex &ndindex) const;
-            NDArray operator[](const SliceRanges &ranges);
-            const NDArray operator[](const SliceRanges &ranges) const;
+            NDArray<T, false> operator[](const SliceRanges &ranges);
+            const NDArray<T, false> operator[](const SliceRanges &ranges) const;
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator+=(T2 value);
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator-=(T2 value);
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator*=(T2 value);
