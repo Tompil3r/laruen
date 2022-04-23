@@ -36,7 +36,7 @@ namespace laruen::ndarray {
         return shape1.size() >= shape2.size() ? d_broadcast(shape1, shape2) : d_broadcast(shape2, shape1);
     }
 
-    bool eq_dims(const Shape &shape1, const Shape &shape2) {
+    bool equal_dims(const Shape &shape1, const Shape &shape2) {
         uint8_t ndim;
         bool eq_dims = (ndim = shape1.size()) == shape2.size();
 

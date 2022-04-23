@@ -13,7 +13,7 @@ namespace laruen::ndarray {
    */
    Shape d_broadcast(const Shape &shape1, const Shape &shape2);
    Shape broadcast(const Shape &shape1, const Shape &shape2);
-   bool eq_dims(const Shape &shape1, const Shape &shape2);
+   bool equal_dims(const Shape &shape1, const Shape &shape2);
 };
 
 #include "src/ndarray/ndarray_lib.tpp"
