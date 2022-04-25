@@ -24,7 +24,7 @@ namespace laruen::ndarray {
             ~NDArray();
             NDArray();
             NDArray(const Shape &shape);
-            NDArray(const Shape &shape, T fill);
+            NDArray(const Shape &shape, T value);
             NDArray(T *data, const ArrayBase &base);
             NDArray(T *data, const ArrayBase &base, bool free_mem);
             NDArray(const NDArray &ndarray);
@@ -42,7 +42,7 @@ namespace laruen::ndarray {
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(NDArray<T2, C2> &&ndarray);
 
             template <typename T2, bool C2> void copy_data_from(const NDArray<T2, C2> &ndarray);
-            void fill(T fill);
+            void fill(T value);
 
             T max() const;
             uint64_t index_max() const;
