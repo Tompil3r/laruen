@@ -9,6 +9,10 @@
 namespace laruen::ndarray {
     template <typename T, bool C> class NDArray;
 
+    /*
+        code duplication is necessary to allow template deduction
+        otherwise constructor syntax becomes quite verbose
+    */
     template <typename T, bool C> class NDIterator {};
     template <typename T, bool C> class ConstNDIterator {};
 
@@ -56,17 +60,14 @@ namespace laruen::ndarray {
             : m_ndarray(ndarray), m_index(0), m_ndindex(ndarray.m_ndim, 0) {}
 
             T& next() {
-                bool check_next = true;
                 auto& value = this->m_ndarray.m_data[this->m_index];
                 this->m_ndindex[this->m_ndarray.m_ndim - 1]++;
                 this->m_index += this->m_ndarray.m_strides[this->m_ndarray.m_ndim - 1];
                 
-                for(uint8_t dim = this->m_ndarray.m_ndim;check_next && dim-- > 1;) {
-                    if(check_next = this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]) {
-                        this->m_ndindex[dim] = 0;
-                        this->m_ndindex[dim - 1]++;
-                        this->m_index += this->m_ndarray.m_strides[dim - 1] - this->m_ndarray.m_shape[dim] * this->m_ndarray.m_strides[dim];
-                    }
+                for(uint8_t dim = this->m_ndarray.m_ndim;(dim-- > 1) && (this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]);) {
+                    this->m_ndindex[dim] = 0;
+                    this->m_ndindex[dim - 1]++;
+                    this->m_index += this->m_ndarray.m_strides[dim - 1] - this->m_ndarray.m_shape[dim] * this->m_ndarray.m_strides[dim];
                 }
 
                 return value;
@@ -142,17 +143,14 @@ namespace laruen::ndarray {
             : m_ndarray(ndarray), m_index(0), m_ndindex(ndarray.m_ndim, 0) {}
 
             const T& next() {
-                bool check_next = true;
                 auto& value = this->m_ndarray.m_data[this->m_index];
                 this->m_ndindex[this->m_ndarray.m_ndim - 1]++;
                 this->m_index += this->m_ndarray.m_strides[this->m_ndarray.m_ndim - 1];
                 
-                for(uint8_t dim = this->m_ndarray.m_ndim;check_next && dim-- > 1;) {
-                    if(check_next = this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]) {
-                        this->m_ndindex[dim] = 0;
-                        this->m_ndindex[dim - 1]++;
-                        this->m_index += this->m_ndarray.m_strides[dim - 1] - this->m_ndarray.m_shape[dim] * this->m_ndarray.m_strides[dim];
-                    }
+                for(uint8_t dim = this->m_ndarray.m_ndim;(dim-- > 1) && (this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]);) {
+                    this->m_ndindex[dim] = 0;
+                    this->m_ndindex[dim - 1]++;
+                    this->m_index += this->m_ndarray.m_strides[dim - 1] - this->m_ndarray.m_shape[dim] * this->m_ndarray.m_strides[dim];
                 }
 
                 return value;
