@@ -1,6 +1,6 @@
 
-#include "src/ndarray/ndarray_lib.h"
-#include "src/ndarray/ndarray_types.h"
+#include "src/ndlib/ndlib.h"
+#include "src/ndlib/ndarray_types.h"
 #include "src/math/common.h"
 #include <cstdint>
 #include <initializer_list>
@@ -8,7 +8,7 @@
 
 using namespace laruen::math;
 
-namespace laruen::ndarray {
+namespace laruen::ndlib {
 
     Shape d_broadcast(const Shape &shape1, const Shape &shape2) {
         // assume shape1.size() >= shape2.size()

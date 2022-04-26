@@ -2,11 +2,11 @@
 #ifndef NDITERATOR_H
 #define NDITERATOR_H
 
-#include "src/ndarray/ndarray_types.h"
-#include "src/ndarray/ndarray.h"
+#include "src/ndlib/ndarray_types.h"
+#include "src/ndlib/ndarray.h"
 #include <type_traits>
 
-namespace laruen::ndarray {
+namespace laruen::ndlib {
     template <typename T, bool C> class NDArray;
 
     /*

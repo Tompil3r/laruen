@@ -1,11 +1,11 @@
 
-#ifndef NDARRAY_LIB_H
-#define NDARRAY_LIB_H
+#ifndef NDLIB_H
+#define NDLIB_H
 
-#include "src/ndarray/ndarray_types.h"
+#include "src/ndlib/ndarray_types.h"
 #include <cstdint>
 
-namespace laruen::ndarray {
+namespace laruen::ndlib {
    /*
       d_broadcast - directional broadcast - shape1.size() >= shape2.size() (shape1 has the same
       or more dimensions as shape2)
@@ -16,5 +16,5 @@ namespace laruen::ndarray {
    bool equal_dims(const Shape &shape1, const Shape &shape2);
 };
 
-#include "src/ndarray/ndarray_lib.tpp"
+#include "src/ndlib/ndlib.tpp"
 #endif

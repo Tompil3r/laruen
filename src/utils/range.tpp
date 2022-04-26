@@ -1,5 +1,5 @@
 
-#include "src/ndarray/ndarray_types.h"
+#include "src/ndlib/ndarray_types.h"
 #include "src/utils/range.h"
 
 #include <cstdint>

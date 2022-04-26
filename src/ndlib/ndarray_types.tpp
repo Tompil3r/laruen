@@ -1,12 +1,12 @@
 
-#include "src/ndarray/ndarray_types.h"
-#include "src/ndarray/ndarray.h"
+#include "src/ndlib/ndarray_types.h"
+#include "src/ndlib/ndarray.h"
 #include <string>
 #include <tuple>
 #include <cstdint>
 #include <type_traits>
 
-using laruen::ndarray::NDArray;
+using laruen::ndlib::NDArray;
 
 // operator<< for Shape is used as operator<< for NDIndex and Strides 
 std::string str(const Shape &shape) {

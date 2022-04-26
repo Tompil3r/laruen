@@ -1,9 +1,9 @@
 
-#include "src/ndarray/ndarray.h"
-#include "src/ndarray/ndarray_types.h"
-#include "src/ndarray/ndarray_utils.h"
-#include "src/ndarray/ndarray_lib.h"
-#include "src/ndarray/nditerator.h"
+#include "src/ndlib/ndarray.h"
+#include "src/ndlib/ndarray_types.h"
+#include "src/ndlib/ndarray_utils.h"
+#include "src/ndlib/ndlib.h"
+#include "src/ndlib/nditerator.h"
 #include "src/utils/range.h"
 #include "src/math/common.h"
 #include <cassert>
@@ -14,10 +14,10 @@
 #include <cmath>
 
 using namespace laruen;
-using namespace laruen::ndarray::utils;
+using namespace laruen::ndlib::utils;
 using namespace laruen::math;
 
-namespace laruen::ndarray {
+namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, C>::~NDArray() {
@@ -413,7 +413,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator+(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array += ndarray;
@@ -423,7 +423,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator-(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array -= ndarray;
@@ -433,7 +433,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator*(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array *= ndarray;
@@ -443,7 +443,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator/(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array /= ndarray;
@@ -453,7 +453,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator+=(const NDArray<T2, C2> &ndarray) {
-        if(!ndarray::equal_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -473,7 +473,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator-=(const NDArray<T2, C2> &ndarray) {
-        if(!ndarray::equal_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -493,7 +493,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator*=(const NDArray<T2, C2> &ndarray) {
-        if(!ndarray::equal_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -513,7 +513,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator/=(const NDArray<T2, C2> &ndarray) {
-        if(!ndarray::equal_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -719,7 +719,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator^=(const NDArray<T2, C2> &ndarray) {
-        if(!ndarray::equal_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -739,7 +739,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator&=(const NDArray<T2, C2> &ndarray) {
-        if(!ndarray::equal_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -759,7 +759,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator|=(const NDArray<T2, C2> &ndarray) {
-        if(!ndarray::equal_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -779,7 +779,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator<<=(const NDArray<T2, C2> &ndarray) {
-        if(!ndarray::equal_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -799,7 +799,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator>>=(const NDArray<T2, C2> &ndarray) {
-        if(!ndarray::equal_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -819,7 +819,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator^(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array ^= ndarray;
@@ -829,7 +829,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator&(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array &= ndarray;
@@ -839,7 +839,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator|(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array |= ndarray;
@@ -849,7 +849,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator<<(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array <<= ndarray;
@@ -859,7 +859,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator>>(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array >>= ndarray;
@@ -900,7 +900,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int>>
     NDArray<T, C>& NDArray<T, C>::operator%=(const NDArray<T2, C2> &ndarray) {
-        if(!ndarray::equal_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -920,7 +920,7 @@ namespace laruen::ndarray {
     
     template <typename T, bool C> template <typename T2, bool C2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int>>
     NDArray<T, C>& NDArray<T, C>::operator%=(const NDArray<T2, C2> &ndarray) {
-        if(!ndarray::equal_dims(this->m_shape, ndarray::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -940,7 +940,7 @@ namespace laruen::ndarray {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator%(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndarray::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array %= ndarray;
