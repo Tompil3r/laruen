@@ -222,7 +222,7 @@ namespace laruen::ndlib {
     template <typename T, bool C> template <typename T2, bool C2>
     void NDArray<T, C>::copy_data_from(const NDArray<T2, C2> &ndarray) {
         NDIterator to(*this);
-        NDIterator from(ndarray);
+        ConstNDIterator from(ndarray);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
             to.next() = from.next();
@@ -240,7 +240,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     T NDArray<T, C>::max() const {
-        NDIterator iter(*this);
+        ConstNDIterator iter(*this);
         uint64_t max = iter.next();
 
         for(uint64_t i = 1;i < this->m_size;i++) {
@@ -252,7 +252,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     uint64_t NDArray<T, C>::index_max() const {
-        NDIterator iter(*this);
+        ConstNDIterator iter(*this);
         T value;
         uint64_t max = iter.next();
         uint64_t index_max = 0;
@@ -274,7 +274,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     T NDArray<T, C>::min() const {
-        NDIterator iter(*this);
+        ConstNDIterator iter(*this);
         uint64_t min = iter.next();
 
         for(uint64_t i = 1;i < this->m_size;i++) {
@@ -286,7 +286,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     uint64_t NDArray<T, C>::index_min() const {
-        NDIterator iter(*this);
+        ConstNDIterator iter(*this);
         T value;
         uint64_t min = iter.next();
         uint64_t index_min = 0;
@@ -375,7 +375,7 @@ namespace laruen::ndlib {
 
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
-        NDIterator iter(*this);
+        ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < ndarray.m_size;i++) {
             ndarray.m_data[i] = iter.next() + value;
@@ -389,7 +389,7 @@ namespace laruen::ndlib {
 
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
-        NDIterator iter(*this);
+        ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < ndarray.m_size;i++) {
             ndarray.m_data[i] = iter.next() - value;
@@ -403,7 +403,7 @@ namespace laruen::ndlib {
 
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
-        NDIterator iter(*this);
+        ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < ndarray.m_size;i++) {
             ndarray.m_data[i] = iter.next() * value;
@@ -417,7 +417,7 @@ namespace laruen::ndlib {
 
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
-        NDIterator iter(*this);
+        ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < ndarray.m_size;i++) {
             ndarray.m_data[i] = iter.next() / value;
@@ -494,7 +494,7 @@ namespace laruen::ndlib {
 
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(*this);
-        NDIterator rhs_iter(ndarray);
+        ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
             for(uint64_t j = 0;j < ndarray.m_size;j++) {
@@ -514,7 +514,7 @@ namespace laruen::ndlib {
 
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(*this);
-        NDIterator rhs_iter(ndarray);
+        ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
             for(uint64_t j = 0;j < ndarray.m_size;j++) {
@@ -534,7 +534,7 @@ namespace laruen::ndlib {
 
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(*this);
-        NDIterator rhs_iter(ndarray);
+        ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
             for(uint64_t j = 0;j < ndarray.m_size;j++) {
