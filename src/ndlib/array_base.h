@@ -97,16 +97,6 @@ class ArrayBase {
             this->m_strides.resize(this->m_ndim);
         }
 
-        bool equal_dims(const ArrayBase &base) const {
-            bool equal = this->m_ndim == base.m_ndim;
-
-            for(uint8_t dim = 0;equal && dim < this->m_ndim;dim++) {
-                equal = this->m_shape[dim] == base.m_shape[dim];
-            }
-
-            return equal;
-        }
-
         std::string str() const {
             std::string str("shape = (");
             uint8_t dim = 0;

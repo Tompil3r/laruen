@@ -468,7 +468,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator+=(const NDArray<T2, C2> &ndarray) {
-        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(this->m_shape != ndlib::d_broadcast(this->m_shape, ndarray.m_shape)) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -488,7 +488,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator-=(const NDArray<T2, C2> &ndarray) {
-        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(this->m_shape != ndlib::d_broadcast(this->m_shape, ndarray.m_shape)) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -508,7 +508,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator*=(const NDArray<T2, C2> &ndarray) {
-        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(this->m_shape != ndlib::d_broadcast(this->m_shape, ndarray.m_shape)) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -528,7 +528,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator/=(const NDArray<T2, C2> &ndarray) {
-        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(this->m_shape != ndlib::d_broadcast(this->m_shape, ndarray.m_shape)) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -548,7 +548,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     bool NDArray<T, C>::operator==(const NDArray<T2, C2> &ndarray) const {
-        bool eq = this->equal_dims(ndarray);
+        bool eq = this->m_shape == ndarray.m_shape;
         ConstNDIterator lhs_iter(*this);
         ConstNDIterator rhs_iter(ndarray);
 
@@ -566,7 +566,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     bool NDArray<T, C>::operator>=(const NDArray<T2, C2> &ndarray) const {
-        bool ge = this->equal_dims(ndarray);
+        bool ge = this->m_shape == ndarray.m_shape;
         ConstNDIterator lhs_iter(*this);
         ConstNDIterator rhs_iter(ndarray);
 
@@ -579,7 +579,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     bool NDArray<T, C>::operator<=(const NDArray<T2, C2> &ndarray) const {
-        bool le = this->equal_dims(ndarray);
+        bool le = this->m_shape == ndarray.m_shape;
         ConstNDIterator lhs_iter(*this);
         ConstNDIterator rhs_iter(ndarray);
 
@@ -734,7 +734,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator^=(const NDArray<T2, C2> &ndarray) {
-        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(this->m_shape != ndlib::d_broadcast(this->m_shape, ndarray.m_shape)) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -754,7 +754,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator&=(const NDArray<T2, C2> &ndarray) {
-        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(this->m_shape != ndlib::d_broadcast(this->m_shape, ndarray.m_shape)) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -774,7 +774,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator|=(const NDArray<T2, C2> &ndarray) {
-        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(this->m_shape != ndlib::d_broadcast(this->m_shape, ndarray.m_shape)) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -794,7 +794,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator<<=(const NDArray<T2, C2> &ndarray) {
-        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(this->m_shape != ndlib::d_broadcast(this->m_shape, ndarray.m_shape)) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -814,7 +814,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator>>=(const NDArray<T2, C2> &ndarray) {
-        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(this->m_shape != ndlib::d_broadcast(this->m_shape, ndarray.m_shape)) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -915,7 +915,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int>>
     NDArray<T, C>& NDArray<T, C>::operator%=(const NDArray<T2, C2> &ndarray) {
-        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(this->m_shape != ndlib::d_broadcast(this->m_shape, ndarray.m_shape)) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
@@ -935,7 +935,7 @@ namespace laruen::ndlib {
     
     template <typename T, bool C> template <typename T2, bool C2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int>>
     NDArray<T, C>& NDArray<T, C>::operator%=(const NDArray<T2, C2> &ndarray) {
-        if(!ndlib::equal_dims(this->m_shape, ndlib::d_broadcast(this->m_shape, ndarray.m_shape))) {
+        if(this->m_shape != ndlib::d_broadcast(this->m_shape, ndarray.m_shape)) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 

@@ -35,15 +35,4 @@ namespace laruen::ndlib {
     Shape broadcast(const Shape &shape1, const Shape &shape2) {
         return shape1.size() >= shape2.size() ? d_broadcast(shape1, shape2) : d_broadcast(shape2, shape1);
     }
-
-    bool equal_dims(const Shape &shape1, const Shape &shape2) {
-        uint8_t ndim;
-        bool eq_dims = (ndim = shape1.size()) == shape2.size();
-
-        for(uint8_t dim = 0;dim < ndim && eq_dims;dim++) {
-            eq_dims = (shape1[dim] == shape2[dim]);
-        }
-
-        return eq_dims;
-    }
 }

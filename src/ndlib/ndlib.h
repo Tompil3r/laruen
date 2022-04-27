@@ -13,7 +13,6 @@ namespace laruen::ndlib {
    */
    Shape d_broadcast(const Shape &shape1, const Shape &shape2);
    Shape broadcast(const Shape &shape1, const Shape &shape2);
-   bool equal_dims(const Shape &shape1, const Shape &shape2);
 };
 
 #include "src/ndlib/ndlib.tpp"
