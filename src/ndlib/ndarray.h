@@ -130,6 +130,8 @@ namespace laruen::ndlib {
                 return this->m_data[index];
             }
     };
+    
+    template <typename T, bool C> NDArray(NDArray<T, C>&, const Axes&) -> NDArray<T, false>;
 };
 
 #include "src/ndlib/ndarray.tpp"
