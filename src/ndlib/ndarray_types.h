@@ -17,6 +17,7 @@ using Shape = std::vector<uint64_t>;
 using Strides = std::vector<uint64_t>;
 using NDIndex = std::vector<uint64_t>;
 using SliceRanges = std::vector<Range<uint64_t>>;
+using Axes = std::vector<uint8_t>;
 
 std::string str(const Shape &shape);
 std::string str(const SliceRanges &slice_ranges);
