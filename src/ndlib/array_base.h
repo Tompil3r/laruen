@@ -18,6 +18,8 @@ class ArrayBase {
 
 
     public:
+        ArrayBase() = default;
+
         ArrayBase(uint8_t ndim, bool free_mem = true) : m_shape(ndim),
         m_strides(ndim), m_ndim(ndim), m_free_mem(free_mem) {}
 
