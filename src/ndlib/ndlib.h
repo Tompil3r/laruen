@@ -7,11 +7,11 @@
 
 namespace laruen::ndlib {
    /*
-      d_broadcast - directional broadcast - shape1.size() >= shape2.size() (shape1 has the same
+      dir_broadcast - directional broadcast - shape1.size() >= shape2.size() (shape1 has the same
       or more dimensions as shape2)
-      broadcast - no assumptions about the shapes is made (uses d_broadcast)
+      broadcast - no assumptions about the shapes is made (uses dir_broadcast)
    */
-   Shape d_broadcast(const Shape &shape1, const Shape &shape2);
+   Shape dir_broadcast(const Shape &shape1, const Shape &shape2);
    Shape broadcast(const Shape &shape1, const Shape &shape2);
 };
 

@@ -10,7 +10,7 @@ using namespace laruen::math;
 
 namespace laruen::ndlib {
 
-    Shape d_broadcast(const Shape &shape1, const Shape &shape2) {
+    Shape dir_broadcast(const Shape &shape1, const Shape &shape2) {
         // assume shape1.size() >= shape2.size()
 
         Shape bshape(shape1);
@@ -33,6 +33,6 @@ namespace laruen::ndlib {
     }
 
     Shape broadcast(const Shape &shape1, const Shape &shape2) {
-        return shape1.size() >= shape2.size() ? d_broadcast(shape1, shape2) : d_broadcast(shape2, shape1);
+        return shape1.size() >= shape2.size() ? dir_broadcast(shape1, shape2) : dir_broadcast(shape2, shape1);
     }
 }
