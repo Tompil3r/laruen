@@ -241,7 +241,7 @@ namespace laruen::ndlib {
     template <typename T, bool C>
     T NDArray<T, C>::max() const {
         ConstNDIterator iter(*this);
-        uint64_t max = iter.next();
+        T max = iter.next();
 
         for(uint64_t i = 1;i < this->m_size;i++) {
             max = common::max(max, iter.next());
@@ -254,7 +254,7 @@ namespace laruen::ndlib {
     uint64_t NDArray<T, C>::index_max() const {
         ConstNDIterator iter(*this);
         T value;
-        uint64_t max = iter.next();
+        T max = iter.next();
         uint64_t index_max = 0;
 
         for(uint64_t i = 1;i < this->m_size;i++) {
@@ -275,7 +275,7 @@ namespace laruen::ndlib {
     template <typename T, bool C>
     T NDArray<T, C>::min() const {
         ConstNDIterator iter(*this);
-        uint64_t min = iter.next();
+        T min = iter.next();
 
         for(uint64_t i = 1;i < this->m_size;i++) {
             min = common::min(min, iter.next());
@@ -288,7 +288,7 @@ namespace laruen::ndlib {
     uint64_t NDArray<T, C>::index_min() const {
         ConstNDIterator iter(*this);
         T value;
-        uint64_t min = iter.next();
+        T min = iter.next();
         uint64_t index_min = 0;
 
         for(uint64_t i = 1;i < this->m_size;i++) {
