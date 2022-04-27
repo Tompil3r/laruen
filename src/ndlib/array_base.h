@@ -21,8 +21,8 @@ class ArrayBase {
         ArrayBase(uint8_t ndim, bool free_mem = true) : m_shape(ndim),
         m_strides(ndim), m_ndim(ndim), m_free_mem(free_mem) {}
 
-        ArrayBase(const Shape &shape) : m_shape(shape),
-        m_strides(shape.size()), m_ndim(shape.size()), m_free_mem(true)
+        ArrayBase(const Shape &shape, bool free_mem = true) : m_shape(shape),
+        m_strides(shape.size()), m_ndim(shape.size()), m_free_mem(free_mem)
         {
             uint64_t stride = 1;
             this->m_size = (this->m_ndim > 0);
