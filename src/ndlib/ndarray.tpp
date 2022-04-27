@@ -90,6 +90,21 @@ namespace laruen::ndlib {
         }
     }
 
+    template <typename T, bool C>
+    NDArray<T, C>::NDArray(NDArray<T, C> &ndarray, const Axes &axes)
+    : ArrayBase(axes.size(), false), m_data(ndarray.m_data)
+    {
+        this->m_size = this->m_ndim > 0;
+        uint8_t axis;
+
+        for(uint8_t i = 0;i < this->m_ndim;i++) {
+            axis = axes[i];
+            this->m_shape[i] = ndarray.m_shape[axis];
+            this->m_strides[i] = ndarray.m_strides[axis];
+            this->m_size *= this->m_shape[i];
+        }
+    }
+
     template <typename T, bool C> template <bool C2>
     NDArray<T, C>::NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges)
     : NDArray<T, C>(ndarray.m_data, ndarray, false)
