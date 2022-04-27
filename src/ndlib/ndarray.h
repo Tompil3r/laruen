@@ -27,6 +27,7 @@ namespace laruen::ndlib {
             NDArray(const Shape &shape, T value);
             NDArray(T *data, const ArrayBase &base);
             NDArray(T *data, const ArrayBase &base, bool free_mem);
+            NDArray(const NDArray &ndarray, bool free_mem);
             NDArray(const NDArray &ndarray);
             NDArray(NDArray &&ndarray);
             NDArray(T end);
