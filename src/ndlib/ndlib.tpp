@@ -38,7 +38,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C, typename T2, bool C2>
-    NDArray<T, false> reorder_broadcast_array(NDArray<T, C> &lhs, const NDArray<T2, C2> &rhs) {
+    NDArray<T, false> broadcast_reorder(NDArray<T, C> &lhs, const NDArray<T2, C2> &rhs) {
         if(rhs.m_ndim > lhs.m_ndim) {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
