@@ -61,32 +61,13 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(T end) : NDArray<T, C>(Shape({ceil_index(end)})) {
-        T value = 0;
+    NDArray<T, C>::NDArray(const Range<T> &range)
+    : NDArray<T, C>(Shape{ceil_index((range.end - range.start) / range.step)}) {
+        T value = range.start;
 
-        for(uint64_t i = 0;i < this->m_shape[0];i++) {
+        for(uint64_t i = 0;i < this->m_size;i++) {
             this->m_data[i] = value;
-            value += 1;
-        }
-    }
-
-    template <typename T, bool C>
-    NDArray<T, C>::NDArray(T start, T end) : NDArray<T, C>(Shape({ceil_index(end - start)})) {
-        T value = start;
-
-        for(uint64_t i = 0;i < this->m_shape[0];i++) {
-            this->m_data[i] = value;
-            value += 1;
-        }
-    }
-
-    template <typename T, bool C>
-    NDArray<T, C>::NDArray(T start, T end, T step) : NDArray<T, C>(Shape({ceil_index((end - start) / step)})) {
-        T value = start;
-
-        for(uint64_t i = 0;i < this->m_shape[0];i++) {
-            this->m_data[i] = value;
-            value += step;
+            value += range.step;
         }
     }
 

@@ -29,9 +29,7 @@ namespace laruen::ndlib {
             NDArray(T *data, const ArrayBase &base, bool free_mem);
             NDArray(const NDArray &ndarray);
             NDArray(NDArray &&ndarray);
-            NDArray(T end);
-            NDArray(T start, T end);
-            NDArray(T start, T end, T step);
+            NDArray(const Range<T> &range);
             NDArray(NDArray &ndarray, const Axes &axes);
             template <bool C2> NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges);
             template <typename T2, bool C2> NDArray(const NDArray<T2, C2> &ndarray, bool free_mem);
