@@ -27,7 +27,6 @@ namespace laruen::ndlib {
             NDArray(const Shape &shape, T value);
             NDArray(T *data, const ArrayBase &base);
             NDArray(T *data, const ArrayBase &base, bool free_mem);
-            NDArray(const NDArray &ndarray, bool free_mem);
             NDArray(const NDArray &ndarray);
             NDArray(NDArray &&ndarray);
             NDArray(T end);
@@ -35,6 +34,7 @@ namespace laruen::ndlib {
             NDArray(T start, T end, T step);
             NDArray(NDArray &ndarray, const Axes &axes);
             template <bool C2> NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges);
+            template <typename T2, bool C2> NDArray(const NDArray<T2, C2> &ndarray, bool free_mem);
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(const NDArray<T2, C2> &ndarray);
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(NDArray<T2, C2> &&ndarray);
 

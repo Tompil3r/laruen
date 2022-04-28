@@ -47,10 +47,6 @@ namespace laruen::ndlib {
     : ArrayBase(base, free_mem), m_data(data) {}
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(const NDArray<T, C> &ndarray, bool free_mem)
-    : NDArray<T, C>(ndarray.m_data, ndarray, free_mem) {}
-
-    template <typename T, bool C>
     NDArray<T, C>::NDArray(const NDArray<T, C> &ndarray)
     : NDArray<T, C>(new T[ndarray.m_size], ndarray)
     {
@@ -128,6 +124,10 @@ namespace laruen::ndlib {
 
         this->m_size /= size_ratio;
     }
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>::NDArray(const NDArray<T2, C2> &ndarray, bool free_mem)
+    : NDArray<T, C>(ndarray.m_data, ndarray, free_mem) {}
 
     template <typename T, bool C> template <typename T2, bool C2, typename ENABLE>
     NDArray<T, C>::NDArray(const NDArray<T2, C2> &ndarray)
