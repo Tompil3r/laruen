@@ -23,6 +23,7 @@ namespace laruen::ndlib {
         public:
             ~NDArray();
             NDArray();
+            NDArray(uint8_t ndim, T *data = nullptr, bool free_mem = false);
             NDArray(const Shape &shape);
             NDArray(const Shape &shape, T value);
             NDArray(T *data, const ArrayBase &base);
