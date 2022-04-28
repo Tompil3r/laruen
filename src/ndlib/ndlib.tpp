@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <initializer_list>
 #include <stdexcept>
+#include <algorithm>
 
 using namespace laruen::math;
 
@@ -34,5 +35,33 @@ namespace laruen::ndlib {
 
     Shape broadcast(const Shape &shape1, const Shape &shape2) {
         return shape1.size() >= shape2.size() ? dir_broadcast(shape1, shape2) : dir_broadcast(shape2, shape1);
+    }
+
+    template <typename T, bool C, typename T2, bool C2>
+    NDArray<T, false> reorder_broadcast_array(NDArray<T, C> &lhs, const NDArray<T2, C2> &rhs) {
+        if(rhs.m_ndim > lhs.m_ndim) {
+            throw std::invalid_argument("shapes cannot be broadcasted");
+        }
+
+        NDArray<T, false> ndarray(lhs);
+        uint8_t rhs_i = 0;
+        uint8_t swap_i = lhs.m_ndim - rhs.m_ndim;
+
+        for(uint8_t lhs_i = swap_i;lhs_i < lhs.m_ndim;lhs_i++) {
+            if(lhs.m_shape[lhs_i] != rhs.m_shape[rhs_i]) {
+                if(rhs.m_shape[rhs_i] == 1) {
+                    std::swap(ndarray.m_shape[swap_i] ,ndarray.m_shape[lhs_i]);
+                    std::swap(ndarray.m_strides[swap_i] ,ndarray.m_strides[lhs_i]);
+                    swap_i++;
+                }
+                else {
+                    throw std::invalid_argument("shapes cannot be broadcasted");
+                }
+            }
+            
+            rhs_i++;
+        }
+
+        return ndarray;
     }
 }

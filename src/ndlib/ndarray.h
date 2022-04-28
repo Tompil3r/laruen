@@ -130,6 +130,9 @@ namespace laruen::ndlib {
             inline const T& operator[](uint64_t index) const {
                 return this->m_data[index];
             }
+
+            template <typename T1, bool C1, typename T2, bool C2>
+            friend NDArray<T1, false> reorder_broadcast_array(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs);
     };
     
     template <typename T, bool C> NDArray(NDArray<T, C>&, const Axes&) -> NDArray<T, false>;
