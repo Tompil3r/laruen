@@ -35,8 +35,8 @@ namespace laruen::ndlib {
             NDArray(T start, T end, T step);
             NDArray(NDArray &ndarray, const Axes &axes);
             template <bool C2> NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges);
-            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray(const NDArray<T2, C2> &ndarray);
-            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray(NDArray<T2, C2> &&ndarray);
+            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(const NDArray<T2, C2> &ndarray);
+            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(NDArray<T2, C2> &&ndarray);
 
             NDArray& operator=(const NDArray &ndarray);
             NDArray& operator=(NDArray &&ndarray);
