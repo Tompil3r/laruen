@@ -20,8 +20,8 @@ class ArrayBase {
     public:
         ArrayBase() = default;
 
-        ArrayBase(uint8_t ndim, bool free_mem = true) : m_shape(ndim),
-        m_strides(ndim), m_size(0), m_ndim(ndim), m_free_mem(free_mem) {}
+        ArrayBase(uint8_t ndim, bool free_mem = true, uint64_t size = 0) : m_shape(ndim),
+        m_strides(ndim), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
 
         ArrayBase(const Shape &shape, bool free_mem = true) : m_shape(shape),
         m_strides(shape.size()), m_ndim(shape.size()), m_free_mem(free_mem)
