@@ -30,8 +30,8 @@ namespace laruen::ndlib {
     NDArray<T, C>::NDArray() : ArrayBase(), m_data(nullptr) {}
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(uint8_t ndim, T *data, bool free_mem)
-    : ArrayBase(ndim, free_mem), m_data(data) {}
+    NDArray<T, C>::NDArray(uint8_t ndim, T *data, bool free_mem, uint64_t size)
+    : ArrayBase(ndim, free_mem, size), m_data(data) {}
 
     template <typename T, bool C>
     NDArray<T, C>::NDArray(const Shape &shape)
