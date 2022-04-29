@@ -11,7 +11,10 @@ namespace laruen::ndlib::utils {
         return (uint64_t)index + ((uint64_t)index < index);
     }
 
-    uint8_t dir_broadcast_ndim_diff(const Shape &lhs, const Shape &rhs) {
+    template <bool = false> uint8_t rev_count_diff(const Shape&, const Shape&);
+
+    template <>
+    uint8_t rev_count_diff<true>(const Shape &lhs, const Shape &rhs) {
         // assume lhs.size() >= rhs.size()
 
         uint8_t count = 0;
@@ -25,8 +28,9 @@ namespace laruen::ndlib::utils {
         return count;
     }
 
-    inline uint8_t broadcast_ndim_diff(const Shape &lhs, const Shape &rhs) {
-        return lhs.size() >= rhs.size() ? dir_broadcast_ndim_diff(lhs, rhs) : dir_broadcast_ndim_diff(rhs, lhs);
+    template <>
+    inline uint8_t rev_count_diff(const Shape &lhs, const Shape &rhs) {
+        return lhs.size() >= rhs.size() ? rev_count_diff<true>(lhs, rhs) : rev_count_diff<true>(rhs, lhs);
     }
 }
 
