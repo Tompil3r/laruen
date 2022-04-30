@@ -457,12 +457,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator+=(const NDArray<T2, C2> &ndarray) {
-        if(this->m_shape != ndlib::dir_broadcast(this->m_shape, ndarray.m_shape)) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
+        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
-        NDIterator lhs_iter(*this);
+        NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
@@ -477,12 +474,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator-=(const NDArray<T2, C2> &ndarray) {
-        if(this->m_shape != ndlib::dir_broadcast(this->m_shape, ndarray.m_shape)) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
+        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
-        NDIterator lhs_iter(*this);
+        NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
@@ -497,12 +491,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator*=(const NDArray<T2, C2> &ndarray) {
-        if(this->m_shape != ndlib::dir_broadcast(this->m_shape, ndarray.m_shape)) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
+        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
-        NDIterator lhs_iter(*this);
+        NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
@@ -517,12 +508,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator/=(const NDArray<T2, C2> &ndarray) {
-        if(this->m_shape != ndlib::dir_broadcast(this->m_shape, ndarray.m_shape)) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
+        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
-        NDIterator lhs_iter(*this);
+        NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
@@ -723,12 +711,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator^=(const NDArray<T2, C2> &ndarray) {
-        if(this->m_shape != ndlib::dir_broadcast(this->m_shape, ndarray.m_shape)) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
+        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
-        NDIterator lhs_iter(*this);
+        NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
@@ -743,12 +728,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator&=(const NDArray<T2, C2> &ndarray) {
-        if(this->m_shape != ndlib::dir_broadcast(this->m_shape, ndarray.m_shape)) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
+        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
-        NDIterator lhs_iter(*this);
+        NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
@@ -763,12 +745,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator|=(const NDArray<T2, C2> &ndarray) {
-        if(this->m_shape != ndlib::dir_broadcast(this->m_shape, ndarray.m_shape)) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
+        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
-        NDIterator lhs_iter(*this);
+        NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
@@ -783,12 +762,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator<<=(const NDArray<T2, C2> &ndarray) {
-        if(this->m_shape != ndlib::dir_broadcast(this->m_shape, ndarray.m_shape)) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
+        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
-        NDIterator lhs_iter(*this);
+        NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
@@ -803,12 +779,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator>>=(const NDArray<T2, C2> &ndarray) {
-        if(this->m_shape != ndlib::dir_broadcast(this->m_shape, ndarray.m_shape)) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
+        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
-        NDIterator lhs_iter(*this);
+        NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
@@ -904,12 +877,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int>>
     NDArray<T, C>& NDArray<T, C>::operator%=(const NDArray<T2, C2> &ndarray) {
-        if(this->m_shape != ndlib::dir_broadcast(this->m_shape, ndarray.m_shape)) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
+        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
-        NDIterator lhs_iter(*this);
+        NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
@@ -924,17 +894,14 @@ namespace laruen::ndlib {
     
     template <typename T, bool C> template <typename T2, bool C2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int>>
     NDArray<T, C>& NDArray<T, C>::operator%=(const NDArray<T2, C2> &ndarray) {
-        if(this->m_shape != ndlib::dir_broadcast(this->m_shape, ndarray.m_shape)) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
+        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
-        NDIterator lhs_iter(*this);
+        NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
 
         for(uint64_t i = 0;i < size_ratio;i++) {
             for(uint64_t j = 0;j < ndarray.m_size;j++) {
-                lhs_iter.next() = (T)fmod((float64_t)lhs_iter.current(), (float64_t)rhs_iter.next());
+                lhs_iter.next() += (T)fmod((float64_t)lhs_iter.current(), (float64_t)rhs_iter.next());
             }
             rhs_iter.reset();
         }
