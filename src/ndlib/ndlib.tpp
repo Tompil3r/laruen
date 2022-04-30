@@ -1,6 +1,7 @@
 
 #include "src/ndlib/ndlib.h"
 #include "src/ndlib/ndarray_types.h"
+#include "src/ndlib/ndarray_utils.h"
 #include "src/math/common.h"
 #include <cstdint>
 #include <initializer_list>
@@ -8,6 +9,7 @@
 #include <algorithm>
 
 using namespace laruen::math;
+using namespace laruen;
 
 namespace laruen::ndlib {
 
@@ -43,25 +45,35 @@ namespace laruen::ndlib {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        NDArray<T, false> ndarray(lhs);
-        uint8_t rhs_i = 0;
-        uint8_t swap_i = lhs.m_ndim - rhs.m_ndim;
+        NDArray<T, false> reorder(lhs.m_ndim, lhs.m_data, false, lhs.m_size);
+        uint8_t lidx = lhs.m_ndim - rhs.m_ndim;
+        uint8_t low_priority_idx = lidx;
+        uint8_t high_priority_idx = lidx + ndlib::utils::rev_count_diff<true>(lhs.m_shape, rhs.m_shape);
 
-        for(uint8_t lhs_i = swap_i;lhs_i < lhs.m_ndim;lhs_i++) {
-            if(lhs.m_shape[lhs_i] != rhs.m_shape[rhs_i]) {
-                if(rhs.m_shape[rhs_i] == 1) {
-                    std::swap(ndarray.m_shape[swap_i] ,ndarray.m_shape[lhs_i]);
-                    std::swap(ndarray.m_strides[swap_i] ,ndarray.m_strides[lhs_i]);
-                    swap_i++;
+        for(uint8_t i = 0;i < lidx;i++) {
+            reorder.m_shape[i] = lhs.m_shape[i];
+            reorder.m_strides[i] = lhs.m_strides[i];
+        }
+
+        for(uint8_t ridx = 0;ridx < rhs.m_ndim;ridx++) {
+            if(lhs.m_shape[lidx] != rhs.m_shape[ridx]) {
+                if(rhs.m_shape[ridx] == 1) {
+                    reorder.m_shape[low_priority_idx] = lhs.m_shape[lidx];
+                    reorder.m_strides[low_priority_idx] = lhs.m_strides[lidx];
+                    low_priority_idx++;
                 }
                 else {
                     throw std::invalid_argument("shapes cannot be broadcasted");
                 }
             }
-            
-            rhs_i++;
+            else {
+                reorder.m_shape[high_priority_idx] = lhs.m_shape[lidx];
+                reorder.m_strides[high_priority_idx] = lhs.m_strides[lidx];
+                high_priority_idx++;
+            }
+            lidx++;
         }
 
-        return ndarray;
+        return reorder;
     }
 }
