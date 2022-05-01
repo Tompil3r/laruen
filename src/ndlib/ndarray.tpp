@@ -30,6 +30,16 @@ namespace laruen::ndlib {
     NDArray<T, C>::NDArray() noexcept : ArrayBase(), m_data(nullptr) {}
 
     template <typename T, bool C>
+    NDArray<T, C>::NDArray(T *data, const Shape &shape, const Strides &strides,
+    uint64_t size, uint8_t ndim, bool free_mem) noexcept
+    : ArrayBase(shape, strides, size, ndim, free_mem), m_data(data) {}
+
+    template <typename T, bool C>
+    NDArray<T, C>::NDArray(T *data, Shape &&shape, Strides &&strides,
+    uint64_t size, uint8_t ndim, bool free_mem) noexcept
+    : ArrayBase(std::move(shape), std::move(strides), size, ndim, free_mem), m_data(data) {}
+
+    template <typename T, bool C>
     NDArray<T, C>::NDArray(uint8_t ndim, T *data, bool free_mem, uint64_t size) noexcept
     : ArrayBase(ndim, free_mem, size), m_data(data) {}
 

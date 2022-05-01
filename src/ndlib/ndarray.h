@@ -23,6 +23,10 @@ namespace laruen::ndlib {
         public:
             ~NDArray();
             NDArray() noexcept;
+            NDArray(T *data, const Shape &shape, const Strides &strides,
+            uint64_t size, uint8_t ndim, bool free_mem) noexcept;
+            NDArray(T *data, Shape &&shape, Strides &&strides,
+            uint64_t size, uint8_t ndim, bool free_mem) noexcept;
             NDArray(uint8_t ndim, T *data = nullptr, bool free_mem = false, uint64_t size = 0) noexcept;
             NDArray(const Shape &shape) noexcept;
             NDArray(const Shape &shape, T value) noexcept;
