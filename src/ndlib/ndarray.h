@@ -5,14 +5,17 @@
 #include "src/ndlib/ndarray_types.h"
 #include "src/ndlib/nditerator.h"
 #include "src/ndlib/array_base.h"
+#include "src/utils/range.h"
 #include <vector>
 #include <cstdint>
 #include <cassert>
 #include <string>
 #include <type_traits>
 
+using laruen::utils::Range;
+
 namespace laruen::ndlib {
-    
+
     template <typename T = float64_t, bool C = true> class NDArray : public ArrayBase {
         T *m_data;
 

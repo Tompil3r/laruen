@@ -16,6 +16,7 @@
 using namespace laruen;
 using namespace laruen::ndlib::utils;
 using namespace laruen::math;
+using laruen::utils::Range;
 
 namespace laruen::ndlib {
 
