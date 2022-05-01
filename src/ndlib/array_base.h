@@ -20,6 +20,14 @@ class ArrayBase {
     public:
         ArrayBase() noexcept = default;
 
+        ArrayBase(const Shape &shape, const Strides &strides, uint64_t size,
+        uint8_t ndim, bool free_mem) noexcept
+        : m_shape(shape), m_strides(strides), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
+
+        ArrayBase(Shape &&shape, Strides &&strides, uint64_t size,
+        uint8_t ndim, bool free_mem) noexcept
+        : m_shape(std::move(shape)), m_strides(std::move(strides)), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
+
         ArrayBase(uint8_t ndim, bool free_mem = true, uint64_t size = 0) noexcept
         : m_shape(ndim), m_strides(ndim), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
 
