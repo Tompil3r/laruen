@@ -361,9 +361,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
     auto NDArray<T, C>::operator+(T2 value) const noexcept {
+        typedef types::combine_types_t<T, T2> TR;
 
-        NDArray<types::combine_types_t<T, T2>> ndarray(
-            new types::combine_types_t<T, T2>[this->m_size], *this, true);
+        NDArray<TR> ndarray(new TR[this->m_size], *this, true);
         ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < ndarray.m_size;i++) {
@@ -375,9 +375,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
     auto NDArray<T, C>::operator-(T2 value) const noexcept {
+        typedef types::combine_types_t<T, T2> TR;
 
-        NDArray<types::combine_types_t<T, T2>> ndarray(
-            new types::combine_types_t<T, T2>[this->m_size], *this, true);
+        NDArray<TR> ndarray(new TR[this->m_size], *this, true);
         ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < ndarray.m_size;i++) {
@@ -389,9 +389,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
     auto NDArray<T, C>::operator*(T2 value) const noexcept {
-
-        NDArray<types::combine_types_t<T, T2>> ndarray(
-            new types::combine_types_t<T, T2>[this->m_size], *this, true);
+        typedef types::combine_types_t<T, T2> TR;
+        
+        NDArray<TR> ndarray(new TR[this->m_size], *this, true);
         ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < ndarray.m_size;i++) {
@@ -403,9 +403,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
     auto NDArray<T, C>::operator/(T2 value) const noexcept {
-
-        NDArray<types::combine_types_t<T, T2>> ndarray(
-            new types::combine_types_t<T, T2>[this->m_size], *this, true);
+        typedef types::combine_types_t<T, T2> TR;
+        
+        NDArray<TR> ndarray(new TR[this->m_size], *this, true);
         ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < ndarray.m_size;i++) {
@@ -634,8 +634,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2>
     auto NDArray<T, C>::operator^(T2 value) const noexcept {
-        NDArray<types::combine_types_t<T, T2>> ndarray(
-            new types::combine_types_t<T, T2>[this->m_size], *this, true);
+        typedef types::combine_types_t<T, T2> TR;
+        
+        NDArray<TR> ndarray(new TR[this->m_size], *this, true);
         ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -647,8 +648,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2>
     auto NDArray<T, C>::operator&(T2 value) const noexcept {
-        NDArray<types::combine_types_t<T, T2>> ndarray(
-            new types::combine_types_t<T, T2>[this->m_size], *this, true);
+        typedef types::combine_types_t<T, T2> TR;
+        
+        NDArray<TR> ndarray(new TR[this->m_size], *this, true);
         ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -660,8 +662,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2>
     auto NDArray<T, C>::operator|(T2 value) const noexcept {
-        NDArray<types::combine_types_t<T, T2>> ndarray(
-            new types::combine_types_t<T, T2>[this->m_size], *this, true);
+        typedef types::combine_types_t<T, T2> TR;
+        
+        NDArray<TR> ndarray(new TR[this->m_size], *this, true);
         ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -673,8 +676,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2>
     auto NDArray<T, C>::operator<<(T2 value) const noexcept {
-        NDArray<types::combine_types_t<T, T2>> ndarray(
-            new types::combine_types_t<T, T2>[this->m_size], *this, true);
+        typedef types::combine_types_t<T, T2> TR;
+        
+        NDArray<TR> ndarray(new TR[this->m_size], *this, true);
         ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -686,8 +690,9 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2>
     auto NDArray<T, C>::operator>>(T2 value) const noexcept {
-        NDArray<types::combine_types_t<T, T2>> ndarray(
-            new types::combine_types_t<T, T2>[this->m_size], *this, true);
+        typedef types::combine_types_t<T, T2> TR;
+        
+        NDArray<TR> ndarray(new TR[this->m_size], *this, true);
         ConstNDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
