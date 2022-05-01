@@ -27,7 +27,6 @@ namespace laruen::ndlib {
             uint64_t size, uint8_t ndim, bool free_mem) noexcept;
             NDArray(T *data, Shape &&shape, Strides &&strides,
             uint64_t size, uint8_t ndim, bool free_mem) noexcept;
-            NDArray(uint8_t ndim, T *data = nullptr, bool free_mem = false, uint64_t size = 0) noexcept;
             NDArray(const Shape &shape) noexcept;
             NDArray(const Shape &shape, T value) noexcept;
             NDArray(T *data, const ArrayBase &base) noexcept;
@@ -37,7 +36,6 @@ namespace laruen::ndlib {
             NDArray(const Range<T> &range) noexcept;
             NDArray(NDArray &ndarray, const Axes &axes) noexcept;
             template <bool C2> NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges) noexcept;
-            template <typename T2, bool C2> NDArray(const NDArray<T2, C2> &ndarray, bool free_mem) noexcept;
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(const NDArray<T2, C2> &ndarray) noexcept;
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(NDArray<T2, C2> &&ndarray) noexcept;
 

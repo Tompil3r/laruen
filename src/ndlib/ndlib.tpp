@@ -45,7 +45,8 @@ namespace laruen::ndlib {
             throw std::invalid_argument("shapes cannot be broadcasted");
         }
 
-        NDArray<T, false> reorder(lhs.m_ndim, lhs.m_data, false, lhs.m_size);
+        NDArray<T, false> reorder(lhs.m_data, Shape(lhs.m_ndim), Strides(lhs.m_ndim),
+        lhs.m_size, lhs.m_ndim, false);
         uint8_t lidx = lhs.m_ndim - rhs.m_ndim;
         uint8_t low_priority_idx = lidx;
         uint8_t high_priority_idx = lidx + ndlib::utils::rev_count_diff<true>(lhs.m_shape, rhs.m_shape);

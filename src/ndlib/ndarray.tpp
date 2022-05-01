@@ -40,10 +40,6 @@ namespace laruen::ndlib {
     : ArrayBase(std::move(shape), std::move(strides), size, ndim, free_mem), m_data(data) {}
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(uint8_t ndim, T *data, bool free_mem, uint64_t size) noexcept
-    : ArrayBase(ndim, free_mem, size), m_data(data) {}
-
-    template <typename T, bool C>
     NDArray<T, C>::NDArray(const Shape &shape) noexcept
     : ArrayBase(shape), m_data(new T[this->m_size]) {}
 
@@ -119,10 +115,6 @@ namespace laruen::ndlib {
 
         this->m_size /= size_ratio;
     }
-
-    template <typename T, bool C> template <typename T2, bool C2>
-    NDArray<T, C>::NDArray(const NDArray<T2, C2> &ndarray, bool free_mem) noexcept
-    : NDArray<T, C>(ndarray.m_data, ndarray, free_mem) {}
 
     template <typename T, bool C> template <typename T2, bool C2, typename ENABLE>
     NDArray<T, C>::NDArray(const NDArray<T2, C2> &ndarray) noexcept
