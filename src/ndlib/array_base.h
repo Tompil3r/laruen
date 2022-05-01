@@ -18,13 +18,13 @@ class ArrayBase {
 
 
     public:
-        ArrayBase() = default;
+        ArrayBase() noexcept = default;
 
-        ArrayBase(uint8_t ndim, bool free_mem = true, uint64_t size = 0) : m_shape(ndim),
-        m_strides(ndim), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
+        ArrayBase(uint8_t ndim, bool free_mem = true, uint64_t size = 0) noexcept
+        : m_shape(ndim), m_strides(ndim), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
 
-        ArrayBase(const Shape &shape, bool free_mem = true) : m_shape(shape),
-        m_strides(shape.size()), m_ndim(shape.size()), m_free_mem(free_mem)
+        ArrayBase(const Shape &shape, bool free_mem = true) noexcept
+        : m_shape(shape), m_strides(shape.size()), m_ndim(shape.size()), m_free_mem(free_mem)
         {
             uint64_t stride = 1;
             this->m_size = (this->m_ndim > 0);
@@ -36,8 +36,9 @@ class ArrayBase {
             }
         }
 
-        ArrayBase(const ArrayBase &base, bool free_mem) : m_shape(base.m_shape),
-        m_strides(base.m_strides), m_size(base.m_size), m_ndim(base.m_ndim), m_free_mem(free_mem) {}
+        ArrayBase(const ArrayBase &base, bool free_mem) noexcept
+        : m_shape(base.m_shape), m_strides(base.m_strides), m_size(base.m_size),
+        m_ndim(base.m_ndim), m_free_mem(free_mem) {}
 
         void reshape(const Shape &shape) {
             uint64_t prev_size = this->m_size;
@@ -59,7 +60,7 @@ class ArrayBase {
             }
         }
 
-        uint64_t ravel_ndindex(const NDIndex &ndindex) const {
+        uint64_t ravel_ndindex(const NDIndex &ndindex) const noexcept {
             uint64_t index = 0;
             uint8_t ndim = ndindex.size();
 
@@ -70,7 +71,7 @@ class ArrayBase {
             return index;
         }
 
-        NDIndex unravel_index(uint64_t index) const {
+        NDIndex unravel_index(uint64_t index) const noexcept {
             NDIndex ndindex(this->m_ndim);
 
             for(uint8_t dim = 0;dim < this->m_ndim;dim++) {
@@ -81,7 +82,7 @@ class ArrayBase {
             return ndindex;
         }
 
-        void squeeze() {
+        void squeeze() noexcept {
             uint8_t new_ndim = 0;
 
             for(uint8_t dim = 0;dim < this->m_ndim;dim++) {
@@ -97,7 +98,7 @@ class ArrayBase {
             this->m_strides.resize(this->m_ndim);
         }
 
-        std::string str() const {
+        std::string str() const noexcept {
             std::string str("shape = (");
             uint8_t dim = 0;
 
@@ -121,7 +122,7 @@ class ArrayBase {
             return str;
         }
 
-        uint64_t physical_index(uint64_t logical_index) const {
+        uint64_t physical_index(uint64_t logical_index) const noexcept {
             uint64_t cstride = this->m_size;
             uint64_t physical_index = 0;
             uint64_t dim_index;
@@ -136,27 +137,27 @@ class ArrayBase {
             return physical_index;
         }
 
-        inline const Shape& shape() const {
+        inline const Shape& shape() const noexcept {
             return this->m_shape;
         }
 
-        inline const Strides& strides() const {
+        inline const Strides& strides() const noexcept {
             return this->m_strides;
         }
 
-        inline const uint64_t& size() const {
+        inline const uint64_t& size() const noexcept {
             return this->m_size;
         }
 
-        inline const uint8_t& ndim() const {
+        inline const uint8_t& ndim() const noexcept {
             return this->m_ndim;
         }
 
-        inline const bool& free_mem() const {
+        inline const bool& free_mem() const noexcept {
             return this->m_free_mem;
         }
 
-        inline void modify_mem_release(bool free_mem) {
+        inline void modify_mem_release(bool free_mem) noexcept {
             this->m_free_mem = free_mem;
         }
 };

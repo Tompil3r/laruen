@@ -11,10 +11,10 @@ namespace laruen::utils {
         T end;
         T step;
 
-        constexpr Range(T end);
-        constexpr Range(T start, T end);
-        constexpr Range(T start, T end, T step);
-        std::string str() const;
+        constexpr Range(T end) noexcept;
+        constexpr Range(T start, T end) noexcept;
+        constexpr Range(T start, T end, T step) noexcept;
+        std::string str() const noexcept;
     };
 };
 

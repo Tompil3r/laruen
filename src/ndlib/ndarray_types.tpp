@@ -9,7 +9,7 @@
 using laruen::ndlib::NDArray;
 
 // operator<< for Shape is used as operator<< for NDIndex and Strides 
-std::string str(const Shape &shape) {
+std::string str(const Shape &shape) noexcept {
     std::string str;
 
     uint8_t size = shape.size();
@@ -27,7 +27,7 @@ std::string str(const Shape &shape) {
     return str;
 }
 
-std::string str(const SliceRanges &slice_ranges) {
+std::string str(const SliceRanges &slice_ranges) noexcept {
     std::string str;
 
     uint8_t size = slice_ranges.size();

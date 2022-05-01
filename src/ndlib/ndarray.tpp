@@ -27,45 +27,45 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray() : ArrayBase(), m_data(nullptr) {}
+    NDArray<T, C>::NDArray() noexcept : ArrayBase(), m_data(nullptr) {}
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(uint8_t ndim, T *data, bool free_mem, uint64_t size)
+    NDArray<T, C>::NDArray(uint8_t ndim, T *data, bool free_mem, uint64_t size) noexcept
     : ArrayBase(ndim, free_mem, size), m_data(data) {}
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(const Shape &shape)
+    NDArray<T, C>::NDArray(const Shape &shape) noexcept
     : ArrayBase(shape), m_data(new T[this->m_size]) {}
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(const Shape &shape, T value) : NDArray<T, C>(shape) {
+    NDArray<T, C>::NDArray(const Shape &shape, T value) noexcept : NDArray<T, C>(shape) {
         this->fill(value);
     }
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(T *data, const ArrayBase &base)
+    NDArray<T, C>::NDArray(T *data, const ArrayBase &base) noexcept
     : ArrayBase(base), m_data(data) {}
     
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(T *data, const ArrayBase &base, bool free_mem)
+    NDArray<T, C>::NDArray(T *data, const ArrayBase &base, bool free_mem) noexcept
     : ArrayBase(base, free_mem), m_data(data) {}
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(const NDArray<T, C> &ndarray)
+    NDArray<T, C>::NDArray(const NDArray<T, C> &ndarray) noexcept
     : NDArray<T, C>(new T[ndarray.m_size], ndarray)
     {
         this->copy_data_from(ndarray);
     }
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(NDArray<T, C> &&ndarray)
+    NDArray<T, C>::NDArray(NDArray<T, C> &&ndarray) noexcept
     : ArrayBase(std::move(ndarray)), m_data(ndarray.m_data)
     {
         ndarray.m_data = nullptr;
     }
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(const Range<T> &range)
+    NDArray<T, C>::NDArray(const Range<T> &range) noexcept
     : NDArray<T, C>(Shape{ceil_index((range.end - range.start) / range.step)}) {
         T value = range.start;
 
@@ -76,7 +76,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(NDArray<T, C> &ndarray, const Axes &axes)
+    NDArray<T, C>::NDArray(NDArray<T, C> &ndarray, const Axes &axes) noexcept
     : ArrayBase(axes.size(), false), m_data(ndarray.m_data)
     {
         this->m_size = this->m_ndim > 0;
@@ -91,7 +91,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <bool C2>
-    NDArray<T, C>::NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges)
+    NDArray<T, C>::NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges) noexcept
     : NDArray<T, C>(ndarray.m_data, ndarray, false)
     {
         static_assert(!C, "cannot create sliced array with non-sliced type");
@@ -111,25 +111,25 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
-    NDArray<T, C>::NDArray(const NDArray<T2, C2> &ndarray, bool free_mem)
+    NDArray<T, C>::NDArray(const NDArray<T2, C2> &ndarray, bool free_mem) noexcept
     : NDArray<T, C>(ndarray.m_data, ndarray, free_mem) {}
 
     template <typename T, bool C> template <typename T2, bool C2, typename ENABLE>
-    NDArray<T, C>::NDArray(const NDArray<T2, C2> &ndarray)
+    NDArray<T, C>::NDArray(const NDArray<T2, C2> &ndarray) noexcept
     : NDArray<T, C>(new T[ndarray.m_size], ndarray)
     {
         this->copy_data_from(ndarray);
     }
 
     template <typename T, bool C> template <typename T2, bool C2, typename ENABLE>
-    NDArray<T, C>::NDArray(NDArray<T2, C2> &&ndarray)
+    NDArray<T, C>::NDArray(NDArray<T2, C2> &&ndarray) noexcept
     : ArrayBase(std::move(ndarray)), m_data(new T[ndarray.m_size])
     {
         this->copy_data_from(ndarray);
     }
 
     template <typename T, bool C>
-    NDArray<T, C>& NDArray<T, C>::operator=(const NDArray<T, C> &ndarray) {
+    NDArray<T, C>& NDArray<T, C>::operator=(const NDArray<T, C> &ndarray) noexcept {
         if(this == &ndarray) {
             return *this;
         }
@@ -153,7 +153,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    NDArray<T, C>& NDArray<T, C>::operator=(NDArray<T, C> &&ndarray) {
+    NDArray<T, C>& NDArray<T, C>::operator=(NDArray<T, C> &&ndarray) noexcept {
         if(this == &ndarray) {
             return *this;
         }
@@ -175,7 +175,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, bool C2, typename ENABLE>
-    NDArray<T, C>& NDArray<T, C>::operator=(const NDArray<T2, C2> &ndarray) {
+    NDArray<T, C>& NDArray<T, C>::operator=(const NDArray<T2, C2> &ndarray) noexcept {
         if(this->m_size != ndarray.m_size) {
             if(this->m_free_mem) {
                 delete[] this->m_data;
@@ -195,7 +195,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, bool C2, typename ENABLE>
-    NDArray<T, C>& NDArray<T, C>::operator=(NDArray<T2, C2> &&ndarray) {
+    NDArray<T, C>& NDArray<T, C>::operator=(NDArray<T2, C2> &&ndarray) noexcept {
         this->m_data = new T[ndarray.m_size];
         this->m_shape = std::move(ndarray.m_shape);
         this->m_strides = std::move(ndarray.strides);
@@ -209,7 +209,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
-    void NDArray<T, C>::copy_data_from(const NDArray<T2, C2> &ndarray) {
+    void NDArray<T, C>::copy_data_from(const NDArray<T2, C2> &ndarray) noexcept {
         NDIterator to(*this);
         ConstNDIterator from(ndarray);
 
@@ -219,7 +219,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    void NDArray<T, C>::fill(T value) {
+    void NDArray<T, C>::fill(T value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -228,7 +228,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    T NDArray<T, C>::max() const {
+    T NDArray<T, C>::max() const noexcept {
         ConstNDIterator iter(*this);
         T max = iter.next();
 
@@ -240,7 +240,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    uint64_t NDArray<T, C>::index_max() const {
+    uint64_t NDArray<T, C>::index_max() const noexcept {
         ConstNDIterator iter(*this);
         T value;
         T max = iter.next();
@@ -257,12 +257,12 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    NDIndex NDArray<T, C>::ndindex_max() const {
+    NDIndex NDArray<T, C>::ndindex_max() const noexcept {
         return this->unravel_index(this->index_max());
     }
 
     template <typename T, bool C>
-    T NDArray<T, C>::min() const {
+    T NDArray<T, C>::min() const noexcept{
         ConstNDIterator iter(*this);
         T min = iter.next();
 
@@ -274,7 +274,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    uint64_t NDArray<T, C>::index_min() const {
+    uint64_t NDArray<T, C>::index_min() const noexcept {
         ConstNDIterator iter(*this);
         T value;
         T min = iter.next();
@@ -291,32 +291,32 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    NDIndex NDArray<T, C>::ndindex_min() const {
+    NDIndex NDArray<T, C>::ndindex_min() const noexcept {
         return this->unravel_index(this->index_min());
     }
 
     template <typename T, bool C>
-    T& NDArray<T, C>::operator[](const NDIndex &ndindex) {
+    T& NDArray<T, C>::operator[](const NDIndex &ndindex) noexcept {
         return this->m_data[this->ravel_ndindex(ndindex)];
     }
 
     template <typename T, bool C>
-    const T& NDArray<T, C>::operator[](const NDIndex &ndindex) const {
+    const T& NDArray<T, C>::operator[](const NDIndex &ndindex) const noexcept {
         return this->m_data[this->ravel_ndindex(ndindex)];
     }
 
     template <typename T, bool C>
-    const NDArray<T, false> NDArray<T, C>::operator[](const SliceRanges &ranges) const {
+    const NDArray<T, false> NDArray<T, C>::operator[](const SliceRanges &ranges) const noexcept {
         return NDArray<T, false>(*this, ranges);
     }
 
     template <typename T, bool C>
-    NDArray<T, false> NDArray<T, C>::operator[](const SliceRanges &ranges) {
+    NDArray<T, false> NDArray<T, C>::operator[](const SliceRanges &ranges) noexcept {
         return NDArray<T, false>(*this, ranges);
     }
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
-    NDArray<T, C>& NDArray<T, C>::operator+=(T2 value) {
+    NDArray<T, C>& NDArray<T, C>::operator+=(T2 value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -327,7 +327,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
-    NDArray<T, C>& NDArray<T, C>::operator-=(T2 value) {
+    NDArray<T, C>& NDArray<T, C>::operator-=(T2 value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -338,7 +338,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
-    NDArray<T, C>& NDArray<T, C>::operator*=(T2 value) {
+    NDArray<T, C>& NDArray<T, C>::operator*=(T2 value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -349,7 +349,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
-    NDArray<T, C>& NDArray<T, C>::operator/=(T2 value) {
+    NDArray<T, C>& NDArray<T, C>::operator/=(T2 value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -360,7 +360,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
-    auto NDArray<T, C>::operator+(T2 value) const {
+    auto NDArray<T, C>::operator+(T2 value) const noexcept {
 
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
@@ -374,7 +374,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
-    auto NDArray<T, C>::operator-(T2 value) const {
+    auto NDArray<T, C>::operator-(T2 value) const noexcept {
 
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
@@ -388,7 +388,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
-    auto NDArray<T, C>::operator*(T2 value) const {
+    auto NDArray<T, C>::operator*(T2 value) const noexcept {
 
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
@@ -402,7 +402,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
-    auto NDArray<T, C>::operator/(T2 value) const {
+    auto NDArray<T, C>::operator/(T2 value) const noexcept {
 
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
@@ -524,7 +524,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
-    bool NDArray<T, C>::operator==(const NDArray<T2, C2> &ndarray) const {
+    bool NDArray<T, C>::operator==(const NDArray<T2, C2> &ndarray) const noexcept {
         bool eq = this->m_shape == ndarray.m_shape;
         ConstNDIterator lhs_iter(*this);
         ConstNDIterator rhs_iter(ndarray);
@@ -537,12 +537,12 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
-    bool NDArray<T, C>::operator!=(const NDArray<T2, C2> &ndarray) const {
+    bool NDArray<T, C>::operator!=(const NDArray<T2, C2> &ndarray) const noexcept {
         return !(*this == ndarray);
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
-    bool NDArray<T, C>::operator>=(const NDArray<T2, C2> &ndarray) const {
+    bool NDArray<T, C>::operator>=(const NDArray<T2, C2> &ndarray) const noexcept {
         bool ge = this->m_shape == ndarray.m_shape;
         ConstNDIterator lhs_iter(*this);
         ConstNDIterator rhs_iter(ndarray);
@@ -555,7 +555,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
-    bool NDArray<T, C>::operator<=(const NDArray<T2, C2> &ndarray) const {
+    bool NDArray<T, C>::operator<=(const NDArray<T2, C2> &ndarray) const noexcept {
         bool le = this->m_shape == ndarray.m_shape;
         ConstNDIterator lhs_iter(*this);
         ConstNDIterator rhs_iter(ndarray);
@@ -568,17 +568,17 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
-    bool NDArray<T, C>::operator>(const NDArray<T2, C2> &ndarray) const {
+    bool NDArray<T, C>::operator>(const NDArray<T2, C2> &ndarray) const noexcept {
         return !(*this <= ndarray);
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
-    bool NDArray<T, C>::operator<(const NDArray<T2, C2> &ndarray) const {
+    bool NDArray<T, C>::operator<(const NDArray<T2, C2> &ndarray) const noexcept {
         return !(*this >= ndarray);
     }
 
     template <typename T, bool C> template <typename T2>
-    NDArray<T, C>& NDArray<T, C>::operator^=(T2 value) {
+    NDArray<T, C>& NDArray<T, C>::operator^=(T2 value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -589,7 +589,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2>
-    NDArray<T, C>& NDArray<T, C>::operator&=(T2 value) {
+    NDArray<T, C>& NDArray<T, C>::operator&=(T2 value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -600,7 +600,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2>
-    NDArray<T, C>& NDArray<T, C>::operator|=(T2 value) {
+    NDArray<T, C>& NDArray<T, C>::operator|=(T2 value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -611,7 +611,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2>
-    NDArray<T, C>& NDArray<T, C>::operator<<=(T2 value) {
+    NDArray<T, C>& NDArray<T, C>::operator<<=(T2 value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -622,7 +622,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2>
-    NDArray<T, C>& NDArray<T, C>::operator>>=(T2 value) {
+    NDArray<T, C>& NDArray<T, C>::operator>>=(T2 value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -633,7 +633,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2>
-    auto NDArray<T, C>::operator^(T2 value) const {
+    auto NDArray<T, C>::operator^(T2 value) const noexcept {
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
         ConstNDIterator iter(*this);
@@ -646,7 +646,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2>
-    auto NDArray<T, C>::operator&(T2 value) const {
+    auto NDArray<T, C>::operator&(T2 value) const noexcept {
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
         ConstNDIterator iter(*this);
@@ -659,7 +659,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2>
-    auto NDArray<T, C>::operator|(T2 value) const {
+    auto NDArray<T, C>::operator|(T2 value) const noexcept {
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
         ConstNDIterator iter(*this);
@@ -672,7 +672,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2>
-    auto NDArray<T, C>::operator<<(T2 value) const {
+    auto NDArray<T, C>::operator<<(T2 value) const noexcept {
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
         ConstNDIterator iter(*this);
@@ -685,7 +685,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2>
-    auto NDArray<T, C>::operator>>(T2 value) const {
+    auto NDArray<T, C>::operator>>(T2 value) const noexcept {
         NDArray<types::combine_types_t<T, T2>> ndarray(
             new types::combine_types_t<T, T2>[this->m_size], *this, true);
         ConstNDIterator iter(*this);
@@ -698,7 +698,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    NDArray<T, C> NDArray<T, C>::operator~() const {
+    NDArray<T, C> NDArray<T, C>::operator~() const noexcept {
         NDArray<T, C> ndarray(new T[this->m_size], *this, true);
         ConstNDIterator iter(*this);
 
@@ -845,7 +845,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int> ENABLE>
-    NDArray<T, C>& NDArray<T, C>::operator%=(T2 value) {
+    NDArray<T, C>& NDArray<T, C>::operator%=(T2 value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -856,7 +856,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int> ENABLE>
-    NDArray<T, C>& NDArray<T, C>::operator%=(T2 value) {
+    NDArray<T, C>& NDArray<T, C>::operator%=(T2 value) noexcept {
         NDIterator iter(*this);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
@@ -867,7 +867,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2>
-    auto NDArray<T, C>::operator%(T2 value) const {
+    auto NDArray<T, C>::operator%(T2 value) const noexcept {
 
         NDArray<types::combine_types_t<T, T2>> ndarray(*this);
         ndarray %= value;
@@ -920,7 +920,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    void NDArray<T, C>::str_(std::string &str, uint8_t dim, uint64_t data_index, bool not_first, bool not_last) const {
+    void NDArray<T, C>::str_(std::string &str, uint8_t dim, uint64_t data_index, bool not_first, bool not_last) const noexcept {
         uint64_t dim_idx;
         uint64_t stride;
 
