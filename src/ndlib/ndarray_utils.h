@@ -7,35 +7,15 @@
 
 
 namespace laruen::ndlib::utils {
-    inline uint64_t ceil_index(float64_t index) noexcept {
-        return (uint64_t)index + ((uint64_t)index < index);
-    }
-
     template <bool = false> uint8_t rev_count_diff(const Shape&, const Shape&) noexcept;
 
-    template <>
-    uint8_t rev_count_diff<true>(const Shape &lhs, const Shape &rhs) noexcept {
-        // assume lhs.size() >= rhs.size()
-
-        uint8_t count = 0;
-        uint8_t lidx = lhs.size() - rhs.size();
-
-        for(uint8_t ridx = 0;ridx < rhs.size();ridx++) {
-            count += lhs[lidx] != rhs[ridx];
-            lidx++;
-        }
-        
-        return count;
-    }
-
-    template <>
-    inline uint8_t rev_count_diff(const Shape &lhs, const Shape &rhs) noexcept {
-        return lhs.size() >= rhs.size() ? rev_count_diff<true>(lhs, rhs) : rev_count_diff<true>(rhs, lhs);
+    inline uint64_t ceil_index(float64_t index) noexcept {
+        return (uint64_t)index + ((uint64_t)index < index);
     }
 }
 
 
 
 
-
+#include "src/ndlib/ndarray_utils.tpp"
 #endif
