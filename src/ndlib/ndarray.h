@@ -2,6 +2,7 @@
 #ifndef NDARRAY_H
 #define NDARRAY_H
 
+#include "src/ndlib/ndarray_utils.h"
 #include "src/ndlib/ndarray_types.h"
 #include "src/ndlib/nditerator.h"
 #include "src/ndlib/array_base.h"
@@ -135,8 +136,9 @@ namespace laruen::ndlib {
                 return this->m_data[index];
             }
 
+            /* ----- ndlib -----  */
             template <typename T1, bool C1, typename T2, bool C2>
-            friend NDArray<T1, false> broadcast_reorder(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs);
+            friend NDArray<T1, false> ndlib::utils::broadcast_reorder(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs);
     };
     
     template <typename T, bool C> NDArray(NDArray<T, C>&, const Axes&) -> NDArray<T, false>;
