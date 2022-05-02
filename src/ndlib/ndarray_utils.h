@@ -7,7 +7,11 @@
 
 
 namespace laruen::ndlib::utils {
-    template <bool = false> uint8_t rev_count_diff(const Shape&, const Shape&) noexcept;
+    template <bool = false>
+    uint8_t rev_count_diff(const Shape&, const Shape&) noexcept;
+
+    template <bool = false>
+    Shape broadcast(const Shape&, const Shape&);
 
     inline uint64_t ceil_index(float64_t index) noexcept {
         return (uint64_t)index + ((uint64_t)index < index);

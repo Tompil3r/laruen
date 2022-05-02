@@ -420,7 +420,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator+(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::utils::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array += ndarray;
@@ -430,7 +430,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator-(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::utils::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array -= ndarray;
@@ -440,7 +440,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator*(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::utils::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array *= ndarray;
@@ -450,7 +450,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator/(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::utils::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array /= ndarray;
@@ -460,7 +460,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator+=(const NDArray<T2, C2> &ndarray) {
-        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
+        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
@@ -477,7 +477,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator-=(const NDArray<T2, C2> &ndarray) {
-        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
+        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
@@ -494,7 +494,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator*=(const NDArray<T2, C2> &ndarray) {
-        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
+        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
@@ -511,7 +511,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator/=(const NDArray<T2, C2> &ndarray) {
-        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
+        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
@@ -719,7 +719,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator^=(const NDArray<T2, C2> &ndarray) {
-        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
+        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
@@ -736,7 +736,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator&=(const NDArray<T2, C2> &ndarray) {
-        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
+        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
@@ -753,7 +753,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator|=(const NDArray<T2, C2> &ndarray) {
-        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
+        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
@@ -770,7 +770,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator<<=(const NDArray<T2, C2> &ndarray) {
-        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
+        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
@@ -787,7 +787,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator>>=(const NDArray<T2, C2> &ndarray) {
-        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
+        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
@@ -804,7 +804,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator^(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::utils::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array ^= ndarray;
@@ -814,7 +814,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator&(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::utils::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array &= ndarray;
@@ -824,7 +824,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator|(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::utils::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array |= ndarray;
@@ -834,7 +834,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator<<(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::utils::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array <<= ndarray;
@@ -844,7 +844,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator>>(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::utils::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array >>= ndarray;
@@ -885,7 +885,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int>>
     NDArray<T, C>& NDArray<T, C>::operator%=(const NDArray<T2, C2> &ndarray) {
-        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
+        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
@@ -902,7 +902,7 @@ namespace laruen::ndlib {
     
     template <typename T, bool C> template <typename T2, bool C2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int>>
     NDArray<T, C>& NDArray<T, C>::operator%=(const NDArray<T2, C2> &ndarray) {
-        NDArray<T, false> reorder = ndlib::broadcast_reorder(*this, ndarray);
+        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, ndarray);
         uint64_t size_ratio = this->m_size / ndarray.m_size;
         NDIterator lhs_iter(reorder);
         ConstNDIterator rhs_iter(ndarray);
@@ -919,7 +919,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     auto NDArray<T, C>::operator%(const NDArray<T2, C2> &ndarray) const {
-        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::broadcast(this->m_shape, ndarray.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>> output_array(ndlib::utils::broadcast(this->m_shape, ndarray.m_shape), 0);
 
         output_array += *this;
         output_array %= ndarray;
