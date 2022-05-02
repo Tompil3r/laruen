@@ -145,7 +145,7 @@ namespace laruen::ndlib {
         }
 
         this->m_shape = ndarray.m_shape;
-        this->m_strides = ndarray.strides;
+        this->m_strides = ndarray.m_strides;
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
         this->m_free_mem = true;
@@ -166,7 +166,7 @@ namespace laruen::ndlib {
         }
         
         this->m_shape = std::move(ndarray.m_shape);
-        this->m_strides = std::move(ndarray.strides);
+        this->m_strides = std::move(ndarray.m_strides);
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
         this->m_free_mem = ndarray.m_free_mem;
@@ -187,7 +187,7 @@ namespace laruen::ndlib {
         }
 
         this->m_shape = ndarray.m_shape;
-        this->m_strides = ndarray.strides;
+        this->m_strides = ndarray.m_strides;
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
         this->m_free_mem = true;
@@ -201,7 +201,7 @@ namespace laruen::ndlib {
     NDArray<T, C>& NDArray<T, C>::operator=(NDArray<T2, C2> &&ndarray) noexcept {
         this->m_data = new T[ndarray.m_size];
         this->m_shape = std::move(ndarray.m_shape);
-        this->m_strides = std::move(ndarray.strides);
+        this->m_strides = std::move(ndarray.m_strides);
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
         this->m_free_mem = true;
