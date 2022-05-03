@@ -22,7 +22,7 @@ namespace laruen::ndlib {
         template <typename, bool> friend class NDArray;
         friend class NDIterator<T, C>;
         friend class ConstNDIterator<T, C>;
-        friend class NDArrayStatic;
+        friend class ::NDArrayStatic;
 
         private:
             T *m_data;
