@@ -6,7 +6,6 @@
 #include "src/ndlib/ndarray_types.h"
 #include "src/ndlib/nditerator.h"
 #include "src/ndlib/array_base.h"
-#include "src/ndlib/ndarray_static.h"
 #include "src/utils/range.h"
 #include <vector>
 #include <cstdint>
@@ -22,7 +21,6 @@ namespace laruen::ndlib {
         template <typename, bool> friend class NDArray;
         friend class NDIterator<T, C>;
         friend class ConstNDIterator<T, C>;
-        friend class ::NDArrayStatic;
 
         private:
             T *m_data;
@@ -142,6 +140,12 @@ namespace laruen::ndlib {
             /* ----- ndlib -----  */
             template <typename T1, bool C1, typename T2, bool C2>
             friend NDArray<T1, false> ndlib::utils::broadcast_reorder(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs);
+
+            template <typename T1, bool C1, typename T2, bool C2>
+            friend NDArray<T1, C1>& add_assign_normal(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs);
+
+            template <typename T1, bool C1, typename T2, bool C2>
+            friend NDArray<T1, C1>& add_assign_broadcast(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs);
     };
     
     template <typename T, bool C> NDArray(NDArray<T, C>&, const Axes&) -> NDArray<T, false>;
