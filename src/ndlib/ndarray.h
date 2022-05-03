@@ -6,6 +6,7 @@
 #include "src/ndlib/ndarray_types.h"
 #include "src/ndlib/nditerator.h"
 #include "src/ndlib/array_base.h"
+#include "src/ndlib/ndarray_static.h"
 #include "src/utils/range.h"
 #include <vector>
 #include <cstdint>
@@ -18,11 +19,13 @@ using laruen::utils::Range;
 namespace laruen::ndlib {
 
     template <typename T = float64_t, bool C = true> class NDArray : public ArrayBase {
-        T *m_data;
-
         template <typename, bool> friend class NDArray;
         friend class NDIterator<T, C>;
         friend class ConstNDIterator<T, C>;
+        friend class NDArrayStatic;
+
+        private:
+            T *m_data;
 
         public:
             ~NDArray();
