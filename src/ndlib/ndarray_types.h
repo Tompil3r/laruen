@@ -7,11 +7,12 @@
 #include <vector>
 #include <tuple>
 #include <string>
+#include <cmath>
 
 using namespace laruen::utils;
 
-typedef float float32_t;
-typedef double float64_t;
+typedef std::float_t float32_t;
+typedef std::double_t float64_t;
 
 using Shape = std::vector<uint64_t>;
 using Strides = std::vector<uint64_t>;
