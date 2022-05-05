@@ -55,6 +55,16 @@ namespace laruen::math::common {
 
         return result;
     }
+
+    template <typename T1, typename T2>
+    inline constexpr T1 pow(T1 base, T2 exp) {
+        if constexpr(std::is_floating_point_v<T2>) {
+            return std::pow(base, exp);
+        }
+        else {
+            return ipow(base, exp);
+        }
+    }
 };
 
 #endif
