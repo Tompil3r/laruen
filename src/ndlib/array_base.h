@@ -12,32 +12,32 @@ class ArrayBase {
     protected:
         Shape m_shape;
         Strides m_strides;
-        uint64_t m_size;
-        uint8_t m_ndim;
+        uint_fast64_t m_size;
+        uint_fast8_t m_ndim;
         bool m_free_mem;
 
 
     public:
         ArrayBase() noexcept = default;
 
-        ArrayBase(const Shape &shape, const Strides &strides, uint64_t size,
-        uint8_t ndim, bool free_mem) noexcept
+        ArrayBase(const Shape &shape, const Strides &strides, uint_fast64_t size,
+        uint_fast8_t ndim, bool free_mem) noexcept
         : m_shape(shape), m_strides(strides), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
 
-        ArrayBase(Shape &&shape, Strides &&strides, uint64_t size,
-        uint8_t ndim, bool free_mem) noexcept
+        ArrayBase(Shape &&shape, Strides &&strides, uint_fast64_t size,
+        uint_fast8_t ndim, bool free_mem) noexcept
         : m_shape(std::move(shape)), m_strides(std::move(strides)), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
 
-        ArrayBase(uint8_t ndim, bool free_mem = true, uint64_t size = 0) noexcept
+        ArrayBase(uint_fast8_t ndim, bool free_mem = true, uint_fast64_t size = 0) noexcept
         : m_shape(ndim), m_strides(ndim), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
 
         ArrayBase(const Shape &shape, bool free_mem = true) noexcept
         : m_shape(shape), m_strides(shape.size()), m_ndim(shape.size()), m_free_mem(free_mem)
         {
-            uint64_t stride = 1;
+            uint_fast64_t stride = 1;
             this->m_size = (this->m_ndim > 0);
             
-            for(uint8_t dim = this->m_ndim; dim-- > 0;) {
+            for(uint_fast8_t dim = this->m_ndim; dim-- > 0;) {
                 this->m_strides[dim] = stride;
                 this->m_size *= shape[dim];
                 stride *= shape[dim];
@@ -49,15 +49,15 @@ class ArrayBase {
         m_ndim(base.m_ndim), m_free_mem(free_mem) {}
 
         void reshape(const Shape &shape) {
-            uint64_t prev_size = this->m_size;
+            uint_fast64_t prev_size = this->m_size;
             this->m_ndim = shape.size();
             this->m_shape = shape;
             this->m_strides.resize(this->m_ndim);
             this->m_size = (this->m_ndim > 0);
 
-            uint64_t stride = 1;
+            uint_fast64_t stride = 1;
             
-            for(uint8_t dim = this->m_ndim; dim-- > 0;) {
+            for(uint_fast8_t dim = this->m_ndim; dim-- > 0;) {
                 this->m_strides[dim] = stride;
                 this->m_size *= shape[dim];
                 stride *= shape[dim];
@@ -68,21 +68,21 @@ class ArrayBase {
             }
         }
 
-        uint64_t ravel_ndindex(const NDIndex &ndindex) const noexcept {
-            uint64_t index = 0;
-            uint8_t ndim = ndindex.size();
+        uint_fast64_t ravel_ndindex(const NDIndex &ndindex) const noexcept {
+            uint_fast64_t index = 0;
+            uint_fast8_t ndim = ndindex.size();
 
-            for(uint8_t dim = 0;dim < ndim;dim++) {
+            for(uint_fast8_t dim = 0;dim < ndim;dim++) {
                 index += ndindex[dim] * this->m_strides[dim];
             }
 
             return index;
         }
 
-        NDIndex unravel_index(uint64_t index) const noexcept {
+        NDIndex unravel_index(uint_fast64_t index) const noexcept {
             NDIndex ndindex(this->m_ndim);
 
-            for(uint8_t dim = 0;dim < this->m_ndim;dim++) {
+            for(uint_fast8_t dim = 0;dim < this->m_ndim;dim++) {
                 ndindex[dim] = index / this->m_strides[dim];
                 index -= ndindex[dim] * this->m_strides[dim];
             }
@@ -91,9 +91,9 @@ class ArrayBase {
         }
 
         void squeeze() noexcept {
-            uint8_t new_ndim = 0;
+            uint_fast8_t new_ndim = 0;
 
-            for(uint8_t dim = 0;dim < this->m_ndim;dim++) {
+            for(uint_fast8_t dim = 0;dim < this->m_ndim;dim++) {
                 if(this->m_shape[dim] > 1) {
                     this->m_shape[new_ndim] = this->m_shape[dim];
                     this->m_strides[new_ndim] = this->m_strides[dim];
@@ -108,7 +108,7 @@ class ArrayBase {
 
         std::string str() const noexcept {
             std::string str("shape = (");
-            uint8_t dim = 0;
+            uint_fast8_t dim = 0;
 
             for(dim = 0;dim < this->m_ndim - 1;dim++) {
                 str += std::to_string(this->m_shape[dim]);
@@ -130,12 +130,12 @@ class ArrayBase {
             return str;
         }
 
-        uint64_t physical_index(uint64_t logical_index) const noexcept {
-            uint64_t cstride = this->m_size;
-            uint64_t physical_index = 0;
-            uint64_t dim_index;
+        uint_fast64_t physical_index(uint_fast64_t logical_index) const noexcept {
+            uint_fast64_t cstride = this->m_size;
+            uint_fast64_t physical_index = 0;
+            uint_fast64_t dim_index;
 
-            for(uint8_t dim = 0;dim < this->m_ndim;dim++) {
+            for(uint_fast8_t dim = 0;dim < this->m_ndim;dim++) {
                 cstride /= this->m_shape[dim];
                 dim_index = logical_index / cstride;
                 physical_index += this->m_strides[dim] * dim_index;
@@ -153,11 +153,11 @@ class ArrayBase {
             return this->m_strides;
         }
 
-        inline const uint64_t& size() const noexcept {
+        inline const uint_fast64_t& size() const noexcept {
             return this->m_size;
         }
 
-        inline const uint8_t& ndim() const noexcept {
+        inline const uint_fast8_t& ndim() const noexcept {
             return this->m_ndim;
         }
 

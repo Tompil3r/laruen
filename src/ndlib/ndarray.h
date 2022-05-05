@@ -29,9 +29,9 @@ namespace laruen::ndlib {
             ~NDArray();
             NDArray() noexcept;
             NDArray(T *data, const Shape &shape, const Strides &strides,
-            uint64_t size, uint8_t ndim, bool free_mem) noexcept;
+            uint_fast64_t size, uint_fast8_t ndim, bool free_mem) noexcept;
             NDArray(T *data, Shape &&shape, Strides &&strides,
-            uint64_t size, uint8_t ndim, bool free_mem) noexcept;
+            uint_fast64_t size, uint_fast8_t ndim, bool free_mem) noexcept;
             NDArray(const Shape &shape) noexcept;
             NDArray(const Shape &shape, T value) noexcept;
             NDArray(T *data, const ArrayBase &base) noexcept;
@@ -53,10 +53,10 @@ namespace laruen::ndlib {
             void fill(T value) noexcept;
 
             T max() const noexcept;
-            uint64_t index_max() const noexcept;
+            uint_fast64_t index_max() const noexcept;
             NDIndex ndindex_max() const noexcept;
             T min() const noexcept;
-            uint64_t index_min() const noexcept;
+            uint_fast64_t index_min() const noexcept;
             NDIndex ndindex_min() const noexcept;
 
             T& operator[](const NDIndex &ndindex) noexcept;
@@ -116,7 +116,7 @@ namespace laruen::ndlib {
             
 
         private:
-            void str_(std::string &str, uint8_t dim=0, uint64_t data_index=0, bool not_first=false, bool not_last=true) const noexcept;
+            void str_(std::string &str, uint_fast8_t dim=0, uint_fast64_t data_index=0, bool not_first=false, bool not_last=true) const noexcept;
         
         public:
             inline std::string str() const noexcept {
@@ -129,11 +129,11 @@ namespace laruen::ndlib {
                 return this->m_data;
             }
 
-            inline T& operator[](uint64_t index) noexcept {
+            inline T& operator[](uint_fast64_t index) noexcept {
                 return this->m_data[index];
             }
 
-            inline const T& operator[](uint64_t index) const noexcept {
+            inline const T& operator[](uint_fast64_t index) const noexcept {
                 return this->m_data[index];
             }
 

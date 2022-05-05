@@ -19,7 +19,7 @@ namespace laruen::ndlib {
     template <typename T>
     class NDIterator<T, true> {
         NDArray<T, true> &m_ndarray;
-        uint64_t m_index;
+        uint_fast64_t m_index;
 
         public:
             NDIterator() = delete;
@@ -42,7 +42,7 @@ namespace laruen::ndlib {
                 return this->m_ndarray.m_data[this->m_index];
             }
 
-            inline const uint64_t& index() const noexcept {
+            inline const uint_fast64_t& index() const noexcept {
                 return this->m_index;
             }
     };
@@ -50,7 +50,7 @@ namespace laruen::ndlib {
     template <typename T>
     class NDIterator<T, false> {
         NDArray<T, false> &m_ndarray;
-        uint64_t m_index;
+        uint_fast64_t m_index;
         NDIndex m_ndindex;
 
         public:
@@ -64,7 +64,7 @@ namespace laruen::ndlib {
                 this->m_ndindex[this->m_ndarray.m_ndim - 1]++;
                 this->m_index += this->m_ndarray.m_strides[this->m_ndarray.m_ndim - 1];
                 
-                for(uint8_t dim = this->m_ndarray.m_ndim;(dim-- > 1) && (this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]);) {
+                for(uint_fast8_t dim = this->m_ndarray.m_ndim;(dim-- > 1) && (this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]);) {
                     this->m_ndindex[dim] = 0;
                     this->m_ndindex[dim - 1]++;
                     this->m_index += this->m_ndarray.m_strides[dim - 1] - this->m_ndarray.m_shape[dim] * this->m_ndarray.m_strides[dim];
@@ -75,9 +75,9 @@ namespace laruen::ndlib {
 
             void reset() noexcept {
                 this->m_index = 0;
-                uint8_t ndim = this->m_ndindex.size();
+                uint_fast8_t ndim = this->m_ndindex.size();
 
-                for(uint8_t i = 0;i < ndim;i++) {
+                for(uint_fast8_t i = 0;i < ndim;i++) {
                     this->m_ndindex[i] = 0;
                 }
             }
@@ -90,7 +90,7 @@ namespace laruen::ndlib {
                 return this->m_ndarray.m_data[this->m_index];
             }
 
-            inline const uint64_t& index() const noexcept {
+            inline const uint_fast64_t& index() const noexcept {
                 return this->m_index;
             }
 
@@ -102,7 +102,7 @@ namespace laruen::ndlib {
     template <typename T>
     class ConstNDIterator<T, true> {
         const NDArray<T, true> &m_ndarray;
-        uint64_t m_index;
+        uint_fast64_t m_index;
 
         public:
             ConstNDIterator() = delete;
@@ -125,7 +125,7 @@ namespace laruen::ndlib {
                 return this->m_ndarray.m_data[this->m_index];
             }
 
-            inline const uint64_t& index() const noexcept {
+            inline const uint_fast64_t& index() const noexcept {
                 return this->m_index;
             }
     };
@@ -133,7 +133,7 @@ namespace laruen::ndlib {
     template <typename T>
     class ConstNDIterator<T, false> {
         const NDArray<T, false> &m_ndarray;
-        uint64_t m_index;
+        uint_fast64_t m_index;
         NDIndex m_ndindex;
 
         public:
@@ -147,7 +147,7 @@ namespace laruen::ndlib {
                 this->m_ndindex[this->m_ndarray.m_ndim - 1]++;
                 this->m_index += this->m_ndarray.m_strides[this->m_ndarray.m_ndim - 1];
                 
-                for(uint8_t dim = this->m_ndarray.m_ndim;(dim-- > 1) && (this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]);) {
+                for(uint_fast8_t dim = this->m_ndarray.m_ndim;(dim-- > 1) && (this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]);) {
                     this->m_ndindex[dim] = 0;
                     this->m_ndindex[dim - 1]++;
                     this->m_index += this->m_ndarray.m_strides[dim - 1] - this->m_ndarray.m_shape[dim] * this->m_ndarray.m_strides[dim];
@@ -158,9 +158,9 @@ namespace laruen::ndlib {
 
             void reset() noexcept {
                 this->m_index = 0;
-                uint8_t ndim = this->m_ndindex.size();
+                uint_fast8_t ndim = this->m_ndindex.size();
 
-                for(uint8_t i = 0;i < ndim;i++) {
+                for(uint_fast8_t i = 0;i < ndim;i++) {
                     this->m_ndindex[i] = 0;
                 }
             }
@@ -173,7 +173,7 @@ namespace laruen::ndlib {
                 return this->m_ndarray.m_data[this->m_index];
             }
 
-            inline const uint64_t& index() const noexcept {
+            inline const uint_fast64_t& index() const noexcept {
                 return this->m_index;
             }
 

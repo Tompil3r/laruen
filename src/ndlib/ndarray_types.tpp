@@ -12,10 +12,10 @@ using laruen::ndlib::NDArray;
 std::string str(const Shape &shape) noexcept {
     std::string str;
 
-    uint8_t size = shape.size();
+    uint_fast8_t size = shape.size();
     str.push_back('(');
 
-    for(uint8_t i = 0;i < size - 1;i++) {
+    for(uint_fast8_t i = 0;i < size - 1;i++) {
         str += std::to_string(shape[i]);
         str.push_back(',');
         str.push_back(' ');
@@ -30,10 +30,10 @@ std::string str(const Shape &shape) noexcept {
 std::string str(const SliceRanges &slice_ranges) noexcept {
     std::string str;
 
-    uint8_t size = slice_ranges.size();
+    uint_fast8_t size = slice_ranges.size();
     str.push_back('(');
 
-    for(uint8_t i = 0;i < size - 1;i++) {
+    for(uint_fast8_t i = 0;i < size - 1;i++) {
         str += slice_ranges[i].str();
         str.push_back(',');
         str.push_back(' ');

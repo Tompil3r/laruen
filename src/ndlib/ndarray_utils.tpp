@@ -9,13 +9,13 @@ using namespace laruen;
 namespace laruen::ndlib::utils {
 
     template <>
-    uint8_t rev_count_diff<true>(const Shape &lhs, const Shape &rhs) noexcept {
+    uint_fast8_t rev_count_diff<true>(const Shape &lhs, const Shape &rhs) noexcept {
         // assume lhs.size() >= rhs.size()
 
-        uint8_t count = 0;
-        uint8_t lidx = lhs.size() - rhs.size();
+        uint_fast8_t count = 0;
+        uint_fast8_t lidx = lhs.size() - rhs.size();
 
-        for(uint8_t ridx = 0;ridx < rhs.size();ridx++) {
+        for(uint_fast8_t ridx = 0;ridx < rhs.size();ridx++) {
             count += lhs[lidx] != rhs[ridx];
             lidx++;
         }
@@ -24,7 +24,7 @@ namespace laruen::ndlib::utils {
     }
 
     template <>
-    uint8_t rev_count_diff<false>(const Shape &lhs, const Shape &rhs) noexcept {
+    uint_fast8_t rev_count_diff<false>(const Shape &lhs, const Shape &rhs) noexcept {
         return lhs.size() >= rhs.size() ? rev_count_diff<true>(lhs, rhs) : rev_count_diff<true>(rhs, lhs);
     }
 
@@ -33,12 +33,12 @@ namespace laruen::ndlib::utils {
         // assume lhs.size() >= rhs.size()
 
         Shape bshape(lhs);
-        const uint8_t min_ndim = rhs.size();
-        const uint8_t ndim_delta = lhs.size() - min_ndim;
-        uint8_t imax, lval, rval;
+        const uint_fast8_t min_ndim = rhs.size();
+        const uint_fast8_t ndim_delta = lhs.size() - min_ndim;
+        uint_fast8_t imax, lval, rval;
 
-        for(uint8_t imin = 0;imin < min_ndim;imin++) {
-            uint8_t imax = imin + ndim_delta;
+        for(uint_fast8_t imin = 0;imin < min_ndim;imin++) {
+            uint_fast8_t imax = imin + ndim_delta;
             lval = lhs[imax];
             rval = rhs[imin];
 
@@ -64,16 +64,16 @@ namespace laruen::ndlib::utils {
 
         NDArray<T, false> reorder(lhs.m_data, Shape(lhs.m_ndim), Strides(lhs.m_ndim),
         lhs.m_size, lhs.m_ndim, false);
-        uint8_t lidx = lhs.m_ndim - rhs.m_ndim;
-        uint8_t low_priority_idx = lidx;
-        uint8_t high_priority_idx = lidx + rev_count_diff<true>(lhs.m_shape, rhs.m_shape);
+        uint_fast8_t lidx = lhs.m_ndim - rhs.m_ndim;
+        uint_fast8_t low_priority_idx = lidx;
+        uint_fast8_t high_priority_idx = lidx + rev_count_diff<true>(lhs.m_shape, rhs.m_shape);
 
-        for(uint8_t i = 0;i < lidx;i++) {
+        for(uint_fast8_t i = 0;i < lidx;i++) {
             reorder.m_shape[i] = lhs.m_shape[i];
             reorder.m_strides[i] = lhs.m_strides[i];
         }
 
-        for(uint8_t ridx = 0;ridx < rhs.m_ndim;ridx++) {
+        for(uint_fast8_t ridx = 0;ridx < rhs.m_ndim;ridx++) {
             if(lhs.m_shape[lidx] != rhs.m_shape[ridx]) {
                 if(rhs.m_shape[ridx] == 1) {
                     reorder.m_shape[low_priority_idx] = lhs.m_shape[lidx];

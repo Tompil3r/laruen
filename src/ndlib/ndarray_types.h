@@ -14,11 +14,11 @@ using namespace laruen::utils;
 typedef std::float_t float32_t;
 typedef std::double_t float64_t;
 
-using Shape = std::vector<uint64_t>;
-using Strides = std::vector<uint64_t>;
-using NDIndex = std::vector<uint64_t>;
-using SliceRanges = std::vector<Range<uint64_t>>;
-using Axes = std::vector<uint8_t>;
+using Shape = std::vector<uint_fast64_t>;
+using Strides = std::vector<uint_fast64_t>;
+using NDIndex = std::vector<uint_fast64_t>;
+using SliceRanges = std::vector<Range<uint_fast64_t>>;
+using Axes = std::vector<uint_fast8_t>;
 
 std::string str(const Shape &shape) noexcept;
 std::string str(const SliceRanges &slice_ranges) noexcept;
