@@ -7,15 +7,18 @@
 #include <cmath>
 
 namespace laruen::math::common {
-    template <typename T> inline constexpr T max(T value1, T value2) noexcept {
+    template <typename T>
+    inline constexpr T max(T value1, T value2) noexcept {
         return (value1 > value2 ? value1 : value2);
     }
 
-    template <typename T> inline constexpr T min(T value1, T value2) noexcept {
+    template <typename T>
+    inline constexpr T min(T value1, T value2) noexcept {
         return (value1 < value2 ? value1 : value2);
     }
 
-    template <typename T1, typename T2> inline constexpr auto remainder(T1 lhs, T2 rhs) noexcept {
+    template <typename T1, typename T2>
+    inline constexpr auto remainder(T1 lhs, T2 rhs) noexcept {
         if constexpr(std::is_arithmetic_v<T1> && std::is_arithmetic_v<T2>) {
             if constexpr(std::is_same_v<types::max_type_t<T1, T2>, float>) {
                 return fmodf(lhs, rhs);
@@ -35,7 +38,8 @@ namespace laruen::math::common {
         }
     }
 
-    template <typename T1, typename T2> constexpr T1 ipow(T1 base, T2 exp) noexcept {
+    template <typename T1, typename T2>
+    constexpr T1 ipow(T1 base, T2 exp) noexcept {
         T1 result = 1;
 
         for(;;) {
