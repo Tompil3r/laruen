@@ -2,9 +2,11 @@
 #ifndef MATH_COMMON_H
 #define MATH_COMMON_H
 
-#include "src/ndlib/ndarray_types.h"
+#include "src/math/math_utils.h"
 #include <type_traits>
 #include <cmath>
+
+using namespace laruen;
 
 namespace laruen::math::common {
     template <typename T>
@@ -39,30 +41,12 @@ namespace laruen::math::common {
     }
 
     template <typename T1, typename T2>
-    constexpr T1 ipow(T1 base, T2 exp) noexcept {
-        T1 result = 1;
-
-        for(;;) {
-            if(exp & 1) {
-                result *= base;
-            }
-            exp >>= 1;
-            if(!exp) {
-                break;
-            }
-            base *= base;
-        }
-
-        return result;
-    }
-
-    template <typename T1, typename T2>
     inline constexpr T1 pow(T1 base, T2 exp) {
         if constexpr(std::is_floating_point_v<T2>) {
             return std::pow(base, exp);
         }
         else {
-            return ipow(base, exp);
+            return math::mutils::ipow(base, exp);
         }
     }
 };
