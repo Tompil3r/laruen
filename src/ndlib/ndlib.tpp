@@ -279,7 +279,7 @@ namespace laruen::ndlib {
         ConstNDIterator rhs_iter(rhs);
 
         for(uint_fast64_t i = 0;i < lhs.m_size;i++) {
-            lhs_iter.next() = (T1)math::common::remainder(lhs_iter.current() ,rhs_iter.next());
+            lhs_iter.next() = (T1)math::common::remainder(lhs_iter.current(), rhs_iter.next());
         }
 
         return lhs;
