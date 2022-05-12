@@ -27,6 +27,7 @@ namespace laruen::ndlib {
             T *m_data;
 
         public:
+            typedef ArrayBase Base;
             typedef T DType;
             static constexpr bool CONTIGUOUS = C;
 
