@@ -7,6 +7,7 @@
 #include <utility>
 #include <stdexcept>
 #include <string>
+#include <ostream>
 
 class ArrayBase {
     protected:
@@ -167,6 +168,10 @@ class ArrayBase {
 
         inline void modify_mem_release(bool free_mem) noexcept {
             this->m_free_mem = free_mem;
+        }
+
+        friend inline std::ostream& operator<<(std::ostream &stream, const ArrayBase &base) noexcept {
+            return stream << base.str();
         }
 };
 
