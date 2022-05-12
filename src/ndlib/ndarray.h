@@ -142,8 +142,7 @@ namespace laruen::ndlib {
                 return this->m_data[index];
             }
 
-            template <typename T1, bool C1>
-            friend inline std::ostream& operator<<(std::ostream &stream, const NDArray<T1, C1> &ndarray) noexcept {
+            friend inline std::ostream& operator<<(std::ostream &stream, const NDArray &ndarray) noexcept {
                 return stream << ndarray.str();
             }
 
