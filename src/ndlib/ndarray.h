@@ -27,8 +27,8 @@ namespace laruen::ndlib {
             T *m_data;
 
         public:
-            typedef T dtype;
-            static constexpr bool contiguous = C;
+            typedef T DType;
+            static constexpr bool CONTIGUOUS = C;
 
             ~NDArray();
             NDArray() noexcept;
