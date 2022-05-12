@@ -4,6 +4,7 @@
 #include "src/ndlib/ndarray_utils.h"
 #include "src/ndlib/nditerator.h"
 #include "src/utils/range.h"
+#include "src/utils/strings.h"
 #include "src/math/common.h"
 #include <cassert>
 #include <ostream>
@@ -942,13 +943,13 @@ namespace laruen::ndlib {
 
             if(this->m_shape[dim]) {
                 for(dim_idx = 0;dim_idx < this->m_shape[dim] - 1;dim_idx++) {
-                    str += std::to_string(this->m_data[data_index]);
+                    str += laruen::utils::strings::to_string(this->m_data[data_index]);
                     str.push_back(',');
                     str.push_back(' ');
                     data_index += stride;
                 }
 
-                str += std::to_string(this->m_data[data_index]);
+                str += laruen::utils::strings::to_string(this->m_data[data_index]);
             }
 
             str.push_back(']');
