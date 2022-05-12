@@ -171,57 +171,57 @@ namespace laruen::ndlib {
             }
 
             template <bool B, typename T2, bool C2>
-            inline NDArray& add_assign(const NDArray<T2, C2> &rhs) {
+            inline NDArray& add_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::addition<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
-            inline NDArray& subtract_assign(const NDArray<T2, C2> &rhs) {
+            inline NDArray& subtract_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::subtraction<T, T2>>(rhs);
             }
             
             template <bool B, typename T2, bool C2>
-            inline NDArray& multiply_assign(const NDArray<T2, C2> &rhs) {
+            inline NDArray& multiply_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::multiplication<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
-            inline NDArray& divide_assign(const NDArray<T2, C2> &rhs) {
+            inline NDArray& divide_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::division<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
-            inline NDArray& bit_xor_assign(const NDArray<T2, C2> &rhs) {
+            inline NDArray& bit_xor_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_xor<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
-            inline NDArray& bit_and_assign(const NDArray<T2, C2> &rhs) {
+            inline NDArray& bit_and_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_and<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
-            inline NDArray& bit_or_assign(const NDArray<T2, C2> &rhs) {
+            inline NDArray& bit_or_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_or<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
-            inline NDArray& shl_assign(const NDArray<T2, C2> &rhs) {
+            inline NDArray& shl_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_shl<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
-            inline NDArray& shr_assign(const NDArray<T2, C2> &rhs) {
+            inline NDArray& shr_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_shr<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
-            inline NDArray& remainder_assign(const NDArray<T2, C2> &rhs) {
+            inline NDArray& remainder_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::remainder<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
-            inline NDArray& power_assign(const NDArray<T2, C2> &rhs) {
+            inline NDArray& power_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::power<T, T2>>(rhs);
             }
 
