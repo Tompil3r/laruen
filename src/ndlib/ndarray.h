@@ -122,6 +122,9 @@ namespace laruen::ndlib {
 
         private:
             void str_(std::string &str, uint_fast8_t dim=0, uint_fast64_t data_index=0, bool not_first=false, bool not_last=true) const noexcept;
+
+            template <typename T2, bool C2>
+            const NDArray<T2, false> broadcast_expansion(const NDArray<T2, C2> &rhs) noexcept;
             
             template <auto Op, typename T2, bool C2>
             NDArray& invoke_broadcast_assignment(const NDArray<T2, C2> &rhs);
