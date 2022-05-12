@@ -12,6 +12,7 @@
 #include <cassert>
 #include <string>
 #include <type_traits>
+#include <ostream>
 
 using laruen::utils::Range;
 
@@ -135,6 +136,11 @@ namespace laruen::ndlib {
 
             inline const T& operator[](uint_fast64_t index) const noexcept {
                 return this->m_data[index];
+            }
+
+            template <typename T1, bool C1>
+            friend inline std::ostream& operator<<(std::ostream &stream, const NDArray<T1, C1> &ndarray) noexcept {
+                return stream << ndarray.str();
             }
 
             /* ----- ndlib -----  */
