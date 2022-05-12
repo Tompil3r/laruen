@@ -122,7 +122,16 @@ namespace laruen::ndlib {
 
         private:
             void str_(std::string &str, uint_fast8_t dim=0, uint_fast64_t data_index=0, bool not_first=false, bool not_last=true) const noexcept;
-        
+            
+            template <auto Op, typename T2, bool C2>
+            NDArray& invoke_broadcast_assignment(const NDArray<T2, C2> &rhs);
+
+            template <auto Op, typename T2, bool C2>
+            NDArray& invoke_ndarray_assignment(const NDArray<T2, C2> &rhs) noexcept;
+            
+            template <auto Op, typename T2>
+            NDArray& invoke_value_assignment(T2 value) noexcept;
+
         public:
             inline std::string str() const noexcept {
                 std::string str;
@@ -144,6 +153,116 @@ namespace laruen::ndlib {
 
             friend inline std::ostream& operator<<(std::ostream &stream, const NDArray &ndarray) noexcept {
                 return stream << ndarray.str();
+            }
+
+            template <bool B, typename T2, bool C2>
+            inline NDArray<T, C>& add_assign(const NDArray<T2, C2> &rhs) {
+                if constexpr(B) {
+                    return this->invoke_broadcast_assignment<ndlib::utils::operations::addition<T, T2>>(rhs);
+                }
+                else {
+                    return this->invoke_ndarray_assignment<ndlib::utils::operations::addition<T, T2>>(rhs);
+                }
+            }
+
+            template <bool B, typename T2, bool C2>
+            inline NDArray<T, C>& subtract_assign(const NDArray<T2, C2> &rhs) {
+                if constexpr(B) {
+                    return this->invoke_broadcast_assignment<ndlib::utils::operations::subtraction<T, T2>>(rhs);
+                }
+                else {
+                    return this->invoke_ndarray_assignment<ndlib::utils::operations::subtraction<T, T2>>(rhs);
+                }
+            }
+            
+            template <bool B, typename T2, bool C2>
+            inline NDArray<T, C>& multiply_assign(const NDArray<T2, C2> &rhs) {
+                if constexpr(B) {
+                    return this->invoke_broadcast_assignment<ndlib::utils::operations::multiplication<T, T2>>(rhs);
+                }
+                else {
+                    return this->invoke_ndarray_assignment<ndlib::utils::operations::multiplication<T, T2>>(rhs);
+                }
+            }
+
+            template <bool B, typename T2, bool C2>
+            inline NDArray<T, C>& divide_assign(const NDArray<T2, C2> &rhs) {
+                if constexpr(B) {
+                    return this->invoke_broadcast_assignment<ndlib::utils::operations::division<T, T2>>(rhs);
+                }
+                else {
+                    return this->invoke_ndarray_assignment<ndlib::utils::operations::division<T, T2>>(rhs);
+                }
+            }
+
+            template <bool B, typename T2, bool C2>
+            inline NDArray<T, C>& bit_xor_assign(const NDArray<T2, C2> &rhs) {
+                if constexpr(B) {
+                    return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_xor<T, T2>>(rhs);
+                }
+                else {
+                    return this->invoke_ndarray_assignment<ndlib::utils::operations::bit_xor<T, T2>>(rhs);
+                }
+            }
+
+            template <bool B, typename T2, bool C2>
+            inline NDArray<T, C>& bit_and_assign(const NDArray<T2, C2> &rhs) {
+                if constexpr(B) {
+                    return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_and<T, T2>>(rhs);
+                }
+                else {
+                    return this->invoke_ndarray_assignment<ndlib::utils::operations::bit_and<T, T2>>(rhs);
+                }
+            }
+
+            template <bool B, typename T2, bool C2>
+            inline NDArray<T, C>& bit_or_assign(const NDArray<T2, C2> &rhs) {
+                if constexpr(B) {
+                    return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_or<T, T2>>(rhs);
+                }
+                else {
+                    return this->invoke_ndarray_assignment<ndlib::utils::operations::bit_or<T, T2>>(rhs);
+                }
+            }
+
+            template <bool B, typename T2, bool C2>
+            inline NDArray<T, C>& shl_assign(const NDArray<T2, C2> &rhs) {
+                if constexpr(B) {
+                    return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_shl<T, T2>>(rhs);
+                }
+                else {
+                    return this->invoke_ndarray_assignment<ndlib::utils::operations::bit_shl<T, T2>>(rhs);
+                }
+            }
+
+            template <bool B, typename T2, bool C2>
+            inline NDArray<T, C>& shr_assign(const NDArray<T2, C2> &rhs) {
+                if constexpr(B) {
+                    return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_shr<T, T2>>(rhs);
+                }
+                else {
+                    return this->invoke_ndarray_assignment<ndlib::utils::operations::bit_shr<T, T2>>(rhs);
+                }
+            }
+
+            template <bool B, typename T2, bool C2>
+            inline NDArray<T, C>& remainder_assign(const NDArray<T2, C2> &rhs) {
+                if constexpr(B) {
+                    return this->invoke_broadcast_assignment<ndlib::utils::operations::remainder<T, T2>>(rhs);
+                }
+                else {
+                    return this->invoke_ndarray_assignment<ndlib::utils::operations::remainder<T, T2>>(rhs);
+                }
+            }
+
+            template <bool B, typename T2, bool C2>
+            inline NDArray<T, C>& power_assign(const NDArray<T2, C2> &rhs) {
+                if constexpr(B) {
+                    return this->invoke_broadcast_assignment<ndlib::utils::operations::power<T, T2>>(rhs);
+                }
+                else {
+                    return this->invoke_ndarray_assignment<ndlib::utils::operations::power<T, T2>>(rhs);
+                }
             }
 
             /* ----- ndlib -----  */
