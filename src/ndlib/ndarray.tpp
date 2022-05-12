@@ -1003,23 +1003,6 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <auto Op, typename T2, bool C2>
-    NDArray<T, C>& NDArray<T, C>::invoke_broadcast_assignment(const NDArray<T2, C2> &rhs) {
-        NDArray<T, false> reorder = ndlib::utils::broadcast_reorder(*this, rhs);
-        uint_fast64_t size_ratio = this->m_size / rhs.m_size;
-        NDIterator lhs_iter(reorder);
-        ConstNDIterator rhs_iter(rhs);
-
-        for(uint_fast64_t i = 0;i < size_ratio;i++) {
-            for(uint_fast64_t j = 0;j < rhs.m_size;j++) {
-                Op(lhs_iter.next(), rhs_iter.next());
-            }
-            rhs_iter.reset();
-        }
-
-        return *this;
-    }
-
-    template <typename T, bool C> template <auto Op, typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::invoke_ndarray_assignment(const NDArray<T2, C2> &rhs) noexcept {
         NDIterator lhs_iter(*this);
         ConstNDIterator rhs_iter(rhs);

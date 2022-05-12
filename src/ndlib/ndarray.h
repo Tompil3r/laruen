@@ -127,13 +127,15 @@ namespace laruen::ndlib {
             const NDArray<T2, false> broadcast_expansion(const NDArray<T2, C2> &rhs) noexcept;
             
             template <auto Op, typename T2, bool C2>
-            NDArray& invoke_broadcast_assignment(const NDArray<T2, C2> &rhs);
-
-            template <auto Op, typename T2, bool C2>
             NDArray& invoke_ndarray_assignment(const NDArray<T2, C2> &rhs) noexcept;
             
             template <auto Op, typename T2>
             NDArray& invoke_value_assignment(T2 value) noexcept;
+
+            template <auto Op, typename T2, bool C2>
+            inline NDArray& invoke_broadcast_assignment(const NDArray<T2, C2> &rhs) {
+                return this->invoke_ndarray_assignment<Op>(this->broadcast_expansion(rhs));
+            }
 
         public:
             inline std::string str() const noexcept {
