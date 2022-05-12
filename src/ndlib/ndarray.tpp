@@ -1002,6 +1002,17 @@ namespace laruen::ndlib {
         return expansion;
     }
 
+    template <typename T, bool C> template <auto Op, typename T2>
+    NDArray<T, C>& NDArray<T, C>::invoke_value_assignment(T2 value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            Op(iter.next(), value);
+        }
+
+        return *this;
+    }
+
     template <typename T, bool C> template <auto Op, typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::invoke_normal_assignment(const NDArray<T2, C2> &rhs) noexcept {
         NDIterator lhs_iter(*this);
@@ -1009,17 +1020,6 @@ namespace laruen::ndlib {
 
         for(uint_fast64_t i = 0;i < this->m_size;i++) {
             Op(lhs_iter.next(), rhs_iter.next());
-        }
-
-        return *this;
-    }
-
-    template <typename T, bool C> template <auto Op, typename T2>
-    NDArray<T, C>& NDArray<T, C>::invoke_value_assignment(T2 value) noexcept {
-        NDIterator iter(*this);
-
-        for(uint_fast64_t i = 0;i < this->m_size;i++) {
-            Op(iter.next(), value);
         }
 
         return *this;
