@@ -127,14 +127,14 @@ namespace laruen::ndlib {
             const NDArray<T2, false> broadcast_expansion(const NDArray<T2, C2> &rhs) noexcept;
             
             template <auto Op, typename T2, bool C2>
-            NDArray& invoke_ndarray_assignment(const NDArray<T2, C2> &rhs) noexcept;
+            NDArray& invoke_normal_assignment(const NDArray<T2, C2> &rhs) noexcept;
             
             template <auto Op, typename T2>
             NDArray& invoke_value_assignment(T2 value) noexcept;
 
             template <auto Op, typename T2, bool C2>
             inline NDArray& invoke_broadcast_assignment(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<Op>(this->broadcast_expansion(rhs));
+                return this->invoke_normal_assignment<Op>(this->broadcast_expansion(rhs));
             }
 
         public:
@@ -166,7 +166,7 @@ namespace laruen::ndlib {
                     return this->invoke_broadcast_assignment<ndlib::utils::operations::addition<T, T2>>(rhs);
                 }
                 else {
-                    return this->invoke_ndarray_assignment<ndlib::utils::operations::addition<T, T2>>(rhs);
+                    return this->invoke_normal_assignment<ndlib::utils::operations::addition<T, T2>>(rhs);
                 }
             }
 
@@ -176,7 +176,7 @@ namespace laruen::ndlib {
                     return this->invoke_broadcast_assignment<ndlib::utils::operations::subtraction<T, T2>>(rhs);
                 }
                 else {
-                    return this->invoke_ndarray_assignment<ndlib::utils::operations::subtraction<T, T2>>(rhs);
+                    return this->invoke_normal_assignment<ndlib::utils::operations::subtraction<T, T2>>(rhs);
                 }
             }
             
@@ -186,7 +186,7 @@ namespace laruen::ndlib {
                     return this->invoke_broadcast_assignment<ndlib::utils::operations::multiplication<T, T2>>(rhs);
                 }
                 else {
-                    return this->invoke_ndarray_assignment<ndlib::utils::operations::multiplication<T, T2>>(rhs);
+                    return this->invoke_normal_assignment<ndlib::utils::operations::multiplication<T, T2>>(rhs);
                 }
             }
 
@@ -196,7 +196,7 @@ namespace laruen::ndlib {
                     return this->invoke_broadcast_assignment<ndlib::utils::operations::division<T, T2>>(rhs);
                 }
                 else {
-                    return this->invoke_ndarray_assignment<ndlib::utils::operations::division<T, T2>>(rhs);
+                    return this->invoke_normal_assignment<ndlib::utils::operations::division<T, T2>>(rhs);
                 }
             }
 
@@ -206,7 +206,7 @@ namespace laruen::ndlib {
                     return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_xor<T, T2>>(rhs);
                 }
                 else {
-                    return this->invoke_ndarray_assignment<ndlib::utils::operations::bit_xor<T, T2>>(rhs);
+                    return this->invoke_normal_assignment<ndlib::utils::operations::bit_xor<T, T2>>(rhs);
                 }
             }
 
@@ -216,7 +216,7 @@ namespace laruen::ndlib {
                     return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_and<T, T2>>(rhs);
                 }
                 else {
-                    return this->invoke_ndarray_assignment<ndlib::utils::operations::bit_and<T, T2>>(rhs);
+                    return this->invoke_normal_assignment<ndlib::utils::operations::bit_and<T, T2>>(rhs);
                 }
             }
 
@@ -226,7 +226,7 @@ namespace laruen::ndlib {
                     return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_or<T, T2>>(rhs);
                 }
                 else {
-                    return this->invoke_ndarray_assignment<ndlib::utils::operations::bit_or<T, T2>>(rhs);
+                    return this->invoke_normal_assignment<ndlib::utils::operations::bit_or<T, T2>>(rhs);
                 }
             }
 
@@ -236,7 +236,7 @@ namespace laruen::ndlib {
                     return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_shl<T, T2>>(rhs);
                 }
                 else {
-                    return this->invoke_ndarray_assignment<ndlib::utils::operations::bit_shl<T, T2>>(rhs);
+                    return this->invoke_normal_assignment<ndlib::utils::operations::bit_shl<T, T2>>(rhs);
                 }
             }
 
@@ -246,7 +246,7 @@ namespace laruen::ndlib {
                     return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_shr<T, T2>>(rhs);
                 }
                 else {
-                    return this->invoke_ndarray_assignment<ndlib::utils::operations::bit_shr<T, T2>>(rhs);
+                    return this->invoke_normal_assignment<ndlib::utils::operations::bit_shr<T, T2>>(rhs);
                 }
             }
 
@@ -256,7 +256,7 @@ namespace laruen::ndlib {
                     return this->invoke_broadcast_assignment<ndlib::utils::operations::remainder<T, T2>>(rhs);
                 }
                 else {
-                    return this->invoke_ndarray_assignment<ndlib::utils::operations::remainder<T, T2>>(rhs);
+                    return this->invoke_normal_assignment<ndlib::utils::operations::remainder<T, T2>>(rhs);
                 }
             }
 
@@ -266,7 +266,7 @@ namespace laruen::ndlib {
                     return this->invoke_broadcast_assignment<ndlib::utils::operations::power<T, T2>>(rhs);
                 }
                 else {
-                    return this->invoke_ndarray_assignment<ndlib::utils::operations::power<T, T2>>(rhs);
+                    return this->invoke_normal_assignment<ndlib::utils::operations::power<T, T2>>(rhs);
                 }
             }
 
@@ -278,7 +278,7 @@ namespace laruen::ndlib {
             friend NDArray<T1, C1>& invoke_broadcast_assignment(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs);
 
             template <auto Op, typename T1, bool C1, typename T2, bool C2>
-            friend NDArray<T1, C1>& invoke_ndarray_assignment(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs) noexcept;
+            friend NDArray<T1, C1>& invoke_normal_assignment(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs) noexcept;
 
             template <auto Op, typename T1, bool C1, typename T2>
             friend NDArray<T1, C1>& invoke_value_assignment(NDArray<T1, C1> &lhs, T2 value) noexcept;
