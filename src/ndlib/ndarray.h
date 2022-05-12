@@ -175,9 +175,17 @@ namespace laruen::ndlib {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::addition<T, T2>>(rhs);
             }
 
+            inline NDArray& add_eq(T value) noexcept {
+                return this->invoke_value_assignment<ndlib::utils::operations::addition<T, T>>(value);
+            }
+
             template <bool B, typename T2, bool C2>
             inline NDArray& subtract_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::subtraction<T, T2>>(rhs);
+            }
+
+            inline NDArray& subtract_eq(T value) noexcept {
+                return this->invoke_value_assignment<ndlib::utils::operations::subtraction<T, T>>(value);
             }
             
             template <bool B, typename T2, bool C2>
@@ -185,9 +193,17 @@ namespace laruen::ndlib {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::multiplication<T, T2>>(rhs);
             }
 
+            inline NDArray& multiply_eq(T value) noexcept {
+                return this->invoke_value_assignment<ndlib::utils::operations::multiplication<T, T>>(value);
+            }
+
             template <bool B, typename T2, bool C2>
             inline NDArray& divide_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::division<T, T2>>(rhs);
+            }
+
+            inline NDArray& divide_eq(T value) noexcept {
+                return this->invoke_value_assignment<ndlib::utils::operations::division<T, T>>(value);
             }
 
             template <bool B, typename T2, bool C2>
@@ -195,9 +211,17 @@ namespace laruen::ndlib {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_xor<T, T2>>(rhs);
             }
 
+            inline NDArray& bit_xor_eq(T value) noexcept {
+                return this->invoke_value_assignment<ndlib::utils::operations::bit_xor<T, T>>(value);
+            }
+
             template <bool B, typename T2, bool C2>
             inline NDArray& bit_and_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_and<T, T2>>(rhs);
+            }
+
+            inline NDArray& bit_and_eq(T value) noexcept {
+                return this->invoke_value_assignment<ndlib::utils::operations::bit_and<T, T>>(value);
             }
 
             template <bool B, typename T2, bool C2>
@@ -205,9 +229,17 @@ namespace laruen::ndlib {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_or<T, T2>>(rhs);
             }
 
+            inline NDArray& bit_or_eq(T value) noexcept {
+                return this->invoke_value_assignment<ndlib::utils::operations::bit_or<T, T>>(value);
+            }
+
             template <bool B, typename T2, bool C2>
             inline NDArray& shl_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_shl<T, T2>>(rhs);
+            }
+
+            inline NDArray& shl_eq(T value) noexcept {
+                return this->invoke_value_assignment<ndlib::utils::operations::bit_shl<T, T>>(value);
             }
 
             template <bool B, typename T2, bool C2>
@@ -215,14 +247,26 @@ namespace laruen::ndlib {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_shr<T, T2>>(rhs);
             }
 
+            inline NDArray& shr_eq(T value) noexcept {
+                return this->invoke_value_assignment<ndlib::utils::operations::bit_shr<T, T>>(value);
+            }
+
             template <bool B, typename T2, bool C2>
             inline NDArray& remainder_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::remainder<T, T2>>(rhs);
             }
 
+            inline NDArray& remainder_eq(T value) noexcept {
+                return this->invoke_value_assignment<ndlib::utils::operations::remainder<T, T>>(value);
+            }
+
             template <bool B, typename T2, bool C2>
             inline NDArray& power_eq(const NDArray<T2, C2> &rhs) {
                 return this->invoke_ndarray_assignment<B, ndlib::utils::operations::power<T, T2>>(rhs);
+            }
+
+            inline NDArray& power_eq(T value) noexcept {
+                return this->invoke_value_assignment<ndlib::utils::operations::power<T, T>>(value);
             }
 
             /* ----- ndlib -----  */
