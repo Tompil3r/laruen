@@ -172,112 +172,57 @@ namespace laruen::ndlib {
 
             template <bool B, typename T2, bool C2>
             inline NDArray<T, C>& add_assign(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<ndlib::utils::operations::addition<T, T2>>(rhs);
-                }
-                else {
-                    return this->invoke_normal_assignment<ndlib::utils::operations::addition<T, T2>>(rhs);
-                }
+                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::addition<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
             inline NDArray<T, C>& subtract_assign(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<ndlib::utils::operations::subtraction<T, T2>>(rhs);
-                }
-                else {
-                    return this->invoke_normal_assignment<ndlib::utils::operations::subtraction<T, T2>>(rhs);
-                }
+                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::subtraction<T, T2>>(rhs);
             }
             
             template <bool B, typename T2, bool C2>
             inline NDArray<T, C>& multiply_assign(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<ndlib::utils::operations::multiplication<T, T2>>(rhs);
-                }
-                else {
-                    return this->invoke_normal_assignment<ndlib::utils::operations::multiplication<T, T2>>(rhs);
-                }
+                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::multiplication<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
             inline NDArray<T, C>& divide_assign(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<ndlib::utils::operations::division<T, T2>>(rhs);
-                }
-                else {
-                    return this->invoke_normal_assignment<ndlib::utils::operations::division<T, T2>>(rhs);
-                }
+                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::division<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
             inline NDArray<T, C>& bit_xor_assign(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_xor<T, T2>>(rhs);
-                }
-                else {
-                    return this->invoke_normal_assignment<ndlib::utils::operations::bit_xor<T, T2>>(rhs);
-                }
+                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_xor<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
             inline NDArray<T, C>& bit_and_assign(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_and<T, T2>>(rhs);
-                }
-                else {
-                    return this->invoke_normal_assignment<ndlib::utils::operations::bit_and<T, T2>>(rhs);
-                }
+                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_and<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
             inline NDArray<T, C>& bit_or_assign(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_or<T, T2>>(rhs);
-                }
-                else {
-                    return this->invoke_normal_assignment<ndlib::utils::operations::bit_or<T, T2>>(rhs);
-                }
+                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_or<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
             inline NDArray<T, C>& shl_assign(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_shl<T, T2>>(rhs);
-                }
-                else {
-                    return this->invoke_normal_assignment<ndlib::utils::operations::bit_shl<T, T2>>(rhs);
-                }
+                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_shl<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
             inline NDArray<T, C>& shr_assign(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_shr<T, T2>>(rhs);
-                }
-                else {
-                    return this->invoke_normal_assignment<ndlib::utils::operations::bit_shr<T, T2>>(rhs);
-                }
+                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_shr<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
             inline NDArray<T, C>& remainder_assign(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<ndlib::utils::operations::remainder<T, T2>>(rhs);
-                }
-                else {
-                    return this->invoke_normal_assignment<ndlib::utils::operations::remainder<T, T2>>(rhs);
-                }
+                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::remainder<T, T2>>(rhs);
             }
 
             template <bool B, typename T2, bool C2>
             inline NDArray<T, C>& power_assign(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<ndlib::utils::operations::power<T, T2>>(rhs);
-                }
-                else {
-                    return this->invoke_normal_assignment<ndlib::utils::operations::power<T, T2>>(rhs);
-                }
+                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::power<T, T2>>(rhs);
             }
 
             /* ----- ndlib -----  */
