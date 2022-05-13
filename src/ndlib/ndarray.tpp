@@ -928,61 +928,50 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    void NDArray<T, C>::str_(std::string &str, uint_fast8_t dim, uint_fast64_t data_index, bool not_first, bool not_last) const noexcept {
-        uint_fast64_t dim_idx;
-        uint_fast64_t stride;
+    std::string NDArray<T, C>::str() const noexcept {
+        NDIndex ndindex(this->m_ndim, 0);
+        uint_fast64_t index = 0;
+        uint_fast8_t dim = 0;
+        std::string str;
 
-        if(not_first) {
-            str += std::string(dim, ' ');
-        }
-
-        str.push_back('[');
-
-        if(dim == this->m_ndim - 1) {
-            stride = this->m_strides[dim];
-
-            if(this->m_shape[dim]) {
-                for(dim_idx = 0;dim_idx < this->m_shape[dim] - 1;dim_idx++) {
-                    str += laruen::utils::strings::to_string(this->m_data[data_index]);
-                    str.push_back(',');
-                    str.push_back(' ');
-                    data_index += stride;
-                }
-
-                str += laruen::utils::strings::to_string(this->m_data[data_index]);
-            }
-
+        if(!this->m_size) {
+            str.push_back('[');
             str.push_back(']');
-            if(not_last) {
-                str.push_back('\n');
+            return str;
+        }
+
+        str.reserve(this->m_size * (this->m_ndim / 2) * 19);
+
+        for(uint_fast64_t i = 0;i < this->m_size;) {
+            if(!ndindex[this->m_ndim - 1]) {
+                str += std::string(dim, ' ') + std::string(this->m_ndim - dim, '[');
             }
-            
-            return;
-        }
 
-        if(this->m_shape[dim]) {
-            this->str_(str, dim + 1, data_index, false, this->m_shape[dim] > 1);
-            data_index += this->m_strides[dim];
+            str += std::to_string(this->m_data[index]);
+            ndindex[this->m_ndim - 1]++;
+            index += this->m_strides[this->m_ndim - 1];
 
-            for(dim_idx = 1;dim_idx < this->m_shape[dim] - 1;dim_idx++) {
-                this->str_(str, dim + 1, data_index, true, true);
-                data_index += this->m_strides[dim];
+            for(dim = this->m_ndim;dim-- > 1 && ndindex[dim] >= this->m_shape[dim];) {
+                ndindex[dim] = 0;
+                ndindex[dim - 1]++;
+                index += this->m_strides[dim - 1] - m_shape[dim] * this->m_strides[dim];
+                str.push_back(']');
+            }
+            dim++;
+
+            if(dim == this->m_ndim) {
+                str.push_back(',');
+                str.push_back(' ');
+            }
+
+            if(++i < this->m_size) {
+                str += std::string(this->m_ndim - dim, '\n');
             }
         }
 
-        if(this->m_shape[dim] > 1) {
-            this->str_(str, dim + 1, data_index, true, false);
-        }
-        
         str.push_back(']');
-        
-        if(!dim) {
-            str.push_back('\n');
-        }
 
-        else if(not_last) {
-            str += std::string(this->m_ndim - dim, '\n');
-        }
+        return str;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>

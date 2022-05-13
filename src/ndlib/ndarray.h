@@ -118,11 +118,9 @@ namespace laruen::ndlib {
             template <typename T2, bool C2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(const NDArray<T2, C2> &ndarray);
             template <typename T2, bool C2> auto operator%(const NDArray<T2, C2> &ndarray) const;
 
-            
+            std::string str() const noexcept;
 
         private:
-            void str_(std::string &str, uint_fast8_t dim=0, uint_fast64_t data_index=0, bool not_first=false, bool not_last=true) const noexcept;
-
             template <typename T2, bool C2>
             const NDArray<T2, false> broadcast_expansion(const NDArray<T2, C2> &rhs) noexcept;
             
@@ -148,12 +146,6 @@ namespace laruen::ndlib {
             }
 
         public:
-            inline std::string str() const noexcept {
-                std::string str;
-                this->str_(str);
-                return str;
-            }
-
             inline const T* data() const noexcept {
                 return this->m_data;
             }
