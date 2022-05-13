@@ -1013,4 +1013,16 @@ namespace laruen::ndlib {
 
         return *this;
     }
+
+    template <typename T, bool C> template <auto Op, typename T2, typename TR>
+    NDArray<TR, true> NDArray<T, C>::invoke_new_value(T2 value) const noexcept {
+        NDArray<TR, true> ndarray(new TR[this->m_size], *this, true);
+        ConstNDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < ndarray.m_size;i++) {
+            ndarray.m_data[i] = Op(iter.next(), value);
+        }
+
+        return ndarray;
+    }
 }
