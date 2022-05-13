@@ -942,7 +942,7 @@ namespace laruen::ndlib {
 
         str.reserve(this->m_size * (this->m_ndim / 2) * 19);
 
-        for(uint_fast64_t i = 0;i < this->m_size;) {
+        for(uint_fast64_t i = 0;i < this->m_size - 1;i++) {
             if(!ndindex[this->m_ndim - 1]) {
                 str += std::string(dim, ' ') + std::string(this->m_ndim - dim, '[');
             }
@@ -964,12 +964,11 @@ namespace laruen::ndlib {
                 str.push_back(' ');
             }
 
-            if(++i < this->m_size) {
-                str += std::string(this->m_ndim - dim, '\n');
-            }
+            str += std::string(this->m_ndim - dim, '\n');
         }
 
-        str.push_back(']');
+        str += std::to_string(this->m_data[index]);
+        str += std::string(this->m_ndim, ']');
 
         return str;
     }
