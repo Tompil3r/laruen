@@ -1025,4 +1025,20 @@ namespace laruen::ndlib {
 
         return ndarray;
     }
+
+    template <typename T, bool C> template <bool B, auto Op, typename TR, typename T2, bool C2>
+    NDArray<TR, true> NDArray<T, C>::invoke_ndarray_new(const NDArray<T2, C2> &rhs) const {
+        if constexpr(B) {
+            NDArray<TR, true> output(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+            output.template add_eq<B>(*this);
+            (output.*Op)(rhs);
+            return output;
+        }
+        else {
+            NDArray<TR, true> output(this->m_shape, 0);
+            output.template add_eq<B>(*this);
+            (output.*Op)(rhs);
+            return output;
+        }
+    }
 }

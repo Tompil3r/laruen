@@ -148,6 +148,9 @@ namespace laruen::ndlib {
             template <auto Op, typename T2, typename TR>
             NDArray<TR, true> invoke_value_new(T2 value) const noexcept;
 
+            template <bool B, auto Op, typename TR, typename T2, bool C2>
+            NDArray<TR, true> invoke_ndarray_new(const NDArray<T2, C2> &rhs) const;
+
         public:
             inline const T* data() const noexcept {
                 return this->m_data;
