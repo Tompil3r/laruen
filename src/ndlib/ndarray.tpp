@@ -83,6 +83,22 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
+    NDArray<T, C>::NDArray(const Range<T> &range, const Shape &shape)
+    : NDArray<T, C>(shape)
+    {
+        if(ceil_index((range.end - range.start) / range.step) != this->m_size) {
+            throw std::invalid_argument("shape size does not match range");
+        }
+
+        T value = range.start;
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            this->m_data[i] = value;
+            value += range.step;
+        }
+    }
+
+    template <typename T, bool C>
     NDArray<T, C>::NDArray(NDArray<T, C> &ndarray, const Axes &axes) noexcept
     : ArrayBase(axes.size(), false), m_data(ndarray.m_data)
     {
