@@ -983,6 +983,10 @@ namespace laruen::ndlib {
             str += std::string(this->m_ndim - dim, '\n');
         }
 
+        if(!ndindex[this->m_ndim - 1]) {
+                str += std::string(dim, ' ') + std::string(this->m_ndim - dim, '[');
+        }
+
         str += std::to_string(this->m_data[index]);
         str += std::string(this->m_ndim, ']');
 
