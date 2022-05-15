@@ -150,6 +150,7 @@ namespace laruen::ndlib {
 
             template <auto Op, typename T2, bool C2, typename TR, bool CR>
             inline NDArray<TR, CR>& invoke_regular_new(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &output) const {
+                output.add_eq_r(*this);
                 (output.*Op)(rhs);
                 return output;
             }
@@ -159,6 +160,7 @@ namespace laruen::ndlib {
 
             template <auto Op, typename T2, bool C2, typename TR, bool CR>
             inline NDArray<TR, CR>& invoke_broadcast_new(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &output) const {
+                output.add_eq_b(*this);
                 (output.*Op)(rhs);
                 return output;
             }
