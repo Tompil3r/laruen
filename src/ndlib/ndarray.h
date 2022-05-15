@@ -121,7 +121,7 @@ namespace laruen::ndlib {
 
             std::string str() const noexcept;
 
-        public:
+        private:
             template <typename T2, bool C2>
             const NDArray<T2, false> broadcast_expansion(const NDArray<T2, C2> &rhs) noexcept;
             
