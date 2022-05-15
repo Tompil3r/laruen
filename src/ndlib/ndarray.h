@@ -131,15 +131,10 @@ namespace laruen::ndlib {
             template <auto Op, typename T2, bool C2>
             NDArray& invoke_normal_assignment(const NDArray<T2, C2> &rhs) noexcept;
 
-            template <auto Op, typename T2, bool C2>
-            inline NDArray& invoke_broadcast_assignment(const NDArray<T2, C2> &rhs) {
-                return this->invoke_normal_assignment<Op>(this->broadcast_expansion(rhs));
-            }
-
             template <bool B, auto Op, typename T2, bool C2>
             inline NDArray& invoke_ndarray_assignment(const NDArray<T2, C2> &rhs) {
                 if constexpr(B) {
-                    return this->invoke_broadcast_assignment<Op>(rhs);
+                    return this->invoke_normal_assignment<Op>(this->broadcast_expansion(rhs));
                 }
                 else {
                     return this->invoke_normal_assignment<Op>(rhs);
