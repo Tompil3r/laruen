@@ -1046,19 +1046,23 @@ namespace laruen::ndlib {
         return ndarray;
     }
 
-    template <typename T, bool C> template <bool B, auto Op, typename TR, typename T2, bool C2>
-    NDArray<TR, true> NDArray<T, C>::invoke_ndarray_new(const NDArray<T2, C2> &rhs) const {
-        if constexpr(B) {
-            NDArray<TR, true> output(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-            output.template add_eq<B>(*this);
-            (output.*Op)(rhs);
-            return output;
-        }
-        else {
-            NDArray<TR, true> output(this->m_shape, 0);
-            output.template add_eq<B>(*this);
-            (output.*Op)(rhs);
-            return output;
-        }
+    template <typename T, bool C> template <auto Op, typename TR, typename T2, bool C2>
+    NDArray<TR, true> NDArray<T, C>::invoke_regular_new(const NDArray<T2, C2> &rhs) const {
+        NDArray<TR, true> output(this->m_shape, 0);
+        
+        output.add_eq_r(*this);
+        (output.*Op)(rhs);
+        
+        return output;
+    }
+
+    template <typename T, bool C> template <auto Op, typename TR, typename T2, bool C2>
+    NDArray<TR, true> NDArray<T, C>::invoke_broadcast_new(const NDArray<T2, C2> &rhs) const {
+        NDArray<TR, true> output(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+
+        output.add_eq_b(*this);
+        (output.*Op)(rhs);
+
+        return output;
     }
 }

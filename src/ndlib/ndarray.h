@@ -121,7 +121,7 @@ namespace laruen::ndlib {
 
             std::string str() const noexcept;
 
-        private:
+        public:
             template <typename T2, bool C2>
             const NDArray<T2, false> broadcast_expansion(const NDArray<T2, C2> &rhs) noexcept;
             
@@ -136,21 +136,14 @@ namespace laruen::ndlib {
                 return this->invoke_regular_assignment<Op>(this->broadcast_expansion(rhs));
             }
 
-            template <bool B, auto Op, typename T2, bool C2>
-            inline NDArray& invoke_ndarray_assignment(const NDArray<T2, C2> &rhs) {
-                if constexpr(B) {
-                    return this->invoke_broadcast_assignment<Op>(rhs);
-                }
-                else {
-                    return this->invoke_regular_assignment<Op>(rhs);
-                }
-            }
-
             template <auto Op, typename T2, typename TR>
             NDArray<TR, true> invoke_value_new(T2 value) const noexcept;
 
-            template <bool B, auto Op, typename TR, typename T2, bool C2>
-            NDArray<TR, true> invoke_ndarray_new(const NDArray<T2, C2> &rhs) const;
+            template <auto Op, typename TR, typename T2, bool C2>
+            NDArray<TR, true> invoke_regular_new(const NDArray<T2, C2> &rhs) const;
+
+            template <auto Op, typename TR, typename T2, bool C2>
+            NDArray<TR, true> invoke_broadcast_new(const NDArray<T2, C2> &rhs) const;
 
         public:
             inline const T* data() const noexcept {
@@ -169,154 +162,209 @@ namespace laruen::ndlib {
                 return stream << ndarray.str();
             }
 
-            template <bool B, typename T2, bool C2>
-            inline NDArray& add_eq(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::addition<T, T2>>(rhs);
+            template <typename T2, bool C2>
+            inline NDArray& add_eq_b(const NDArray<T2, C2> &rhs) {
+                return this->invoke_broadcast_assignment<ndlib::utils::operations::addition<T, T2>>(rhs);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& add_eq_r(const NDArray<T2, C2> &rhs) {
+                return this->invoke_regular_assignment<ndlib::utils::operations::addition<T, T2>>(rhs);
             }
 
             template <typename T2, bool C2>
             inline NDArray& add_eq(const NDArray<T2, C2> &rhs) {
-                return this->m_shape == rhs.m_shape ? this->add_eq<false>(rhs) : this->add_eq<true>(rhs);
+                return this->m_shape == rhs.m_shape ? this->add_eq_r(rhs) : this->add_eq_b(rhs);
             }
 
             inline NDArray& add_eq(T value) noexcept {
                 return this->invoke_value_assignment<ndlib::utils::operations::addition<T, T>>(value);
             }
 
-            template <bool B, typename T2, bool C2>
-            inline NDArray& subtract_eq(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::subtraction<T, T2>>(rhs);
+            template <typename T2, bool C2>
+            inline NDArray& subtract_eq_b(const NDArray<T2, C2> &rhs) {
+                return this->invoke_broadcast_assignment<ndlib::utils::operations::subtraction<T, T2>>(rhs);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& subtract_eq_r(const NDArray<T2, C2> &rhs) {
+                return this->invoke_regular_assignment<ndlib::utils::operations::subtraction<T, T2>>(rhs);
             }
 
             template <typename T2, bool C2>
             inline NDArray& subtract_eq(const NDArray<T2, C2> &rhs) {
-                return this->m_shape == rhs.m_shape ? this->subtract_eq<false>(rhs) : this->subtract_eq<true>(rhs);
+                return this->m_shape == rhs.m_shape ? this->subtract_eq_r(rhs) : this->subtract_eq_b(rhs);
             }
 
             inline NDArray& subtract_eq(T value) noexcept {
                 return this->invoke_value_assignment<ndlib::utils::operations::subtraction<T, T>>(value);
             }
             
-            template <bool B, typename T2, bool C2>
-            inline NDArray& multiply_eq(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::multiplication<T, T2>>(rhs);
+            template <typename T2, bool C2>
+            inline NDArray& multiply_eq_b(const NDArray<T2, C2> &rhs) {
+                return this->invoke_broadcast_assignment<ndlib::utils::operations::multiplication<T, T2>>(rhs);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& multiply_eq_r(const NDArray<T2, C2> &rhs) {
+                return this->invoke_regular_assignment<ndlib::utils::operations::multiplication<T, T2>>(rhs);
             }
 
             template <typename T2, bool C2>
             inline NDArray& multiply_eq(const NDArray<T2, C2> &rhs) {
-                return this->m_shape == rhs.m_shape ? this->multiply_eq<false>(rhs) : this->multiply_eq<true>(rhs);
+                return this->m_shape == rhs.m_shape ? this->multiply_eq_r(rhs) : this->multiply_eq_b(rhs);
             }
 
             inline NDArray& multiply_eq(T value) noexcept {
                 return this->invoke_value_assignment<ndlib::utils::operations::multiplication<T, T>>(value);
             }
 
-            template <bool B, typename T2, bool C2>
-            inline NDArray& divide_eq(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::division<T, T2>>(rhs);
+            template <typename T2, bool C2>
+            inline NDArray& divide_eq_b(const NDArray<T2, C2> &rhs) {
+                return this->invoke_broadcast_assignment<ndlib::utils::operations::division<T, T2>>(rhs);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& divide_eq_r(const NDArray<T2, C2> &rhs) {
+                return this->invoke_regular_assignment<ndlib::utils::operations::division<T, T2>>(rhs);
             }
 
             template <typename T2, bool C2>
             inline NDArray& divide_eq(const NDArray<T2, C2> &rhs) {
-                return this->m_shape == rhs.m_shape ? this->divide_eq<false>(rhs) : this->divide_eq<true>(rhs);
+                return this->m_shape == rhs.m_shape ? this->divide_eq_r(rhs) : this->divide_eq_b(rhs);
             }
 
             inline NDArray& divide_eq(T value) noexcept {
                 return this->invoke_value_assignment<ndlib::utils::operations::division<T, T>>(value);
             }
 
-            template <bool B, typename T2, bool C2>
-            inline NDArray& bit_xor_eq(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_xor<T, T2>>(rhs);
+            template <typename T2, bool C2>
+            inline NDArray& bit_xor_eq_b(const NDArray<T2, C2> &rhs) {
+                return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_xor<T, T2>>(rhs);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& bit_xor_eq_r(const NDArray<T2, C2> &rhs) {
+                return this->invoke_regular_assignment<ndlib::utils::operations::bit_xor<T, T2>>(rhs);
             }
 
             template <typename T2, bool C2>
             inline NDArray& bit_xor_eq(const NDArray<T2, C2> &rhs) {
-                return this->m_shape == rhs.m_shape ? this->bit_xor_eq<false>(rhs) : this->bit_xor_eq<true>(rhs);
+                return this->m_shape == rhs.m_shape ? this->bit_xor_eq_r(rhs) : this->bit_xor_eq_b(rhs);
             }
 
             inline NDArray& bit_xor_eq(T value) noexcept {
                 return this->invoke_value_assignment<ndlib::utils::operations::bit_xor<T, T>>(value);
             }
 
-            template <bool B, typename T2, bool C2>
-            inline NDArray& bit_and_eq(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_and<T, T2>>(rhs);
+            template <typename T2, bool C2>
+            inline NDArray& bit_and_eq_b(const NDArray<T2, C2> &rhs) {
+                return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_and<T, T2>>(rhs);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& bit_and_eq_r(const NDArray<T2, C2> &rhs) {
+                return this->invoke_regular_assignment<ndlib::utils::operations::bit_and<T, T2>>(rhs);
             }
 
             template <typename T2, bool C2>
             inline NDArray& bit_and_eq(const NDArray<T2, C2> &rhs) {
-                return this->m_shape == rhs.m_shape ? this->bit_and_eq<false>(rhs) : this->bit_and_eq<true>(rhs);
+                return this->m_shape == rhs.m_shape ? this->bit_and_eq_r(rhs) : this->bit_and_eq_b(rhs);
             }
 
             inline NDArray& bit_and_eq(T value) noexcept {
                 return this->invoke_value_assignment<ndlib::utils::operations::bit_and<T, T>>(value);
             }
 
-            template <bool B, typename T2, bool C2>
-            inline NDArray& bit_or_eq(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_or<T, T2>>(rhs);
+            template <typename T2, bool C2>
+            inline NDArray& bit_or_eq_b(const NDArray<T2, C2> &rhs) {
+                return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_or<T, T2>>(rhs);
+            }
+            
+            template <typename T2, bool C2>
+            inline NDArray& bit_or_eq_r(const NDArray<T2, C2> &rhs) {
+                return this->invoke_regular_assignment<ndlib::utils::operations::bit_or<T, T2>>(rhs);
             }
             
             template <typename T2, bool C2>
             inline NDArray& bit_or_eq(const NDArray<T2, C2> &rhs) {
-                return this->m_shape == rhs.m_shape ? this->bit_or_eq<false>(rhs) : this->bit_or_eq<true>(rhs);
+                return this->m_shape == rhs.m_shape ? this->bit_or_eq_r(rhs) : this->bit_or_eq_b(rhs);
             }
 
             inline NDArray& bit_or_eq(T value) noexcept {
                 return this->invoke_value_assignment<ndlib::utils::operations::bit_or<T, T>>(value);
             }
 
-            template <bool B, typename T2, bool C2>
-            inline NDArray& shl_eq(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_shl<T, T2>>(rhs);
+            template <typename T2, bool C2>
+            inline NDArray& shl_eq_b(const NDArray<T2, C2> &rhs) {
+                return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_shl<T, T2>>(rhs);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& shl_eq_r(const NDArray<T2, C2> &rhs) {
+                return this->invoke_regular_assignment<ndlib::utils::operations::bit_shl<T, T2>>(rhs);
             }
 
             template <typename T2, bool C2>
             inline NDArray& shl_eq(const NDArray<T2, C2> &rhs) {
-                return this->m_shape == rhs.m_shape ? this->shl_eq<false>(rhs) : this->shl_eq<true>(rhs);
+                return this->m_shape == rhs.m_shape ? this->shl_eq_r(rhs) : this->shl_eq_b(rhs);
             }
 
             inline NDArray& shl_eq(T value) noexcept {
                 return this->invoke_value_assignment<ndlib::utils::operations::bit_shl<T, T>>(value);
             }
 
-            template <bool B, typename T2, bool C2>
-            inline NDArray& shr_eq(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::bit_shr<T, T2>>(rhs);
+            template <typename T2, bool C2>
+            inline NDArray& shr_eq_b(const NDArray<T2, C2> &rhs) {
+                return this->invoke_broadcast_assignment<ndlib::utils::operations::bit_shr<T, T2>>(rhs);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& shr_eq_r(const NDArray<T2, C2> &rhs) {
+                return this->invoke_regular_assignment<ndlib::utils::operations::bit_shr<T, T2>>(rhs);
             }
 
             template <typename T2, bool C2>
             inline NDArray& shr_eq(const NDArray<T2, C2> &rhs) {
-                return this->m_shape == rhs.m_shape ? this->shr_eq<false>(rhs) : this->shr_eq<true>(rhs);
+                return this->m_shape == rhs.m_shape ? this->shr_eq_r(rhs) : this->shr_eq_b(rhs);
             }
 
             inline NDArray& shr_eq(T value) noexcept {
                 return this->invoke_value_assignment<ndlib::utils::operations::bit_shr<T, T>>(value);
             }
 
-            template <bool B, typename T2, bool C2>
-            inline NDArray& remainder_eq(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::remainder<T, T2>>(rhs);
+            template <typename T2, bool C2>
+            inline NDArray& remainder_eq_b(const NDArray<T2, C2> &rhs) {
+                return this->invoke_broadcast_assignment<ndlib::utils::operations::remainder<T, T2>>(rhs);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& remainder_eq_r(const NDArray<T2, C2> &rhs) {
+                return this->invoke_regular_assignment<ndlib::utils::operations::remainder<T, T2>>(rhs);
             }
 
             template <typename T2, bool C2>
             inline NDArray& remainder_eq(const NDArray<T2, C2> &rhs) {
-                return this->m_shape == rhs.m_shape ? this->remainder_eq<false>(rhs) : this->remainder_eq<true>(rhs);
+                return this->m_shape == rhs.m_shape ? this->remainder_eq_r(rhs) : this->remainder_eq_b(rhs);
             }
 
             inline NDArray& remainder_eq(T value) noexcept {
                 return this->invoke_value_assignment<ndlib::utils::operations::remainder<T, T>>(value);
             }
 
-            template <bool B, typename T2, bool C2>
-            inline NDArray& power_eq(const NDArray<T2, C2> &rhs) {
-                return this->invoke_ndarray_assignment<B, ndlib::utils::operations::power<T, T2>>(rhs);
+            template <typename T2, bool C2>
+            inline NDArray& power_eq_b(const NDArray<T2, C2> &rhs) {
+                return this->invoke_broadcast_assignment<ndlib::utils::operations::power<T, T2>>(rhs);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& power_eq_r(const NDArray<T2, C2> &rhs) {
+                return this->invoke_regular_assignment<ndlib::utils::operations::power<T, T2>>(rhs);
             }
 
             template <typename T2, bool C2>
             inline NDArray& power_eq(const NDArray<T2, C2> &rhs) {
-                return this->m_shape == rhs.m_shape ? this->power_eq<false>(rhs) : this->power_eq<true>(rhs);
+                return this->m_shape == rhs.m_shape ? this->power_eq_r(rhs) : this->power_eq_b(rhs);
             }
 
             inline NDArray& power_eq(T value) noexcept {
