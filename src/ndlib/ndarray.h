@@ -326,15 +326,6 @@ namespace laruen::ndlib {
             /* ----- ndlib -----  */
             template <typename T1, bool C1, typename T2, bool C2>
             friend NDArray<T1, false> ndlib::utils::broadcast_reorder(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs);
-
-            template <auto Op, typename T1, bool C1, typename T2, bool C2>
-            friend NDArray<T1, C1>& invoke_broadcast_assignment(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs);
-
-            template <auto Op, typename T1, bool C1, typename T2, bool C2>
-            friend NDArray<T1, C1>& invoke_normal_assignment(NDArray<T1, C1> &lhs, const NDArray<T2, C2> &rhs) noexcept;
-
-            template <auto Op, typename T1, bool C1, typename T2>
-            friend NDArray<T1, C1>& invoke_value_assignment(NDArray<T1, C1> &lhs, T2 value) noexcept;
     };
     
     template <typename T, bool C> NDArray(NDArray<T, C>&, const Axes&) -> NDArray<T, false>;
