@@ -136,35 +136,6 @@ namespace laruen::ndlib {
                 return this->invoke_regular_assignment<Op>(this->broadcast_expansion(rhs));
             }
 
-            template <auto Op, typename TR, typename T2>
-            NDArray<TR, true> invoke_value_new(T2 value) const noexcept;
-
-            template <auto Op, typename T2, typename TR, bool CR>
-            inline NDArray<TR, CR>& invoke_value_new(T2 value, NDArray<TR, CR> &output) const noexcept {
-                (output.*Op)(value);
-                return output;
-            }
-
-            template <auto Op, typename TR, typename T2, bool C2>
-            NDArray<TR, true> invoke_regular_new(const NDArray<T2, C2> &rhs) const;
-
-            template <auto Op, typename T2, bool C2, typename TR, bool CR>
-            inline NDArray<TR, CR>& invoke_regular_new(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &output) const {
-                output.add_eq_r(*this);
-                (output.*Op)(rhs);
-                return output;
-            }
-
-            template <auto Op, typename TR, typename T2, bool C2>
-            NDArray<TR, true> invoke_broadcast_new(const NDArray<T2, C2> &rhs) const;
-
-            template <auto Op, typename T2, bool C2, typename TR, bool CR>
-            inline NDArray<TR, CR>& invoke_broadcast_new(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &output) const {
-                output.add_eq_b(*this);
-                (output.*Op)(rhs);
-                return output;
-            }
-
         public:
             inline const T* data() const noexcept {
                 return this->m_data;
