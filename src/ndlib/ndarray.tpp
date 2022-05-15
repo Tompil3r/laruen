@@ -1023,7 +1023,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <auto Op, typename T2, bool C2>
-    NDArray<T, C>& NDArray<T, C>::invoke_normal_assignment(const NDArray<T2, C2> &rhs) noexcept {
+    NDArray<T, C>& NDArray<T, C>::invoke_regular_assignment(const NDArray<T2, C2> &rhs) noexcept {
         NDIterator lhs_iter(*this);
         ConstNDIterator rhs_iter(rhs);
 
