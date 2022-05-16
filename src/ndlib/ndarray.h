@@ -80,6 +80,11 @@ namespace laruen::ndlib {
             NDArray& add_eq(const NDArray<T2, C2> &rhs);
 
             NDArray& add_eq(T value) noexcept;
+            
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& add(T value, NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> add(T value) const noexcept;
 
             template <typename T2, bool C2>
             NDArray& subtract_eq_b(const NDArray<T2, C2> &rhs);
@@ -91,6 +96,11 @@ namespace laruen::ndlib {
             NDArray& subtract_eq(const NDArray<T2, C2> &rhs);
 
             NDArray& subtract_eq(T value) noexcept;
+
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& subtract(T value, NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> subtract(T value) const noexcept;
             
             template <typename T2, bool C2>
             NDArray& multiply_eq_b(const NDArray<T2, C2> &rhs);
@@ -103,6 +113,11 @@ namespace laruen::ndlib {
 
             NDArray& multiply_eq(T value) noexcept;
 
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& multiply(T value, NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> multiply(T value) const noexcept;
+
             template <typename T2, bool C2>
             NDArray& divide_eq_b(const NDArray<T2, C2> &rhs);
 
@@ -113,6 +128,11 @@ namespace laruen::ndlib {
             NDArray& divide_eq(const NDArray<T2, C2> &rhs);
 
             NDArray& divide_eq(T value) noexcept;
+
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& divide(T value, NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> divide(T value) const noexcept;
 
             template <typename T2, bool C2>
             NDArray& bit_xor_eq_b(const NDArray<T2, C2> &rhs);
@@ -125,6 +145,11 @@ namespace laruen::ndlib {
 
             NDArray& bit_xor_eq(T value) noexcept;
 
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& bit_xor(T value, NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> bit_xor(T value) const noexcept;
+
             template <typename T2, bool C2>
             NDArray& bit_and_eq_b(const NDArray<T2, C2> &rhs);
 
@@ -135,6 +160,11 @@ namespace laruen::ndlib {
             NDArray& bit_and_eq(const NDArray<T2, C2> &rhs);
 
             NDArray& bit_and_eq(T value) noexcept;
+
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& bit_and(T value, NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> bit_and(T value) const noexcept;
 
             template <typename T2, bool C2>
             NDArray& bit_or_eq_b(const NDArray<T2, C2> &rhs);
@@ -147,6 +177,11 @@ namespace laruen::ndlib {
 
             NDArray& bit_or_eq(T value) noexcept;
 
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& bit_or(T value, NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> bit_or(T value) const noexcept;
+
             template <typename T2, bool C2>
             NDArray& shl_eq_b(const NDArray<T2, C2> &rhs);
 
@@ -157,6 +192,11 @@ namespace laruen::ndlib {
             NDArray& shl_eq(const NDArray<T2, C2> &rhs);
 
             NDArray& shl_eq(T value) noexcept;
+
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& shl(T value, NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> shl(T value) const noexcept;
 
             template <typename T2, bool C2>
             NDArray& shr_eq_b(const NDArray<T2, C2> &rhs);
@@ -169,6 +209,11 @@ namespace laruen::ndlib {
 
             NDArray& shr_eq(T value) noexcept;
 
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& shr(T value, NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> shr(T value) const noexcept;
+
             template <typename T2, bool C2>
             NDArray& remainder_eq_b(const NDArray<T2, C2> &rhs);
 
@@ -180,6 +225,11 @@ namespace laruen::ndlib {
 
             NDArray& remainder_eq(T value) noexcept;
 
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& remainder(T value, NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> remainder(T value) const noexcept;
+
             template <typename T2, bool C2>
             NDArray& power_eq_b(const NDArray<T2, C2> &rhs);
 
@@ -190,6 +240,11 @@ namespace laruen::ndlib {
             NDArray& power_eq(const NDArray<T2, C2> &rhs);
 
             NDArray& power_eq(T value) noexcept;
+
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& power(T value, NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> power(T value) const noexcept;
 
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator+=(T2 value) noexcept;
             template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator-=(T2 value) noexcept;

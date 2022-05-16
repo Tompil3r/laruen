@@ -367,6 +367,30 @@ namespace laruen::ndlib {
         return *this;
 	}
 
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::add(T value, NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = this_iter.next() + value;
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::add(T value) const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = iter.next() + value;
+        }
+
+        return out;
+    }
+
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::subtract_eq_b(const NDArray<T2, C2> &rhs) {
         return this->subtract_eq_r(this->broadcast_expansion(rhs));
@@ -399,6 +423,30 @@ namespace laruen::ndlib {
 
         return *this;
 	}
+
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::subtract(T value, NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = this_iter.next() - value;
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::subtract(T value) const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = iter.next() - value;
+        }
+
+        return out;
+    }
     
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::multiply_eq_b(const NDArray<T2, C2> &rhs) {
@@ -433,6 +481,30 @@ namespace laruen::ndlib {
         return *this;
 	}
 
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::multiply(T value, NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = this_iter.next() * value;
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::multiply(T value) const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = iter.next() * value;
+        }
+
+        return out;
+    }
+
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::divide_eq_b(const NDArray<T2, C2> &rhs) {
         return this->divide_eq_r(this->broadcast_expansion(rhs));
@@ -465,6 +537,30 @@ namespace laruen::ndlib {
 
         return *this;
 	}
+
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::divide(T value, NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = this_iter.next() / value;
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::divide(T value) const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = iter.next() / value;
+        }
+
+        return out;
+    }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::bit_xor_eq_b(const NDArray<T2, C2> &rhs) {
@@ -499,6 +595,30 @@ namespace laruen::ndlib {
         return *this;
 	}
 
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::bit_xor(T value, NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = this_iter.next() ^ value;
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::bit_xor(T value) const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = iter.next() ^ value;
+        }
+
+        return out;
+    }
+
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::bit_and_eq_b(const NDArray<T2, C2> &rhs) {
         return this->bit_and_eq_r(this->broadcast_expansion(rhs));
@@ -531,6 +651,30 @@ namespace laruen::ndlib {
 
         return *this;
 	}
+
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::bit_and(T value, NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = this_iter.next() & value;
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::bit_and(T value) const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = iter.next() & value;
+        }
+
+        return out;
+    }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::bit_or_eq_b(const NDArray<T2, C2> &rhs) {
@@ -565,6 +709,30 @@ namespace laruen::ndlib {
         return *this;
 	}
 
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::bit_or(T value, NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = this_iter.next() | value;
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::bit_or(T value) const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = iter.next() | value;
+        }
+
+        return out;
+    }
+
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::shl_eq_b(const NDArray<T2, C2> &rhs) {
         return this->shl_eq_r(this->broadcast_expansion(rhs));
@@ -597,6 +765,30 @@ namespace laruen::ndlib {
 
         return *this;
 	}
+
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::shl(T value, NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = this_iter.next() << value;
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::shl(T value) const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = iter.next() << value;
+        }
+
+        return out;
+    }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::shr_eq_b(const NDArray<T2, C2> &rhs) {
@@ -631,6 +823,30 @@ namespace laruen::ndlib {
         return *this;
 	}
 
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::shr(T value, NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = this_iter.next() >> value;
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::shr(T value) const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = iter.next() >> value;
+        }
+
+        return out;
+    }
+
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::remainder_eq_b(const NDArray<T2, C2> &rhs) {
         return this->remainder_eq_r(this->broadcast_expansion(rhs));
@@ -664,6 +880,30 @@ namespace laruen::ndlib {
         return *this;
 	}
 
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::remainder(T value, NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = math::common::remainder(this_iter.next(), value);
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::remainder(T value) const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = math::common::remainder(iter.next(), value);
+        }
+
+        return out;
+    }
+
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::power_eq_b(const NDArray<T2, C2> &rhs) {
         return this->power_eq_r(this->broadcast_expansion(rhs));
@@ -696,6 +936,30 @@ namespace laruen::ndlib {
 
         return *this;
 	}
+
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::power(T value, NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = math::common::pow(this_iter.next(), value);
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::power(T value) const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = math::common::pow(iter.next() - value);
+        }
+
+        return out;
+    }
 
     template <typename T, bool C> template <typename T2, typename ENABLE>
     NDArray<T, C>& NDArray<T, C>::operator+=(T2 value) noexcept {
