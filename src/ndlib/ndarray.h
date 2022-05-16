@@ -376,6 +376,13 @@ namespace laruen::ndlib {
             template <typename T2, bool C2>
             NDArray<types::combine_types_t<T, T2>, true> shr(const NDArray<T2, C2> &rhs) const;
 
+            NDArray& bit_not_eq() noexcept;
+
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& bit_not(NDArray<TR, CR> &out) const noexcept;
+
+            NDArray<T, true> bit_not() const noexcept;
+
             template <typename T2, bool C2>
             NDArray& remainder_eq_b(const NDArray<T2, C2> &rhs);
 

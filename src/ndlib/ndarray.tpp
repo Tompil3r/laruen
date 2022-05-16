@@ -1316,6 +1316,41 @@ namespace laruen::ndlib {
         return this->m_shape == rhs.m_shape ? this->shr_r(rhs) : this->shr_b(rhs);
     }
 
+    template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::bit_not_eq() noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() = ~iter.current();
+        }
+
+        return *this;
+    }
+
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::bit_not(NDArray<TR, CR> &out) const noexcept {
+        ConstNDIterator this_iter(*this);
+        NDIterator out_iter(out);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out_iter.next() = ~this_iter.next();
+        }
+        
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::bit_not() const noexcept {
+        NDArray<T, true> out(this->m_shape);
+        ConstNDIterator iter(*this);
+
+        for(uint64_t i = 0;i < this->m_size;i++) {
+            out.m_data[i] = ~iter.next();
+        }
+
+        return out;
+    }
+
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::remainder_eq_b(const NDArray<T2, C2> &rhs) {
         return this->remainder_eq_r(this->broadcast_expansion(rhs));
