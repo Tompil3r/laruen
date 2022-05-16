@@ -451,55 +451,12 @@ namespace laruen::ndlib {
             template <typename T2, bool C2>
             NDArray<types::combine_types_t<T, T2>, true> power(const NDArray<T2, C2> &rhs) const;
 
-            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator+=(T2 value) noexcept;
-            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator-=(T2 value) noexcept;
-            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator*=(T2 value) noexcept;
-            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> NDArray& operator/=(T2 value) noexcept;
-            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> auto operator+(T2 value) const noexcept;
-            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> auto operator-(T2 value) const noexcept;
-            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> auto operator*(T2 value) const noexcept;
-            template <typename T2, typename = std::enable_if_t<!types::is_ndarray_v<T2>>> auto operator/(T2 value) const noexcept;
-            template <typename T2, bool C2> auto operator+(const NDArray<T2, C2> &ndarray) const;
-            template <typename T2, bool C2> auto operator-(const NDArray<T2, C2> &ndarray) const;
-            template <typename T2, bool C2> auto operator*(const NDArray<T2, C2> &ndarray) const;
-            template <typename T2, bool C2> auto operator/(const NDArray<T2, C2> &ndarray) const;
-            template <typename T2, bool C2> NDArray& operator+=(const NDArray<T2, C2> &ndarray);
-            template <typename T2, bool C2> NDArray& operator-=(const NDArray<T2, C2> &ndarray);
-            template <typename T2, bool C2> NDArray& operator*=(const NDArray<T2, C2> &ndarray);
-            template <typename T2, bool C2> NDArray& operator/=(const NDArray<T2, C2> &ndarray);
             template <typename T2, bool C2> bool operator==(const NDArray<T2, C2> &ndarray) const noexcept;
             template <typename T2, bool C2> bool operator!=(const NDArray<T2, C2> &ndarray) const noexcept;
             template <typename T2, bool C2> bool operator>=(const NDArray<T2, C2> &ndarray) const noexcept;
             template <typename T2, bool C2> bool operator<=(const NDArray<T2, C2> &ndarray) const noexcept;
             template <typename T2, bool C2> bool operator>(const NDArray<T2, C2> &ndarray) const noexcept;
             template <typename T2, bool C2> bool operator<(const NDArray<T2, C2> &ndarray) const noexcept;
-            template <typename T2> NDArray& operator^=(T2 value) noexcept;
-            template <typename T2> NDArray& operator&=(T2 value) noexcept;
-            template <typename T2> NDArray& operator|=(T2 value) noexcept;
-            template <typename T2> NDArray& operator<<=(T2 value) noexcept;
-            template <typename T2> NDArray& operator>>=(T2 value) noexcept;
-            template <typename T2> auto operator^(T2 value) const noexcept;
-            template <typename T2> auto operator&(T2 value) const noexcept;
-            template <typename T2> auto operator|(T2 value) const noexcept;
-            template <typename T2> auto operator<<(T2 value) const noexcept;
-            template <typename T2> auto operator>>(T2 value) const noexcept;
-            NDArray operator~() const noexcept;
-            template <typename T2, bool C2> NDArray& operator^=(const NDArray<T2, C2> &ndarray);
-            template <typename T2, bool C2> NDArray& operator&=(const NDArray<T2, C2> &ndarray);
-            template <typename T2, bool C2> NDArray& operator|=(const NDArray<T2, C2> &ndarray);
-            template <typename T2, bool C2> NDArray& operator<<=(const NDArray<T2, C2> &ndarray);
-            template <typename T2, bool C2> NDArray& operator>>=(const NDArray<T2, C2> &ndarray);
-            template <typename T2, bool C2> auto operator^(const NDArray<T2, C2> &ndarray) const;
-            template <typename T2, bool C2> auto operator&(const NDArray<T2, C2> &ndarray) const;
-            template <typename T2, bool C2> auto operator|(const NDArray<T2, C2> &ndarray) const;
-            template <typename T2, bool C2> auto operator<<(const NDArray<T2, C2> &ndarray) const;
-            template <typename T2, bool C2> auto operator>>(const NDArray<T2, C2> &ndarray) const;
-            template <typename T2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(T2 value) noexcept;
-            template <typename T2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(T2 value) noexcept;
-            template <typename T2> auto operator%(T2 value) const noexcept;
-            template <typename T2, bool C2, std::enable_if_t<!types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(const NDArray<T2, C2> &ndarray);
-            template <typename T2, bool C2, std::enable_if_t<types::atleast_one_float_v<T, T2>, int> = 0> NDArray& operator%=(const NDArray<T2, C2> &ndarray);
-            template <typename T2, bool C2> auto operator%(const NDArray<T2, C2> &ndarray) const;
 
             std::string str() const noexcept;
 
@@ -518,6 +475,190 @@ namespace laruen::ndlib {
 
             inline const T& operator[](uint_fast64_t index) const noexcept {
                 return this->m_data[index];
+            }
+
+            inline NDArray& operator+=(T value) noexcept {
+                return this->add_eq(value);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& operator+=(const NDArray<T2, C2> &rhs) {
+                return this->add_eq(rhs);
+            }
+
+            inline NDArray& operator-=(T value) noexcept {
+                return this->subtract_eq(value);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& operator-=(const NDArray<T2, C2> &rhs) {
+                return this->subtract_eq(rhs);
+            }
+
+            inline NDArray& operator*=(T value) noexcept {
+                return this->multiply_eq(value);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& operator*=(const NDArray<T2, C2> &rhs) {
+                return this->multiply_eq(rhs);
+            }
+
+            inline NDArray& operator/=(T value) noexcept {
+                return this->divide_eq(value);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& operator/=(const NDArray<T2, C2> &rhs) {
+                return this->divide_eq(rhs);
+            }
+
+            inline NDArray& operator%=(T value) noexcept {
+                return this->remainder_eq(value);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& operator%=(const NDArray<T2, C2> &rhs) {
+                return this->remainder_eq(rhs);
+            }
+            
+            inline NDArray& operator^=(T value) noexcept {
+                return this->bit_xor_eq(value);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& operator^=(const NDArray<T2, C2> &rhs) {
+                return this->bit_xor_eq(rhs);
+            }
+            
+            inline NDArray& operator&=(T value) noexcept {
+                return this->bit_and_eq(value);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& operator&=(const NDArray<T2, C2> &rhs) {
+                return this->bit_and_eq(rhs);
+            }
+            
+            inline NDArray& operator|=(T value) noexcept {
+                return this->bit_or_eq(value);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& operator|=(const NDArray<T2, C2> &rhs) {
+                return this->bit_or_eq(rhs);
+            }
+            
+            inline NDArray& operator<<=(T value) noexcept {
+                return this->shl_eq(value);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& operator<<=(const NDArray<T2, C2> &rhs) {
+                return this->shl_eq(rhs);
+            }
+            
+            inline NDArray& operator>>=(T value) noexcept {
+                return this->shr_eq(value);
+            }
+
+            template <typename T2, bool C2>
+            inline NDArray& operator>>=(const NDArray<T2, C2> &rhs) {
+                return this->shr_eq(rhs);
+            }
+            
+            inline NDArray& operator~() noexcept {
+                return this->bit_not();
+            }
+
+            inline NDArray<T, true> operator+(T value) const noexcept {
+                return this->add(value);
+            }
+
+            template <typename T2, bool C2>
+            inline auto operator+(const NDArray<T2, C2> &rhs) const {
+                return this->add(rhs);
+            }
+
+            inline NDArray<T, true> operator-(T value) const noexcept {
+                return this->subtract(value);
+            }
+
+            template <typename T2, bool C2>
+            inline auto operator-(const NDArray<T2, C2> &rhs) const {
+                return this->subtract(rhs);
+            }
+
+            inline NDArray<T, true> operator*(T value) const noexcept {
+                return this->multiply(value);
+            }
+
+            template <typename T2, bool C2>
+            inline auto operator*(const NDArray<T2, C2> &rhs) const {
+                return this->multiply(rhs);
+            }
+
+            inline NDArray<T, true> operator/(T value) const noexcept {
+                return this->divide(value);
+            }
+
+            template <typename T2, bool C2>
+            inline auto operator/(const NDArray<T2, C2> &rhs) const {
+                return this->divide(rhs);
+            }
+
+            inline NDArray<T, true> operator%(T value) const noexcept {
+                return this->remainder(value);
+            }
+
+            template <typename T2, bool C2>
+            inline auto operator%(const NDArray<T2, C2> &rhs) const {
+                return this->remainder(rhs);
+            }
+
+            inline NDArray<T, true> operator^(T value) const noexcept {
+                return this->bit_xor(value);
+            }
+
+            template <typename T2, bool C2>
+            inline auto operator^(const NDArray<T2, C2> &rhs) const {
+                return this->bit_xor(rhs);
+            }
+
+            inline NDArray<T, true> operator&(T value) const noexcept {
+                return this->bit_and(value);
+            }
+
+            template <typename T2, bool C2>
+            inline auto operator&(const NDArray<T2, C2> &rhs) const {
+                return this->bit_and(rhs);
+            }
+
+            inline NDArray<T, true> operator|(T value) const noexcept {
+                return this->bit_or(value);
+            }
+
+            template <typename T2, bool C2>
+            inline auto operator|(const NDArray<T2, C2> &rhs) const {
+                return this->bit_or(rhs);
+            }
+
+            inline NDArray<T, true> operator<<(T value) const noexcept {
+                return this->shl(value);
+            }
+
+            template <typename T2, bool C2>
+            inline auto operator<<(const NDArray<T2, C2> &rhs) const {
+                return this->shl(rhs);
+            }
+
+            inline NDArray<T, true> operator>>(T value) const noexcept {
+                return this->shr(value);
+            }
+
+            template <typename T2, bool C2>
+            inline auto operator>>(const NDArray<T2, C2> &rhs) const {
+                return this->shr(rhs);
             }
 
             friend inline std::ostream& operator<<(std::ostream &stream, const NDArray &ndarray) noexcept {
