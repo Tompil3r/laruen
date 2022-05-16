@@ -334,6 +334,369 @@ namespace laruen::ndlib {
         return NDArray<T, false>(*this, ranges);
     }
 
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::add_eq_b(const NDArray<T2, C2> &rhs) {
+        return this->add_eq_r(this->broadcast_expansion(rhs));
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::add_eq_r(const NDArray<T2, C2> &rhs) {
+        NDIterator lhs_iter(*this);
+        ConstNDIterator rhs_iter(rhs);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            lhs_iter.next() += rhs_iter.next();
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::add_eq(const NDArray<T2, C2> &rhs) {
+        return this->m_shape == rhs.m_shape ? this->add_eq_r(rhs) : this->add_eq_b(rhs);
+	}
+
+	template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::add_eq(T value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() += value;
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::subtract_eq_b(const NDArray<T2, C2> &rhs) {
+        return this->subtract_eq_r(this->broadcast_expansion(rhs));
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::subtract_eq_r(const NDArray<T2, C2> &rhs) {
+        NDIterator lhs_iter(*this);
+        ConstNDIterator rhs_iter(rhs);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            lhs_iter.next() -= rhs_iter.next();
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::subtract_eq(const NDArray<T2, C2> &rhs) {
+        return this->m_shape == rhs.m_shape ? this->subtract_eq_r(rhs) : this->subtract_eq_b(rhs);
+	}
+
+	template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::subtract_eq(T value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() -= value;
+        }
+
+        return *this;
+	}
+    
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::multiply_eq_b(const NDArray<T2, C2> &rhs) {
+        return this->multiply_eq_r(this->broadcast_expansion(rhs));
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::multiply_eq_r(const NDArray<T2, C2> &rhs) {
+        NDIterator lhs_iter(*this);
+        ConstNDIterator rhs_iter(rhs);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            lhs_iter.next() *= rhs_iter.next();
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::multiply_eq(const NDArray<T2, C2> &rhs) {
+        return this->m_shape == rhs.m_shape ? this->multiply_eq_r(rhs) : this->multiply_eq_b(rhs);
+	}
+
+	template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::multiply_eq(T value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() *= value;
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::divide_eq_b(const NDArray<T2, C2> &rhs) {
+        return this->divide_eq_r(this->broadcast_expansion(rhs));
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::divide_eq_r(const NDArray<T2, C2> &rhs) {
+        NDIterator lhs_iter(*this);
+        ConstNDIterator rhs_iter(rhs);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            lhs_iter.next() /= rhs_iter.next();
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::divide_eq(const NDArray<T2, C2> &rhs) {
+        return this->m_shape == rhs.m_shape ? this->divide_eq_r(rhs) : this->divide_eq_b(rhs);
+	}
+
+	template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::divide_eq(T value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() /= value;
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::bit_xor_eq_b(const NDArray<T2, C2> &rhs) {
+        return this->bit_xor_eq_r(this->broadcast_expansion(rhs));
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::bit_xor_eq_r(const NDArray<T2, C2> &rhs) {
+        NDIterator lhs_iter(*this);
+        ConstNDIterator rhs_iter(rhs);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            lhs_iter.next() ^= rhs_iter.next();
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::bit_xor_eq(const NDArray<T2, C2> &rhs) {
+        return this->m_shape == rhs.m_shape ? this->bit_xor_eq_r(rhs) : this->bit_xor_eq_b(rhs);
+	}
+
+	template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::bit_xor_eq(T value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() ^= value;
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::bit_and_eq_b(const NDArray<T2, C2> &rhs) {
+        return this->bit_and_eq_r(this->broadcast_expansion(rhs));
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::bit_and_eq_r(const NDArray<T2, C2> &rhs) {
+        NDIterator lhs_iter(*this);
+        ConstNDIterator rhs_iter(rhs);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            lhs_iter.next() &= rhs_iter.next();
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::bit_and_eq(const NDArray<T2, C2> &rhs) {
+        return this->m_shape == rhs.m_shape ? this->bit_and_eq_r(rhs) : this->bit_and_eq_b(rhs);
+	}
+
+	template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::bit_and_eq(T value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() &= value;
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::bit_or_eq_b(const NDArray<T2, C2> &rhs) {
+        return this->bit_or_eq_r(this->broadcast_expansion(rhs));
+	}
+    
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::bit_or_eq_r(const NDArray<T2, C2> &rhs) {
+        NDIterator lhs_iter(*this);
+        ConstNDIterator rhs_iter(rhs);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            lhs_iter.next() |= rhs_iter.next();
+        }
+
+        return *this;
+	}
+    
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::bit_or_eq(const NDArray<T2, C2> &rhs) {
+        return this->m_shape == rhs.m_shape ? this->bit_or_eq_r(rhs) : this->bit_or_eq_b(rhs);
+	}
+
+	template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::bit_or_eq(T value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() |= value;
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::shl_eq_b(const NDArray<T2, C2> &rhs) {
+        return this->shl_eq_r(this->broadcast_expansion(rhs));
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::shl_eq_r(const NDArray<T2, C2> &rhs) {
+        NDIterator lhs_iter(*this);
+        ConstNDIterator rhs_iter(rhs);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            lhs_iter.next() <<= rhs_iter.next();
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::shl_eq(const NDArray<T2, C2> &rhs) {
+        return this->m_shape == rhs.m_shape ? this->shl_eq_r(rhs) : this->shl_eq_b(rhs);
+	}
+
+	template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::shl_eq(T value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() <<= value;
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::shr_eq_b(const NDArray<T2, C2> &rhs) {
+        return this->shr_eq_r(this->broadcast_expansion(rhs));
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::shr_eq_r(const NDArray<T2, C2> &rhs) {
+        NDIterator lhs_iter(*this);
+        ConstNDIterator rhs_iter(rhs);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            lhs_iter.next() >>= rhs_iter.next();
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::shr_eq(const NDArray<T2, C2> &rhs) {
+        return this->m_shape == rhs.m_shape ? this->shr_eq_r(rhs) : this->shr_eq_b(rhs);
+	}
+
+	template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::shr_eq(T value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() >>= value;
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::remainder_eq_b(const NDArray<T2, C2> &rhs) {
+        return this->remainder_eq_r(this->broadcast_expansion(rhs));
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::remainder_eq_r(const NDArray<T2, C2> &rhs) {
+        NDIterator lhs_iter(*this);
+        ConstNDIterator rhs_iter(rhs);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            lhs_iter.next() = math::common::remainder(lhs_iter.current(), rhs_iter.next());
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::remainder_eq(const NDArray<T2, C2> &rhs) {
+        return this->m_shape == rhs.m_shape ? this->remainder_eq_r(rhs) : this->remainder_eq_b(rhs);
+	}
+
+	template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::remainder_eq(T value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() = math::common::remainder(iter.current(), value);
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::power_eq_b(const NDArray<T2, C2> &rhs) {
+        return this->power_eq_r(this->broadcast_expansion(rhs));
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::power_eq_r(const NDArray<T2, C2> &rhs) {
+        NDIterator lhs_iter(*this);
+        ConstNDIterator rhs_iter(rhs);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            lhs_iter.next() = math::common::pow(lhs_iter.current(), rhs_iter.next());
+        }
+
+        return *this;
+	}
+
+    template <typename T, bool C> template <typename T2, bool C2>
+    NDArray<T, C>& NDArray<T, C>::power_eq(const NDArray<T2, C2> &rhs) {
+        return this->m_shape == rhs.m_shape ? this->power_eq_r(rhs) : this->power_eq_b(rhs);
+	}
+
+	template <typename T, bool C>
+    NDArray<T, C>& NDArray<T, C>::power_eq(T value) noexcept {
+        NDIterator iter(*this);
+
+        for(uint_fast64_t i = 0;i < this->m_size;i++) {
+            iter.next() = math::common::pow(iter.current(), value);
+        }
+
+        return *this;
+	}
+
     template <typename T, bool C> template <typename T2, typename ENABLE>
     NDArray<T, C>& NDArray<T, C>::operator+=(T2 value) noexcept {
         NDIterator iter(*this);
@@ -1009,55 +1372,5 @@ namespace laruen::ndlib {
         }
 
         return expansion;
-    }
-
-    template <typename T, bool C> template <auto Op, typename T2>
-    NDArray<T, C>& NDArray<T, C>::invoke_value_assignment(T2 value) noexcept {
-        NDIterator iter(*this);
-
-        for(uint_fast64_t i = 0;i < this->m_size;i++) {
-            Op(iter.next(), value);
-        }
-
-        return *this;
-    }
-
-    template <typename T, bool C> template <auto Op, typename T2, bool C2>
-    NDArray<T, C>& NDArray<T, C>::invoke_regular_assignment(const NDArray<T2, C2> &rhs) noexcept {
-        NDIterator lhs_iter(*this);
-        ConstNDIterator rhs_iter(rhs);
-
-        for(uint_fast64_t i = 0;i < this->m_size;i++) {
-            Op(lhs_iter.next(), rhs_iter.next());
-        }
-
-        return *this;
-    }
-
-    template <typename T, bool C> template <auto Op, typename TR, typename T2>
-    NDArray<TR, true> NDArray<T, C>::invoke_value_new(T2 value) const noexcept {
-        NDArray<TR, true> output(new TR[this->m_size], *this, true);
-        (output.*Op)(value);
-        return output;
-    }
-
-    template <typename T, bool C> template <auto Op, typename TR, typename T2, bool C2>
-    NDArray<TR, true> NDArray<T, C>::invoke_regular_new(const NDArray<T2, C2> &rhs) const {
-        NDArray<TR, true> output(this->m_shape, 0);
-        
-        output.add_eq_r(*this);
-        (output.*Op)(rhs);
-        
-        return output;
-    }
-
-    template <typename T, bool C> template <auto Op, typename TR, typename T2, bool C2>
-    NDArray<TR, true> NDArray<T, C>::invoke_broadcast_new(const NDArray<T2, C2> &rhs) const {
-        NDArray<TR, true> output(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-
-        output.add_eq_b(*this);
-        (output.*Op)(rhs);
-
-        return output;
     }
 }
