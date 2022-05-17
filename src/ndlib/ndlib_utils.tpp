@@ -39,19 +39,17 @@ namespace laruen::ndlib::utils {
     }
 
     Axes remaining_axes(const Axes &axes, uint_fast8_t ndim) {
-        std::vector<int_fast16_t> all_axes(ndim);
         Axes result(ndim - axes.size());
         uint_fast8_t ridx = 0;
-
-        std::iota(all_axes.begin(), all_axes.end(), 0);
+        uint_fast8_t remaining_axes = -1;
 
         for(uint_fast8_t i = 0;i < axes.size();i++) {
-            all_axes[axes[i]] = -1;
+            remaining_axes ^= 1 << axes[i];
         }
 
-        for(uint_fast8_t i = 0;i < all_axes.size();i++) {
-            if(all_axes[i] != -1) {
-                result[ridx] = all_axes[i];
+        for(uint_fast8_t i = 0;i < ndim;i++) {
+            if(remaining_axes & (1 << i)) {
+                result[ridx] = i;
                 ridx++;
             }
         }
