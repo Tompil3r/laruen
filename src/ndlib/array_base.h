@@ -2,7 +2,7 @@
 #ifndef BASE_ARRAY_H
 #define BASE_ARRAY_H
 
-#include "src/ndlib/ndarray_types.h"
+#include "src/ndlib/ndlib_types.h"
 #include <cstdint>
 #include <utility>
 #include <stdexcept>

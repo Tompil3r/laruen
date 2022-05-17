@@ -2,7 +2,7 @@
 #ifndef NDARRAY_UTILS_H
 #define NDARRAY_UTILS_H
 
-#include "src/ndlib/ndarray_types.h"
+#include "src/ndlib/ndlib_types.h"
 #include "src/math/common.h"
 #include <cstdint>
 
@@ -22,5 +22,5 @@ namespace laruen::ndlib::utils {
 }
 
 
-#include "src/ndlib/ndarray_utils.tpp"
+#include "src/ndlib/ndlib_utils.tpp"
 #endif

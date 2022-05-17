@@ -1,6 +1,6 @@
 
-#ifndef NDARRAY_TYPES_H
-#define NDARRAY_TYPES_H
+#ifndef NDLIB_TYPES_H
+#define NDLIB_TYPES_H
 
 #include "src/utils/range.h"
 #include <cstdint>
@@ -43,5 +43,5 @@ namespace types {
     template <typename T, typename T2> inline constexpr bool atleast_one_float_v = (std::is_floating_point_v<T> || std::is_floating_point_v<T2>);
 }
 
-#include "src/ndlib/ndarray_types.tpp"
+#include "src/ndlib/ndlib_types.tpp"
 #endif
