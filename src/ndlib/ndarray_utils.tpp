@@ -9,26 +9,6 @@ using namespace laruen;
 namespace laruen::ndlib::utils {
 
     template <>
-    uint_fast8_t rev_count_diff<true>(const Shape &lhs, const Shape &rhs) noexcept {
-        // assume lhs.size() >= rhs.size()
-
-        uint_fast8_t count = 0;
-        uint_fast8_t lidx = lhs.size() - rhs.size();
-
-        for(uint_fast8_t ridx = 0;ridx < rhs.size();ridx++) {
-            count += lhs[lidx] != rhs[ridx];
-            lidx++;
-        }
-        
-        return count;
-    }
-
-    template <>
-    uint_fast8_t rev_count_diff<false>(const Shape &lhs, const Shape &rhs) noexcept {
-        return lhs.size() >= rhs.size() ? rev_count_diff<true>(lhs, rhs) : rev_count_diff<true>(rhs, lhs);
-    }
-
-    template <>
     Shape broadcast<true>(const Shape &lhs, const Shape &rhs) {
         // assume lhs.size() >= rhs.size()
 
@@ -54,44 +34,5 @@ namespace laruen::ndlib::utils {
     template <>
     Shape broadcast<false>(const Shape &lhs, const Shape &rhs) {
         return lhs.size() >= rhs.size() ? broadcast<true>(lhs, rhs) : broadcast<true>(rhs, lhs);
-    }
-
-    template <typename T, bool C, typename T2, bool C2>
-    NDArray<T, false> broadcast_reorder(NDArray<T, C> &lhs, const NDArray<T2, C2> &rhs) {
-        if(rhs.m_ndim > lhs.m_ndim) {
-            throw std::invalid_argument("shapes cannot be broadcasted");
-        }
-
-        NDArray<T, false> reorder(lhs.m_data, Shape(lhs.m_ndim), Strides(lhs.m_ndim),
-        lhs.m_size, lhs.m_ndim, false);
-        uint_fast8_t lidx = lhs.m_ndim - rhs.m_ndim;
-        uint_fast8_t low_priority_idx = lidx;
-        uint_fast8_t high_priority_idx = lidx + rev_count_diff<true>(lhs.m_shape, rhs.m_shape);
-
-        for(uint_fast8_t i = 0;i < lidx;i++) {
-            reorder.m_shape[i] = lhs.m_shape[i];
-            reorder.m_strides[i] = lhs.m_strides[i];
-        }
-
-        for(uint_fast8_t ridx = 0;ridx < rhs.m_ndim;ridx++) {
-            if(lhs.m_shape[lidx] != rhs.m_shape[ridx]) {
-                if(rhs.m_shape[ridx] == 1) {
-                    reorder.m_shape[low_priority_idx] = lhs.m_shape[lidx];
-                    reorder.m_strides[low_priority_idx] = lhs.m_strides[lidx];
-                    low_priority_idx++;
-                }
-                else {
-                    throw std::invalid_argument("shapes cannot be broadcasted");
-                }
-            }
-            else {
-                reorder.m_shape[high_priority_idx] = lhs.m_shape[lidx];
-                reorder.m_strides[high_priority_idx] = lhs.m_strides[lidx];
-                high_priority_idx++;
-            }
-            lidx++;
-        }
-
-        return reorder;
     }
 }
