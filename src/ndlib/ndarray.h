@@ -45,7 +45,7 @@ namespace laruen::ndlib {
             NDArray(NDArray &&ndarray) noexcept;
             NDArray(const Range<T> &range) noexcept;
             NDArray(const Range<T> &range, const Shape &shape);
-            NDArray(NDArray &ndarray, const Axes &axes) noexcept;
+            NDArray(T *data, ArrayBase &base, const Axes &axes) noexcept;
             template <bool C2> NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges) noexcept;
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(const NDArray<T2, C2> &ndarray) noexcept;
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(NDArray<T2, C2> &&ndarray) noexcept;
@@ -671,8 +671,6 @@ namespace laruen::ndlib {
                 return stream << ndarray.str();
             }
     };
-    
-    template <typename T, bool C> NDArray(NDArray<T, C>&, const Axes&) -> NDArray<T, false>;
 };
 
 #include "src/ndlib/ndarray.tpp"

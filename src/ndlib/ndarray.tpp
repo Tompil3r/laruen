@@ -99,16 +99,16 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(NDArray<T, C> &ndarray, const Axes &axes) noexcept
-    : ArrayBase(axes.size(), false), m_data(ndarray.m_data)
+    NDArray<T, C>::NDArray(T *data, ArrayBase &base, const Axes &axes) noexcept
+    : ArrayBase(axes.size(), false), m_data(data)
     {
         this->m_size = this->m_ndim > 0;
         uint_fast8_t axis;
 
         for(uint_fast8_t i = 0;i < this->m_ndim;i++) {
             axis = axes[i];
-            this->m_shape[i] = ndarray.m_shape[axis];
-            this->m_strides[i] = ndarray.m_strides[axis];
+            this->m_shape[i] = base.m_shape[axis];
+            this->m_strides[i] = base.m_strides[axis];
             this->m_size *= this->m_shape[i];
         }
     }
