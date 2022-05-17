@@ -1690,4 +1690,30 @@ namespace laruen::ndlib {
 
         return expansion;
     }
+
+    template <typename T, bool C>
+    const NDArray<T, C> NDArray<T, C>::axes_reorder(const Axes &axes) const noexcept {
+        NDArray<T, C> reorder(this->m_data, Shape(this->m_ndim), Strides(this->m_ndim),
+        this->m_size, this->m_ndim, false);
+
+        uint_fast8_t axes_added = 0;
+        uint_fast8_t dest_idx = reorder.m_ndim - 1;
+        
+        for(uint_fast8_t i = axes.size();i-- > 0;) {
+            reorder.m_shape[dest_idx] = this->m_shape[axes[i]];
+            reorder.m_strides[dest_idx] = this->m_strides[axes[i]];
+            axes_added |= 1 << axes[i];
+            dest_idx--;
+        }
+
+        for(uint_fast8_t i = reorder.m_ndim;i-- > 0;) {
+            if(!(axes_added & (1 << i))) {
+                reorder.m_shape[dest_idx] = this->m_shape[i];
+                reorder.m_strides[dest_idx] = this->m_strides[i];
+                dest_idx--; 
+            }
+        }
+
+        return reorder;
+    }
 }
