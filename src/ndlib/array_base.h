@@ -12,6 +12,8 @@
 namespace laruen::ndlib {
 
     class ArrayBase {
+        template <typename T, bool C> friend class NDArray;
+
         protected:
             Shape m_shape;
             Strides m_strides;
