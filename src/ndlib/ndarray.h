@@ -663,6 +663,10 @@ namespace laruen::ndlib {
                 return this->shr(rhs);
             }
 
+            inline ArrayBase& base() {
+                return *this;
+            }
+
             friend inline std::ostream& operator<<(std::ostream &stream, const NDArray &ndarray) noexcept {
                 return stream << ndarray.str();
             }
