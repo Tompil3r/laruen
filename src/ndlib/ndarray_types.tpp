@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <type_traits>
 
+namespace laruen::ndlib { template <typename T, bool C> class NDArray; }
 using laruen::ndlib::NDArray;
 
 // operator<< for Shape is used as operator<< for NDIndex and Strides 
