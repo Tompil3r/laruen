@@ -1,6 +1,6 @@
 
-#ifndef ndarray_types_H
-#define ndarray_types_H
+#ifndef NDARRAY_TYPES_H
+#define NDARRAY_TYPES_H
 
 #include "src/utils/range.h"
 #include <cstdint>
