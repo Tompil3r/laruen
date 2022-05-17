@@ -99,7 +99,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(ArrayBase &base, const Axes &axes) noexcept
+    NDArray<T, C>::NDArray(const ArrayBase &base, const Axes &axes) noexcept
     : ArrayBase(axes.size(), true)
     {
         this->m_size = this->m_ndim > 0;
