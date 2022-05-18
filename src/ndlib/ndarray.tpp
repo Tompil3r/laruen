@@ -1694,8 +1694,8 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    const NDArray<T, C> NDArray<T, C>::axes_reorder(const Axes &axes) const noexcept {
-        NDArray<T, C> reorder(this->m_data, Shape(this->m_ndim), Strides(this->m_ndim),
+    const NDArray<T, false> NDArray<T, C>::axes_reorder(const Axes &axes) const noexcept {
+        NDArray<T, false> reorder(this->m_data, Shape(this->m_ndim), Strides(this->m_ndim),
         this->m_size, this->m_ndim, false);
 
         uint_fast8_t axes_added = 0;

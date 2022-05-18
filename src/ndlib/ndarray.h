@@ -464,7 +464,7 @@ namespace laruen::ndlib {
             template <typename T2, bool C2>
             const NDArray<T2, false> broadcast_expansion(const NDArray<T2, C2> &rhs) noexcept;
 
-            const NDArray axes_reorder(const Axes &axes) const noexcept;
+            const NDArray<T, false> axes_reorder(const Axes &axes) const noexcept;
 
         public:
             inline const T* data() const noexcept {
