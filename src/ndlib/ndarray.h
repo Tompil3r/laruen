@@ -4,7 +4,7 @@
 
 #include "src/ndlib/ndlib_utils.h"
 #include "src/ndlib/ndlib_types.h"
-#include "src/ndlib/nditerator.h"
+#include "src/ndlib/nditer.h"
 #include "src/ndlib/array_base.h"
 #include "src/utils/range.h"
 #include <vector>
@@ -20,8 +20,8 @@ namespace laruen::ndlib {
 
     template <typename T = float64_t, bool C = true> class NDArray : public ArrayBase {
         template <typename, bool> friend class NDArray;
-        friend class NDIterator<T, C>;
-        friend class ConstNDIterator<T, C>;
+        friend class NDIter<NDArray<T, C>, C>;
+        friend class NDIter<const NDArray<T, C>, C>;
 
         private:
             T *m_data;
