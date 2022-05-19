@@ -22,7 +22,9 @@ namespace laruen::ndlib {
         public:
             NDIter(T &ndarray) noexcept
             : m_ndarray(ndarray), m_index(0)
-            {}
+            {
+                static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
+            }
 
             inline auto& next() noexcept {
                 return this->m_ndarray.m_data[this->m_index++];
@@ -54,7 +56,9 @@ namespace laruen::ndlib {
         public:
             NDIter(T &ndarray) noexcept
             : m_ndarray(ndarray), m_index(0), m_ndindex(ndarray.m_ndim, 0)
-            {}
+            {
+                static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
+            }
 
             auto& next() noexcept {
                 auto &value = this->m_ndarray.m_data[this->m_index];
