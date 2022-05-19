@@ -250,6 +250,28 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::max(const Axes &axes) const noexcept {
+        NDArray<T, true> out(*this, ndlib::utils::remaining_axes(axes, this->m_ndim));
+        NDArray<T, false> reorder = this->axes_reorder(axes);
+
+        NDIter out_iter(out);
+        NDIter this_iter(reorder);
+        uint_fast64_t sample_size = reorder.m_size / out.m_size;
+        T max;
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            max = this_iter.next();
+            
+            for(uint_fast64_t j = 0;j < sample_size - 1;j++) {
+                max = math::common::max(max, this_iter.next());
+            }
+            out_iter.next() = max;
+        }
+
+        return out;
+    }
+
+    template <typename T, bool C>
     T NDArray<T, C>::max() const noexcept {
         NDIter iter(*this);
         T max = iter.next();

@@ -58,6 +58,7 @@ namespace laruen::ndlib {
             template <typename T2, bool C2> void copy_data_from(const NDArray<T2, C2> &ndarray) noexcept;
             void fill(T value) noexcept;
 
+            NDArray<T, true> max(const Axes &axes) const noexcept;
             T max() const noexcept;
             uint_fast64_t index_max() const noexcept;
             NDIndex ndindex_max() const noexcept;
