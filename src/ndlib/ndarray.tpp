@@ -419,17 +419,24 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::add_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const {
-        out.fill(0);
-        out.add_eq_b(*this);
-        out.add_eq_b(rhs);
+        NDArray<T, false> lhs_exp = out.broadcast_expansion(*this);
+        NDArray<T2, false> rhs_exp = out.broadcast_expansion(rhs);
+
+        NDIter lhs_iter(lhs_exp);
+        NDIter rhs_iter(rhs_exp);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            out_iter.next() = lhs_iter.next() + rhs_iter.next();
+        }
+
         return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::add_b(const NDArray<T2, C2> &rhs) const {
         NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-        out.add_eq_b(*this);
-        out.add_eq_b(rhs);
+        this->add_b(rhs, out);
         return out;
     }
 
@@ -518,17 +525,24 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::subtract_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const {
-        out.fill(0);
-        out.add_eq_b(*this);
-        out.subtract_eq_b(rhs);
+        NDArray<T, false> lhs_exp = out.broadcast_expansion(*this);
+        NDArray<T2, false> rhs_exp = out.broadcast_expansion(rhs);
+
+        NDIter lhs_iter(lhs_exp);
+        NDIter rhs_iter(rhs_exp);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            out_iter.next() = lhs_iter.next() - rhs_iter.next();
+        }
+
         return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::subtract_b(const NDArray<T2, C2> &rhs) const {
         NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-        out.add_eq_b(*this);
-        out.subtract_eq_b(rhs);
+        this->subtract_b(rhs, out);
         return out;
     }
 
@@ -616,17 +630,24 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::multiply_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const {
-        out.fill(0);
-        out.add_eq_b(*this);
-        out.multiply_eq_b(rhs);
+        NDArray<T, false> lhs_exp = out.broadcast_expansion(*this);
+        NDArray<T2, false> rhs_exp = out.broadcast_expansion(rhs);
+
+        NDIter lhs_iter(lhs_exp);
+        NDIter rhs_iter(rhs_exp);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            out_iter.next() = lhs_iter.next() * rhs_iter.next();
+        }
+
         return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::multiply_b(const NDArray<T2, C2> &rhs) const {
         NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-        out.add_eq_b(*this);
-        out.multiply_eq_b(rhs);
+        this->multiply_b(rhs, out);
         return out;
     }
 
@@ -714,17 +735,24 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::divide_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const {
-        out.fill(0);
-        out.add_eq_b(*this);
-        out.divide_eq_b(rhs);
+        NDArray<T, false> lhs_exp = out.broadcast_expansion(*this);
+        NDArray<T2, false> rhs_exp = out.broadcast_expansion(rhs);
+
+        NDIter lhs_iter(lhs_exp);
+        NDIter rhs_iter(rhs_exp);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            out_iter.next() = lhs_iter.next() / rhs_iter.next();
+        }
+
         return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::divide_b(const NDArray<T2, C2> &rhs) const {
         NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-        out.add_eq_b(*this);
-        out.divide_eq_b(rhs);
+        this->divide_b(rhs, out);
         return out;
     }
 
@@ -812,17 +840,24 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::bit_xor_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const {
-        out.fill(0);
-        out.add_eq_b(*this);
-        out.bit_xor_eq_b(rhs);
+        NDArray<T, false> lhs_exp = out.broadcast_expansion(*this);
+        NDArray<T2, false> rhs_exp = out.broadcast_expansion(rhs);
+
+        NDIter lhs_iter(lhs_exp);
+        NDIter rhs_iter(rhs_exp);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            out_iter.next() = lhs_iter.next() ^ rhs_iter.next();
+        }
+
         return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::bit_xor_b(const NDArray<T2, C2> &rhs) const {
         NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-        out.add_eq_b(*this);
-        out.bit_xor_eq_b(rhs);
+        this->bit_xor_b(rhs, out);
         return out;
     }
 
@@ -910,17 +945,24 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::bit_and_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const {
-        out.fill(0);
-        out.add_eq_b(*this);
-        out.bit_and_eq_b(rhs);
+        NDArray<T, false> lhs_exp = out.broadcast_expansion(*this);
+        NDArray<T2, false> rhs_exp = out.broadcast_expansion(rhs);
+
+        NDIter lhs_iter(lhs_exp);
+        NDIter rhs_iter(rhs_exp);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            out_iter.next() = lhs_iter.next() & rhs_iter.next();
+        }
+
         return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::bit_and_b(const NDArray<T2, C2> &rhs) const {
         NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-        out.add_eq_b(*this);
-        out.bit_and_eq_b(rhs);
+        this->bit_and_b(rhs, out);
         return out;
     }
 
@@ -1008,17 +1050,24 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::bit_or_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const {
-        out.fill(0);
-        out.add_eq_b(*this);
-        out.bit_or_eq_b(rhs);
+        NDArray<T, false> lhs_exp = out.broadcast_expansion(*this);
+        NDArray<T2, false> rhs_exp = out.broadcast_expansion(rhs);
+
+        NDIter lhs_iter(lhs_exp);
+        NDIter rhs_iter(rhs_exp);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            out_iter.next() = lhs_iter.next() | rhs_iter.next();
+        }
+
         return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::bit_or_b(const NDArray<T2, C2> &rhs) const {
         NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-        out.add_eq_b(*this);
-        out.bit_or_eq_b(rhs);
+        this->bit_or_b(rhs, out);
         return out;
     }
 
@@ -1106,17 +1155,24 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::shl_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const {
-        out.fill(0);
-        out.add_eq_b(*this);
-        out.shl_eq_b(rhs);
+        NDArray<T, false> lhs_exp = out.broadcast_expansion(*this);
+        NDArray<T2, false> rhs_exp = out.broadcast_expansion(rhs);
+
+        NDIter lhs_iter(lhs_exp);
+        NDIter rhs_iter(rhs_exp);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            out_iter.next() = lhs_iter.next() << rhs_iter.next();
+        }
+
         return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::shl_b(const NDArray<T2, C2> &rhs) const {
         NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-        out.add_eq_b(*this);
-        out.shl_eq_b(rhs);
+        this->shl_b(rhs, out);
         return out;
     }
 
@@ -1204,17 +1260,24 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::shr_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const {
-        out.fill(0);
-        out.add_eq_b(*this);
-        out.shr_eq_b(rhs);
+        NDArray<T, false> lhs_exp = out.broadcast_expansion(*this);
+        NDArray<T2, false> rhs_exp = out.broadcast_expansion(rhs);
+
+        NDIter lhs_iter(lhs_exp);
+        NDIter rhs_iter(rhs_exp);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            out_iter.next() = lhs_iter.next() >> rhs_iter.next();
+        }
+
         return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::shr_b(const NDArray<T2, C2> &rhs) const {
         NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-        out.add_eq_b(*this);
-        out.shr_eq_b(rhs);
+        this->shr_b(rhs, out);
         return out;
     }
 
@@ -1332,17 +1395,25 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::remainder_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const {
-        out.fill(0);
-        out.add_eq_b(*this);
-        out.remainder_eq_b(rhs);
+        NDArray<T, false> lhs_exp = out.broadcast_expansion(*this);
+        NDArray<T2, false> rhs_exp = out.broadcast_expansion(rhs);
+
+        NDIter lhs_iter(lhs_exp);
+        NDIter rhs_iter(rhs_exp);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            out_iter.next() = math::common::remainder(lhs_iter.next(), rhs_iter.next());
+        }
+
+        return out;
         return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::remainder_b(const NDArray<T2, C2> &rhs) const {
         NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-        out.add_eq_b(*this);
-        out.remainder_eq_b(rhs);
+        this->remainder_b(rhs, out);
         return out;
     }
 
@@ -1430,17 +1501,25 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::power_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const {
-        out.fill(0);
-        out.add_eq_b(*this);
-        out.power_eq_b(rhs);
+        NDArray<T, false> lhs_exp = out.broadcast_expansion(*this);
+        NDArray<T2, false> rhs_exp = out.broadcast_expansion(rhs);
+
+        NDIter lhs_iter(lhs_exp);
+        NDIter rhs_iter(rhs_exp);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            out_iter.next() = math::common::pow(lhs_iter.next(), rhs_iter.next());
+        }
+
+        return out;
         return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::power_b(const NDArray<T2, C2> &rhs) const {
         NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
-        out.add_eq_b(*this);
-        out.power_eq_b(rhs);
+        this->power_b(rhs, out);
         return out;
     }
 
