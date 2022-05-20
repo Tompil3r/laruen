@@ -32,45 +32,78 @@ namespace laruen::ndlib {
             static constexpr bool CONTIGUOUS = C;
 
             ~NDArray();
+
+            // constructors and assignment operators
             NDArray() noexcept;
+
             NDArray(T *data, const Shape &shape, const Strides &strides,
             uint_fast64_t size, uint_fast8_t ndim, bool free_mem) noexcept;
+
             NDArray(T *data, Shape &&shape, Strides &&strides,
             uint_fast64_t size, uint_fast8_t ndim, bool free_mem) noexcept;
+            
             NDArray(const Shape &shape) noexcept;
+            
             NDArray(const Shape &shape, T value) noexcept;
+            
             NDArray(T *data, const ArrayBase &base) noexcept;
+            
             NDArray(T *data, const ArrayBase &base, bool free_mem) noexcept;
+            
             NDArray(const NDArray &ndarray) noexcept;
+            
             NDArray(NDArray &&ndarray) noexcept;
+            
             NDArray(const Range<T> &range) noexcept;
+            
             NDArray(const Range<T> &range, const Shape &shape);
+            
             NDArray(const ArrayBase &base, const Axes &axes) noexcept;
+            
             template <bool C2> NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges) noexcept;
+            
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(const NDArray<T2, C2> &ndarray) noexcept;
+            
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(NDArray<T2, C2> &&ndarray) noexcept;
 
             NDArray& operator=(const NDArray &ndarray) noexcept;
+            
             NDArray& operator=(NDArray &&ndarray) noexcept;
+            
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(const NDArray<T2, C2> &ndarray) noexcept;
+            
             template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(NDArray<T2, C2> &&ndarray) noexcept;
 
+            // utility functions
             template <typename T2, bool C2> void copy_data_from(const NDArray<T2, C2> &ndarray) noexcept;
+            
             void fill(T value) noexcept;
 
+            // computational functions on the array
             NDArray<T, true> max(const Axes &axes) const noexcept;
+            
             T max() const noexcept;
+            
             uint_fast64_t index_max() const noexcept;
+            
             NDIndex ndindex_max() const noexcept;
+            
             T min() const noexcept;
+            
             uint_fast64_t index_min() const noexcept;
+            
             NDIndex ndindex_min() const noexcept;
 
+            // indexing and slicing operators
             T& operator[](const NDIndex &ndindex) noexcept;
+
             const T& operator[](const NDIndex &ndindex) const noexcept;
+
             NDArray<T, false> operator[](const SliceRanges &ranges) noexcept;
+            
             const NDArray<T, false> operator[](const SliceRanges &ranges) const noexcept;
 
+            // arithmetical functions
             template <typename T2, bool C2>
             NDArray& add_eq_b(const NDArray<T2, C2> &rhs);
 
@@ -452,22 +485,31 @@ namespace laruen::ndlib {
             template <typename T2, bool C2>
             NDArray<types::combine_types_t<T, T2>, true> power(const NDArray<T2, C2> &rhs) const;
 
+            // bool operators between arrays
             template <typename T2, bool C2> bool operator==(const NDArray<T2, C2> &ndarray) const noexcept;
+            
             template <typename T2, bool C2> bool operator!=(const NDArray<T2, C2> &ndarray) const noexcept;
+            
             template <typename T2, bool C2> bool operator>=(const NDArray<T2, C2> &ndarray) const noexcept;
+            
             template <typename T2, bool C2> bool operator<=(const NDArray<T2, C2> &ndarray) const noexcept;
+            
             template <typename T2, bool C2> bool operator>(const NDArray<T2, C2> &ndarray) const noexcept;
+            
             template <typename T2, bool C2> bool operator<(const NDArray<T2, C2> &ndarray) const noexcept;
 
+            // string function
             std::string str() const noexcept;
 
         private:
+            // private utility functions
             template <typename T2, bool C2>
             const NDArray<T2, false> broadcast_expansion(const NDArray<T2, C2> &rhs) noexcept;
 
             const NDArray<T, false> axes_reorder(const Axes &axes) const noexcept;
 
         public:
+            // getters
             inline const T* data() const noexcept {
                 return this->m_data;
             }
@@ -480,6 +522,7 @@ namespace laruen::ndlib {
                 return this->m_data[index];
             }
 
+            // arithmetical operators
             inline NDArray& operator+=(T value) noexcept {
                 return this->add_eq(value);
             }
@@ -664,6 +707,7 @@ namespace laruen::ndlib {
                 return this->shr(rhs);
             }
 
+            // more utility functions
             inline ArrayBase& base() {
                 return *this;
             }
