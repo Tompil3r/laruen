@@ -18,7 +18,9 @@ using laruen::utils::Range;
 
 namespace laruen::ndlib {
 
-    template <typename T = float64_t, bool C = true> class NDArray : public ArrayBase {
+    template <typename T = float64_t, bool C = true>
+    class NDArray : public ArrayBase {
+
         template <typename, bool> friend class NDArray;
         friend class NDIter<NDArray<T, C>, C>;
         friend class NDIter<const NDArray<T, C>, C>;
@@ -60,22 +62,28 @@ namespace laruen::ndlib {
             
             NDArray(const ArrayBase &base, const Axes &axes) noexcept;
             
-            template <bool C2> NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges) noexcept;
+            template <bool C2>
+            NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges) noexcept;
             
-            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(const NDArray<T2, C2> &ndarray) noexcept;
+            template <typename T2, bool C2>
+            NDArray(const NDArray<T2, C2> &ndarray) noexcept;
             
-            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2> || C != C2>> NDArray(NDArray<T2, C2> &&ndarray) noexcept;
+            template <typename T2, bool C2>
+            NDArray(NDArray<T2, C2> &&ndarray) noexcept;
 
             NDArray& operator=(const NDArray &ndarray) noexcept;
             
             NDArray& operator=(NDArray &&ndarray) noexcept;
             
-            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(const NDArray<T2, C2> &ndarray) noexcept;
+            template <typename T2, bool C2>
+            NDArray& operator=(const NDArray<T2, C2> &ndarray) noexcept;
             
-            template <typename T2, bool C2, typename = std::enable_if_t<!std::is_same_v<T, T2>>> NDArray& operator=(NDArray<T2, C2> &&ndarray) noexcept;
+            template <typename T2, bool C2>
+            NDArray& operator=(NDArray<T2, C2> &&ndarray) noexcept;
 
             // utility functions
-            template <typename T2, bool C2> void copy_data_from(const NDArray<T2, C2> &ndarray) noexcept;
+            template <typename T2, bool C2>
+            void copy_data_from(const NDArray<T2, C2> &ndarray) noexcept;
             
             void fill(T value) noexcept;
 
@@ -486,17 +494,23 @@ namespace laruen::ndlib {
             NDArray<types::combine_types_t<T, T2>, true> power(const NDArray<T2, C2> &rhs) const;
 
             // bool operators between arrays
-            template <typename T2, bool C2> bool operator==(const NDArray<T2, C2> &ndarray) const noexcept;
+            template <typename T2, bool C2>
+            bool operator==(const NDArray<T2, C2> &ndarray) const noexcept;
             
-            template <typename T2, bool C2> bool operator!=(const NDArray<T2, C2> &ndarray) const noexcept;
+            template <typename T2, bool C2>
+            bool operator!=(const NDArray<T2, C2> &ndarray) const noexcept;
             
-            template <typename T2, bool C2> bool operator>=(const NDArray<T2, C2> &ndarray) const noexcept;
+            template <typename T2, bool C2>
+            bool operator>=(const NDArray<T2, C2> &ndarray) const noexcept;
             
-            template <typename T2, bool C2> bool operator<=(const NDArray<T2, C2> &ndarray) const noexcept;
+            template <typename T2, bool C2>
+            bool operator<=(const NDArray<T2, C2> &ndarray) const noexcept;
             
-            template <typename T2, bool C2> bool operator>(const NDArray<T2, C2> &ndarray) const noexcept;
+            template <typename T2, bool C2>
+            bool operator>(const NDArray<T2, C2> &ndarray) const noexcept;
             
-            template <typename T2, bool C2> bool operator<(const NDArray<T2, C2> &ndarray) const noexcept;
+            template <typename T2, bool C2>
+            bool operator<(const NDArray<T2, C2> &ndarray) const noexcept;
 
             // string function
             std::string str() const noexcept;

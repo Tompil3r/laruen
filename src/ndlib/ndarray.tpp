@@ -136,14 +136,14 @@ namespace laruen::ndlib {
         this->m_size /= size_ratio;
     }
 
-    template <typename T, bool C> template <typename T2, bool C2, typename ENABLE>
+    template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>::NDArray(const NDArray<T2, C2> &ndarray) noexcept
     : NDArray<T, C>(new T[ndarray.m_size], ndarray)
     {
         this->copy_data_from(ndarray);
     }
 
-    template <typename T, bool C> template <typename T2, bool C2, typename ENABLE>
+    template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>::NDArray(NDArray<T2, C2> &&ndarray) noexcept
     : ArrayBase(std::move(ndarray)), m_data(new T[ndarray.m_size])
     {
@@ -196,7 +196,7 @@ namespace laruen::ndlib {
         return *this;
     }
 
-    template <typename T, bool C> template <typename T2, bool C2, typename ENABLE>
+    template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator=(const NDArray<T2, C2> &ndarray) noexcept {
         if(this->m_size != ndarray.m_size) {
             if(this->m_free_mem) {
@@ -216,7 +216,7 @@ namespace laruen::ndlib {
         return *this;
     }
 
-    template <typename T, bool C> template <typename T2, bool C2, typename ENABLE>
+    template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator=(NDArray<T2, C2> &&ndarray) noexcept {
         this->m_data = new T[ndarray.m_size];
         this->m_shape = std::move(ndarray.m_shape);
