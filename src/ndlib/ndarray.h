@@ -88,6 +88,9 @@ namespace laruen::ndlib {
             void fill(T value) noexcept;
 
             // computational functions on the array
+            template <typename TR, bool CR>
+            NDArray<TR, CR>& max(const Axes &axes, NDArray<TR, CR> &out) const noexcept;
+
             NDArray<T, true> max(const Axes &axes) const noexcept;
             
             T max() const noexcept;
