@@ -38,7 +38,7 @@ namespace laruen::ndlib {
                 return this->m_index < this->m_ndarray.m_size;
             }
 
-            inline T& current() noexcept {
+            inline auto& current() noexcept {
                 return this->m_ndarray.m_data[this->m_index];
             }
 
@@ -87,7 +87,7 @@ namespace laruen::ndlib {
                 return this->m_ndindex[0] < this->m_ndarray.m_shape[0];
             }
 
-            inline T& current() noexcept {
+            inline auto& current() noexcept {
                 return this->m_ndarray.m_data[this->m_index];
             }
 
