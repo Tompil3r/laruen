@@ -5,6 +5,7 @@
 #include "src/ndlib/ndlib_types.h"
 #include "src/ndlib/ndarray.h"
 #include <type_traits>
+#include <utility>
 
 namespace laruen::ndlib {
     template <typename T, bool C> class NDArray;
@@ -22,6 +23,18 @@ namespace laruen::ndlib {
         public:
             NDIter(T &ndarray) noexcept
             : m_ndarray(ndarray), m_index(0)
+            {
+                static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
+            }
+
+            NDIter(T &ndarray, uint_fast64_t index) noexcept
+            : m_ndarray(ndarray), m_index(index)
+            {
+                static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
+            }
+
+            NDIter(T &ndarray, const NDIndex &ndindex) noexcept
+            : m_ndarray(ndarray), m_index(ndarray.ravel_ndindex(ndindex))
             {
                 static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
             }
@@ -56,6 +69,24 @@ namespace laruen::ndlib {
         public:
             NDIter(T &ndarray) noexcept
             : m_ndarray(ndarray), m_index(0), m_ndindex(ndarray.m_ndim, 0)
+            {
+                static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
+            }
+
+            NDIter(T &ndarray, uint_fast64_t index) noexcept
+            : m_ndarray(ndarray), m_index(index), m_ndindex(ndarray.unravel_index(index))
+            {
+                static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
+            }
+
+            NDIter(T &ndarray, const NDIndex &ndindex) noexcept
+            : m_ndarray(ndarray), m_index(ndarray.ravel_ndindex(ndindex)), m_ndindex(ndindex)
+            {
+                static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
+            }
+
+            NDIter(T &ndarray, NDIndex &&ndindex) noexcept
+            : m_ndarray(ndarray), m_index(ndarray.ravel_ndindex(ndindex)), m_ndindex(std::move(ndindex))
             {
                 static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
             }
@@ -101,6 +132,9 @@ namespace laruen::ndlib {
     };
 
     template <typename T> NDIter(T&) -> NDIter<T, T::CONTIGUOUS>;
+    template <typename T> NDIter(T&, uint_fast64_t) -> NDIter<T, T::CONTIGUOUS>;
+    template <typename T> NDIter(T&, const NDIndex&) -> NDIter<T, T::CONTIGUOUS>;
+    template <typename T> NDIter(T&, NDIndex&&) -> NDIter<T, T::CONTIGUOUS>;
 };
 
 #endif
