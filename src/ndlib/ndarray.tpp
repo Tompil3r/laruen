@@ -272,7 +272,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, true> NDArray<T, C>::sum(const Axes &axes) const noexcept {
-        NDArray<T, true> out(*this, ndlib::utils::remaining_axes(axes, this->m_ndim));
+        NDArray<T, true> out(*this, ndlib::utils::compress_axes(axes, this->m_ndim));
         this->sum(axes, out);
         return out;
     }
@@ -312,7 +312,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, true> NDArray<T, C>::max(const Axes &axes) const noexcept {
-        NDArray<T, true> out(*this, ndlib::utils::remaining_axes(axes, this->m_ndim));
+        NDArray<T, true> out(*this, ndlib::utils::compress_axes(axes, this->m_ndim));
         this->max(axes, out);
         return out;
     }
@@ -374,7 +374,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, true> NDArray<T, C>::min(const Axes &axes) const noexcept {
-        NDArray<T, true> out(*this, ndlib::utils::remaining_axes(axes, this->m_ndim));
+        NDArray<T, true> out(*this, ndlib::utils::compress_axes(axes, this->m_ndim));
         this->min(axes, out);
         return out;
     }

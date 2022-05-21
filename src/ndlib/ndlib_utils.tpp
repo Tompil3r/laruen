@@ -38,7 +38,7 @@ namespace laruen::ndlib::utils {
         return lhs.size() >= rhs.size() ? broadcast<true>(lhs, rhs) : broadcast<true>(rhs, lhs);
     }
 
-    Axes remaining_axes(const Axes &axes, uint_fast8_t ndim) {
+    Axes compress_axes(const Axes &axes, uint_fast8_t ndim) {
         Axes result(ndim - axes.size());
         uint_fast8_t ridx = 0;
         uint_fast8_t remaining_axes = -1;

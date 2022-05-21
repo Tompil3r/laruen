@@ -14,7 +14,7 @@ namespace laruen::ndlib::utils {
     template <bool = false>
     Shape broadcast(const Shape&, const Shape&);
 
-    Axes remaining_axes(const Axes &axes, uint_fast8_t ndim);
+    Axes compress_axes(const Axes &axes, uint_fast8_t ndim);
 
     inline uint_fast64_t ceil_index(float64_t index) noexcept {
         return (uint_fast64_t)index + ((uint_fast64_t)index < index);
