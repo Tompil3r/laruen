@@ -428,6 +428,43 @@ namespace laruen::ndlib {
         return min;
     }
 
+    template <typename T, bool C> template <bool CR>
+    NDArray<uint_fast64_t, CR>& NDArray<T, C>::indices_min(const Axes &axes, NDArray<uint_fast64_t, CR> &out) const noexcept {
+        const NDArray<T, false> reorder = this->axes_reorder(axes);
+
+        NDIter out_iter(out);
+        NDIter src_iter(reorder);
+        uint_fast64_t sample_size = reorder.m_size / out.m_size;
+        T min;
+        T current;
+        uint_fast64_t index_min;
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            index_min = src_iter.index();
+            min = src_iter.next();
+            
+            for(uint_fast64_t j = 0;j < sample_size - 1;j++) {
+                current = src_iter.current();
+
+                if(current < min) {
+                    min = current;
+                    index_min = src_iter.index();
+                }
+                src_iter.next();
+            }
+            out_iter.next() = index_min;
+        }
+
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<uint_fast64_t, true> NDArray<T, C>::indices_min(const Axes &axes) const noexcept {
+        NDArray<uint_fast64_t, true> out(*this, ndlib::utils::compress_axes(axes, this->m_ndim));
+        this->indices_min(axes, out);
+        return out;
+    }
+
     template <typename T, bool C>
     uint_fast64_t NDArray<T, C>::index_min() const noexcept {
         NDIter iter(*this);

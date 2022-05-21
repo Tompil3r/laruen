@@ -118,6 +118,11 @@ namespace laruen::ndlib {
 
             T min() const noexcept;
             
+            template <bool CR>
+            NDArray<uint_fast64_t, CR>& indices_min(const Axes &axes, NDArray<uint_fast64_t, CR> &out) const noexcept;
+
+            NDArray<uint_fast64_t, true> indices_min(const Axes &axes) const noexcept;
+
             uint_fast64_t index_min() const noexcept;
             
             NDIndex ndindex_min() const noexcept;
