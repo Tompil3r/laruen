@@ -329,6 +329,43 @@ namespace laruen::ndlib {
         return max;
     }
 
+    template <typename T, bool C> template <bool CR>
+    NDArray<uint_fast64_t, CR>& NDArray<T, C>::indices_max(const Axes &axes, NDArray<uint_fast64_t, CR> &out) const noexcept {
+        NDArray<T, false> reorder = this->axes_reorder(axes);
+
+        NDIter out_iter(out);
+        NDIter src_iter(reorder);
+        uint_fast64_t sample_size = reorder.m_size / out.m_size;
+        T max;
+        T current;
+        uint_fast64_t index_max;
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            max = src_iter.next();
+            index_max = 0;
+            
+            for(uint_fast64_t j = 0;j < sample_size - 1;j++) {
+                current = src_iter.current();
+
+                if(current > max) {
+                    max = current;
+                    index_max = src_iter.index();
+                }
+                src_iter.next();
+            }
+            out_iter.next() = index_max;
+        }
+
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<uint_fast64_t, true> NDArray<T, C>::indices_max(const Axes &axes) const noexcept {
+        NDArray<uint_fast64_t, true> out(*this, ndlib::utils::compress_axes(axes, this->m_ndim));
+        this->indices_max(axes, out);
+        return out;
+    }
+
     template <typename T, bool C>
     uint_fast64_t NDArray<T, C>::index_max() const noexcept {
         NDIter iter(*this);
