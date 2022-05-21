@@ -351,6 +351,34 @@ namespace laruen::ndlib {
         return this->unravel_index(this->index_max());
     }
 
+    template <typename T, bool C> template <typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::min(const Axes &axes, NDArray<TR, CR> &out) const noexcept {
+        NDArray<T, false> reorder = this->axes_reorder(axes);
+
+        NDIter out_iter(out);
+        NDIter this_iter(reorder);
+        uint_fast64_t sample_size = reorder.m_size / out.m_size;
+        T min;
+
+        for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            min = this_iter.next();
+            
+            for(uint_fast64_t j = 0;j < sample_size - 1;j++) {
+                min = math::common::min(min, this_iter.next());
+            }
+            out_iter.next() = min;
+        }
+
+        return out;
+    }
+
+    template <typename T, bool C>
+    NDArray<T, true> NDArray<T, C>::min(const Axes &axes) const noexcept {
+        NDArray<T, true> out(*this, ndlib::utils::remaining_axes(axes, this->m_ndim));
+        this->min(axes, out);
+        return out;
+    }
+
     template <typename T, bool C>
     T NDArray<T, C>::min() const noexcept{
         NDIter iter(*this);
