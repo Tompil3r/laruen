@@ -251,7 +251,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::sum(const Axes &axes, NDArray<TR, CR> &out) const noexcept {
-        NDArray<T, false> reorder = this->axes_reorder(axes);
+        const NDArray<T, false> reorder = this->axes_reorder(axes);
 
         NDIter out_iter(out);
         NDIter this_iter(reorder);
@@ -291,7 +291,7 @@ namespace laruen::ndlib {
 
     template<typename T, bool C> template <typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::max(const Axes &axes, NDArray<TR, CR> &out) const noexcept {
-        NDArray<T, false> reorder = this->axes_reorder(axes);
+        const NDArray<T, false> reorder = this->axes_reorder(axes);
 
         NDIter out_iter(out);
         NDIter this_iter(reorder);
@@ -331,7 +331,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <bool CR>
     NDArray<uint_fast64_t, CR>& NDArray<T, C>::indices_max(const Axes &axes, NDArray<uint_fast64_t, CR> &out) const noexcept {
-        NDArray<T, false> reorder = this->axes_reorder(axes);
+        const NDArray<T, false> reorder = this->axes_reorder(axes);
 
         NDIter out_iter(out);
         NDIter src_iter(reorder);
@@ -390,7 +390,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename TR, bool CR>
     NDArray<TR, CR>& NDArray<T, C>::min(const Axes &axes, NDArray<TR, CR> &out) const noexcept {
-        NDArray<T, false> reorder = this->axes_reorder(axes);
+        const NDArray<T, false> reorder = this->axes_reorder(axes);
 
         NDIter out_iter(out);
         NDIter this_iter(reorder);
