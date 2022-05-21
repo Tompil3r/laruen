@@ -341,8 +341,8 @@ namespace laruen::ndlib {
         uint_fast64_t index_max;
 
         for(uint_fast64_t i = 0;i < out.m_size;i++) {
+            index_max = src_iter.index();
             max = src_iter.next();
-            index_max = 0;
             
             for(uint_fast64_t j = 0;j < sample_size - 1;j++) {
                 current = src_iter.current();
