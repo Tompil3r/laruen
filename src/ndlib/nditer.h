@@ -58,6 +58,14 @@ namespace laruen::ndlib {
             inline const uint_fast64_t& index() const noexcept {
                 return this->m_index;
             }
+
+            inline static NDIter<T, T::CONTIGUOUS> begin(T &ndarray) noexcept {
+                return NDIter(ndarray);
+            }
+
+            inline static NDIter<T, T::CONTIGUOUS> end(T &ndarray) noexcept {
+                return NDIter(ndarray, ndarray.m_size);
+            }
     };
 
     template <typename T>
@@ -128,6 +136,14 @@ namespace laruen::ndlib {
 
             inline const NDIndex& ndindex() const noexcept {
                 return this->m_ndindex;
+            }
+
+            inline static NDIter<T, T::CONTIGUOUS> begin(T &ndarray) noexcept {
+                return NDIter(ndarray);
+            }
+
+            inline static NDIter<T, T::CONTIGUOUS> end(T &ndarray) noexcept {
+                return NDIter(ndarray, ndarray.m_shape);
             }
     };
 
