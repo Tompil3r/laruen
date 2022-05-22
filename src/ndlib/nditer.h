@@ -11,9 +11,7 @@ namespace laruen::ndlib {
     template <typename T, bool C> class NDArray;
 
     template <typename T, bool C = T::CONTIGUOUS>
-    class NDIter {
-        
-    };
+    class NDIter {};
 
     template <typename T>
     class NDIter<T, true> {
@@ -57,14 +55,6 @@ namespace laruen::ndlib {
 
             inline const uint_fast64_t& index() const noexcept {
                 return this->m_index;
-            }
-
-            inline static auto begin(T &ndarray) noexcept {
-                return NDIter(ndarray);
-            }
-
-            inline static auto end(T &ndarray) noexcept {
-                return NDIter(ndarray, ndarray.m_size);
             }
     };
 
@@ -137,15 +127,22 @@ namespace laruen::ndlib {
             inline const NDIndex& ndindex() const noexcept {
                 return this->m_ndindex;
             }
-
-            inline static auto begin(T &ndarray) noexcept {
-                return NDIter(ndarray);
-            }
-
-            inline static auto end(T &ndarray) noexcept {
-                return NDIter(ndarray, ndarray.m_shape);
-            }
     };
+
+    template <typename T>
+    inline auto nditer_begin(T &ndarray) noexcept {
+        return NDIter(ndarray);
+    }
+
+    template <typename T>
+    inline auto nditer_end(T &ndarray) noexcept {
+        if constexpr(T::CONTIGOUOS) {
+            return NDIter(ndarray, ndarray.size());
+        }
+        else {
+            return NDIter(ndarray, ndarray.shape());
+        }
+    }
 
     template <typename T> NDIter(T&) -> NDIter<T, T::CONTIGUOUS>;
     template <typename T> NDIter(T&, uint_fast64_t) -> NDIter<T, T::CONTIGUOUS>;
