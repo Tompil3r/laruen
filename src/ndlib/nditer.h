@@ -59,11 +59,11 @@ namespace laruen::ndlib {
                 return this->m_index;
             }
 
-            inline static NDIter<T, T::CONTIGUOUS> begin(T &ndarray) noexcept {
+            inline static auto begin(T &ndarray) noexcept {
                 return NDIter(ndarray);
             }
 
-            inline static NDIter<T, T::CONTIGUOUS> end(T &ndarray) noexcept {
+            inline static auto end(T &ndarray) noexcept {
                 return NDIter(ndarray, ndarray.m_size);
             }
     };
@@ -138,11 +138,11 @@ namespace laruen::ndlib {
                 return this->m_ndindex;
             }
 
-            inline static NDIter<T, T::CONTIGUOUS> begin(T &ndarray) noexcept {
+            inline static auto begin(T &ndarray) noexcept {
                 return NDIter(ndarray);
             }
 
-            inline static NDIter<T, T::CONTIGUOUS> end(T &ndarray) noexcept {
+            inline static auto end(T &ndarray) noexcept {
                 return NDIter(ndarray, ndarray.m_shape);
             }
     };
