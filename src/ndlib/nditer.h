@@ -136,7 +136,7 @@ namespace laruen::ndlib {
 
     template <typename T>
     inline auto nditer_end(T &ndarray) noexcept {
-        if constexpr(T::CONTIGOUOS) {
+        if constexpr(T::CONTIGUOUS) {
             return NDIter(ndarray, ndarray.size());
         }
         else {
