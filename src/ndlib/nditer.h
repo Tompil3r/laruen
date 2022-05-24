@@ -134,16 +134,6 @@ namespace laruen::ndlib {
         return NDIter(ndarray);
     }
 
-    template <typename T>
-    inline auto nditer_end(T &ndarray) noexcept {
-        if constexpr(T::CONTIGUOUS) {
-            return NDIter(ndarray, ndarray.size());
-        }
-        else {
-            return NDIter(ndarray, ndarray.shape());
-        }
-    }
-
     template <typename T> NDIter(T&) -> NDIter<T, T::CONTIGUOUS>;
     template <typename T> NDIter(T&, uint_fast64_t) -> NDIter<T, T::CONTIGUOUS>;
     template <typename T> NDIter(T&, const NDIndex&) -> NDIter<T, T::CONTIGUOUS>;

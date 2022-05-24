@@ -759,14 +759,6 @@ namespace laruen::ndlib {
                 return nditer_begin(*this);
             }
 
-            inline auto end() noexcept {
-                return nditer_end(*this);
-            }
-
-            inline auto end() const noexcept {
-                return nditer_end(*this);
-            }
-
             friend inline std::ostream& operator<<(std::ostream &stream, const NDArray &ndarray) noexcept {
                 return stream << ndarray.str();
             }
