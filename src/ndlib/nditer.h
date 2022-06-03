@@ -45,6 +45,38 @@ namespace laruen::ndlib {
                 this->m_index = 0;
             }
 
+            inline void move_index_forward(uint_fast8_t axis, uint_fast64_t amount) noexcept {
+                this->m_index += amount * this->m_ndarray.m_strides[axis];  
+            }
+
+            inline void move_index_forward(uint_fast8_t axis, uint_fast64_t amount, uint_fast64_t stride) noexcept {
+                this->m_index += stride;
+            }
+
+            inline void move_index_backward(uint_fast8_t axis, uint_fast64_t amount) noexcept {
+                this->m_index -= amount * this->m_ndarray.m_strides[axis];
+            }
+
+            inline void move_index_backward(uint_fast8_t axis, uint_fast64_t amount, uint_fast64_t stride) noexcept {
+                this->m_index -= stride;
+            }
+            
+            inline void move_index(uint_fast8_t axis, int_fast64_t amount) noexcept {
+                this->m_index += amount * this->m_ndarray.m_strides[axis];
+            }
+
+            inline void move_index(uint_fast8_t axis, int_fast64_t amount, uint_fast64_t stride) noexcept {
+                this->m_index += stride;
+            }
+
+            inline void axis_inc(uint_fast8_t axis) noexcept {
+                this->m_index += this->m_ndarray.m_strides[axis];
+            }
+
+            inline void axis_dec(uint_fast8_t axis) noexcept {
+                this->m_index -= this->m_ndarray.m_strides[axis];
+            }
+
             inline bool has_next() const noexcept {
                 return this->m_index < this->m_ndarray.m_size;
             }
@@ -110,6 +142,46 @@ namespace laruen::ndlib {
                 for(uint_fast8_t i = 0;i < ndim;i++) {
                     this->m_ndindex[i] = 0;
                 }
+            }
+
+            inline void move_index_forward(uint_fast8_t axis, uint_fast64_t amount) noexcept {
+                this->m_index += amount * this->m_ndarray.m_strides[axis];
+                this->m_ndindex[axis] += amount;
+            }
+
+            inline void move_index_forward(uint_fast8_t axis, uint_fast64_t amount, uint_fast64_t stride) noexcept {
+                this->m_index += stride;
+                this->m_ndindex[axis] += amount;
+            }
+
+            inline void move_index_backward(uint_fast8_t axis, uint_fast64_t amount) noexcept {
+                this->m_index -= amount * this->m_ndarray.m_strides[axis];
+                this->m_ndindex[axis] -= amount;
+            }
+
+            inline void move_index_backward(uint_fast8_t axis, uint_fast64_t amount, uint_fast64_t stride) noexcept {
+                this->m_index -= stride;
+                this->m_ndindex[axis] -= amount;
+            }
+            
+            inline void move_index(uint_fast8_t axis, int_fast64_t amount) noexcept {
+                this->m_index += amount * this->m_ndarray.m_strides[axis];
+                this->m_ndindex[axis] += amount;
+            }
+
+            inline void move_index(uint_fast8_t axis, int_fast64_t amount, uint_fast64_t stride) noexcept {
+                this->m_index += stride;
+                this->m_ndindex[axis] += amount;
+            }
+
+            inline void axis_inc(uint_fast8_t axis) noexcept {
+                this->m_index += this->m_ndarray.m_strides[axis];
+                this->m_ndindex[axis]++;
+            }
+
+            inline void axis_dec(uint_fast8_t axis) noexcept {
+                this->m_index -= this->m_ndarray.m_strides[axis];
+                this->m_ndindex[axis]--;
             }
 
             inline bool has_next() const noexcept {
