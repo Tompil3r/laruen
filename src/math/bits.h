@@ -8,22 +8,22 @@ namespace laruen::math::bits {
 
     #if defined(__GNUC__)  // GCC, Clang, ICC
 
-        inline auto lsb(uint64_t n) {
+        inline auto lsb64(uint64_t n) {
             assert(n);
             return __builtin_ctzll(n);
         }
 
-        inline auto lsb(uint32_t n) {
+        inline auto lsb32(uint32_t n) {
             assert(n);
             return __builtin_ctz(n);
         }
 
-        inline auto msb(uint64_t n) {
+        inline auto msb64(uint64_t n) {
             assert(n);
             return ((decltype(__builtin_clzll(n)))(63) ^ __builtin_clzll(n));
         }
 
-        inline auto msb(uint32_t n) {
+        inline auto msb32(uint32_t n) {
             assert(n);
             return ((decltype(__builtin_clz(n)))(31) ^ __builtin_clz(n));
         }
@@ -31,14 +31,14 @@ namespace laruen::math::bits {
     #elif defined(_MSC_VER)  // MSVC
 
         // 32 bit versions for both WIN32 and WIN64
-        inline unsigned long lsb(uint32_t n) {
+        inline unsigned long lsb32(uint32_t n) {
             assert(n);
             unsigned long index;
             _BitScanForward(&index, n);
             return index;
         }
 
-        inline unsigned long msb(uint32_t n) {
+        inline unsigned long msb32(uint32_t n) {
             assert(n);
             unsigned long index;
             _BitScanReverse(&idx, n);
@@ -47,14 +47,14 @@ namespace laruen::math::bits {
 
         #ifdef _WIN64  // MSVC, WIN64
 
-            inline unsigned long lsb(uint64_t n) {
+            inline unsigned long lsb64(uint64_t n) {
                 assert(n);
                 unsigned long index;
                 _BitScanForward64(&index, n);
                 return index;
             }
 
-            inline unsigned long msb(uint64_t n) {
+            inline unsigned long msb64(uint64_t n) {
                 assert(n);
                 unsigned long index;
                 _BitScanReverse64(&idx, n);
@@ -63,7 +63,7 @@ namespace laruen::math::bits {
 
         #else  // MSVC, WIN32
 
-            inline unsigned long lsb(uint64_t n) {
+            inline unsigned long lsb64(uint64_t n) {
                 assert(n);
                 unsigned long index;
                 if(n & 0xFFFFFFFF) {
@@ -76,7 +76,7 @@ namespace laruen::math::bits {
                 }
             }
 
-            inline unsigned long msb(uint64_t n) {
+            inline unsigned long msb64(uint64_t n) {
                 assert(n);
                 unsigned long index;
                 if(n >> 32) {
@@ -93,7 +93,7 @@ namespace laruen::math::bits {
 
     #else  // Compiler is neither GCC nor MSVC compatible
 
-        inline uint_fast8_t lsb(uint64_t n) noexcept {
+        inline uint_fast8_t lsb64(uint64_t n) noexcept {
             constexpr uint_fast8_t debruijn_bitposition[] = {
                 0, 1, 17, 2, 18, 50, 3, 57,
                 47, 19, 22, 51, 29, 4, 33, 58,
@@ -109,7 +109,7 @@ namespace laruen::math::bits {
             return debruijn_bitposition[((n & (-n)) * 0x37E84A99DAE458FULL) >> 58];
         }
         
-        inline uint_fast8_t lsb(uint32_t n) noexcept {
+        inline uint_fast8_t lsb32(uint32_t n) noexcept {
             constexpr uint_fast8_t debruijn_bitposition[] = {
                 0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8, 
                 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
@@ -119,7 +119,7 @@ namespace laruen::math::bits {
             return debruijn_bitposition[((n & (-n)) * 0x077CB531U) >> 27];
         }
 
-        inline uint_fast8_t msb(uint64_t n) noexcept {
+        inline uint_fast8_t msb64(uint64_t n) noexcept {
             constexpr uint8_t debruijn_bitposition[] = {
                 0, 47,  1, 56, 48, 27,  2, 60,
                 57, 49, 41, 37, 28, 16,  3, 61,
@@ -141,7 +141,7 @@ namespace laruen::math::bits {
             return deburijn_bitposition[(n * 0x03F79D71B4CB0A89ULL) >> 58];
         }
 
-        inline uint_fast8_t msb(uint32_t n) noexcept {
+        inline uint_fast8_t msb32(uint32_t n) noexcept {
             constexpr uint_fast8_t debruijn_bitposition[] = {
                 0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
                 8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31
