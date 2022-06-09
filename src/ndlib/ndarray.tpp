@@ -1798,7 +1798,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
-    const NDArray<T2, false> NDArray<T, C>::broadcast_expansion(const NDArray<T2, C2> &rhs) noexcept {
+    const NDArray<T2, false> NDArray<T, C>::broadcast_expansion(const NDArray<T2, C2> &rhs) const noexcept {
         
         NDArray<T2, false> expansion(rhs.m_data, Shape(this->m_shape),
         Strides(this->m_ndim, 0), this->m_size, this->m_ndim, false);

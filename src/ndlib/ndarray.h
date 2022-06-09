@@ -543,7 +543,7 @@ namespace laruen::ndlib {
         private:
             // private utility functions
             template <typename T2, bool C2>
-            const NDArray<T2, false> broadcast_expansion(const NDArray<T2, C2> &rhs) noexcept;
+            const NDArray<T2, false> broadcast_expansion(const NDArray<T2, C2> &rhs) const noexcept;
 
             const NDArray<T, false> axes_reorder(const Axes &axes) const noexcept;
 
