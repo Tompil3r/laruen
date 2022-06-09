@@ -1549,7 +1549,6 @@ namespace laruen::ndlib {
         }
 
         return out;
-        return out;
     }
 
     template <typename T, bool C> template <typename T2, bool C2>
@@ -1654,7 +1653,6 @@ namespace laruen::ndlib {
             out_iter.next() = math::common::pow(lhs_iter.next(), rhs_iter.next());
         }
 
-        return out;
         return out;
     }
 
