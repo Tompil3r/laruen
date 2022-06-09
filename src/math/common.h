@@ -49,6 +49,11 @@ namespace laruen::math::common {
             return math::mutils::ipow(base, exp);
         }
     }
+
+    template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+    inline bool is_pow2(T n) noexcept {
+        return n && !(n & (n - 1));
+    }
 };
 
 #endif
