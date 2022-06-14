@@ -1,6 +1,6 @@
 
-#ifndef RANGE_H
-#define RANGE_H
+#ifndef UTILS_RANGE_H_
+#define UTILS_RANGE_H_
 
 #include <string>
 

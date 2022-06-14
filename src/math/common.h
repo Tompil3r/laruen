@@ -1,6 +1,6 @@
 
-#ifndef MATH_COMMON_H
-#define MATH_COMMON_H
+#ifndef MATH_COMMON_H_
+#define MATH_COMMON_H_
 
 #include "src/math/math_utils.h"
 #include <type_traits>

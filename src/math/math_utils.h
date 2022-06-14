@@ -1,6 +1,6 @@
 
-#ifndef MATH_UTILS_H
-#define MATH_UTILS_H
+#ifndef MATH_UTILS_H_
+#define MATH_UTILS_H_
 
 namespace laruen::math::mutils {
     template <typename T1, typename T2>

@@ -1,6 +1,6 @@
 
-#ifndef NDLIB_TYPES_H
-#define NDLIB_TYPES_H
+#ifndef NDLIB_TYPES_H_
+#define NDLIB_TYPES_H_
 
 #include "src/utils/range.h"
 #include <cstdint>

@@ -1,6 +1,6 @@
 
-#ifndef NDARRAY_UTILS_H
-#define NDARRAY_UTILS_H
+#ifndef NDLIB_UTILS_H_
+#define NDLIB_UTILS_H_
 
 #include "src/ndlib/ndlib_types.h"
 #include "src/math/common.h"

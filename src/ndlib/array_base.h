@@ -1,6 +1,6 @@
 
-#ifndef BASE_ARRAY_H
-#define BASE_ARRAY_H
+#ifndef NDLIB_BASE_ARRAY_H_
+#define NDLIB_BASE_ARRAY_H_
 
 #include "src/ndlib/ndlib_types.h"
 #include <cstdint>

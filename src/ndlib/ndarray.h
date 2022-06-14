@@ -1,6 +1,6 @@
 
-#ifndef NDARRAY_H
-#define NDARRAY_H
+#ifndef NDLIB_NDARRAY_H_
+#define NDLIB_NDARRAY_H_
 
 #include "src/ndlib/ndlib_utils.h"
 #include "src/ndlib/ndlib_types.h"
