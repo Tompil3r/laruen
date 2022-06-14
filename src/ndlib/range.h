@@ -1,10 +1,10 @@
 
-#ifndef UTILS_RANGE_H_
-#define UTILS_RANGE_H_
+#ifndef NDLIB_RANGE_H_
+#define NDLIB_RANGE_H_
 
 #include <string>
 
-namespace laruen::utils {
+namespace laruen::ndlib {
     
     template <typename T> struct Range {
         T start;
@@ -18,5 +18,5 @@ namespace laruen::utils {
     };
 };
 
-#include "src/utils/range.tpp"
+#include "src/ndlib/range.tpp"
 #endif

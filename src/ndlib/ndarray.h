@@ -6,15 +6,13 @@
 #include "src/ndlib/ndlib_types.h"
 #include "src/ndlib/nditer.h"
 #include "src/ndlib/array_base.h"
-#include "src/utils/range.h"
+#include "src/ndlib/range.h"
 #include <vector>
 #include <cstdint>
 #include <cassert>
 #include <string>
 #include <type_traits>
 #include <ostream>
-
-using laruen::utils::Range;
 
 namespace laruen::ndlib {
 

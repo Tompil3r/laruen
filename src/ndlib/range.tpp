@@ -1,11 +1,11 @@
 
 #include "src/ndlib/ndlib_types.h"
-#include "src/utils/range.h"
+#include "src/ndlib/range.h"
 
 #include <cstdint>
 #include <string>
 
-namespace laruen::utils {
+namespace laruen::ndlib {
 
     template <typename T>
     constexpr Range<T>::Range(T end) noexcept {

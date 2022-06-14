@@ -2,14 +2,12 @@
 #ifndef NDLIB_TYPES_H_
 #define NDLIB_TYPES_H_
 
-#include "src/utils/range.h"
+#include "src/ndlib/range.h"
 #include <cstdint>
 #include <vector>
 #include <tuple>
 #include <string>
 #include <cmath>
-
-using namespace laruen::utils;
 
 typedef std::float_t float32_t;
 typedef std::double_t float64_t;
@@ -17,7 +15,7 @@ typedef std::double_t float64_t;
 using Shape = std::vector<uint_fast64_t>;
 using Strides = std::vector<uint_fast64_t>;
 using NDIndex = std::vector<uint_fast64_t>;
-using SliceRanges = std::vector<Range<uint_fast64_t>>;
+using SliceRanges = std::vector<laruen::ndlib::Range<uint_fast64_t>>;
 using Axes = std::vector<uint_fast8_t>;
 
 std::string str(const Shape &shape) noexcept;

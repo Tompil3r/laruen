@@ -3,7 +3,7 @@
 #include "src/ndlib/ndlib_types.h"
 #include "src/ndlib/ndlib_utils.h"
 #include "src/ndlib/nditer.h"
-#include "src/utils/range.h"
+#include "src/ndlib/range.h"
 #include "src/math/common.h"
 #include <cassert>
 #include <ostream>
@@ -15,7 +15,6 @@
 using namespace laruen;
 using namespace laruen::ndlib::utils;
 using namespace laruen::math;
-using laruen::utils::Range;
 
 namespace laruen::ndlib {
 
