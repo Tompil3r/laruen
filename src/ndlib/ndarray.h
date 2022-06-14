@@ -29,7 +29,6 @@ namespace laruen::ndlib {
             T *m_data;
 
         public:
-            typedef ArrayBase Base;
             typedef T DType;
             static constexpr bool CONTIGUOUS = C;
 
@@ -747,7 +746,7 @@ namespace laruen::ndlib {
             }
 
             // more utility functions
-            inline ArrayBase& base() {
+            inline ArrayBase& arraybase() {
                 return *this;
             }
 
