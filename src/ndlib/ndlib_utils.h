@@ -2,7 +2,7 @@
 #ifndef NDLIB_UTILS_H_
 #define NDLIB_UTILS_H_
 
-#include "src/ndlib/ndlib_types.h"
+#include "src/ndlib/types.h"
 #include "src/math/common.h"
 #include <cstdint>
 

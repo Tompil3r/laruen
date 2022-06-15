@@ -1,5 +1,5 @@
 
-#include "src/ndlib/ndlib_types.h"
+#include "src/ndlib/types.h"
 #include "src/ndlib/range.h"
 
 #include <cstdint>

@@ -39,5 +39,5 @@ namespace laruen::ndlib {
     }
 }
 
-#include "src/ndlib/ndlib_types.tpp"
+#include "src/ndlib/types.tpp"
 #endif

@@ -2,7 +2,7 @@
 #ifndef NDLIB_NDITER_H_
 #define NDLIB_NDITER_H_
 
-#include "src/ndlib/ndlib_types.h"
+#include "src/ndlib/types.h"
 #include "src/ndlib/ndarray.h"
 #include <type_traits>
 #include <utility>

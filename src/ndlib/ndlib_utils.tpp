@@ -1,6 +1,6 @@
 
 #include "src/ndlib/ndlib_utils.h"
-#include "src/ndlib/ndlib_types.h"
+#include "src/ndlib/types.h"
 #include "src/math/common.h"
 #include <numeric>
 #include <vector>

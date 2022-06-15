@@ -3,7 +3,7 @@
 #define NDLIB_NDARRAY_H_
 
 #include "src/ndlib/ndlib_utils.h"
-#include "src/ndlib/ndlib_types.h"
+#include "src/ndlib/types.h"
 #include "src/ndlib/nditer.h"
 #include "src/ndlib/array_base.h"
 #include "src/ndlib/range.h"

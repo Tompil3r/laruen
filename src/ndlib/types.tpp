@@ -1,5 +1,5 @@
 
-#include "src/ndlib/ndlib_types.h"
+#include "src/ndlib/types.h"
 #include "src/ndlib/ndarray.h"
 #include <string>
 #include <tuple>
