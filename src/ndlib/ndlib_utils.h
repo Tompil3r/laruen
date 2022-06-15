@@ -6,9 +6,6 @@
 #include "src/math/common.h"
 #include <cstdint>
 
-namespace laruen::ndlib { template <typename T, bool C> class NDArray; }
-using laruen::ndlib::NDArray;
-
 namespace laruen::ndlib::utils {
 
     template <bool = false>
