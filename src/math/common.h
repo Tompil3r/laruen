@@ -22,14 +22,14 @@ namespace laruen::math::common {
     template <typename T1, typename T2>
     inline constexpr auto remainder(T1 lhs, T2 rhs) noexcept {
         if constexpr(std::is_arithmetic_v<T1> && std::is_arithmetic_v<T2>) {
-            if constexpr(std::is_same_v<types::max_type_t<T1, T2>, float>) {
-                return fmodf(lhs, rhs);
+            if constexpr(std::is_same_v<T1, long double> || std::is_same_v<T2, long double>) {
+                return fmodl(lhs, rhs);
             }
-            else if constexpr(std::is_same_v<types::max_type_t<T1, T2>, double>) {
+            else if constexpr(std::is_same_v<T1, double> || std::is_same_v<T2, double>) {
                 return fmod(lhs, rhs);
             }
-            else if constexpr(std::is_same_v<types::max_type_t<T1, T2>, long double>) {
-                return fmodl(lhs, rhs);
+            else if constexpr(std::is_same_v<T1, float> || std::is_same_v<T2, float>) {
+                return fmodf(lhs, rhs);
             }
             else {
                 return lhs % rhs;
