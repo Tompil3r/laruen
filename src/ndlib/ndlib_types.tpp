@@ -9,44 +9,6 @@
 namespace laruen::ndlib { template <typename T, bool C> class NDArray; }
 using laruen::ndlib::NDArray;
 
-// operator<< for Shape is used as operator<< for NDIndex and Strides 
-std::string str(const Shape &shape) noexcept {
-    std::string str;
-
-    uint_fast8_t size = shape.size();
-    str.push_back('(');
-
-    for(uint_fast8_t i = 0;i < size - 1;i++) {
-        str += std::to_string(shape[i]);
-        str.push_back(',');
-        str.push_back(' ');
-    }
-
-    str += std::to_string(shape[size - 1]);
-    str.push_back(')');
-
-    return str;
-}
-
-std::string str(const SliceRanges &slice_ranges) noexcept {
-    std::string str;
-
-    uint_fast8_t size = slice_ranges.size();
-    str.push_back('(');
-
-    for(uint_fast8_t i = 0;i < size - 1;i++) {
-        str += slice_ranges[i].str();
-        str.push_back(',');
-        str.push_back(' ');
-    }
-
-    str += slice_ranges[size - 1].str();
-    str.push_back(')');
-
-    return str;
-}
-
-// ** experimental **
 namespace types {
     template <> struct next_signed<int8_t> { typedef int16_t type; };
     template <> struct next_signed<uint8_t> { typedef int16_t type; };

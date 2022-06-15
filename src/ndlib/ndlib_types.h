@@ -18,10 +18,6 @@ using NDIndex = std::vector<uint_fast64_t>;
 using SliceRanges = std::vector<laruen::ndlib::Range<uint_fast64_t>>;
 using Axes = std::vector<uint_fast8_t>;
 
-std::string str(const Shape &shape) noexcept;
-std::string str(const SliceRanges &slice_ranges) noexcept;
-
-// ** experimental **
 namespace types {
     template <typename T> struct next_signed;
     template <typename T, typename T2> struct max_type;
