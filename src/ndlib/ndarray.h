@@ -2,7 +2,7 @@
 #ifndef NDLIB_NDARRAY_H_
 #define NDLIB_NDARRAY_H_
 
-#include "src/ndlib/ndlib_utils.h"
+#include "src/ndlib/utils.h"
 #include "src/ndlib/types.h"
 #include "src/ndlib/nditer.h"
 #include "src/ndlib/array_base.h"

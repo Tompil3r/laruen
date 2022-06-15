@@ -1,7 +1,7 @@
 
 #include "src/ndlib/ndarray.h"
 #include "src/ndlib/types.h"
-#include "src/ndlib/ndlib_utils.h"
+#include "src/ndlib/utils.h"
 #include "src/ndlib/nditer.h"
 #include "src/ndlib/range.h"
 #include "src/math/common.h"

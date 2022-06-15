@@ -19,5 +19,5 @@ namespace laruen::ndlib::utils {
 }
 
 
-#include "src/ndlib/ndlib_utils.tpp"
+#include "src/ndlib/utils.tpp"
 #endif

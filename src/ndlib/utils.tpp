@@ -1,5 +1,5 @@
 
-#include "src/ndlib/ndlib_utils.h"
+#include "src/ndlib/utils.h"
 #include "src/ndlib/types.h"
 #include "src/math/common.h"
 #include <numeric>
