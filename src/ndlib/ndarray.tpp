@@ -12,10 +12,6 @@
 #include <stdexcept>
 #include <cmath>
 
-using namespace laruen;
-using namespace laruen::ndlib::utils;
-using namespace laruen::math;
-
 namespace laruen::ndlib {
 
     template <typename T, bool C>
@@ -71,7 +67,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, C>::NDArray(const Range<T> &range) noexcept
-    : NDArray<T, C>(Shape{ceil_index((range.end - range.start) / range.step)}) {
+    : NDArray<T, C>(Shape{laruen::ndlib::utils::ceil_index((range.end - range.start) / range.step)}) {
         T value = range.start;
 
         for(uint_fast64_t i = 0;i < this->m_size;i++) {
@@ -84,7 +80,7 @@ namespace laruen::ndlib {
     NDArray<T, C>::NDArray(const Range<T> &range, const Shape &shape)
     : NDArray<T, C>(shape)
     {
-        if(ceil_index((range.end - range.start) / range.step) != this->m_size) {
+        if(laruen::ndlib::utils::ceil_index((range.end - range.start) / range.step) != this->m_size) {
             throw std::invalid_argument("shape size does not match range");
         }
 
@@ -127,7 +123,7 @@ namespace laruen::ndlib {
             size_ratio *= this->m_shape[dim];
             this->m_data += ranges[dim].start * this->m_strides[dim];
             this->m_strides[dim] = this->m_strides[dim] * ranges[dim].step;
-            this->m_shape[dim] = ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
+            this->m_shape[dim] = laruen::ndlib::utils::ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
             size_ratio /= this->m_shape[dim];
         }
 
@@ -270,7 +266,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, true> NDArray<T, C>::sum(const Axes &axes) const noexcept {
-        NDArray<T, true> out(*this, ndlib::utils::compress_axes(axes, this->m_ndim));
+        NDArray<T, true> out(*this, laruen::ndlib::utils::compress_axes(axes, this->m_ndim));
         this->sum(axes, out);
         return out;
     }
@@ -300,7 +296,7 @@ namespace laruen::ndlib {
             max = this_iter.next();
             
             for(uint_fast64_t j = 0;j < sample_size - 1;j++) {
-                max = math::common::max(max, this_iter.next());
+                max = laruen::math::common::max(max, this_iter.next());
             }
             out_iter.next() = max;
         }
@@ -310,7 +306,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, true> NDArray<T, C>::max(const Axes &axes) const noexcept {
-        NDArray<T, true> out(*this, ndlib::utils::compress_axes(axes, this->m_ndim));
+        NDArray<T, true> out(*this, laruen::ndlib::utils::compress_axes(axes, this->m_ndim));
         this->max(axes, out);
         return out;
     }
@@ -321,7 +317,7 @@ namespace laruen::ndlib {
         T max = iter.next();
 
         for(uint_fast64_t i = 1;i < this->m_size;i++) {
-            max = common::max(max, iter.next());
+            max = laruen::math::common::max(max, iter.next());
         }
 
         return max;
@@ -359,7 +355,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<uint_fast64_t, true> NDArray<T, C>::indices_max(const Axes &axes) const noexcept {
-        NDArray<uint_fast64_t, true> out(*this, ndlib::utils::compress_axes(axes, this->m_ndim));
+        NDArray<uint_fast64_t, true> out(*this, laruen::ndlib::utils::compress_axes(axes, this->m_ndim));
         this->indices_max(axes, out);
         return out;
     }
@@ -399,7 +395,7 @@ namespace laruen::ndlib {
             min = this_iter.next();
             
             for(uint_fast64_t j = 0;j < sample_size - 1;j++) {
-                min = math::common::min(min, this_iter.next());
+                min = laruen::math::common::min(min, this_iter.next());
             }
             out_iter.next() = min;
         }
@@ -409,7 +405,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, true> NDArray<T, C>::min(const Axes &axes) const noexcept {
-        NDArray<T, true> out(*this, ndlib::utils::compress_axes(axes, this->m_ndim));
+        NDArray<T, true> out(*this, laruen::ndlib::utils::compress_axes(axes, this->m_ndim));
         this->min(axes, out);
         return out;
     }
@@ -420,7 +416,7 @@ namespace laruen::ndlib {
         T min = iter.next();
 
         for(uint_fast64_t i = 1;i < this->m_size;i++) {
-            min = common::min(min, iter.next());
+            min = laruen::math::common::min(min, iter.next());
         }
 
         return min;
@@ -458,7 +454,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<uint_fast64_t, true> NDArray<T, C>::indices_min(const Axes &axes) const noexcept {
-        NDArray<uint_fast64_t, true> out(*this, ndlib::utils::compress_axes(axes, this->m_ndim));
+        NDArray<uint_fast64_t, true> out(*this, laruen::ndlib::utils::compress_axes(axes, this->m_ndim));
         this->indices_min(axes, out);
         return out;
     }
@@ -575,7 +571,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::add_b(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->add_b(rhs, out);
         return out;
     }
@@ -595,7 +591,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::add_r(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->add_r(rhs, out);
         return out;
     }
@@ -681,7 +677,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::subtract_b(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->subtract_b(rhs, out);
         return out;
     }
@@ -701,7 +697,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::subtract_r(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->subtract_r(rhs, out);
         return out;
     }
@@ -786,7 +782,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::multiply_b(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->multiply_b(rhs, out);
         return out;
     }
@@ -806,7 +802,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::multiply_r(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->multiply_r(rhs);
         return out;
     }
@@ -891,7 +887,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::divide_b(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->divide_b(rhs, out);
         return out;
     }
@@ -911,7 +907,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::divide_r(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->divide_r(rhs, out);
         return out;
     }
@@ -996,7 +992,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::bit_xor_b(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->bit_xor_b(rhs, out);
         return out;
     }
@@ -1016,7 +1012,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::bit_xor_r(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->bit_xor_r(rhs, out);
         return out;
     }
@@ -1101,7 +1097,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::bit_and_b(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->bit_and_b(rhs, out);
         return out;
     }
@@ -1121,7 +1117,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::bit_and_r(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->bit_and_r(rhs, out);
         return out;
     }
@@ -1206,7 +1202,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::bit_or_b(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->bit_or_b(rhs, out);
         return out;
     }
@@ -1226,7 +1222,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::bit_or_r(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->bit_or_r(rhs, out);
         return out;
     }
@@ -1311,7 +1307,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::shl_b(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->shl_b(rhs, out);
         return out;
     }
@@ -1331,7 +1327,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::shl_r(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->shl_r(rhs, out);
         return out;
     }
@@ -1416,7 +1412,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::shr_b(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->shr_b(rhs, out);
         return out;
     }
@@ -1436,7 +1432,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::shr_r(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->shr_r(rhs, out);
         return out;
     }
@@ -1492,7 +1488,7 @@ namespace laruen::ndlib {
         NDIter rhs_iter(rhs);
 
         for(uint_fast64_t i = 0;i < this->m_size;i++) {
-            lhs_iter.next() = math::common::remainder(lhs_iter.current(), rhs_iter.next());
+            lhs_iter.next() = laruen::math::common::remainder(lhs_iter.current(), rhs_iter.next());
         }
 
         return *this;
@@ -1508,7 +1504,7 @@ namespace laruen::ndlib {
         NDIter iter(*this);
 
         for(uint_fast64_t i = 0;i < this->m_size;i++) {
-            iter.next() = math::common::remainder(iter.current(), value);
+            iter.next() = laruen::math::common::remainder(iter.current(), value);
         }
 
         return *this;
@@ -1520,7 +1516,7 @@ namespace laruen::ndlib {
         NDIter out_iter(out);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
-            out_iter.next() = math::common::remainder(this_iter.next(), value);
+            out_iter.next() = laruen::math::common::remainder(this_iter.next(), value);
         }
         
         return out;
@@ -1543,7 +1539,7 @@ namespace laruen::ndlib {
         NDIter out_iter(out);
 
         for(uint_fast64_t i = 0;i < out.m_size;i++) {
-            out_iter.next() = math::common::remainder(lhs_iter.next(), rhs_iter.next());
+            out_iter.next() = laruen::math::common::remainder(lhs_iter.next(), rhs_iter.next());
         }
 
         return out;
@@ -1551,7 +1547,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::remainder_b(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->remainder_b(rhs, out);
         return out;
     }
@@ -1563,7 +1559,7 @@ namespace laruen::ndlib {
         NDIter out_iter(out);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
-            out_iter.next() = math::common::remainder(lhs_iter.next(), rhs_iter.next());
+            out_iter.next() = laruen::math::common::remainder(lhs_iter.next(), rhs_iter.next());
         }
 
         return out;
@@ -1571,7 +1567,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::remainder_r(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->remainder_r(rhs, out);
         return out;
     }
@@ -1597,7 +1593,7 @@ namespace laruen::ndlib {
         NDIter rhs_iter(rhs);
 
         for(uint_fast64_t i = 0;i < this->m_size;i++) {
-            lhs_iter.next() = math::common::pow(lhs_iter.current(), rhs_iter.next());
+            lhs_iter.next() = laruen::math::common::pow(lhs_iter.current(), rhs_iter.next());
         }
 
         return *this;
@@ -1613,7 +1609,7 @@ namespace laruen::ndlib {
         NDIter iter(*this);
 
         for(uint_fast64_t i = 0;i < this->m_size;i++) {
-            iter.next() = math::common::pow(iter.current(), value);
+            iter.next() = laruen::math::common::pow(iter.current(), value);
         }
 
         return *this;
@@ -1625,7 +1621,7 @@ namespace laruen::ndlib {
         NDIter out_iter(out);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
-            out_iter.next() = math::common::pow(this_iter.next(), value);
+            out_iter.next() = laruen::math::common::pow(this_iter.next(), value);
         }
         
         return out;
@@ -1648,7 +1644,7 @@ namespace laruen::ndlib {
         NDIter out_iter(out);
 
         for(uint_fast64_t i = 0;i < out.m_size;i++) {
-            out_iter.next() = math::common::pow(lhs_iter.next(), rhs_iter.next());
+            out_iter.next() = laruen::math::common::pow(lhs_iter.next(), rhs_iter.next());
         }
 
         return out;
@@ -1656,7 +1652,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::power_b(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->power_b(rhs, out);
         return out;
     }
@@ -1668,7 +1664,7 @@ namespace laruen::ndlib {
         NDIter out_iter(out);
 
         for(uint64_t i = 0;i < this->m_size;i++) {
-            out_iter.next() = math::common::pow(lhs_iter.next(), rhs_iter.next());
+            out_iter.next() = laruen::math::common::pow(lhs_iter.next(), rhs_iter.next());
         }
 
         return out;
@@ -1676,7 +1672,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<types::combine_types_t<T, T2>, true> NDArray<T, C>::power_r(const NDArray<T2, C2> &rhs) const {
-        NDArray<types::combine_types_t<T, T2>, true> out(ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
+        NDArray<types::combine_types_t<T, T2>, true> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape), 0);
         this->power_r(rhs, out);
         return out;
     }

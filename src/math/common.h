@@ -6,8 +6,6 @@
 #include <type_traits>
 #include <cmath>
 
-using namespace laruen;
-
 namespace laruen::math::common {
     template <typename T>
     inline constexpr T max(T value1, T value2) noexcept {
@@ -46,7 +44,7 @@ namespace laruen::math::common {
             return std::pow(base, exp);
         }
         else {
-            return math::mutils::ipow(base, exp);
+            return laruen::math::mutils::ipow(base, exp);
         }
     }
 

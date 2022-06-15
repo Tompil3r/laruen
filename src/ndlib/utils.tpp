@@ -6,9 +6,9 @@
 #include <vector>
 #include <cstdint>
 
-using namespace laruen;
-
 namespace laruen::ndlib::utils {
+
+    using laruen::ndlib::Shape, laruen::ndlib::Axes;
 
     template <>
     Shape broadcast<true>(const Shape &lhs, const Shape &rhs) {
@@ -27,7 +27,7 @@ namespace laruen::ndlib::utils {
             if(lval != rval && lval != 1 && rval != 1) {
                 throw std::invalid_argument("shapes cannot be broadcasted");
             }
-            bshape[imax] = math::common::max(lval, rval);
+            bshape[imax] = laruen::math::common::max(lval, rval);
         }
 
         return bshape;
