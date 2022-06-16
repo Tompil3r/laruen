@@ -10,6 +10,7 @@
 #include "src/ndlib/utils.h"
 #include "src/ndlib/nditer.h"
 #include "src/ndlib/range.h"
+#include "src/ndlib/type_selection.h"
 #include "src/math/common.h"
 
 namespace laruen::ndlib {

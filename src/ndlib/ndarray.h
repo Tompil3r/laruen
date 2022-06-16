@@ -13,6 +13,8 @@
 #include "src/ndlib/nditer.h"
 #include "src/ndlib/array_base.h"
 #include "src/ndlib/range.h"
+#include "src/ndlib/type_selection.h"
+
 
 namespace laruen::ndlib {
 

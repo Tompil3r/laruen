@@ -6,6 +6,7 @@
 #include <utility>
 #include "src/ndlib/types.h"
 #include "src/ndlib/ndarray.h"
+#include "src/ndlib/type_selection.h"
 
 namespace laruen::ndlib {
     template <typename T, bool C> class NDArray;

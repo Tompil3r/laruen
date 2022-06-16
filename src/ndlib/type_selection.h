@@ -1,15 +1,17 @@
 
-#include <string>
-#include <tuple>
+#ifndef NDLIB_TYPE_SELECTION_H_
+#define NDLIB_TYPE_SELECTION_H_
+
 #include <cstdint>
 #include <type_traits>
-#include "src/ndlib/types.h"
 #include "src/ndlib/ndarray.h"
 
 namespace laruen::ndlib {
+    // NDArray forward declaration
     template <typename T, bool C> class NDArray;
 
     namespace types {
+        template <typename T> struct next_signed;
         template <> struct next_signed<int8_t> { typedef int16_t type; };
         template <> struct next_signed<uint8_t> { typedef int16_t type; };
         template <> struct next_signed<int16_t> { typedef int32_t type; };
@@ -20,6 +22,7 @@ namespace laruen::ndlib {
         template <> struct next_signed<uint64_t> { typedef float64_t type; };
         template <> struct next_signed<float32_t> { typedef float64_t type; };
         template <> struct next_signed<float64_t> { typedef float64_t type; };
+        template <typename T> using next_signed_t = typename next_signed<T>::type;
 
         template <typename T, typename T2>
         struct max_type {
@@ -27,14 +30,17 @@ namespace laruen::ndlib {
                 std::conditional_t<sizeof(T) >= sizeof(T2), T, T2>,
                 std::conditional_t<std::is_floating_point_v<T>, T, T2>> type;
         };
+        template <typename T, typename T2> using max_type_t = typename max_type<T, T2>::type;
 
         template <typename T, typename T2> struct float_type {
             typedef std::conditional_t<std::is_floating_point_v<T>, T, T2> type;
         };
+        template <typename T, typename T2> using float_type_t = typename float_type<T, T2>::type;
 
         template <typename T, typename T2> struct integer_type {
             typedef std::conditional_t<std::is_integral_v<T>, T, T2> type;
         };
+        template <typename T, typename T2> using integer_type_t = typename integer_type<T, T2>::type;
 
         template <typename T, typename T2>
         struct combine_types {
@@ -73,10 +79,12 @@ namespace laruen::ndlib {
                 // sub group b2 - the size of the integer type is smaller than the size of the float type
                 max_type_t<T, T2>>> type;
         };
-    
+        template <typename T, typename T2> using combine_types_t = typename combine_types<T, T2>::type;
+
         template <typename T> struct is_ndarray {
             static constexpr bool value = false;
         };
+        template <typename T> inline constexpr bool is_ndarray_v = is_ndarray<T>::value;
 
         template <typename T, bool C> struct is_ndarray<NDArray<T, C>> {
             static constexpr bool value = true;
@@ -85,5 +93,10 @@ namespace laruen::ndlib {
         template <typename T, bool C> struct is_ndarray<const NDArray<T, C>> {
             static constexpr bool value = true;
         };
+
+        template <typename T, typename T2> inline constexpr bool both_integers_v = (std::is_integral_v<T> && std::is_integral_v<T2>);
+        template <typename T, typename T2> inline constexpr bool atleast_one_float_v = (std::is_floating_point_v<T> || std::is_floating_point_v<T2>);
     }
 }
+
+#endif
