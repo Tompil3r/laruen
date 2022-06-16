@@ -16,7 +16,7 @@ namespace laruen::ndlib {
     using Shape = std::vector<uint_fast64_t>;
     using Strides = std::vector<uint_fast64_t>;
     using NDIndex = std::vector<uint_fast64_t>;
-    using SliceRanges = std::vector<laruen::ndlib::Range<uint_fast64_t>>;
+    using SliceRanges = std::vector<Range<uint_fast64_t>>;
     using Axes = std::vector<uint_fast8_t>;
 
     namespace types {
