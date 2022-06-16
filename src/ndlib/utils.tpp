@@ -1,10 +1,9 @@
 
+#include <numeric>
+#include <cstdint>
 #include "src/ndlib/utils.h"
 #include "src/ndlib/types.h"
 #include "src/math/common.h"
-#include <numeric>
-#include <vector>
-#include <cstdint>
 
 namespace laruen::ndlib::utils {
 

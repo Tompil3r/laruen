@@ -2,12 +2,12 @@
 #ifndef NDLIB_TYPES_H_
 #define NDLIB_TYPES_H_
 
-#include "src/ndlib/range.h"
 #include <cstdint>
 #include <vector>
 #include <tuple>
 #include <string>
 #include <cmath>
+#include "src/ndlib/range.h"
 
 namespace laruen::ndlib {
     using float32_t = std::float_t;

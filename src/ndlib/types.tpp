@@ -1,10 +1,10 @@
 
-#include "src/ndlib/types.h"
-#include "src/ndlib/ndarray.h"
 #include <string>
 #include <tuple>
 #include <cstdint>
 #include <type_traits>
+#include "src/ndlib/types.h"
+#include "src/ndlib/ndarray.h"
 
 namespace laruen::ndlib {
     template <typename T, bool C> class NDArray;

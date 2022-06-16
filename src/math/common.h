@@ -2,9 +2,9 @@
 #ifndef MATH_COMMON_H_
 #define MATH_COMMON_H_
 
-#include "src/math/utils.h"
 #include <type_traits>
 #include <cmath>
+#include "src/math/utils.h"
 
 namespace laruen::math::common {
     template <typename T>

@@ -2,12 +2,12 @@
 #ifndef NDLIB_BASE_ARRAY_H_
 #define NDLIB_BASE_ARRAY_H_
 
-#include "src/ndlib/types.h"
 #include <cstdint>
 #include <utility>
 #include <stdexcept>
 #include <string>
 #include <ostream>
+#include "src/ndlib/types.h"
 
 namespace laruen::ndlib {
 

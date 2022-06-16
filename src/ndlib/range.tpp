@@ -1,9 +1,8 @@
 
-#include "src/ndlib/types.h"
-#include "src/ndlib/range.h"
-
 #include <cstdint>
 #include <string>
+#include "src/ndlib/types.h"
+#include "src/ndlib/range.h"
 
 namespace laruen::ndlib {
 

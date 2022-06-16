@@ -2,10 +2,10 @@
 #ifndef NDLIB_NDITER_H_
 #define NDLIB_NDITER_H_
 
-#include "src/ndlib/types.h"
-#include "src/ndlib/ndarray.h"
 #include <type_traits>
 #include <utility>
+#include "src/ndlib/types.h"
+#include "src/ndlib/ndarray.h"
 
 namespace laruen::ndlib {
     template <typename T, bool C> class NDArray;

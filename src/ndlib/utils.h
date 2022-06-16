@@ -2,9 +2,9 @@
 #ifndef NDLIB_UTILS_H_
 #define NDLIB_UTILS_H_
 
+#include <cstdint>
 #include "src/ndlib/types.h"
 #include "src/math/common.h"
-#include <cstdint>
 
 namespace laruen::ndlib::utils {
 

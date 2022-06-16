@@ -2,17 +2,17 @@
 #ifndef NDLIB_NDARRAY_H_
 #define NDLIB_NDARRAY_H_
 
-#include "src/ndlib/utils.h"
-#include "src/ndlib/types.h"
-#include "src/ndlib/nditer.h"
-#include "src/ndlib/array_base.h"
-#include "src/ndlib/range.h"
 #include <vector>
 #include <cstdint>
 #include <cassert>
 #include <string>
 #include <type_traits>
 #include <ostream>
+#include "src/ndlib/utils.h"
+#include "src/ndlib/types.h"
+#include "src/ndlib/nditer.h"
+#include "src/ndlib/array_base.h"
+#include "src/ndlib/range.h"
 
 namespace laruen::ndlib {
 

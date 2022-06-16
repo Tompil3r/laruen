@@ -1,16 +1,16 @@
 
-#include "src/ndlib/ndarray.h"
-#include "src/ndlib/types.h"
-#include "src/ndlib/utils.h"
-#include "src/ndlib/nditer.h"
-#include "src/ndlib/range.h"
-#include "src/math/common.h"
 #include <cassert>
 #include <ostream>
 #include <cstdint>
 #include <utility>
 #include <stdexcept>
 #include <cmath>
+#include "src/ndlib/ndarray.h"
+#include "src/ndlib/types.h"
+#include "src/ndlib/utils.h"
+#include "src/ndlib/nditer.h"
+#include "src/ndlib/range.h"
+#include "src/math/common.h"
 
 namespace laruen::ndlib {
 
