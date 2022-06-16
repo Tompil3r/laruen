@@ -43,7 +43,7 @@ namespace laruen::ndlib {
         template <typename T, typename T2> using integer_type_t = typename integer_type<T, T2>::type;
 
         template <typename T, typename T2>
-        struct combine_types {
+        struct result_type {
         /*
             code simplification:
             if(is_int(T) == is_int(T2)) {
@@ -79,7 +79,7 @@ namespace laruen::ndlib {
                 // sub group b2 - the size of the integer type is smaller than the size of the float type
                 max_type_t<T, T2>>> type;
         };
-        template <typename T, typename T2> using combine_types_t = typename combine_types<T, T2>::type;
+        template <typename T, typename T2> using result_type_t = typename result_type<T, T2>::type;
 
         template <typename T> struct is_ndarray {
             static constexpr bool value = false;

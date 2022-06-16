@@ -156,19 +156,19 @@ namespace laruen::ndlib {
             NDArray<TR, CR>& add_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> add_b(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> add_b(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& add_r(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> add_r(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> add_r(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& add(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> add(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> add(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2>
             NDArray& subtract_eq_b(const NDArray<T2, C2> &rhs);
@@ -190,19 +190,19 @@ namespace laruen::ndlib {
             NDArray<TR, CR>& subtract_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> subtract_b(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> subtract_b(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& subtract_r(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> subtract_r(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> subtract_r(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& subtract(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> subtract(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> subtract(const NDArray<T2, C2> &rhs) const;
             
             template <typename T2, bool C2>
             NDArray& multiply_eq_b(const NDArray<T2, C2> &rhs);
@@ -224,19 +224,19 @@ namespace laruen::ndlib {
             NDArray<TR, CR>& multiply_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> multiply_b(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> multiply_b(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& multiply_r(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> multiply_r(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> multiply_r(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& multiply(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> multiply(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> multiply(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2>
             NDArray& divide_eq_b(const NDArray<T2, C2> &rhs);
@@ -258,19 +258,19 @@ namespace laruen::ndlib {
             NDArray<TR, CR>& divide_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> divide_b(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> divide_b(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& divide_r(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> divide_r(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> divide_r(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& divide(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> divide(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> divide(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2>
             NDArray& bit_xor_eq_b(const NDArray<T2, C2> &rhs);
@@ -292,19 +292,19 @@ namespace laruen::ndlib {
             NDArray<TR, CR>& bit_xor_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> bit_xor_b(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> bit_xor_b(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& bit_xor_r(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> bit_xor_r(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> bit_xor_r(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& bit_xor(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> bit_xor(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> bit_xor(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2>
             NDArray& bit_and_eq_b(const NDArray<T2, C2> &rhs);
@@ -326,19 +326,19 @@ namespace laruen::ndlib {
             NDArray<TR, CR>& bit_and_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> bit_and_b(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> bit_and_b(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& bit_and_r(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> bit_and_r(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> bit_and_r(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& bit_and(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> bit_and(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> bit_and(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2>
             NDArray& bit_or_eq_b(const NDArray<T2, C2> &rhs);
@@ -360,19 +360,19 @@ namespace laruen::ndlib {
             NDArray<TR, CR>& bit_or_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> bit_or_b(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> bit_or_b(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& bit_or_r(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> bit_or_r(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> bit_or_r(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& bit_or(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> bit_or(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> bit_or(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2>
             NDArray& shl_eq_b(const NDArray<T2, C2> &rhs);
@@ -394,19 +394,19 @@ namespace laruen::ndlib {
             NDArray<TR, CR>& shl_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> shl_b(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> shl_b(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& shl_r(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> shl_r(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> shl_r(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& shl(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> shl(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> shl(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2>
             NDArray& shr_eq_b(const NDArray<T2, C2> &rhs);
@@ -428,19 +428,19 @@ namespace laruen::ndlib {
             NDArray<TR, CR>& shr_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> shr_b(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> shr_b(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& shr_r(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> shr_r(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> shr_r(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& shr(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> shr(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> shr(const NDArray<T2, C2> &rhs) const;
 
             NDArray& bit_not_eq() noexcept;
 
@@ -469,19 +469,19 @@ namespace laruen::ndlib {
             NDArray<TR, CR>& remainder_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> remainder_b(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> remainder_b(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& remainder_r(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> remainder_r(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> remainder_r(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& remainder(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> remainder(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> remainder(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2>
             NDArray& power_eq_b(const NDArray<T2, C2> &rhs);
@@ -503,19 +503,19 @@ namespace laruen::ndlib {
             NDArray<TR, CR>& power_b(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> power_b(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> power_b(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& power_r(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> power_r(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> power_r(const NDArray<T2, C2> &rhs) const;
 
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& power(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const;
 
             template <typename T2, bool C2>
-            NDArray<types::combine_types_t<T, T2>, true> power(const NDArray<T2, C2> &rhs) const;
+            NDArray<types::result_type_t<T, T2>, true> power(const NDArray<T2, C2> &rhs) const;
 
             // bool operators between arrays
             template <typename T2, bool C2>
