@@ -2,7 +2,7 @@
 #ifndef MATH_COMMON_H_
 #define MATH_COMMON_H_
 
-#include "src/math/math_utils.h"
+#include "src/math/utils.h"
 #include <type_traits>
 #include <cmath>
 
@@ -44,7 +44,7 @@ namespace laruen::math::common {
             return std::pow(base, exp);
         }
         else {
-            return laruen::math::mutils::ipow(base, exp);
+            return laruen::math::utils::ipow(base, exp);
         }
     }
 
