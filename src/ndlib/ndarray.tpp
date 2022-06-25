@@ -17,7 +17,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, C>::~NDArray() {
-        if(this->m_free_mem) {
+        if(!this->m_base) {
             delete[] this->m_data;
         }
     }
@@ -27,13 +27,13 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, C>::NDArray(T *data, const Shape &shape, const Strides &strides,
-    uint_fast64_t size, uint_fast8_t ndim, bool free_mem) noexcept
-    : ArrayBase(shape, strides, size, ndim, free_mem), m_data(data) {}
+    uint_fast64_t size, uint_fast8_t ndim, const NDArray<T, true> *base) noexcept
+    : ArrayBase(shape, strides, size, ndim), m_data(data), m_base(base) {}
 
     template <typename T, bool C>
     NDArray<T, C>::NDArray(T *data, Shape &&shape, Strides &&strides,
-    uint_fast64_t size, uint_fast8_t ndim, bool free_mem) noexcept
-    : ArrayBase(std::move(shape), std::move(strides), size, ndim, free_mem), m_data(data) {}
+    uint_fast64_t size, uint_fast8_t ndim, const NDArray<T, true> *base) noexcept
+    : ArrayBase(std::move(shape), std::move(strides), size, ndim), m_data(data), m_base(base) {}
 
     template <typename T, bool C>
     NDArray<T, C>::NDArray(const Shape &shape) noexcept
@@ -45,12 +45,8 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(T *data, const ArrayBase &base) noexcept
-    : ArrayBase(base), m_data(data) {}
-    
-    template <typename T, bool C>
-    NDArray<T, C>::NDArray(T *data, const ArrayBase &base, bool free_mem) noexcept
-    : ArrayBase(base, free_mem), m_data(data) {}
+    NDArray<T, C>::NDArray(T *data, const ArrayBase &arraybase, const NDArray<T, true> *base) noexcept
+    : ArrayBase(arraybase), m_data(data), m_base(base) {}
 
     template <typename T, bool C>
     NDArray<T, C>::NDArray(const NDArray<T, C> &ndarray) noexcept
@@ -94,15 +90,15 @@ namespace laruen::ndlib {
     }
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(const ArrayBase &base, const Axes &axes) noexcept
-    : ArrayBase(axes.size(), true, axes.size() > 0)
+    NDArray<T, C>::NDArray(const ArrayBase &arraybase, const Axes &axes) noexcept
+    : ArrayBase(axes.size(), axes.size() > 0)
     {
         uint_fast8_t axis;
         uint_fast64_t stride = 1;
 
         for(uint_fast8_t i = this->m_ndim;i-- > 0;) {
             axis = axes[i];
-            this->m_shape[i] = base.m_shape[axis];
+            this->m_shape[i] = arraybase.m_shape[axis];
             this->m_strides[i] = stride;
             this->m_size *= this->m_shape[i];
             stride *= this->m_shape[i];
@@ -113,7 +109,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <bool C2>
     NDArray<T, C>::NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges) noexcept
-    : NDArray<T, C>(ndarray.m_data, ndarray, false)
+    : NDArray<T, C>(ndarray.m_data, ndarray, C2 ? &ndarray : ndarray.m_base)
     {
         static_assert(!C, "cannot create sliced array with non-sliced type");
 
@@ -152,7 +148,7 @@ namespace laruen::ndlib {
         }
 
         if(this->m_size != ndarray.m_size) {
-            if(this->m_free_mem) {
+            if(!this->m_base) {
                 delete[] this->m_data;
             }
             this->m_data = new T[ndarray.m_size];
@@ -162,7 +158,7 @@ namespace laruen::ndlib {
         this->m_strides = ndarray.m_strides;
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
-        this->m_free_mem = true;
+        // this->m_free_mem = true; // check this
 
         this->copy_data_from(ndarray);
 
@@ -175,7 +171,7 @@ namespace laruen::ndlib {
             return *this;
         }
 
-        if(this->m_free_mem) {
+        if(!this->m_base) {
             delete[] this->m_data;
         }
         
@@ -183,7 +179,7 @@ namespace laruen::ndlib {
         this->m_strides = std::move(ndarray.m_strides);
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
-        this->m_free_mem = ndarray.m_free_mem;
+        // this->m_free_mem = ndarray.m_free_mem; // check this
         
         this->m_data = ndarray.m_data;
         ndarray.m_data = nullptr;
@@ -194,7 +190,7 @@ namespace laruen::ndlib {
     template <typename T, bool C> template <typename T2, bool C2>
     NDArray<T, C>& NDArray<T, C>::operator=(const NDArray<T2, C2> &ndarray) noexcept {
         if(this->m_size != ndarray.m_size) {
-            if(this->m_free_mem) {
+            if(!this->m_base) {
                 delete[] this->m_data;
             }
             this->m_data = new T[ndarray.m_size];
@@ -204,7 +200,7 @@ namespace laruen::ndlib {
         this->m_strides = ndarray.m_strides;
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
-        this->m_free_mem = true;
+        // this->m_free_mem = true; // check this
 
         this->copy_data_from(ndarray);
 
@@ -218,7 +214,7 @@ namespace laruen::ndlib {
         this->m_strides = std::move(ndarray.m_strides);
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
-        this->m_free_mem = true;
+        // this->m_free_mem = true; // check this
 
         this->copy_data_from(ndarray);
 
@@ -1796,7 +1792,7 @@ namespace laruen::ndlib {
     const NDArray<T2, false> NDArray<T, C>::broadcast_expansion(const NDArray<T2, C2> &rhs) const noexcept {
         
         NDArray<T2, false> expansion(rhs.m_data, Shape(this->m_shape),
-        Strides(this->m_ndim, 0), this->m_size, this->m_ndim, false);
+        Strides(this->m_ndim, 0), this->m_size, this->m_ndim, C2 ? &rhs : rhs.m_base);
         
         uint_fast8_t lidx = this->m_ndim - rhs.m_ndim;
 
@@ -1813,7 +1809,7 @@ namespace laruen::ndlib {
     template <typename T, bool C>
     const NDArray<T, false> NDArray<T, C>::axes_reorder(const Axes &axes) const noexcept {
         NDArray<T, false> reorder(this->m_data, Shape(this->m_ndim), Strides(this->m_ndim),
-        this->m_size, this->m_ndim, false);
+        this->m_size, this->m_ndim, C ? this : this->m_base);
 
         uint_fast8_t axes_added = 0;
         uint_fast8_t dest_idx = reorder.m_ndim - 1;

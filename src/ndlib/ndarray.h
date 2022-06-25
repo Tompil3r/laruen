@@ -27,6 +27,7 @@ namespace laruen::ndlib {
 
         private:
             T *m_data;
+            const NDArray<T, true> *m_base = nullptr;
 
         public:
             typedef T DType;
@@ -38,18 +39,16 @@ namespace laruen::ndlib {
             NDArray() noexcept;
 
             NDArray(T *data, const Shape &shape, const Strides &strides,
-            uint_fast64_t size, uint_fast8_t ndim, bool free_mem) noexcept;
+            uint_fast64_t size, uint_fast8_t ndim, const NDArray<T, true> *base = nullptr) noexcept;
 
             NDArray(T *data, Shape &&shape, Strides &&strides,
-            uint_fast64_t size, uint_fast8_t ndim, bool free_mem) noexcept;
+            uint_fast64_t size, uint_fast8_t ndim, const NDArray<T, true> *base = nullptr) noexcept;
             
             NDArray(const Shape &shape) noexcept;
             
             NDArray(const Shape &shape, T value) noexcept;
             
-            NDArray(T *data, const ArrayBase &base) noexcept;
-            
-            NDArray(T *data, const ArrayBase &base, bool free_mem) noexcept;
+            NDArray(T *data, const ArrayBase &arraybase, const NDArray<T, true> *base = nullptr) noexcept;
             
             NDArray(const NDArray &ndarray) noexcept;
             
@@ -59,7 +58,7 @@ namespace laruen::ndlib {
             
             NDArray(const Range<T> &range, const Shape &shape);
             
-            NDArray(const ArrayBase &base, const Axes &axes) noexcept;
+            NDArray(const ArrayBase &arraybase, const Axes &axes) noexcept;
             
             template <bool C2>
             NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges) noexcept;
@@ -550,6 +549,14 @@ namespace laruen::ndlib {
             // getters
             inline const T* data() const noexcept {
                 return this->m_data;
+            }
+
+            inline T* data() noexcept {
+                return this->m_data;
+            }
+
+            inline const NDArray<T, true>* base() const noexcept {
+                return this->m_base;
             }
 
             inline T& operator[](uint_fast64_t index) noexcept {

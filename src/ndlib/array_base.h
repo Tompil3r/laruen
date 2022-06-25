@@ -19,25 +19,24 @@ namespace laruen::ndlib {
             Strides m_strides;
             uint_fast64_t m_size;
             uint_fast8_t m_ndim;
-            bool m_free_mem;
 
 
         public:
             ArrayBase() noexcept = default;
 
             ArrayBase(const Shape &shape, const Strides &strides, uint_fast64_t size,
-            uint_fast8_t ndim, bool free_mem) noexcept
-            : m_shape(shape), m_strides(strides), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
+            uint_fast8_t ndim) noexcept
+            : m_shape(shape), m_strides(strides), m_size(size), m_ndim(ndim) {}
 
             ArrayBase(Shape &&shape, Strides &&strides, uint_fast64_t size,
-            uint_fast8_t ndim, bool free_mem) noexcept
-            : m_shape(std::move(shape)), m_strides(std::move(strides)), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
+            uint_fast8_t ndim) noexcept
+            : m_shape(std::move(shape)), m_strides(std::move(strides)), m_size(size), m_ndim(ndim) {}
 
-            ArrayBase(uint_fast8_t ndim, bool free_mem = true, uint_fast64_t size = 0) noexcept
-            : m_shape(ndim), m_strides(ndim), m_size(size), m_ndim(ndim), m_free_mem(free_mem) {}
+            ArrayBase(uint_fast8_t ndim, uint_fast64_t size = 0) noexcept
+            : m_shape(ndim), m_strides(ndim), m_size(size), m_ndim(ndim) {}
 
-            ArrayBase(const Shape &shape, bool free_mem = true) noexcept
-            : m_shape(shape), m_strides(shape.size()), m_ndim(shape.size()), m_free_mem(free_mem)
+            ArrayBase(const Shape &shape) noexcept
+            : m_shape(shape), m_strides(shape.size()), m_ndim(shape.size())
             {
                 uint_fast64_t stride = 1;
                 this->m_size = (this->m_ndim > 0);
@@ -48,10 +47,6 @@ namespace laruen::ndlib {
                     stride *= shape[dim];
                 }
             }
-
-            ArrayBase(const ArrayBase &base, bool free_mem) noexcept
-            : m_shape(base.m_shape), m_strides(base.m_strides), m_size(base.m_size),
-            m_ndim(base.m_ndim), m_free_mem(free_mem) {}
 
             void reshape(const Shape &shape) {
                 uint_fast64_t prev_size = this->m_size;
@@ -164,14 +159,6 @@ namespace laruen::ndlib {
 
             inline const uint_fast8_t& ndim() const noexcept {
                 return this->m_ndim;
-            }
-
-            inline const bool& free_mem() const noexcept {
-                return this->m_free_mem;
-            }
-
-            inline void modify_mem_release(bool free_mem) noexcept {
-                this->m_free_mem = free_mem;
             }
 
             friend inline std::ostream& operator<<(std::ostream &stream, const ArrayBase &base) noexcept {
