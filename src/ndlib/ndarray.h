@@ -770,6 +770,15 @@ namespace laruen::ndlib {
                 return nditer_begin(*this);
             }
 
+            inline const NDArray<T, true>* forward_base() const noexcept {
+                if constexpr(C) {
+                    return this;
+                }
+                else {
+                    return this->m_base;
+                }
+            }
+
             friend inline std::ostream& operator<<(std::ostream &stream, const NDArray &ndarray) noexcept {
                 return stream << ndarray.str();
             }

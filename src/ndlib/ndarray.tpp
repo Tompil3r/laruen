@@ -43,7 +43,7 @@ namespace laruen::ndlib {
     : NDArray<T>(shape)
     {
         assert(init_list.size() == this->m_size);
-        
+
         NDIter iter(*this);
 
         for(const T *list_ptr = init_list.begin();list_ptr != init_list.end();list_ptr++) {
@@ -135,7 +135,7 @@ namespace laruen::ndlib {
 
     template <typename T, bool C> template <bool C2>
     NDArray<T, C>::NDArray(NDArray<T, C2> &ndarray, const SliceRanges &ranges) noexcept
-    : NDArray<T, C>(ndarray.m_data, ndarray, C2 ? &ndarray : ndarray.m_base)
+    : NDArray<T, C>(ndarray.m_data, ndarray, ndarray.forward_base())
     {
         static_assert(!C, "cannot create sliced array with non-sliced type");
 
@@ -1818,7 +1818,7 @@ namespace laruen::ndlib {
     const NDArray<T2, false> NDArray<T, C>::broadcast_expansion(const NDArray<T2, C2> &rhs) const noexcept {
         
         NDArray<T2, false> expansion(rhs.m_data, Shape(this->m_shape),
-        Strides(this->m_ndim, 0), this->m_size, this->m_ndim, C2 ? &rhs : rhs.m_base);
+        Strides(this->m_ndim, 0), this->m_size, this->m_ndim, rhs.forward_base());
         
         uint_fast8_t lidx = this->m_ndim - rhs.m_ndim;
 
