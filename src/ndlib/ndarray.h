@@ -8,6 +8,7 @@
 #include <string>
 #include <type_traits>
 #include <ostream>
+#include <initializer_list>
 #include "src/ndlib/utils.h"
 #include "src/ndlib/types.h"
 #include "src/ndlib/nditer.h"
@@ -37,6 +38,10 @@ namespace laruen::ndlib {
 
             // constructors and assignment operators
             NDArray() noexcept;
+
+            NDArray(std::initializer_list<T> init_list) noexcept;
+
+            NDArray(std::initializer_list<T> init_list, const Shape &shape) noexcept;
 
             NDArray(T *data, const Shape &shape, const Strides &strides,
             uint_fast64_t size, uint_fast8_t ndim, const NDArray<T, true> *base = nullptr) noexcept;

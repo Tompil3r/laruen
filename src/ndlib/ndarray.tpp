@@ -5,6 +5,7 @@
 #include <utility>
 #include <stdexcept>
 #include <cmath>
+#include <initializer_list>
 #include "src/ndlib/ndarray.h"
 #include "src/ndlib/types.h"
 #include "src/ndlib/utils.h"
@@ -24,6 +25,31 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, C>::NDArray() noexcept : ArrayBase(), m_data(nullptr) {}
+
+    template <typename T, bool C>
+    NDArray<T, C>::NDArray(std::initializer_list<T> init_list) noexcept
+    : ArrayBase(Shape{init_list.size()}, Strides{1}, init_list.size(), 1),
+    m_data(new T[init_list.size()])
+    {
+        NDIter iter(*this);
+
+        for(const T *list_ptr = init_list.begin();list_ptr != init_list.end();list_ptr++) {
+            iter.next() = *list_ptr;
+        }
+    }
+
+    template <typename T, bool C>
+    NDArray<T, C>::NDArray(std::initializer_list<T> init_list, const Shape &shape) noexcept
+    : NDArray<T>(shape)
+    {
+        assert(init_list.size() == this->m_size);
+        
+        NDIter iter(*this);
+
+        for(const T *list_ptr = init_list.begin();list_ptr != init_list.end();list_ptr++) {
+            iter.next() = *list_ptr;
+        }
+    }
 
     template <typename T, bool C>
     NDArray<T, C>::NDArray(T *data, const Shape &shape, const Strides &strides,
