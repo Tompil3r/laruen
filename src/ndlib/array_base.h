@@ -35,7 +35,7 @@ namespace laruen::ndlib {
             ArrayBase(uint_fast8_t ndim, uint_fast64_t size = 0) noexcept
             : m_shape(ndim), m_strides(ndim), m_size(size), m_ndim(ndim) {}
 
-            ArrayBase(const Shape &shape) noexcept
+            explicit ArrayBase(const Shape &shape) noexcept
             : m_shape(shape), m_strides(shape.size()), m_ndim(shape.size())
             {
                 uint_fast64_t stride = 1;

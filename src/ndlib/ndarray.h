@@ -49,7 +49,7 @@ namespace laruen::ndlib {
             NDArray(T *data, Shape &&shape, Strides &&strides,
             uint_fast64_t size, uint_fast8_t ndim, const NDArray<T, true> *base = nullptr) noexcept;
             
-            NDArray(const Shape &shape) noexcept;
+            explicit NDArray(const Shape &shape) noexcept;
             
             NDArray(const Shape &shape, T value) noexcept;
             
@@ -59,7 +59,7 @@ namespace laruen::ndlib {
             
             NDArray(NDArray &&ndarray) noexcept;
             
-            NDArray(const Range<T> &range) noexcept;
+            explicit NDArray(const Range<T> &range) noexcept;
             
             NDArray(const Range<T> &range, const Shape &shape);
             
