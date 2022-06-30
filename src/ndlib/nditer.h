@@ -111,28 +111,33 @@ namespace laruen::ndlib {
         T &m_ndarray;
         uint_fast64_t m_index;
         NDIndex m_ndindex;
+        const Strides &m_single_strides;
 
         public:
             NDIter(T &ndarray) noexcept
-            : m_ndarray(ndarray), m_index(0), m_ndindex(ndarray.m_ndim, 0)
+            : m_ndarray(ndarray), m_index(0), m_ndindex(ndarray.m_ndim, 0),
+            m_single_strides(ndarray.forward_base()->strides())
             {
                 static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
             }
 
             NDIter(T &ndarray, uint_fast64_t index) noexcept
-            : m_ndarray(ndarray), m_index(index), m_ndindex(ndarray.unravel_index(index))
+            : m_ndarray(ndarray), m_index(index), m_ndindex(ndarray.unravel_index(index)),
+            m_single_strides(ndarray.forward_base()->strides())
             {
                 static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
             }
 
             NDIter(T &ndarray, const NDIndex &ndindex) noexcept
-            : m_ndarray(ndarray), m_index(ndarray.ravel_ndindex(ndindex)), m_ndindex(ndindex)
+            : m_ndarray(ndarray), m_index(ndarray.ravel_ndindex(ndindex)), m_ndindex(ndindex),
+            m_single_strides(ndarray.forward_base()->strides())
             {
                 static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
             }
 
             NDIter(T &ndarray, NDIndex &&ndindex) noexcept
-            : m_ndarray(ndarray), m_index(ndarray.ravel_ndindex(ndindex)), m_ndindex(std::move(ndindex))
+            : m_ndarray(ndarray), m_index(ndarray.ravel_ndindex(ndindex)), m_ndindex(std::move(ndindex)),
+            m_single_strides(ndarray.forward_base()->strides())
             {
                 static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
             }
@@ -142,10 +147,11 @@ namespace laruen::ndlib {
                 this->m_ndindex[axis]++;
                 this->m_index += this->m_ndarray.m_strides[axis];
                 
-                for(uint_fast8_t dim = axis+1;(dim-- > 1) && (this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]);) {
+                for(uint_fast8_t dim = axis;(dim > 0) && (this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]);) {
                     this->m_ndindex[dim] = 0;
-                    this->m_ndindex[dim - 1]++;
-                    this->m_index += this->m_ndarray.m_strides[dim - 1] - this->m_ndarray.m_shape[dim] * this->m_ndarray.m_strides[dim];
+                    dim--; // decrease dim "ahead of time" for minor efficiency improvements
+                    this->m_ndindex[dim]++;
+                    this->m_index += this->m_ndarray.m_strides[dim] - this->m_single_strides[dim];
                 }
 
                 return value;
