@@ -42,6 +42,12 @@ namespace laruen::ndlib {
                 return this->m_ndarray.m_data[this->m_index++];
             }
 
+            inline auto& next(uint_fast8_t axis) noexcept {
+                auto &value = this->m_ndarray.m_data[this->m_index];
+                this->m_index += this->m_ndarray.m_strides[axis];
+                return value;
+            }
+
             inline void reset() noexcept {
                 this->m_index = 0;
             }
@@ -131,18 +137,22 @@ namespace laruen::ndlib {
                 static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
             }
 
-            auto& next() noexcept {
+            auto& next(uint_fast8_t axis) noexcept {
                 auto &value = this->m_ndarray.m_data[this->m_index];
-                this->m_ndindex[this->m_ndarray.m_ndim - 1]++;
-                this->m_index += this->m_ndarray.m_strides[this->m_ndarray.m_ndim - 1];
+                this->m_ndindex[axis]++;
+                this->m_index += this->m_ndarray.m_strides[axis];
                 
-                for(uint_fast8_t dim = this->m_ndarray.m_ndim;(dim-- > 1) && (this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]);) {
+                for(uint_fast8_t dim = axis+1;(dim-- > 1) && (this->m_ndindex[dim] >= this->m_ndarray.m_shape[dim]);) {
                     this->m_ndindex[dim] = 0;
                     this->m_ndindex[dim - 1]++;
                     this->m_index += this->m_ndarray.m_strides[dim - 1] - this->m_ndarray.m_shape[dim] * this->m_ndarray.m_strides[dim];
                 }
 
                 return value;
+            }
+
+            inline auto& next() noexcept {
+                return this->next(this->m_ndarray.m_ndim - 1);
             }
 
             void reset() noexcept {
