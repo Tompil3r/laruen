@@ -779,6 +779,16 @@ namespace laruen::ndlib {
                 }
             }
 
+            inline NDArray<T, C> mask() noexcept {
+                return NDArray<T, C>(this->m_data, this->m_shape,
+                this->m_strides, this->m_size, this->m_ndim, this->forward_base());
+            }
+
+            inline const NDArray<T, C> mask() const noexcept {
+                return NDArray<T, C>(this->m_data, this->m_shape,
+                this->m_strides, this->m_size, this->m_ndim, this->forward_base());
+            }
+
             friend inline std::ostream& operator<<(std::ostream &stream, const NDArray &ndarray) noexcept {
                 return stream << ndarray.str();
             }
