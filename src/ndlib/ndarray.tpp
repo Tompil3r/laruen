@@ -1857,4 +1857,58 @@ namespace laruen::ndlib {
 
         return reorder;
     }
+
+    template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::matmul_2d_n3(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const noexcept {
+        /* assumes the following:
+            - shapes are valid
+            - no broadcasting needed
+        */
+       
+        uint_fast8_t rows_axis = this->m_ndim - 2;
+        uint_fast8_t cols_axis = this->m_ndim - 1;
+        uint_fast64_t rows = out.m_shape[rows_axis];
+        uint_fast64_t cols = out.m_shape[cols_axis];
+        uint_fast64_t shared = this->m_shape[cols_axis]; // or rhs.m_shape[rows_axis]
+        
+        const uint_fast64_t lhs_row_stride = this->m_strides[rows_axis];
+        const uint_fast64_t lhs_col_stride = this->m_strides[cols_axis];
+        const uint_fast64_t rhs_row_stride = rhs.m_strides[rows_axis];
+        const uint_fast64_t rhs_col_stride = rhs.m_strides[cols_axis];
+        const uint_fast64_t out_row_stride = out.m_strides[rows_axis];
+        const uint_fast64_t out_col_stride = out.m_strides[cols_axis];
+
+        T *lhs_ptr = this->m_data;
+        T2 *rhs_ptr = rhs.m_data;
+        TR *out_ptr = out.m_data;
+        T *lhs_checkpoint = this->m_data;
+        T2 *rhs_checkpoint = rhs.m_data;
+        TR *out_checkpoint = out.m_data;
+
+        TR product;
+
+        for(uint_fast64_t row = 0;row < rows;row++) {
+            for(uint_fast64_t col = 0;col < cols;col++) {
+                product = 0;
+                for(uint_fast64_t i = 0; i < shared;i++) {
+                    product += (*lhs_ptr) * (*rhs_ptr);
+                    lhs_ptr += lhs_col_stride;
+                    rhs_ptr += rhs_row_stride;
+                }
+                *out_ptr = product;
+                out_ptr += out_col_stride;
+                lhs_ptr = lhs_checkpoint;
+                rhs_checkpoint += rhs_col_stride;
+                rhs_ptr = rhs_checkpoint;
+            }
+            out_checkpoint += out_row_stride;
+            out_ptr = out_checkpoint;
+            lhs_checkpoint += lhs_row_stride;
+            lhs_ptr = lhs_checkpoint;
+            rhs_ptr = rhs.m_data;
+            rhs_checkpoint = rhs.m_data;
+        }
+
+        return out;
+    }
 }
