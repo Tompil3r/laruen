@@ -16,6 +16,9 @@ namespace laruen::ndlib {
 
     template <typename T>
     class NDIter<T, true> {
+
+        template <typename, bool> friend class NDArray;
+
         T &m_ndarray;
         uint_fast64_t m_index;
 
@@ -108,6 +111,9 @@ namespace laruen::ndlib {
 
     template <typename T>
     class NDIter<T, false> {
+
+        template <typename, bool> friend class NDArray;
+
         T &m_ndarray;
         uint_fast64_t m_index;
         NDIndex m_ndindex;
