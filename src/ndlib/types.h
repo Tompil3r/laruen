@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <cmath>
 #include "src/ndlib/range.h"
 
 namespace laruen::ndlib {
