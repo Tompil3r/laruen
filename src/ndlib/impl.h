@@ -17,6 +17,31 @@ namespace laruen::ndlib::impl {
 
         return product;
     }
+
+    template <typename TR, typename T, typename T2>
+    TR* matmul_2d_n3(T *lhs_ptr, uint_fast64_t lhs_row_stride, uint_fast64_t lhs_col_stride,
+    T2 *rhs_ptr, uint_fast64_t rhs_row_stride, uint_fast64_t rhs_col_stride,
+    TR *out_ptr, uint_fast64_t out_row_stride, uint_fast64_t out_col_stride,
+    uint_fast64_t rows, uint_fast64_t cols, uint_fast64_t shared)
+    {
+        T2 *rhs_start_ptr = rhs_ptr;
+        TR *out_start_ptr = out_ptr;
+        TR *out_checkpoint = out_ptr;
+
+        for(uint_fast64_t row = 0;row < rows;row++) {
+            for(uint_fast64_t col = 0;col < cols;col++) {
+                *out_ptr = dot_1d<TR>(lhs_ptr, lhs_col_stride, rhs_ptr, rhs_row_stride, shared);
+                out_ptr += out_col_stride;
+                rhs_ptr += rhs_col_stride;
+            }
+            out_checkpoint += out_row_stride;
+            out_ptr = out_checkpoint;
+            lhs_ptr += lhs_row_stride;
+            rhs_ptr = rhs_start_ptr;
+        }
+
+        return out_start_ptr;
+    }
 }
 
 #endif
