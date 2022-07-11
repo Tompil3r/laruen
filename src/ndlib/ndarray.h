@@ -788,7 +788,7 @@ namespace laruen::ndlib {
             }
             
             template <bool CR = C>
-            inline NDArray<T, CR> mask() noexcept {
+            inline NDArray<T, CR> view() noexcept {
                 static_assert(!(CR && !C), "Contiguous array on a non contiguous data may lead to failure");
 
                 return NDArray<T, CR>(this->m_data, this->m_shape,
@@ -796,7 +796,7 @@ namespace laruen::ndlib {
             }
 
             template <bool CR = C>
-            inline const NDArray<T, CR> mask() const noexcept {
+            inline const NDArray<T, CR> view() const noexcept {
                 static_assert(!(CR && !C), "Contiguous array on a non contiguous data may lead to failure");
 
                 return NDArray<T, CR>(this->m_data, this->m_shape,
