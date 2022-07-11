@@ -18,7 +18,7 @@ namespace laruen::ndlib::impl {
         return product;
     }
 
-    template <typename TR, typename T, typename T2>
+    template <typename T, typename T2, typename TR>
     TR* matmul_2d_n3(T *lhs_ptr, uint_fast64_t lhs_row_stride, uint_fast64_t lhs_col_stride,
     T2 *rhs_ptr, uint_fast64_t rhs_row_stride, uint_fast64_t rhs_col_stride,
     TR *out_ptr, uint_fast64_t out_row_stride, uint_fast64_t out_col_stride,
