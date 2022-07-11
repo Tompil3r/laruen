@@ -12,6 +12,7 @@
 #include "src/ndlib/nditer.h"
 #include "src/ndlib/range.h"
 #include "src/ndlib/type_selection.h"
+#include "src/ndlib/impl.h"
 #include "src/math/common.h"
 
 namespace laruen::ndlib {
@@ -1907,6 +1908,44 @@ namespace laruen::ndlib {
             lhs_ptr = lhs_checkpoint;
             rhs_ptr = rhs.m_data;
             rhs_checkpoint = rhs.m_data;
+        }
+
+        return out;
+    }
+
+    template <typename T, bool C> template <typename T2, bool C2, typename TR, bool CR>
+    NDArray<TR, CR>& NDArray<T, C>::matmul_n3(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const noexcept {
+        /* assumes the following:
+            - shapes are valid
+            - no broadcasting needed
+            - min ndim == 2 (no dot product)
+        */
+
+        uint_fast8_t rows_axis = this->m_ndim - 2;
+        uint_fast8_t cols_axis = this->m_ndim - 1;
+
+        if(this->m_ndim <= 2) {
+            impl::matmul_2d_n3(this->m_data, this->m_strides[rows_axis], this->m_strides[cols_axis],
+            rhs.m_data, rhs.m_strides[rows_axis], rhs.m_strides[cols_axis], out.m_data, out.m_strides[rows_axis],
+            out.m_strides[cols_axis], out.m_shape[rows_axis], out.m_shape[cols_axis], this->m_shape[cols_axis]);
+
+            return out;
+        }
+
+        uint_fast64_t stacks = (this->m_size / this->m_shape[cols_axis]) / this->m_shape[rows_axis];
+        uint_fast8_t iteration_axis = this->m_ndim - 3;
+        NDIter lhs_iter(*this);
+        NDIter rhs_iter(rhs);
+        NDIter out_iter(out);
+
+        for(uint_fast64_t stack = 0;stack < stacks;stack++) {
+            impl::matmul_2d_n3(lhs_iter.ptr(), this->m_strides[rows_axis], this->m_strides[cols_axis],
+            rhs_iter.ptr(), rhs.m_strides[rows_axis], rhs.m_strides[cols_axis], out_iter.ptr(), out.m_strides[rows_axis],
+            out.m_strides[cols_axis], out.m_shape[rows_axis], out.m_shape[cols_axis], this->m_shape[cols_axis]);
+
+            lhs_iter.next(iteration_axis);
+            rhs_iter.next(iteration_axis);
+            out_iter.next(iteration_axis);
         }
 
         return out;

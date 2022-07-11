@@ -553,6 +553,9 @@ namespace laruen::ndlib {
             template <typename T2, bool C2, typename TR, bool CR>
             NDArray<TR, CR>& matmul_2d_n3(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const noexcept;
 
+            template <typename T2, bool C2, typename TR, bool CR>
+            NDArray<TR, CR>& matmul_n3(const NDArray<T2, C2> &rhs, NDArray<TR, CR> &out) const noexcept;
+
         public:
             // getters
             inline const T* data() const noexcept {
