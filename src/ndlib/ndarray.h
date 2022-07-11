@@ -9,6 +9,7 @@
 #include <type_traits>
 #include <ostream>
 #include <initializer_list>
+#include <utility>
 #include "src/ndlib/utils.h"
 #include "src/ndlib/types.h"
 #include "src/ndlib/nditer.h"
@@ -539,6 +540,10 @@ namespace laruen::ndlib {
             
             template <typename T2, bool C2>
             bool operator<(const NDArray<T2, C2> &ndarray) const noexcept;
+
+            NDArray<T, false> transpose() noexcept;
+
+            const NDArray<T, false> transpose() const noexcept;
 
             // string function
             std::string str() const noexcept;
