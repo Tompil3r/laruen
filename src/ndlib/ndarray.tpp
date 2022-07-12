@@ -1931,8 +1931,8 @@ namespace laruen::ndlib {
         NDIter out_iter(out);
 
         for(uint_fast64_t stack = 0;stack < stacks;stack++) {
-            impl::matmul_2d_n3(lhs_iter.ptr(), this->m_strides[rows_axis], this->m_strides[cols_axis],
-            rhs_iter.ptr(), rhs.m_strides[rows_axis], rhs.m_strides[cols_axis], out_iter.ptr(), out.m_strides[rows_axis],
+            impl::matmul_2d_n3(lhs_iter.ptr, this->m_strides[rows_axis], this->m_strides[cols_axis],
+            rhs_iter.ptr, rhs.m_strides[rows_axis], rhs.m_strides[cols_axis], out_iter.ptr, out.m_strides[rows_axis],
             out.m_strides[cols_axis], out.m_shape[rows_axis], out.m_shape[cols_axis], this->m_shape[cols_axis]);
 
             lhs_iter.next(iteration_axis);
