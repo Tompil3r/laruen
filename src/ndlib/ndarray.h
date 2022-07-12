@@ -803,15 +803,6 @@ namespace laruen::ndlib {
                 this->m_strides, this->m_size, this->m_ndim, this->forward_base());
             }
 
-            inline Strides dim_sizes() const noexcept {
-                Strides dim_sizes(this->m_ndim);
-
-                for(uint_fast8_t i = 0;i < this->m_ndim;i++) {
-                    dim_sizes[i] = this->m_shape[i] * this->m_strides[i];
-                }
-                return dim_sizes;
-            }
-
             friend inline std::ostream& operator<<(std::ostream &stream, const NDArray &ndarray) noexcept {
                 return stream << ndarray.str();
             }
