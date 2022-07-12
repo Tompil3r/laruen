@@ -145,6 +145,15 @@ namespace laruen::ndlib {
                 return physical_index;
             }
 
+            Strides dim_sizes() const noexcept {
+                Strides dim_sizes(this->m_ndim);
+
+                for(uint_fast8_t i = 0;i < this->m_ndim;i++) {
+                    dim_sizes[i] = this->m_shape[i] * this->m_strides[i];
+                }
+                return dim_sizes;
+            }
+
             inline const Shape& shape() const noexcept {
                 return this->m_shape;
             }
