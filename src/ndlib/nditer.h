@@ -12,10 +12,10 @@ namespace laruen::ndlib {
     template <typename T, bool C> class NDArray;
 
     template <typename T, bool C = T::CONTIGUOUS>
-    class NDIter {};
+    struct NDIter {};
 
     template <typename T>
-    class NDIter<T, true> {
+    struct NDIter<T, true> {
         template <typename, bool> friend class NDArray;
         typedef std::conditional_t<std::is_const_v<T>, const typename T::DType, typename T::DType> DType;
 
@@ -110,7 +110,7 @@ namespace laruen::ndlib {
     };
 
     template <typename T>
-    class NDIter<T, false> {
+    struct NDIter<T, false> {
         template <typename, bool> friend class NDArray;
         typedef std::conditional_t<std::is_const_v<T>, const typename T::DType, typename T::DType> DType;
 

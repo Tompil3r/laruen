@@ -24,8 +24,8 @@ namespace laruen::ndlib {
     class NDArray : public ArrayBase {
 
         template <typename, bool> friend class NDArray;
-        friend class NDIter<NDArray<T, C>, C>;
-        friend class NDIter<const NDArray<T, C>, C>;
+        friend struct NDIter<NDArray<T, C>, C>;
+        friend struct NDIter<const NDArray<T, C>, C>;
 
         private:
             T *m_data;
