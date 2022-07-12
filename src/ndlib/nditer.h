@@ -71,48 +71,48 @@ namespace laruen::ndlib {
 
         T &ndarray;
         DType *ptr;
-        NDIndex m_ndindex;
-        const Strides m_dim_sizes;
+        NDIndex ndindex;
+        const Strides dim_sizes;
 
         public:
             NDIter(T &ndarray) noexcept
-            : ndarray(ndarray), ptr(ndarray.m_data), m_ndindex(ndarray.m_ndim, 0),
-            m_dim_sizes(ndarray.dim_sizes())
+            : ndarray(ndarray), ptr(ndarray.m_data), ndindex(ndarray.m_ndim, 0),
+            dim_sizes(ndarray.dim_sizes())
             {
                 static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
             }
 
             NDIter(T &ndarray, uint_fast64_t index) noexcept
-            : ndarray(ndarray), ptr(ndarray.m_data + index), m_ndindex(ndarray.unravel_index(index)),
-            m_dim_sizes(ndarray.dim_sizes())
+            : ndarray(ndarray), ptr(ndarray.m_data + index), ndindex(ndarray.unravel_index(index)),
+            dim_sizes(ndarray.dim_sizes())
             {
                 static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
             }
 
             NDIter(T &ndarray, const NDIndex &ndindex) noexcept
-            : ndarray(ndarray), ptr(ndarray.m_data + ndarray.ravel_ndindex(ndindex)), m_ndindex(ndindex),
-            m_dim_sizes(ndarray.dim_sizes())
+            : ndarray(ndarray), ptr(ndarray.m_data + ndarray.ravel_ndindex(ndindex)), ndindex(ndindex),
+            dim_sizes(ndarray.dim_sizes())
             {
                 static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
             }
 
             NDIter(T &ndarray, NDIndex &&ndindex) noexcept
-            : ndarray(ndarray), ptr(ndarray.m_data + ndarray.ravel_ndindex(ndindex)), m_ndindex(std::move(ndindex)),
-            m_dim_sizes(ndarray.dim_sizes())
+            : ndarray(ndarray), ptr(ndarray.m_data + ndarray.ravel_ndindex(ndindex)), ndindex(std::move(ndindex)),
+            dim_sizes(ndarray.dim_sizes())
             {
                 static_assert(types::is_ndarray_v<T>, "NDIter only supports NDArray");
             }
 
             DType& next(uint_fast8_t axis) noexcept {
                 DType &value = *this->ptr;
-                this->m_ndindex[axis]++;
+                this->ndindex[axis]++;
                 this->ptr += this->ndarray.m_strides[axis];
                 
-                for(uint_fast8_t dim = axis;(dim > 0) && (this->m_ndindex[dim] >= this->ndarray.m_shape[dim]);) {
-                    this->m_ndindex[dim] = 0;
-                    this->ptr -= this->m_dim_sizes[dim];
+                for(uint_fast8_t dim = axis;(dim > 0) && (this->ndindex[dim] >= this->ndarray.m_shape[dim]);) {
+                    this->ndindex[dim] = 0;
+                    this->ptr -= this->dim_sizes[dim];
                     dim--; // decrease dim "ahead of time" for minor efficiency improvements
-                    this->m_ndindex[dim]++;
+                    this->ndindex[dim]++;
                     this->ptr += this->ndarray.m_strides[dim];
                 }
 
@@ -125,15 +125,15 @@ namespace laruen::ndlib {
 
             void reset() noexcept {
                 this->ptr = this->ndarray.m_data;
-                uint_fast8_t ndim = this->m_ndindex.size();
+                uint_fast8_t ndim = this->ndindex.size();
 
                 for(uint_fast8_t i = 0;i < ndim;i++) {
-                    this->m_ndindex[i] = 0;
+                    this->ndindex[i] = 0;
                 }
             }
 
             inline bool has_next() const noexcept {
-                return this->m_ndindex[0] < this->ndarray.m_shape[0];
+                return this->ndindex[0] < this->ndarray.m_shape[0];
             }
 
             inline DType* current() noexcept {
