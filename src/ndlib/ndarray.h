@@ -44,10 +44,10 @@ namespace laruen::ndlib {
 
             NDArray(std::initializer_list<T> init_list, const Shape &shape) noexcept;
 
-            NDArray(T *data, const Shape &shape, const Strides &strides,
+            NDArray(T *data, const Shape &shape, const Strides &strides, const Strides &dim_sizes,
             uint_fast64_t size, uint_fast8_t ndim, const NDArray<T, true> *base = nullptr) noexcept;
 
-            NDArray(T *data, Shape &&shape, Strides &&strides,
+            NDArray(T *data, Shape &&shape, Strides &&strides, Strides &&dim_sizes,
             uint_fast64_t size, uint_fast8_t ndim, const NDArray<T, true> *base = nullptr) noexcept;
             
             explicit NDArray(const Shape &shape) noexcept;

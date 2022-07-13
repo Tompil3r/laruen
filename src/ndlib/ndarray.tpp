@@ -54,13 +54,14 @@ namespace laruen::ndlib {
 
     template <typename T, bool C>
     NDArray<T, C>::NDArray(T *data, const Shape &shape, const Strides &strides,
-    uint_fast64_t size, uint_fast8_t ndim, const NDArray<T, true> *base) noexcept
-    : ArrayBase(shape, strides, size, ndim), m_data(data), m_base(base) {}
+    const Strides &dim_sizes, uint_fast64_t size, uint_fast8_t ndim, const NDArray<T, true> *base) noexcept
+    : ArrayBase(shape, strides, dim_sizes, size, ndim), m_data(data), m_base(base) {}
 
     template <typename T, bool C>
-    NDArray<T, C>::NDArray(T *data, Shape &&shape, Strides &&strides,
+    NDArray<T, C>::NDArray(T *data, Shape &&shape, Strides &&strides, Strides &&dim_sizes,
     uint_fast64_t size, uint_fast8_t ndim, const NDArray<T, true> *base) noexcept
-    : ArrayBase(std::move(shape), std::move(strides), size, ndim), m_data(data), m_base(base) {}
+    : ArrayBase(std::move(shape), std::move(strides), std::move(dim_sizes), size, ndim),
+    m_data(data), m_base(base) {}
 
     template <typename T, bool C>
     NDArray<T, C>::NDArray(const Shape &shape) noexcept
@@ -127,8 +128,9 @@ namespace laruen::ndlib {
             axis = axes[i];
             this->m_shape[i] = arraybase.m_shape[axis];
             this->m_strides[i] = stride;
-            this->m_size *= this->m_shape[i];
             stride *= this->m_shape[i];
+            this->m_dim_sizes[i] = stride;
+            this->m_size *= this->m_shape[i];
         }
 
         this->m_data = new T[this->m_size];
@@ -148,6 +150,7 @@ namespace laruen::ndlib {
             this->m_data += ranges[dim].start * this->m_strides[dim];
             this->m_strides[dim] = this->m_strides[dim] * ranges[dim].step;
             this->m_shape[dim] = laruen::ndlib::utils::ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
+            this->m_dim_sizes[dim] = this->m_shape[dim] * this->m_strides[dim];
             size_ratio /= this->m_shape[dim];
         }
 
@@ -183,6 +186,7 @@ namespace laruen::ndlib {
 
         this->m_shape = ndarray.m_shape;
         this->m_strides = ndarray.m_strides;
+        this->m_dim_sizes = ndarray.m_dim_sizes;
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
         // this->m_free_mem = true; // check this
@@ -204,6 +208,7 @@ namespace laruen::ndlib {
         
         this->m_shape = std::move(ndarray.m_shape);
         this->m_strides = std::move(ndarray.m_strides);
+        this->m_dim_sizes = std::move(ndarray.m_dim_sizes);
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
         // this->m_free_mem = ndarray.m_free_mem; // check this
@@ -225,6 +230,7 @@ namespace laruen::ndlib {
 
         this->m_shape = ndarray.m_shape;
         this->m_strides = ndarray.m_strides;
+        this->m_dim_sizes=  ndarray.m_dim_sizes;
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
         // this->m_free_mem = true; // check this
@@ -239,6 +245,7 @@ namespace laruen::ndlib {
         this->m_data = new T[ndarray.m_size];
         this->m_shape = std::move(ndarray.m_shape);
         this->m_strides = std::move(ndarray.m_strides);
+        this->m_dim_sizes = std::move(ndarray.m_dim_sizes);
         this->m_size = ndarray.m_size;
         this->m_ndim = ndarray.m_ndim;
         // this->m_free_mem = true; // check this
@@ -1769,6 +1776,7 @@ namespace laruen::ndlib {
     NDArray<T, false> NDArray<T, C>::transpose() noexcept {
         Shape t_shape(this->m_ndim);
         Strides t_strides(this->m_ndim);
+        Strides t_dim_sizes(this->m_ndim);
 
         uint_fast8_t f = 0;
         uint_fast8_t b = this->m_ndim - 1;
@@ -1776,22 +1784,27 @@ namespace laruen::ndlib {
 
         t_shape[mid] = this->m_shape[mid];
         t_strides[mid] = this->m_strides[mid];
+        t_dim_sizes[mid] = this->m_dim_sizes[mid];
+
 
         for(;f < mid;f++, b--) {
             t_shape[f] = this->m_shape[b];
             t_shape[b] = this->m_shape[f];
             t_strides[f] = this->m_strides[b];
             t_strides[b] = this->m_strides[f];
+            t_dim_sizes[f] = this->m_dim_sizes[b];
+            t_dim_sizes[b] = this->m_dim_sizes[f];
         }
 
         return NDArray<T, false>(this->m_data, std::move(t_shape),
-        std::move(t_strides), this->m_size, this->m_ndim, this->forward_base());
+        std::move(t_strides), std::move(t_dim_sizes), this->m_size, this->m_ndim, this->forward_base());
     }
     
     template <typename T, bool C>
     const NDArray<T, false> NDArray<T, C>::transpose() const noexcept {
         Shape t_shape(this->m_ndim);
         Strides t_strides(this->m_ndim);
+        Strides t_dim_sizes(this->m_ndim);
 
         uint_fast8_t f = 0;
         uint_fast8_t b = this->m_ndim - 1;
@@ -1799,16 +1812,20 @@ namespace laruen::ndlib {
 
         t_shape[mid] = this->m_shape[mid];
         t_strides[mid] = this->m_strides[mid];
+        t_dim_sizes[mid] = this->m_dim_sizes[mid];
+
 
         for(;f < mid;f++, b--) {
             t_shape[f] = this->m_shape[b];
             t_shape[b] = this->m_shape[f];
             t_strides[f] = this->m_strides[b];
             t_strides[b] = this->m_strides[f];
+            t_dim_sizes[f] = this->m_dim_sizes[b];
+            t_dim_sizes[b] = this->m_dim_sizes[f];
         }
 
         return NDArray<T, false>(this->m_data, std::move(t_shape),
-        std::move(t_strides), this->m_size, this->m_ndim, this->forward_base());
+        std::move(t_strides), std::move(t_dim_sizes), this->m_size, this->m_ndim, this->forward_base());
     }
 
     template <typename T, bool C>
@@ -1865,15 +1882,15 @@ namespace laruen::ndlib {
     const NDArray<T2, false> NDArray<T, C>::broadcast_expansion(const NDArray<T2, C2> &rhs) const noexcept {
         
         NDArray<T2, false> expansion(rhs.m_data, Shape(this->m_shape),
-        Strides(this->m_ndim, 0), this->m_size, this->m_ndim, rhs.forward_base());
+        Strides(this->m_ndim, 0), Strides(this->m_ndim, 0), this->m_size, this->m_ndim, rhs.forward_base());
         
         uint_fast8_t lidx = this->m_ndim - rhs.m_ndim;
 
-        for(uint_fast8_t ridx = 0;ridx < rhs.m_ndim;ridx++) {
+        for(uint_fast8_t ridx = 0;ridx < rhs.m_ndim;ridx++, lidx++) {
             if(this->m_shape[lidx] == rhs.m_shape[ridx]) {
                 expansion.m_strides[lidx] = rhs.m_strides[ridx];
+                expansion.m_dim_sizes[lidx] = rhs.m_dim_sizes[ridx];
             }
-            lidx++;
         }
 
         return expansion;
@@ -1882,7 +1899,7 @@ namespace laruen::ndlib {
     template <typename T, bool C>
     const NDArray<T, false> NDArray<T, C>::axes_reorder(const Axes &axes) const noexcept {
         NDArray<T, false> reorder(this->m_data, Shape(this->m_ndim), Strides(this->m_ndim),
-        this->m_size, this->m_ndim, C ? this : this->m_base);
+        this->m_size, this->m_ndim, this->forward_base());
 
         uint_fast8_t axes_added = 0;
         uint_fast8_t dest_idx = reorder.m_ndim - 1;
@@ -1890,6 +1907,7 @@ namespace laruen::ndlib {
         for(uint_fast8_t i = axes.size();i-- > 0;) {
             reorder.m_shape[dest_idx] = this->m_shape[axes[i]];
             reorder.m_strides[dest_idx] = this->m_strides[axes[i]];
+            reorder.m_dim_sizes[dest_idx] = this->m_dim_sizes[axes[i]];
             axes_added |= 1 << axes[i];
             dest_idx--;
         }
@@ -1898,6 +1916,7 @@ namespace laruen::ndlib {
             if(!(axes_added & (1 << i))) {
                 reorder.m_shape[dest_idx] = this->m_shape[i];
                 reorder.m_strides[dest_idx] = this->m_strides[i];
+                reorder.m_dim_sizes[dest_idx] = this->m_dim_sizes[i];
                 dest_idx--; 
             }
         }

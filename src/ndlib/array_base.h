@@ -17,6 +17,7 @@ namespace laruen::ndlib {
         protected:
             Shape m_shape;
             Strides m_strides;
+            Strides m_dim_sizes;
             uint_fast64_t m_size;
             uint_fast8_t m_ndim;
 
@@ -24,27 +25,29 @@ namespace laruen::ndlib {
         public:
             ArrayBase() noexcept = default;
 
-            ArrayBase(const Shape &shape, const Strides &strides, uint_fast64_t size,
-            uint_fast8_t ndim) noexcept
-            : m_shape(shape), m_strides(strides), m_size(size), m_ndim(ndim) {}
+            ArrayBase(const Shape &shape, const Strides &strides, const Strides &dim_sizes,
+            uint_fast64_t size, uint_fast8_t ndim) noexcept
+            : m_shape(shape), m_strides(strides), m_dim_sizes(dim_sizes), m_size(size), m_ndim(ndim) {}
 
-            ArrayBase(Shape &&shape, Strides &&strides, uint_fast64_t size,
-            uint_fast8_t ndim) noexcept
-            : m_shape(std::move(shape)), m_strides(std::move(strides)), m_size(size), m_ndim(ndim) {}
+            ArrayBase(Shape &&shape, Strides &&strides, Strides &&dim_sizes,
+            uint_fast64_t size, uint_fast8_t ndim) noexcept
+            : m_shape(std::move(shape)), m_strides(std::move(strides)),
+            m_dim_sizes(std::move(dim_sizes)), m_size(size), m_ndim(ndim) {}
 
             ArrayBase(uint_fast8_t ndim, uint_fast64_t size = 0) noexcept
-            : m_shape(ndim), m_strides(ndim), m_size(size), m_ndim(ndim) {}
+            : m_shape(ndim), m_strides(ndim), m_dim_sizes(ndim), m_size(size), m_ndim(ndim) {}
 
             explicit ArrayBase(const Shape &shape) noexcept
-            : m_shape(shape), m_strides(shape.size()), m_ndim(shape.size())
+            : m_shape(shape), m_strides(shape.size()), m_dim_sizes(shape.size()), m_ndim(shape.size())
             {
                 uint_fast64_t stride = 1;
                 this->m_size = (this->m_ndim > 0);
                 
                 for(uint_fast8_t dim = this->m_ndim; dim-- > 0;) {
                     this->m_strides[dim] = stride;
-                    this->m_size *= shape[dim];
                     stride *= shape[dim];
+                    this->m_dim_sizes[dim] = stride;
+                    this->m_size *= shape[dim];
                 }
             }
 
@@ -53,14 +56,16 @@ namespace laruen::ndlib {
                 this->m_ndim = shape.size();
                 this->m_shape = shape;
                 this->m_strides.resize(this->m_ndim);
+                this->m_dim_sizes.resize(this->m_ndim);
                 this->m_size = (this->m_ndim > 0);
 
                 uint_fast64_t stride = 1;
                 
                 for(uint_fast8_t dim = this->m_ndim; dim-- > 0;) {
                     this->m_strides[dim] = stride;
-                    this->m_size *= shape[dim];
                     stride *= shape[dim];
+                    this->m_dim_sizes[dim] = stride;
+                    this->m_size *= shape[dim];
                 }
 
                 if(this->m_size != prev_size) {
@@ -97,6 +102,7 @@ namespace laruen::ndlib {
                     if(this->m_shape[dim] > 1) {
                         this->m_shape[new_ndim] = this->m_shape[dim];
                         this->m_strides[new_ndim] = this->m_strides[dim];
+                        this->m_dim_sizes[new_ndim] = this->m_dim_sizes[dim];
                         new_ndim++;
                     }
                 }
@@ -104,6 +110,7 @@ namespace laruen::ndlib {
                 this->m_ndim = new_ndim;
                 this->m_shape.resize(this->m_ndim);
                 this->m_strides.resize(this->m_ndim);
+                this->m_dim_sizes.resize(this->m_ndim);
             }
 
             std::string str() const noexcept {
@@ -145,21 +152,16 @@ namespace laruen::ndlib {
                 return physical_index;
             }
 
-            Strides dim_sizes() const noexcept {
-                Strides dim_sizes(this->m_ndim);
-
-                for(uint_fast8_t i = 0;i < this->m_ndim;i++) {
-                    dim_sizes[i] = this->m_shape[i] * this->m_strides[i];
-                }
-                return dim_sizes;
-            }
-
             inline const Shape& shape() const noexcept {
                 return this->m_shape;
             }
 
             inline const Strides& strides() const noexcept {
                 return this->m_strides;
+            }
+
+            inline const Strides& dim_sizes() const noexcept {
+                return this->m_dim_sizes;
             }
 
             inline const uint_fast64_t& size() const noexcept {
