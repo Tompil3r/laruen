@@ -24,8 +24,6 @@ namespace laruen::ndlib {
     class NDArray : public ArrayBase {
 
         template <typename, bool> friend class NDArray;
-        friend struct NDIter<NDArray<T, C>, C>;
-        friend struct NDIter<const NDArray<T, C>, C>;
 
         private:
             T *m_data;
@@ -768,14 +766,6 @@ namespace laruen::ndlib {
             // more utility functions
             inline ArrayBase& arraybase() {
                 return *this;
-            }
-
-            inline auto begin() noexcept {
-                return nditer_begin(*this);
-            }
-
-            inline auto begin() const noexcept {
-                return nditer_begin(*this);
             }
 
             inline const NDArray<T, true>* forward_base() const noexcept {
