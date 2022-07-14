@@ -12,7 +12,7 @@
 namespace laruen::ndlib {
 
     class ArrayBase {
-        template <typename T, bool C> friend class NDArray;
+        template <typename T> friend class NDArray;
         template <typename> friend struct NDIter;
 
         protected:

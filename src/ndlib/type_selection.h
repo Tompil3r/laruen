@@ -8,7 +8,7 @@
 
 namespace laruen::ndlib {
     // NDArray forward declaration
-    template <typename T, bool C> class NDArray;
+    template <typename T> class NDArray;
 
     namespace types {
         template <typename T> struct next_signed;
@@ -86,11 +86,11 @@ namespace laruen::ndlib {
         };
         template <typename T> inline constexpr bool is_ndarray_v = is_ndarray<T>::value;
 
-        template <typename T, bool C> struct is_ndarray<NDArray<T, C>> {
+        template <typename T> struct is_ndarray<NDArray<T>> {
             static constexpr bool value = true;
         };
 
-        template <typename T, bool C> struct is_ndarray<const NDArray<T, C>> {
+        template <typename T> struct is_ndarray<const NDArray<T>> {
             static constexpr bool value = true;
         };
     }
