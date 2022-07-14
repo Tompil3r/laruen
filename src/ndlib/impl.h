@@ -2,6 +2,7 @@
 #define NDLIB_STATIC_H_
 
 #include <cstdint>
+#include "src/math/common.h"
 
 namespace laruen::ndlib::impl {
 
@@ -41,6 +42,599 @@ namespace laruen::ndlib::impl {
         }
 
         return out_start_ptr;
+    }
+
+    template <typename T, typename T2>
+    T* add_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        /* implementation function: arrays must be broadcasted if needed */
+
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            lhs_iter.next() += rhs_iter.next();
+        }
+
+        return lhs_data;
+	}
+
+	template <typename T>
+    T* add_eq(T *data, const ArrayBase &base, T value) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() += value;
+        }
+
+        return data;
+	}
+
+    template <typename T, typename TR>
+    TR* add(const T *lhs_data, const ArrayBase &lhs_base, T value, TR *out_data, const ArrayBase &out_base) const noexcept {
+        /* implementation function: arrays must be broadcasted if needed */
+
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = this_iter.next() + value;
+        }
+        
+        return out_data;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* add(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+        /* implementation function: arrays must be broadcasted if needed */
+
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = lhs_iter.next() + rhs_iter.next();
+        }
+
+        return out_data;
+    }
+
+    template <typename T, typename T2>
+    T* subtract_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        /* implementation function: arrays must be broadcasted if needed */
+
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            lhs_iter.next() -= rhs_iter.next();
+        }
+
+        return lhs_data;
+	}
+
+	template <typename T>
+    T* subtract_eq(T *data, const ArrayBase &base, T value) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() -= value;
+        }
+
+        return data;
+	}
+
+    template <typename T, typename TR>
+    TR* subtract(const T *lhs_data, const ArrayBase &lhs_base, T value, TR *out_data, const ArrayBase &out_base) const noexcept {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = this_iter.next() - value;
+        }
+        
+        return out_data;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* subtract(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+        /* implementation function: arrays must be broadcasted if needed */
+
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = lhs_iter.next() - rhs_iter.next();
+        }
+
+        return out_data;
+    }
+
+    template <typename T, typename T2>
+    T* multiply_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        /* implementation function: arrays must be broadcasted if needed */
+
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            lhs_iter.next() *= rhs_iter.next();
+        }
+
+        return lhs_data;
+	}
+
+	template <typename T>
+    T* multiply_eq(T *data, const ArrayBase &base, T value) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() *= value;
+        }
+
+        return data;
+	}
+
+    template <typename T, typename TR>
+    TR* multiply(const T *lhs_data, const ArrayBase &lhs_base, T value, TR *out_data, const ArrayBase &out_base) const noexcept {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = this_iter.next() * value;
+        }
+        
+        return out_data;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* multiply(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+        /* implementation function: arrays must be broadcasted if needed */
+
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = lhs_iter.next() * rhs_iter.next();
+        }
+
+        return out_data;
+    }
+
+    template <typename T, typename T2>
+    T* divide_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        /* implementation function: arrays must be broadcasted if needed */
+
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            lhs_iter.next() /= rhs_iter.next();
+        }
+
+        return lhs_data;
+	}
+
+	template <typename T>
+    T* divide_eq(T *data, const ArrayBase &base, T value) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() /= value;
+        }
+
+        return data;
+	}
+
+    template <typename T, typename TR>
+    TR* divide(const T *lhs_data, const ArrayBase &lhs_base, T value, TR *out_data, const ArrayBase &out_base) const noexcept {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = this_iter.next() / value;
+        }
+        
+        return out_data;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* divide(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+        /* implementation function: arrays must be broadcasted if needed */
+
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = lhs_iter.next() / rhs_iter.next();
+        }
+
+        return out_data;
+    }
+
+    template <typename T, typename T2>
+    T* bit_xor_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            lhs_iter.next() ^= rhs_iter.next();
+        }
+
+        return lhs_data;
+	}
+
+	template <typename T>
+    T* bit_xor_eq(T *data, const ArrayBase &base, T value) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() ^= value;
+        }
+
+        return data;
+	}
+
+    template <typename T, typename TR>
+    TR* bit_xor(const T *lhs_data, const ArrayBase &lhs_base, T value, TR *out_data, const ArrayBase &out_base) const noexcept {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = this_iter.next() ^ value;
+        }
+        
+        return out_data;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* bit_xor(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = lhs_iter.next() ^ rhs_iter.next();
+        }
+
+        return out_data;
+    }
+
+    template <typename T, typename T2>
+    T* bit_and_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            lhs_iter.next() &= rhs_iter.next();
+        }
+
+        return lhs_data;
+	}
+
+	template <typename T>
+    T* bit_and_eq(T *data, const ArrayBase &base, T value) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() &= value;
+        }
+
+        return data;
+	}
+
+    template <typename T, typename TR>
+    TR* bit_and(const T *lhs_data, const ArrayBase &lhs_base, T value, TR *out_data, const ArrayBase &out_base) const noexcept {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = this_iter.next() & value;
+        }
+        
+        return out_data;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* bit_and(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = lhs_iter.next() & rhs_iter.next();
+        }
+
+        return out_data;
+    }
+    
+    template <typename T, typename T2>
+    T* bit_or_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            lhs_iter.next() |= rhs_iter.next();
+        }
+
+        return lhs_data;
+	}
+    
+	template <typename T>
+    T* bit_or_eq(T *data, const ArrayBase &base, T value) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() |= value;
+        }
+
+        return data;
+	}
+
+    template <typename T, typename TR>
+    TR* bit_or(const T *lhs_data, const ArrayBase &lhs_base, T value, TR *out_data, const ArrayBase &out_base) const noexcept {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = this_iter.next() | value;
+        }
+        
+        return out_data;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* bit_or(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = lhs_iter.next() | rhs_iter.next();
+        }
+
+        return out_data;
+    }
+
+    template <typename T, typename T2>
+    T* shl_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            lhs_iter.next() <<= rhs_iter.next();
+        }
+
+        return lhs_data;
+	}
+
+	template <typename T>
+    T* shl_eq(T *data, const ArrayBase &base, T value) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() <<= value;
+        }
+
+        return data;
+	}
+
+    template <typename T, typename TR>
+    TR* shl(const T *lhs_data, const ArrayBase &lhs_base, T value, TR *out_data, const ArrayBase &out_base) const noexcept {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = this_iter.next() << value;
+        }
+        
+        return out_data;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* shl(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = lhs_iter.next() << rhs_iter.next();
+        }
+
+        return out_data;
+    }
+
+    template <typename T, typename T2>
+    T* shr_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            lhs_iter.next() >>= rhs_iter.next();
+        }
+
+        return lhs_data;
+	}
+
+	template <typename T>
+    T* shr_eq(T *data, const ArrayBase &base, T value) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() >>= value;
+        }
+
+        return data;
+	}
+
+    template <typename T, typename TR>
+    TR* shr(const T *lhs_data, const ArrayBase &lhs_base, T value, TR *out_data, const ArrayBase &out_base) const noexcept {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = this_iter.next() >> value;
+        }
+        
+        return out_data;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* shr(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = lhs_iter.next() >> rhs_iter.next();
+        }
+
+        return out_data;
+    }
+
+    template <typename T>
+    T* bit_not_eq(T *data, const ArrayBase &base) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() = ~iter.current();
+        }
+
+        return data;
+    }
+
+    template <typename T, typename TR>
+    TR* bit_not(const T *lhs_data, const ArrayBase &lhs_base, TR *out_data, const ArrayBase &out_base) const noexcept {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint_fast64_t i = 0 ;i < lhs_base.size();i++) {
+            out_iter.next() = ~lhs_iter.next();
+        }
+    }
+
+    template <typename T, typename T2>
+    T* remainder_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            lhs_iter.next() = laruen::math::common::remainder(lhs_iter.current(), rhs_iter.next());
+        }
+
+        return lhs_data;
+	}
+
+	template <typename T>
+    T* remainder_eq(T *data, const ArrayBase &base, T value) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() = laruen::math::common::remainder(iter.current(), value);
+        }
+
+        return data;
+	}
+
+    template <typename T, typename TR>
+    TR* remainder(const T *lhs_data, const ArrayBase &lhs_base, T value, TR *out_data, const ArrayBase &out_base) const noexcept {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = laruen::math::common::remainder(this_iter.next(), value);
+        }
+        
+        return out_data;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* remainder(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = laruen::math::common::remainder(lhs_iter.next(), rhs_iter.next());
+        }
+
+        return out_data;
+    }
+
+    template <typename T, typename T2>
+    T* power_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            lhs_iter.next() = laruen::math::common::pow(lhs_iter.current(), rhs_iter.next());
+        }
+
+        return lhs_data;
+	}
+
+	template <typename T>
+    T* power_eq(T *data, const ArrayBase &base, T value) noexcept {
+        NDIter iter(data, base);
+
+        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+            iter.next() = laruen::math::common::pow(iter.current(), value);
+        }
+
+        return data;
+	}
+
+    template <typename T, typename TR>
+    TR* power(const T *lhs_data, const ArrayBase &lhs_base, T value, TR *out_data, const ArrayBase &out_base) const noexcept {
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = laruen::math::common::pow(this_iter.next(), value);
+        }
+        
+        return out_data;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* power(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+        /* implementation function: arrays must be broadcasted if needed */
+        
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint64_t i = 0;i < lhs_base.size();i++) {
+            out_iter.next() = laruen::math::common::pow(lhs_iter.next(), rhs_iter.next());
+        }
+
+        return out_data;
     }
 }
 
