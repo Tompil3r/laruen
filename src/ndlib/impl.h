@@ -77,7 +77,7 @@ namespace laruen::ndlib::impl {
         NDIter out_iter(out_data, out_base);
 
         for(uint64_t i = 0;i < lhs_base.size();i++) {
-            out_iter.next() = this_iter.next() + value;
+            out_iter.next() = lhs_iter.next() + value;
         }
         
         return out_data;
@@ -129,7 +129,7 @@ namespace laruen::ndlib::impl {
         NDIter out_iter(out_data, out_base);
 
         for(uint64_t i = 0;i < lhs_base.size();i++) {
-            out_iter.next() = this_iter.next() - value;
+            out_iter.next() = lhs_iter.next() - value;
         }
         
         return out_data;
@@ -181,7 +181,7 @@ namespace laruen::ndlib::impl {
         NDIter out_iter(out_data, out_base);
 
         for(uint64_t i = 0;i < lhs_base.size();i++) {
-            out_iter.next() = this_iter.next() * value;
+            out_iter.next() = lhs_iter.next() * value;
         }
         
         return out_data;
@@ -233,7 +233,7 @@ namespace laruen::ndlib::impl {
         NDIter out_iter(out_data, out_base);
 
         for(uint64_t i = 0;i < lhs_base.size();i++) {
-            out_iter.next() = this_iter.next() / value;
+            out_iter.next() = lhs_iter.next() / value;
         }
         
         return out_data;
@@ -285,7 +285,7 @@ namespace laruen::ndlib::impl {
         NDIter out_iter(out_data, out_base);
 
         for(uint64_t i = 0;i < lhs_base.size();i++) {
-            out_iter.next() = this_iter.next() ^ value;
+            out_iter.next() = lhs_iter.next() ^ value;
         }
         
         return out_data;
@@ -337,7 +337,7 @@ namespace laruen::ndlib::impl {
         NDIter out_iter(out_data, out_base);
 
         for(uint64_t i = 0;i < lhs_base.size();i++) {
-            out_iter.next() = this_iter.next() & value;
+            out_iter.next() = lhs_iter.next() & value;
         }
         
         return out_data;
@@ -389,7 +389,7 @@ namespace laruen::ndlib::impl {
         NDIter out_iter(out_data, out_base);
 
         for(uint64_t i = 0;i < lhs_base.size();i++) {
-            out_iter.next() = this_iter.next() | value;
+            out_iter.next() = lhs_iter.next() | value;
         }
         
         return out_data;
@@ -441,7 +441,7 @@ namespace laruen::ndlib::impl {
         NDIter out_iter(out_data, out_base);
 
         for(uint64_t i = 0;i < lhs_base.size();i++) {
-            out_iter.next() = this_iter.next() << value;
+            out_iter.next() = lhs_iter.next() << value;
         }
         
         return out_data;
@@ -493,7 +493,7 @@ namespace laruen::ndlib::impl {
         NDIter out_iter(out_data, out_base);
 
         for(uint64_t i = 0;i < lhs_base.size();i++) {
-            out_iter.next() = this_iter.next() >> value;
+            out_iter.next() = lhs_iter.next() >> value;
         }
         
         return out_data;
@@ -566,7 +566,7 @@ namespace laruen::ndlib::impl {
         NDIter out_iter(out_data, out_base);
 
         for(uint64_t i = 0;i < lhs_base.size();i++) {
-            out_iter.next() = laruen::math::common::remainder(this_iter.next(), value);
+            out_iter.next() = laruen::math::common::remainder(lhs_iter.next(), value);
         }
         
         return out_data;
@@ -616,7 +616,7 @@ namespace laruen::ndlib::impl {
         NDIter out_iter(out_data, out_base);
 
         for(uint64_t i = 0;i < lhs_base.size();i++) {
-            out_iter.next() = laruen::math::common::pow(this_iter.next(), value);
+            out_iter.next() = laruen::math::common::pow(lhs_iter.next(), value);
         }
         
         return out_data;
