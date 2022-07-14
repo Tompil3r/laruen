@@ -62,7 +62,7 @@ namespace laruen::ndlib::impl {
     T* add_eq(T *data, const ArrayBase &base, T value) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() += value;
         }
 
@@ -70,7 +70,7 @@ namespace laruen::ndlib::impl {
 	}
 
     template <typename T, typename TR>
-    TR* add(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* add(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
         /* implementation function: arrays must be broadcasted if needed */
 
         NDIter lhs_iter(lhs_data, lhs_base);
@@ -84,7 +84,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename T2, typename TR>
-    TR* add(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+    TR* add(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
         /* implementation function: arrays must be broadcasted if needed */
 
         NDIter lhs_iter(lhs_data, lhs_base);
@@ -116,7 +116,7 @@ namespace laruen::ndlib::impl {
     T* subtract_eq(T *data, const ArrayBase &base, T value) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() -= value;
         }
 
@@ -124,7 +124,7 @@ namespace laruen::ndlib::impl {
 	}
 
     template <typename T, typename TR>
-    TR* subtract(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* subtract(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
         NDIter lhs_iter(lhs_data, lhs_base);
         NDIter out_iter(out_data, out_base);
 
@@ -136,7 +136,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename T2, typename TR>
-    TR* subtract(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+    TR* subtract(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
         /* implementation function: arrays must be broadcasted if needed */
 
         NDIter lhs_iter(lhs_data, lhs_base);
@@ -168,7 +168,7 @@ namespace laruen::ndlib::impl {
     T* multiply_eq(T *data, const ArrayBase &base, T value) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() *= value;
         }
 
@@ -176,7 +176,7 @@ namespace laruen::ndlib::impl {
 	}
 
     template <typename T, typename TR>
-    TR* multiply(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* multiply(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
         NDIter lhs_iter(lhs_data, lhs_base);
         NDIter out_iter(out_data, out_base);
 
@@ -188,7 +188,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename T2, typename TR>
-    TR* multiply(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+    TR* multiply(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
         /* implementation function: arrays must be broadcasted if needed */
 
         NDIter lhs_iter(lhs_data, lhs_base);
@@ -220,7 +220,7 @@ namespace laruen::ndlib::impl {
     T* divide_eq(T *data, const ArrayBase &base, T value) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() /= value;
         }
 
@@ -228,7 +228,7 @@ namespace laruen::ndlib::impl {
 	}
 
     template <typename T, typename TR>
-    TR* divide(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* divide(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
         NDIter lhs_iter(lhs_data, lhs_base);
         NDIter out_iter(out_data, out_base);
 
@@ -240,7 +240,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename T2, typename TR>
-    TR* divide(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+    TR* divide(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
         /* implementation function: arrays must be broadcasted if needed */
 
         NDIter lhs_iter(lhs_data, lhs_base);
@@ -272,7 +272,7 @@ namespace laruen::ndlib::impl {
     T* bit_xor_eq(T *data, const ArrayBase &base, T value) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() ^= value;
         }
 
@@ -280,7 +280,7 @@ namespace laruen::ndlib::impl {
 	}
 
     template <typename T, typename TR>
-    TR* bit_xor(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* bit_xor(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
         NDIter lhs_iter(lhs_data, lhs_base);
         NDIter out_iter(out_data, out_base);
 
@@ -292,7 +292,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename T2, typename TR>
-    TR* bit_xor(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+    TR* bit_xor(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
         /* implementation function: arrays must be broadcasted if needed */
         
         NDIter lhs_iter(lhs_data, lhs_base);
@@ -324,7 +324,7 @@ namespace laruen::ndlib::impl {
     T* bit_and_eq(T *data, const ArrayBase &base, T value) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() &= value;
         }
 
@@ -332,7 +332,7 @@ namespace laruen::ndlib::impl {
 	}
 
     template <typename T, typename TR>
-    TR* bit_and(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* bit_and(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
         NDIter lhs_iter(lhs_data, lhs_base);
         NDIter out_iter(out_data, out_base);
 
@@ -344,7 +344,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename T2, typename TR>
-    TR* bit_and(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+    TR* bit_and(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
         /* implementation function: arrays must be broadcasted if needed */
         
         NDIter lhs_iter(lhs_data, lhs_base);
@@ -376,7 +376,7 @@ namespace laruen::ndlib::impl {
     T* bit_or_eq(T *data, const ArrayBase &base, T value) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() |= value;
         }
 
@@ -384,7 +384,7 @@ namespace laruen::ndlib::impl {
 	}
 
     template <typename T, typename TR>
-    TR* bit_or(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* bit_or(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
         NDIter lhs_iter(lhs_data, lhs_base);
         NDIter out_iter(out_data, out_base);
 
@@ -396,7 +396,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename T2, typename TR>
-    TR* bit_or(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+    TR* bit_or(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
         /* implementation function: arrays must be broadcasted if needed */
         
         NDIter lhs_iter(lhs_data, lhs_base);
@@ -428,7 +428,7 @@ namespace laruen::ndlib::impl {
     T* shl_eq(T *data, const ArrayBase &base, T value) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() <<= value;
         }
 
@@ -436,7 +436,7 @@ namespace laruen::ndlib::impl {
 	}
 
     template <typename T, typename TR>
-    TR* shl(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* shl(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
         NDIter lhs_iter(lhs_data, lhs_base);
         NDIter out_iter(out_data, out_base);
 
@@ -448,7 +448,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename T2, typename TR>
-    TR* shl(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+    TR* shl(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
         /* implementation function: arrays must be broadcasted if needed */
         
         NDIter lhs_iter(lhs_data, lhs_base);
@@ -480,7 +480,7 @@ namespace laruen::ndlib::impl {
     T* shr_eq(T *data, const ArrayBase &base, T value) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() >>= value;
         }
 
@@ -488,7 +488,7 @@ namespace laruen::ndlib::impl {
 	}
 
     template <typename T, typename TR>
-    TR* shr(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* shr(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
         NDIter lhs_iter(lhs_data, lhs_base);
         NDIter out_iter(out_data, out_base);
 
@@ -500,7 +500,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename T2, typename TR>
-    TR* shr(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+    TR* shr(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
         /* implementation function: arrays must be broadcasted if needed */
         
         NDIter lhs_iter(lhs_data, lhs_base);
@@ -518,7 +518,7 @@ namespace laruen::ndlib::impl {
     T* bit_not_eq(T *data, const ArrayBase &base) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() = ~iter.current();
         }
 
@@ -526,7 +526,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename TR>
-    TR* bit_not(const T *lhs_data, const ArrayBase &lhs_base, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* bit_not(const T *lhs_data, const ArrayBase &lhs_base, TR *out_data, const ArrayBase &out_base) noexcept {
         NDIter lhs_iter(lhs_data, lhs_base);
         NDIter out_iter(out_data, out_base);
 
@@ -553,7 +553,7 @@ namespace laruen::ndlib::impl {
     T* remainder_eq(T *data, const ArrayBase &base, T value) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() = laruen::math::common::remainder(iter.current(), value);
         }
 
@@ -561,7 +561,7 @@ namespace laruen::ndlib::impl {
 	}
 
     template <typename T, typename TR>
-    TR* remainder(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* remainder(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
         NDIter lhs_iter(lhs_data, lhs_base);
         NDIter out_iter(out_data, out_base);
 
@@ -573,7 +573,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename T2, typename TR>
-    TR* remainder(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+    TR* remainder(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
         /* implementation function: arrays must be broadcasted if needed */
         
         NDIter lhs_iter(lhs_data, lhs_base);
@@ -603,7 +603,7 @@ namespace laruen::ndlib::impl {
     T* power_eq(T *data, const ArrayBase &base, T value) noexcept {
         NDIter iter(data, base);
 
-        for(uint_fast64_t i = 0;i < lhs_base.size();i++) {
+        for(uint_fast64_t i = 0;i < base.size();i++) {
             iter.next() = laruen::math::common::pow(iter.current(), value);
         }
 
@@ -611,7 +611,7 @@ namespace laruen::ndlib::impl {
 	}
 
     template <typename T, typename TR>
-    TR* power(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) const noexcept {
+    TR* power(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
         NDIter lhs_iter(lhs_data, lhs_base);
         NDIter out_iter(out_data, out_base);
 
@@ -623,7 +623,7 @@ namespace laruen::ndlib::impl {
     }
 
     template <typename T, typename T2, typename TR>
-    TR* power(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) const {
+    TR* power(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
         /* implementation function: arrays must be broadcasted if needed */
         
         NDIter lhs_iter(lhs_data, lhs_base);
