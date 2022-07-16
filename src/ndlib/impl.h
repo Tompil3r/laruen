@@ -533,6 +533,8 @@ namespace laruen::ndlib::impl {
         for(uint_fast64_t i = 0 ;i < lhs_base.size();i++) {
             out_iter.next() = ~lhs_iter.next();
         }
+        
+        return out_data;
     }
 
     template <typename T, typename T2>
