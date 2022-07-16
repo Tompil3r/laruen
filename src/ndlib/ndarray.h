@@ -103,7 +103,6 @@ namespace laruen::ndlib {
             
             T max() const noexcept;
             
-            template <bool CR>
             NDArray<uint_fast64_t>& indices_max(const Axes &axes, NDArray<uint_fast64_t> &out) const noexcept;
 
             NDArray<uint_fast64_t> indices_max(const Axes &axes) const noexcept;
@@ -119,7 +118,6 @@ namespace laruen::ndlib {
 
             T min() const noexcept;
             
-            template <bool CR>
             NDArray<uint_fast64_t>& indices_min(const Axes &axes, NDArray<uint_fast64_t> &out) const noexcept;
 
             NDArray<uint_fast64_t> indices_min(const Axes &axes) const noexcept;

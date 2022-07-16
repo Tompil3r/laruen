@@ -352,7 +352,7 @@ namespace laruen::ndlib {
         return max;
     }
 
-    template <typename T> template <bool CR>
+    template <typename T>
     NDArray<uint_fast64_t>& NDArray<T>::indices_max(const Axes &axes, NDArray<uint_fast64_t> &out) const noexcept {
         const NDArray<T> reorder = this->axes_reorder(axes);
 
@@ -361,10 +361,10 @@ namespace laruen::ndlib {
         uint_fast64_t sample_size = reorder.m_size / out.m_size;
         T max;
         T current;
-        uint_fast64_t index_max;
+        T *ptr_max;
 
         for(uint_fast64_t i = 0;i < out.m_size;i++) {
-            index_max = src_iter.index();
+            ptr_max = src_iter.ptr;
             max = src_iter.next();
             
             for(uint_fast64_t j = 0;j < sample_size - 1;j++) {
@@ -372,11 +372,11 @@ namespace laruen::ndlib {
 
                 if(current > max) {
                     max = current;
-                    index_max = src_iter.index();
+                    ptr_max = src_iter.ptr;
                 }
                 src_iter.next();
             }
-            out_iter.next() = index_max;
+            out_iter.next() = ptr_max - this->m_data;
         }
 
         return out;
@@ -451,7 +451,7 @@ namespace laruen::ndlib {
         return min;
     }
 
-    template <typename T> template <bool CR>
+    template <typename T>
     NDArray<uint_fast64_t>& NDArray<T>::indices_min(const Axes &axes, NDArray<uint_fast64_t> &out) const noexcept {
         const NDArray<T> reorder = this->axes_reorder(axes);
 
@@ -460,10 +460,10 @@ namespace laruen::ndlib {
         uint_fast64_t sample_size = reorder.m_size / out.m_size;
         T min;
         T current;
-        uint_fast64_t index_min;
+        T *ptr_min;
 
         for(uint_fast64_t i = 0;i < out.m_size;i++) {
-            index_min = src_iter.index();
+            ptr_min = src_iter.ptr;
             min = src_iter.next();
             
             for(uint_fast64_t j = 0;j < sample_size - 1;j++) {
@@ -471,11 +471,11 @@ namespace laruen::ndlib {
 
                 if(current < min) {
                     min = current;
-                    index_min = src_iter.index();
+                    ptr_min = src_iter.ptr;
                 }
                 src_iter.next();
             }
-            out_iter.next() = index_min;
+            out_iter.next() = ptr_min - this->m_data;
         }
 
         return out;
