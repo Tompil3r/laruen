@@ -712,7 +712,7 @@ namespace laruen::ndlib {
     template <typename T>
     const NDArray<T> NDArray<T>::axes_reorder(const Axes &axes) const noexcept {
         NDArray<T> reorder(this->m_data, Shape(this->m_ndim), Strides(this->m_ndim),
-        this->m_size, this->m_ndim, this->forward_base());
+        Strides(this->m_ndim), this->m_size, this->m_ndim, this->forward_base());
 
         uint_fast8_t axes_added = 0;
         uint_fast8_t dest_idx = reorder.m_ndim - 1;
