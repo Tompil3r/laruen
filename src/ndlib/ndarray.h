@@ -917,7 +917,11 @@ namespace laruen::ndlib {
             }
 
             // more utility functions
-            inline ArrayBase& arraybase() {
+            inline ArrayBase& arraybase() noexcept {
+                return *this;
+            }
+
+            inline const ArrayBase& arraybase() const noexcept {
                 return *this;
             }
 
