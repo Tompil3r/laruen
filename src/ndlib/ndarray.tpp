@@ -697,7 +697,7 @@ namespace laruen::ndlib {
             return *this;
         }
         
-        NDArray<T2> expansion(this->m_data, Shape(expand_to.m_shape), Strides(expand_to.m_ndim, 0),
+        NDArray<T> expansion(this->m_data, Shape(expand_to.m_shape), Strides(expand_to.m_ndim, 0),
         Strides(expand_to.m_ndim, 0), expand_to.m_size, expand_to.m_ndim, this->forward_base());
         
         uint_fast8_t to_idx = expand_to.m_ndim - this->m_ndim;
