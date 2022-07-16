@@ -165,7 +165,7 @@ namespace laruen::ndlib {
         private:
             // private utility functions
             template <typename T2>
-            const NDArray<T> broadcast_expansion(const NDArray<T2> &expand_to) const noexcept;
+            const NDArray<T> expand_to(const NDArray<T2> &expand_to) const noexcept;
 
             const NDArray<T> axes_reorder(const Axes &axes) const noexcept;
 

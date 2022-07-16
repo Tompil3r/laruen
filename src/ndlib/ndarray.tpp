@@ -691,7 +691,7 @@ namespace laruen::ndlib {
     }
 
     template <typename T> template <typename T2>
-    const NDArray<T> NDArray<T>::broadcast_expansion(const NDArray<T2> &expand_to) const noexcept {
+    const NDArray<T> NDArray<T>::expand_to(const NDArray<T2> &expand_to) const noexcept {
         /* expand the dimensions of this to the dimensions of expand_to */
         if(this->m_shape == expand_to.m_shape) {
             return *this;
