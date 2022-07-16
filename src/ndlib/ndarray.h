@@ -209,7 +209,7 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& add(const NDArray<T2> &rhs, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& add(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
                 impl::add(this->m_data, this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 rhs.m_data, rhs.m_shape == out.m_shape ? rhs : rhs.expand_to(out),
                 out.m_data, out);
@@ -217,7 +217,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& add(TR value, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& add(TR value, NDArray<TR> &out) const noexcept {
                 impl::add(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 value, out.m_data, out);
@@ -225,21 +225,21 @@ namespace laruen::ndlib {
             }
 
             template <typename TR, typename T2>
-            inline NDArray<TR> add(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<TR> add(const NDArray<T2> &rhs) const noexcept {
                 NDArray<TR> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape));
                 this->add(rhs, out);
                 return out;
             }
 
             template <typename TR>
-            inline NDArray<TR> add(TR value) noexcept {
+            inline NDArray<TR> add(TR value) const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->add(value, out);
                 return out;
             }
 
             template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> add(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<types::result_type_t<T, T2>> add(const NDArray<T2> &rhs) const noexcept {
                 return this->template add<types::result_type_t<T, T2>, T2>(rhs);
             }
 
@@ -256,7 +256,7 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& subtract(const NDArray<T2> &rhs, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& subtract(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
                 impl::subtract(this->m_data, this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 rhs.m_data, rhs.m_shape == out.m_shape ? rhs : rhs.expand_to(out),
                 out.m_data, out);
@@ -264,7 +264,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& subtract(TR value, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& subtract(TR value, NDArray<TR> &out) const noexcept {
                 impl::subtract(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 value, out.m_data, out);
@@ -272,21 +272,21 @@ namespace laruen::ndlib {
             }
 
             template <typename TR, typename T2>
-            inline NDArray<TR> subtract(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<TR> subtract(const NDArray<T2> &rhs) const noexcept {
                 NDArray<TR> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape));
                 this->subtract(rhs, out);
                 return out;
             }
 
             template <typename TR>
-            inline NDArray<TR> subtract(TR value) noexcept {
+            inline NDArray<TR> subtract(TR value) const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->subtract(value, out);
                 return out;
             }
 
             template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> subtract(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<types::result_type_t<T, T2>> subtract(const NDArray<T2> &rhs) const noexcept {
                 return this->template subtract<types::result_type_t<T, T2>, T2>(rhs);
             }
 
@@ -303,7 +303,7 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& multiply(const NDArray<T2> &rhs, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& multiply(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
                 impl::multiply(this->m_data, this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 rhs.m_data, rhs.m_shape == out.m_shape ? rhs : rhs.expand_to(out),
                 out.m_data, out);
@@ -311,7 +311,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& multiply(TR value, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& multiply(TR value, NDArray<TR> &out) const noexcept {
                 impl::multiply(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 value, out.m_data, out);
@@ -319,21 +319,21 @@ namespace laruen::ndlib {
             }
 
             template <typename TR, typename T2>
-            inline NDArray<TR> multiply(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<TR> multiply(const NDArray<T2> &rhs) const noexcept {
                 NDArray<TR> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape));
                 this->multiply(rhs, out);
                 return out;
             }
 
             template <typename TR>
-            inline NDArray<TR> multiply(TR value) noexcept {
+            inline NDArray<TR> multiply(TR value) const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->multiply(value, out);
                 return out;
             }
 
             template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> multiply(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<types::result_type_t<T, T2>> multiply(const NDArray<T2> &rhs) const noexcept {
                 return this->template multiply<types::result_type_t<T, T2>, T2>(rhs);
             }
 
@@ -350,7 +350,7 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& divide(const NDArray<T2> &rhs, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& divide(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
                 impl::divide(this->m_data, this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 rhs.m_data, rhs.m_shape == out.m_shape ? rhs : rhs.expand_to(out),
                 out.m_data, out);
@@ -358,7 +358,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& divide(TR value, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& divide(TR value, NDArray<TR> &out) const noexcept {
                 impl::divide(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 value, out.m_data, out);
@@ -366,21 +366,21 @@ namespace laruen::ndlib {
             }
 
             template <typename TR, typename T2>
-            inline NDArray<TR> divide(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<TR> divide(const NDArray<T2> &rhs) const noexcept {
                 NDArray<TR> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape));
                 this->divide(rhs, out);
                 return out;
             }
 
             template <typename TR>
-            inline NDArray<TR> divide(TR value) noexcept {
+            inline NDArray<TR> divide(TR value) const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->divide(value, out);
                 return out;
             }
 
             template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> divide(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<types::result_type_t<T, T2>> divide(const NDArray<T2> &rhs) const noexcept {
                 return this->template divide<types::result_type_t<T, T2>, T2>(rhs);
             }
 
@@ -397,7 +397,7 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& bit_xor(const NDArray<T2> &rhs, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& bit_xor(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
                 impl::bit_xor(this->m_data, this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 rhs.m_data, rhs.m_shape == out.m_shape ? rhs : rhs.expand_to(out),
                 out.m_data, out);
@@ -405,7 +405,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& bit_xor(TR value, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& bit_xor(TR value, NDArray<TR> &out) const noexcept {
                 impl::bit_xor(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 value, out.m_data, out);
@@ -413,21 +413,21 @@ namespace laruen::ndlib {
             }
 
             template <typename TR, typename T2>
-            inline NDArray<TR> bit_xor(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<TR> bit_xor(const NDArray<T2> &rhs) const noexcept {
                 NDArray<TR> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape));
                 this->bit_xor(rhs, out);
                 return out;
             }
 
             template <typename TR>
-            inline NDArray<TR> bit_xor(TR value) noexcept {
+            inline NDArray<TR> bit_xor(TR value) const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->bit_xor(value, out);
                 return out;
             }
 
             template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> bit_xor(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<types::result_type_t<T, T2>> bit_xor(const NDArray<T2> &rhs) const noexcept {
                 return this->template bit_xor<types::result_type_t<T, T2>, T2>(rhs);
             }
 
@@ -444,7 +444,7 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& bit_and(const NDArray<T2> &rhs, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& bit_and(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
                 impl::bit_and(this->m_data, this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 rhs.m_data, rhs.m_shape == out.m_shape ? rhs : rhs.expand_to(out),
                 out.m_data, out);
@@ -452,7 +452,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& bit_and(TR value, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& bit_and(TR value, NDArray<TR> &out) const noexcept {
                 impl::bit_and(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 value, out.m_data, out);
@@ -460,21 +460,21 @@ namespace laruen::ndlib {
             }
 
             template <typename TR, typename T2>
-            inline NDArray<TR> bit_and(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<TR> bit_and(const NDArray<T2> &rhs) const noexcept {
                 NDArray<TR> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape));
                 this->bit_and(rhs, out);
                 return out;
             }
 
             template <typename TR>
-            inline NDArray<TR> bit_and(TR value) noexcept {
+            inline NDArray<TR> bit_and(TR value) const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->bit_and(value, out);
                 return out;
             }
 
             template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> bit_and(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<types::result_type_t<T, T2>> bit_and(const NDArray<T2> &rhs) const noexcept {
                 return this->template bit_and<types::result_type_t<T, T2>, T2>(rhs);
             }
 
@@ -491,7 +491,7 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& bit_or(const NDArray<T2> &rhs, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& bit_or(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
                 impl::bit_or(this->m_data, this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 rhs.m_data, rhs.m_shape == out.m_shape ? rhs : rhs.expand_to(out),
                 out.m_data, out);
@@ -499,7 +499,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& bit_or(TR value, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& bit_or(TR value, NDArray<TR> &out) const noexcept {
                 impl::bit_or(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 value, out.m_data, out);
@@ -507,21 +507,21 @@ namespace laruen::ndlib {
             }
 
             template <typename TR, typename T2>
-            inline NDArray<TR> bit_or(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<TR> bit_or(const NDArray<T2> &rhs) const noexcept {
                 NDArray<TR> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape));
                 this->bit_or(rhs, out);
                 return out;
             }
 
             template <typename TR>
-            inline NDArray<TR> bit_or(TR value) noexcept {
+            inline NDArray<TR> bit_or(TR value) const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->bit_or(value, out);
                 return out;
             }
 
             template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> bit_or(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<types::result_type_t<T, T2>> bit_or(const NDArray<T2> &rhs) const noexcept {
                 return this->template bit_or<types::result_type_t<T, T2>, T2>(rhs);
             }
 
@@ -538,7 +538,7 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& shl(const NDArray<T2> &rhs, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& shl(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
                 impl::shl(this->m_data, this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 rhs.m_data, rhs.m_shape == out.m_shape ? rhs : rhs.expand_to(out),
                 out.m_data, out);
@@ -546,7 +546,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& shl(TR value, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& shl(TR value, NDArray<TR> &out) const noexcept {
                 impl::shl(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 value, out.m_data, out);
@@ -554,21 +554,21 @@ namespace laruen::ndlib {
             }
 
             template <typename TR, typename T2>
-            inline NDArray<TR> shl(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<TR> shl(const NDArray<T2> &rhs) const noexcept {
                 NDArray<TR> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape));
                 this->shl(rhs, out);
                 return out;
             }
 
             template <typename TR>
-            inline NDArray<TR> shl(TR value) noexcept {
+            inline NDArray<TR> shl(TR value) const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->shl(value, out);
                 return out;
             }
 
             template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> shl(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<types::result_type_t<T, T2>> shl(const NDArray<T2> &rhs) const noexcept {
                 return this->template shl<types::result_type_t<T, T2>, T2>(rhs);
             }
 
@@ -585,7 +585,7 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& shr(const NDArray<T2> &rhs, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& shr(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
                 impl::shr(this->m_data, this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 rhs.m_data, rhs.m_shape == out.m_shape ? rhs : rhs.expand_to(out),
                 out.m_data, out);
@@ -593,7 +593,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& shr(TR value, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& shr(TR value, NDArray<TR> &out) const noexcept {
                 impl::shr(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 value, out.m_data, out);
@@ -601,14 +601,14 @@ namespace laruen::ndlib {
             }
 
             template <typename TR, typename T2>
-            inline NDArray<TR> shr(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<TR> shr(const NDArray<T2> &rhs) const noexcept {
                 NDArray<TR> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape));
                 this->shr(rhs, out);
                 return out;
             }
 
             template <typename TR>
-            inline NDArray<TR> shr(TR value) noexcept {
+            inline NDArray<TR> shr(TR value) const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->shr(value, out);
                 return out;
@@ -620,7 +620,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& bit_not(NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& bit_not(NDArray<TR> &out) const noexcept {
                 impl::bit_not(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 out.m_data, out);
@@ -628,14 +628,14 @@ namespace laruen::ndlib {
             }
 
             template <typename TR = T>
-            inline NDArray<TR> bit_not() noexcept {
+            inline NDArray<TR> bit_not() const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->bit_not(out);
                 return out;
             }
 
             template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> shr(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<types::result_type_t<T, T2>> shr(const NDArray<T2> &rhs) const noexcept {
                 return this->template shr<types::result_type_t<T, T2>, T2>(rhs);
             }
 
@@ -652,7 +652,7 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& remainder(const NDArray<T2> &rhs, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& remainder(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
                 impl::remainder(this->m_data, this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 rhs.m_data, rhs.m_shape == out.m_shape ? rhs : rhs.expand_to(out),
                 out.m_data, out);
@@ -660,7 +660,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& remainder(TR value, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& remainder(TR value, NDArray<TR> &out) const noexcept {
                 impl::remainder(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 value, out.m_data, out);
@@ -668,21 +668,21 @@ namespace laruen::ndlib {
             }
 
             template <typename TR, typename T2>
-            inline NDArray<TR> remainder(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<TR> remainder(const NDArray<T2> &rhs) const noexcept {
                 NDArray<TR> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape));
                 this->remainder(rhs, out);
                 return out;
             }
 
             template <typename TR>
-            inline NDArray<TR> remainder(TR value) noexcept {
+            inline NDArray<TR> remainder(TR value) const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->remainder(value, out);
                 return out;
             }
 
             template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> remainder(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<types::result_type_t<T, T2>> remainder(const NDArray<T2> &rhs) const noexcept {
                 return this->template remainder<types::result_type_t<T, T2>, T2>(rhs);
             }
 
@@ -699,7 +699,7 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& power(const NDArray<T2> &rhs, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& power(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
                 impl::power(this->m_data, this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 rhs.m_data, rhs.m_shape == out.m_shape ? rhs : rhs.expand_to(out),
                 out.m_data, out);
@@ -707,7 +707,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            inline NDArray<TR>& power(TR value, NDArray<TR> &out) noexcept {
+            inline NDArray<TR>& power(TR value, NDArray<TR> &out) const noexcept {
                 impl::power(this->m_data,
                 this->m_shape == out.m_shape ? *this : this->expand_to(out),
                 value, out.m_data, out);
@@ -715,21 +715,21 @@ namespace laruen::ndlib {
             }
 
             template <typename TR, typename T2>
-            inline NDArray<TR> power(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<TR> power(const NDArray<T2> &rhs) const noexcept {
                 NDArray<TR> out(laruen::ndlib::utils::broadcast(this->m_shape, rhs.m_shape));
                 this->power(rhs, out);
                 return out;
             }
 
             template <typename TR>
-            inline NDArray<TR> power(TR value) noexcept {
+            inline NDArray<TR> power(TR value) const noexcept {
                 NDArray<TR> out(new TR[this->m_size], *this, nullptr);
                 this->power(value, out);
                 return out;
             }
 
             template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> power(const NDArray<T2> &rhs) noexcept {
+            inline NDArray<types::result_type_t<T, T2>> power(const NDArray<T2> &rhs) const noexcept {
                 return this->template power<types::result_type_t<T, T2>, T2>(rhs);
             }
 
