@@ -12,8 +12,9 @@
 namespace laruen::ndlib {
 
     class ArrayBase {
-        template <typename T> friend class NDArray;
+        template <typename> friend class NDArray;
         template <typename> friend struct NDIter;
+        friend struct Impl;
 
         protected:
             Shape m_shape;

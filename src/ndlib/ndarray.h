@@ -25,6 +25,7 @@ namespace laruen::ndlib {
     class NDArray : public ArrayBase {
 
         template <typename> friend class NDArray;
+        friend struct Impl;
 
         private:
             T *m_data;
