@@ -10,8 +10,8 @@ namespace laruen::ndlib {
     struct Impl {
         
         template <typename TR, typename T, typename T2>
-        static inline TR dot_1d(T *lhs_ptr, uint_fast64_t lhs_stride,
-        T2 *rhs_ptr, uint_fast64_t rhs_stride, uint_fast64_t size) noexcept {
+        static inline TR dot_1d(const T *lhs_ptr, uint_fast64_t lhs_stride,
+        const T2 *rhs_ptr, uint_fast64_t rhs_stride, uint_fast64_t size) noexcept {
             TR product = 0;
             for(uint_fast64_t i = 0;i < size;i++) {
                 product += (*lhs_ptr) * (*rhs_ptr);
@@ -23,12 +23,12 @@ namespace laruen::ndlib {
         }
 
         template <typename T, typename T2, typename TR>
-        static TR* matmul_2d_n3(T *lhs_ptr, uint_fast64_t lhs_row_stride, uint_fast64_t lhs_col_stride,
-        T2 *rhs_ptr, uint_fast64_t rhs_row_stride, uint_fast64_t rhs_col_stride,
+        static TR* matmul_2d_n3(const T *lhs_ptr, uint_fast64_t lhs_row_stride, uint_fast64_t lhs_col_stride,
+        const T2 *rhs_ptr, uint_fast64_t rhs_row_stride, uint_fast64_t rhs_col_stride,
         TR *out_ptr, uint_fast64_t out_row_stride, uint_fast64_t out_col_stride,
         uint_fast64_t rows, uint_fast64_t cols, uint_fast64_t shared)
         {
-            T2 *rhs_start_ptr = rhs_ptr;
+            const T2 *rhs_start_ptr = rhs_ptr;
             TR *out_start_ptr = out_ptr;
             TR *out_checkpoint = out_ptr;
 
