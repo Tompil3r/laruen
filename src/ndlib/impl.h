@@ -2,6 +2,7 @@
 #define NDLIB_STATIC_H_
 
 #include <cstdint>
+#include "src/ndlib/nditer.h"
 #include "src/math/common.h"
 
 namespace laruen::ndlib::impl {
@@ -42,6 +43,46 @@ namespace laruen::ndlib::impl {
         }
 
         return out_start_ptr;
+    }
+
+    template <typename T, typename T2, typename TR>
+    TR* matmul_n3(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data,
+    const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) noexcept {
+        /* assumes the following:
+            - shapes are valid
+            - no broadcasting needed
+            - min ndim == 2 (no dot product)
+        */
+        using laruen::ndlib::NDIter;
+
+        uint_fast8_t rows_axis = lhs_base.ndim() - 2;
+        uint_fast8_t cols_axis = lhs_base.ndim() - 1;
+
+        if(lhs_base.ndim() <= 2) {
+            impl::matmul_2d_n3(lhs_data, lhs_base.strides()[rows_axis], lhs_base.strides()[cols_axis],
+            rhs_data, rhs_base.strides()[rows_axis], rhs_base.strides()[cols_axis], out_data, out_base.strides()[rows_axis],
+            out_base.strides()[cols_axis], out_base.shape()[rows_axis], out_base.shape()[cols_axis], lhs_base.shape()[cols_axis]);
+
+            return out_data;
+        }
+
+        uint_fast64_t stacks = (lhs_base.size() / lhs_base.shape()[cols_axis]) / lhs_base.shape()[rows_axis];
+        uint_fast8_t iteration_axis = lhs_base.ndim() - 3;
+        NDIter lhs_iter(lhs_data, lhs_base);
+        NDIter rhs_iter(rhs_data, rhs_base);
+        NDIter out_iter(out_data, out_base);
+
+        for(uint_fast64_t stack = 0;stack < stacks;stack++) {
+            impl::matmul_2d_n3(lhs_iter.ptr, lhs_base.strides()[rows_axis], lhs_base.strides()[cols_axis],
+            rhs_iter.ptr, rhs_base.strides()[rows_axis], rhs_base.strides()[cols_axis], out_iter.ptr, out_base.strides()[rows_axis],
+            out_base.strides()[cols_axis], out_base.shape()[rows_axis], out_base.shape()[cols_axis], lhs_base.shape()[cols_axis]);
+
+            lhs_iter.next(iteration_axis);
+            rhs_iter.next(iteration_axis);
+            out_iter.next(iteration_axis);
+        }
+
+        return out_data;
     }
 
     template <typename T, typename T2>

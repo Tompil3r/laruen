@@ -736,42 +736,4 @@ namespace laruen::ndlib {
 
         return reorder;
     }
-
-    template <typename T> template <typename T2, typename TR>
-    NDArray<TR>& NDArray<T>::matmul_n3(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
-        /* assumes the following:
-            - shapes are valid
-            - no broadcasting needed
-            - min ndim == 2 (no dot product)
-        */
-
-        uint_fast8_t rows_axis = this->m_ndim - 2;
-        uint_fast8_t cols_axis = this->m_ndim - 1;
-
-        if(this->m_ndim <= 2) {
-            impl::matmul_2d_n3(this->m_data, this->m_strides[rows_axis], this->m_strides[cols_axis],
-            rhs.m_data, rhs.m_strides[rows_axis], rhs.m_strides[cols_axis], out.m_data, out.m_strides[rows_axis],
-            out.m_strides[cols_axis], out.m_shape[rows_axis], out.m_shape[cols_axis], this->m_shape[cols_axis]);
-
-            return out;
-        }
-
-        uint_fast64_t stacks = (this->m_size / this->m_shape[cols_axis]) / this->m_shape[rows_axis];
-        uint_fast8_t iteration_axis = this->m_ndim - 3;
-        NDIter lhs_iter(this->m_data, *this);
-        NDIter rhs_iter(rhs.m_data, rhs);
-        NDIter out_iter(out.m_data, out);
-
-        for(uint_fast64_t stack = 0;stack < stacks;stack++) {
-            impl::matmul_2d_n3(lhs_iter.ptr, this->m_strides[rows_axis], this->m_strides[cols_axis],
-            rhs_iter.ptr, rhs.m_strides[rows_axis], rhs.m_strides[cols_axis], out_iter.ptr, out.m_strides[rows_axis],
-            out.m_strides[cols_axis], out.m_shape[rows_axis], out.m_shape[cols_axis], this->m_shape[cols_axis]);
-
-            lhs_iter.next(iteration_axis);
-            rhs_iter.next(iteration_axis);
-            out_iter.next(iteration_axis);
-        }
-
-        return out;
-    }
 }

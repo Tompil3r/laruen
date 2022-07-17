@@ -168,9 +168,6 @@ namespace laruen::ndlib {
 
             const NDArray<T> axes_reorder(const Axes &axes) const noexcept;
 
-            template <typename T2, typename TR>
-            NDArray<TR>& matmul_n3(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept;
-
         public:
             // getters
             inline const T* data() const noexcept {
