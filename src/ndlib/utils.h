@@ -11,11 +11,7 @@ namespace laruen::ndlib::utils {
 
     using laruen::ndlib::Shape, laruen::ndlib::Axes;
 
-    template <bool = false>
-    Shape broadcast(const Shape&, const Shape&);
-
-    template <>
-    Shape broadcast<true>(const Shape &lhs, const Shape &rhs) {
+    Shape broadcast_(const Shape &lhs, const Shape &rhs) {
         // assume lhs.size() >= rhs.size()
 
         Shape bshape(lhs);
@@ -37,9 +33,8 @@ namespace laruen::ndlib::utils {
         return bshape;
     }
 
-    template <>
-    Shape broadcast<false>(const Shape &lhs, const Shape &rhs) {
-        return lhs.size() >= rhs.size() ? broadcast<true>(lhs, rhs) : broadcast<true>(rhs, lhs);
+    Shape broadcast(const Shape &lhs, const Shape &rhs) {
+        return lhs.size() >= rhs.size() ? broadcast_(lhs, rhs) : broadcast_(rhs, lhs);
     }
 
 
