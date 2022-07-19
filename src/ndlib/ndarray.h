@@ -18,6 +18,8 @@
 #include "src/ndlib/range.h"
 #include "src/ndlib/type_selection.h"
 #include "src/ndlib/impl.h"
+#include "src/math/common.h"
+#include "src/math/bits.h"
 
 
 namespace laruen::ndlib {
@@ -735,9 +737,22 @@ namespace laruen::ndlib {
 
             template <typename T2, typename TR>
             inline NDArray<TR>& matmul(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
-                assert(this->m_shape[this->m_ndim - 2] == out.m_shape[out.m_ndim - 2] &&
-                rhs.m_shape.back() == out.m_shape.back() &&
-                this->m_shape.back() == rhs.m_shape[rhs.m_ndim - 2]);
+                using laruen::math::common::min, laruen::math::common::is_pow2;
+                using laruen::math::bits::lsb64;
+
+                uint_fast64_t lhs_rows = this->m_shape[this->m_ndim - 2];
+                uint_fast64_t rhs_cols = rhs.m_shape.back();
+                uint_fast64_t lhs_shared = this->m_shape.back();
+
+                assert(lhs_rows == out.m_shape[out.m_ndim - 2] &&
+                rhs_cols == out.m_shape.back() &&
+                lhs_shared == rhs.m_shape[rhs.m_ndim - 2]);
+
+                uint_fast8_t depth = min(lsb64(lhs_rows), min(lsb64(rhs_cols), lsb64(lhs_shared)));
+
+                if(is_pow2(lhs_rows) && is_pow2(rhs_cols) && is_pow2(lhs_shared)) {
+                    depth--;
+                }
 
                 Impl::matmul(this->m_data,
                 std::equal(out.m_shape.begin(), out.m_shape.end() - 2, this->m_shape.begin())
@@ -745,7 +760,7 @@ namespace laruen::ndlib {
                 rhs.m_data,
                 std::equal(out.m_shape.begin(), out.m_shape.end() - 2, rhs.m_shape.begin())
                 ? rhs : rhs.matmul_expansion(out),
-                out.m_data, out);
+                out.m_data, out, depth);
 
                 return out;
             }
