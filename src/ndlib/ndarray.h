@@ -167,6 +167,9 @@ namespace laruen::ndlib {
             template <typename T2>
             const NDArray<T> expansion(const NDArray<T2> &expand_to) const noexcept;
 
+            template <typename T2>
+            const NDArray<T> matmul_expansion(const NDArray<T2> &expand_to) const noexcept;
+
             const NDArray<T> axes_reorder(const Axes &axes) const noexcept;
 
         public:
