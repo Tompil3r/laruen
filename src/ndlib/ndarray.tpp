@@ -691,18 +691,18 @@ namespace laruen::ndlib {
     }
 
     template <typename T> template <typename T2>
-    const NDArray<T> NDArray<T>::expand_to(const NDArray<T2> &expand_to) const noexcept {
-        /* expand the dimensions of this to the dimensions of expand_to */
+    const NDArray<T> NDArray<T>::expansion(const NDArray<T2> &expand_to) const noexcept {
+        /* expand the dimensions of this to the dimensions of expansion */
         
         NDArray<T> expansion(this->m_data, Shape(expand_to.m_shape), Strides(expand_to.m_ndim, 0),
         Strides(expand_to.m_ndim, 0), expand_to.m_size, expand_to.m_ndim, this->forward_base());
         
-        uint_fast8_t to_idx = expand_to.m_ndim - this->m_ndim;
+        uint_fast8_t expansion_idx = expansion.m_ndim - this->m_ndim;
 
-        for(uint_fast8_t this_idx = 0;this_idx < this->m_ndim;this_idx++, to_idx++) {
-            if(expand_to.m_shape[to_idx] == this->m_shape[this_idx]) {
-                expansion.m_strides[to_idx] = this->m_strides[this_idx];
-                expansion.m_dim_sizes[to_idx] = this->m_dim_sizes[this_idx];
+        for(uint_fast8_t expanded_idx = 0;expanded_idx < this->m_ndim;expanded_idx++, expansion_idx++) {
+            if(expansion.m_shape[expansion_idx] == this->m_shape[expanded_idx]) {
+                expansion.m_strides[expansion_idx] = this->m_strides[expanded_idx];
+                expansion.m_dim_sizes[expansion_idx] = this->m_dim_sizes[expanded_idx];
             }
         }
 
