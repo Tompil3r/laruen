@@ -33,11 +33,6 @@ namespace laruen::ndlib::utils {
         return bshape;
     }
 
-    Shape broadcast(const Shape &lhs, const Shape &rhs) {
-        return lhs.size() >= rhs.size() ? broadcast_(lhs, rhs) : broadcast_(rhs, lhs);
-    }
-
-
     Axes compress_axes(const Axes &axes, uint_fast8_t ndim) {
         Axes result(ndim - axes.size());
         uint_fast8_t ridx = 0;
@@ -55,6 +50,10 @@ namespace laruen::ndlib::utils {
         }
 
         return result;
+    }
+
+    inline Shape broadcast(const Shape &lhs, const Shape &rhs) {
+        return lhs.size() >= rhs.size() ? broadcast_(lhs, rhs) : broadcast_(rhs, lhs);
     }
 
     inline uint_fast64_t ceil_index(float64_t index) noexcept {
