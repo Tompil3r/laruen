@@ -33,6 +33,29 @@ namespace laruen::ndlib::utils {
         return bshape;
     }
 
+    Shape matmul_broadcast_(const Shape &lhs, const Shape &rhs) {
+        // assume lhs.size() >= rhs.size()
+
+        Shape bshape(lhs);
+        const uint_fast8_t min_ndim = rhs.size();
+        const uint_fast8_t ndim_delta = lhs.size() - min_ndim;
+        uint_fast8_t imax, lval, rval;
+
+        for(uint_fast8_t imin = 0;imin < min_ndim - 2;imin++) {
+            uint_fast8_t imax = imin + ndim_delta;
+            lval = lhs[imax];
+            rval = rhs[imin];
+
+            if(lval != rval && lval != 1 && rval != 1) {
+                throw std::invalid_argument("shapes cannot be broadcasted");
+            }
+            bshape[imax] = laruen::math::common::max(lval, rval);
+        }
+
+        bshape.back() = rhs.back();
+        return bshape;
+    }
+
     Axes compress_axes(const Axes &axes, uint_fast8_t ndim) {
         Axes result(ndim - axes.size());
         uint_fast8_t ridx = 0;
@@ -54,6 +77,10 @@ namespace laruen::ndlib::utils {
 
     inline Shape broadcast(const Shape &lhs, const Shape &rhs) {
         return lhs.size() >= rhs.size() ? broadcast_(lhs, rhs) : broadcast_(rhs, lhs);
+    }
+
+    inline Shape matmul_broadcast(const Shape &lhs, const Shape &rhs) {
+        return lhs.size() >= rhs.size() ? matmul_broadcast_(lhs, rhs) : matmul_broadcast_(rhs, lhs);
     }
 
     inline uint_fast64_t ceil_index(float64_t index) noexcept {
