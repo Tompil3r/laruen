@@ -10,6 +10,7 @@
 #include <ostream>
 #include <initializer_list>
 #include <utility>
+#include <algorithm>
 #include "src/ndlib/utils.h"
 #include "src/ndlib/types.h"
 #include "src/ndlib/nditer.h"
@@ -730,6 +731,35 @@ namespace laruen::ndlib {
             template <typename T2>
             inline NDArray<types::result_type_t<T, T2>> power(const NDArray<T2> &rhs) const noexcept {
                 return this->template power<types::result_type_t<T, T2>, T2>(rhs);
+            }
+
+            template <typename T2, typename TR>
+            inline NDArray<TR>& matmul(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
+                assert(this->m_shape[this->m_ndim - 2] == out.m_shape[out.m_ndim - 2] &&
+                rhs.m_shape.back() == out.m_shape.back() &&
+                this->m_shape.back() == rhs.m_shape[rhs.m_ndim - 2]);
+
+                Impl::matmul(this->m_data,
+                std::equal(out.m_shape.begin(), out.m_shape.end() - 2, this->m_shape.begin())
+                ? *this : this->matmul_expansion(out),
+                rhs.m_data,
+                std::equal(out.m_shape.begin(), out.m_shape.end() - 2, rhs.m_shape.begin())
+                ? rhs : rhs.matmul_expansion(out),
+                out.m_data, out);
+
+                return out;
+            }
+
+            template <typename TR, typename T2>
+            inline NDArray<TR> matmul(const NDArray<T2> &rhs) const {
+                NDArray<TR> out(laruen::ndlib::utils::matmul_broadcast(this->m_shape, rhs.m_shape));
+                this->matmul(rhs, out);
+                return out;
+            }
+
+            template <typename T2>
+            inline NDArray<types::result_type_t<T, T2>> matmul(const NDArray<T2> &rhs) const {
+                return this->matmul<types::result_type_t<T, T2>, T2>(rhs);
             }
 
             // arithmetical operators
