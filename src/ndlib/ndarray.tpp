@@ -29,7 +29,7 @@ namespace laruen::ndlib {
 
     template <typename T>
     NDArray<T>::NDArray(std::initializer_list<T> init_list) noexcept
-    : ArrayBase(Shape{init_list.size()}, Strides{1}, init_list.size(), 1),
+    : ArrayBase(Shape{init_list.size()}, Strides{1}, Strides{init_list.size()}, init_list.size(), 1),
     m_data(new T[init_list.size()])
     {
         NDIter iter(this->m_data, *this);
