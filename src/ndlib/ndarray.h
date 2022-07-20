@@ -190,6 +190,10 @@ namespace laruen::ndlib {
                         delete[] this->m_data;
                     }
                     this->m_data = new T[ndarray.m_size];
+                    // base update is required - 
+                    // creating new data means
+                    // 'this' object is the owner
+                    this->m_base = nullptr;
                 }
 
                 this->m_shape = ndarray.m_shape;
@@ -197,7 +201,6 @@ namespace laruen::ndlib {
                 this->m_dim_sizes = ndarray.m_dim_sizes;
                 this->m_size = ndarray.m_size;
                 this->m_ndim = ndarray.m_ndim;
-                // this->m_free_mem = true; // check this
 
                 this->copy_data_from(ndarray);
 
@@ -218,7 +221,9 @@ namespace laruen::ndlib {
                 this->m_dim_sizes = std::move(ndarray.m_dim_sizes);
                 this->m_size = ndarray.m_size;
                 this->m_ndim = ndarray.m_ndim;
-                // this->m_free_mem = ndarray.m_free_mem; // check this
+                // base update required since memory space
+                // of data is not ours
+                this->m_base = ndarray.m_base;
                 
                 this->m_data = ndarray.m_data;
                 ndarray.m_data = nullptr;
@@ -233,6 +238,10 @@ namespace laruen::ndlib {
                         delete[] this->m_data;
                     }
                     this->m_data = new T[ndarray.m_size];
+                    // base update is required - 
+                    // creating new data means
+                    // 'this' object is the owner
+                    this->m_base = nullptr;
                 }
 
                 this->m_shape = ndarray.m_shape;
@@ -240,7 +249,6 @@ namespace laruen::ndlib {
                 this->m_dim_sizes=  ndarray.m_dim_sizes;
                 this->m_size = ndarray.m_size;
                 this->m_ndim = ndarray.m_ndim;
-                // this->m_free_mem = true; // check this
 
                 this->copy_data_from(ndarray);
 
@@ -255,7 +263,10 @@ namespace laruen::ndlib {
                 this->m_dim_sizes = std::move(ndarray.m_dim_sizes);
                 this->m_size = ndarray.m_size;
                 this->m_ndim = ndarray.m_ndim;
-                // this->m_free_mem = true; // check this
+                // base change needs to be done -
+                // new data means 'this' object
+                // is the owner of the data
+                this->m_base = nullptr;
 
                 this->copy_data_from(ndarray);
 
