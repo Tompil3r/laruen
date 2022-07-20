@@ -1,5 +1,5 @@
-#ifndef NDLIB_STATIC_H_
-#define NDLIB_STATIC_H_
+#ifndef NDLIB_IMPL_H_
+#define NDLIB_IMPL_H_
 
 #include <cstdint>
 #include "src/ndlib/nditer.h"
