@@ -50,7 +50,7 @@ namespace laruen::ndlib {
             {}
 
             NDArray(std::initializer_list<T> init_list) noexcept
-            : ArrayBase(Shape{init_list.size()}, Strides{1}, Strides{init_list.size()}, init_list.size(), 1),
+            : ArrayBase(Shape{init_list.size()}, Strides{1}, Strides{init_list.size()}, init_list.size(), 1, true),
             m_data(new T[init_list.size()])
             {
                 NDIter iter(this->m_data, *this);
@@ -73,13 +73,13 @@ namespace laruen::ndlib {
             }
 
             NDArray(T *data, const Shape &shape, const Strides &strides, const Strides &dim_sizes,
-            uint_fast64_t size, uint_fast8_t ndim, const NDArray *base = nullptr) noexcept
-            : ArrayBase(shape, strides, dim_sizes, size, ndim), m_data(data), m_base(base)
+            uint_fast64_t size, uint_fast8_t ndim, bool contig, const NDArray *base = nullptr) noexcept
+            : ArrayBase(shape, strides, dim_sizes, size, ndim, contig), m_data(data), m_base(base)
             {}
 
             NDArray(T *data, Shape &&shape, Strides &&strides, Strides &&dim_sizes,
-            uint_fast64_t size, uint_fast8_t ndim, const NDArray *base = nullptr) noexcept
-            : ArrayBase(std::move(shape), std::move(strides), std::move(dim_sizes), size, ndim),
+            uint_fast64_t size, uint_fast8_t ndim, bool contig, const NDArray *base = nullptr) noexcept
+            : ArrayBase(std::move(shape), std::move(strides), std::move(dim_sizes), size, ndim, contig),
             m_data(data), m_base(base)
             {}
             
@@ -148,6 +148,7 @@ namespace laruen::ndlib {
                 }
 
                 this->m_data = new T[this->m_size];
+                this->m_contig = false;
             }
             
             NDArray(NDArray<T> &ndarray, const SliceRanges &ranges) noexcept
@@ -159,13 +160,14 @@ namespace laruen::ndlib {
                 for(uint_fast8_t dim = 0;dim < ndim;dim++) {
                     size_ratio *= this->m_shape[dim];
                     this->m_data += ranges[dim].start * this->m_strides[dim];
-                    this->m_strides[dim] = this->m_strides[dim] * ranges[dim].step;
+                    this->m_strides[dim] *= ranges[dim].step;
                     this->m_shape[dim] = laruen::ndlib::utils::ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
                     this->m_dim_sizes[dim] = this->m_shape[dim] * this->m_strides[dim];
                     size_ratio /= this->m_shape[dim];
                 }
 
                 this->m_size /= size_ratio;
+                this->m_contig = false;
             }
             
             template <typename T2>
@@ -190,6 +192,7 @@ namespace laruen::ndlib {
                         delete[] this->m_data;
                     }
                     this->m_data = new T[ndarray.m_size];
+                    this->m_contig = true;
                     // base update is required - 
                     // creating new data means
                     // 'this' object is the owner
@@ -221,6 +224,7 @@ namespace laruen::ndlib {
                 this->m_dim_sizes = std::move(ndarray.m_dim_sizes);
                 this->m_size = ndarray.m_size;
                 this->m_ndim = ndarray.m_ndim;
+                this->m_contig = ndarray.m_contig;
                 // base update required since memory space
                 // of data is not ours
                 this->m_base = ndarray.m_base;
@@ -233,11 +237,13 @@ namespace laruen::ndlib {
             
             template <typename T2>
             NDArray& operator=(const NDArray<T2> &ndarray) noexcept {
+                // needs fix
                 if(this->m_size != ndarray.m_size) {
                     if(!this->m_base) {
                         delete[] this->m_data;
                     }
                     this->m_data = new T[ndarray.m_size];
+                    this->m_contig = true;
                     // base update is required - 
                     // creating new data means
                     // 'this' object is the owner
@@ -263,6 +269,7 @@ namespace laruen::ndlib {
                 this->m_dim_sizes = std::move(ndarray.m_dim_sizes);
                 this->m_size = ndarray.m_size;
                 this->m_ndim = ndarray.m_ndim;
+                this->m_contig = true;
                 // base change needs to be done -
                 // new data means 'this' object
                 // is the owner of the data
@@ -700,7 +707,7 @@ namespace laruen::ndlib {
                 /* expand the dimensions of this to the dimensions of expansion */
                 
                 NDArray<T> expansion(this->m_data, Shape(expand_to.m_shape), Strides(expand_to.m_ndim, 0),
-                Strides(expand_to.m_ndim, 0), expand_to.m_size, expand_to.m_ndim, this->forward_base());
+                Strides(expand_to.m_ndim, 0), expand_to.m_size, expand_to.m_ndim, false, this->forward_base());
                 
                 uint_fast8_t expansion_idx = expansion.m_ndim - this->m_ndim;
 
@@ -719,7 +726,7 @@ namespace laruen::ndlib {
                 /* expand the dimensions of this to the dimensions of expand_to */
                 
                 NDArray<T> expansion(this->m_data, Shape(expand_to.m_shape), Strides(expand_to.m_ndim, 0),
-                Strides(expand_to.m_ndim, 0), expand_to.m_size, expand_to.m_ndim, this->forward_base());
+                Strides(expand_to.m_ndim, 0), expand_to.m_size, expand_to.m_ndim, false, this->forward_base());
                 
                 uint_fast8_t expansion_idx = expand_to.m_ndim - 1;
                 uint_fast8_t expanded_idx = this->m_ndim - 1;
@@ -745,7 +752,7 @@ namespace laruen::ndlib {
 
             const NDArray<T> axes_reorder(const Axes &axes) const noexcept {
                 NDArray<T> reorder(this->m_data, Shape(this->m_ndim), Strides(this->m_ndim),
-                Strides(this->m_ndim), this->m_size, this->m_ndim, this->forward_base());
+                Strides(this->m_ndim), this->m_size, this->m_ndim, false, this->forward_base());
 
                 uint_fast8_t axes_added = 0;
                 uint_fast8_t dest_idx = reorder.m_ndim - 1;

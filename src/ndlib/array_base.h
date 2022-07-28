@@ -22,25 +22,31 @@ namespace laruen::ndlib {
             Strides m_dim_sizes;
             uint_fast64_t m_size;
             uint_fast8_t m_ndim;
+            bool m_contig;
 
 
         public:
             ArrayBase() noexcept = default;
 
             ArrayBase(const Shape &shape, const Strides &strides, const Strides &dim_sizes,
-            uint_fast64_t size, uint_fast8_t ndim) noexcept
-            : m_shape(shape), m_strides(strides), m_dim_sizes(dim_sizes), m_size(size), m_ndim(ndim) {}
+            uint_fast64_t size, uint_fast8_t ndim, bool contig) noexcept
+            : m_shape(shape), m_strides(strides), m_dim_sizes(dim_sizes),
+            m_size(size), m_ndim(ndim), m_contig(contig)
+            {}
 
             ArrayBase(Shape &&shape, Strides &&strides, Strides &&dim_sizes,
-            uint_fast64_t size, uint_fast8_t ndim) noexcept
+            uint_fast64_t size, uint_fast8_t ndim, bool contig) noexcept
             : m_shape(std::move(shape)), m_strides(std::move(strides)),
-            m_dim_sizes(std::move(dim_sizes)), m_size(size), m_ndim(ndim) {}
+            m_dim_sizes(std::move(dim_sizes)), m_size(size), m_ndim(ndim), m_contig(contig)
+            {}
 
-            ArrayBase(uint_fast8_t ndim, uint_fast64_t size = 0) noexcept
-            : m_shape(ndim), m_strides(ndim), m_dim_sizes(ndim), m_size(size), m_ndim(ndim) {}
+            ArrayBase(uint_fast8_t ndim, uint_fast64_t size = 0, bool contig = true) noexcept
+            : m_shape(ndim), m_strides(ndim), m_dim_sizes(ndim), m_size(size), m_ndim(ndim), m_contig(contig)
+            {}
 
             explicit ArrayBase(const Shape &shape) noexcept
-            : m_shape(shape), m_strides(shape.size()), m_dim_sizes(shape.size()), m_ndim(shape.size())
+            : m_shape(shape), m_strides(shape.size()), m_dim_sizes(shape.size()),
+            m_ndim(shape.size()), m_contig(true)
             {
                 uint_fast64_t stride = 1;
                 this->m_size = (this->m_ndim > 0);
@@ -60,6 +66,7 @@ namespace laruen::ndlib {
                 this->m_strides.resize(this->m_ndim);
                 this->m_dim_sizes.resize(this->m_ndim);
                 this->m_size = (this->m_ndim > 0);
+                this->m_contig = false;
 
                 uint_fast64_t stride = 1;
                 
@@ -133,7 +140,7 @@ namespace laruen::ndlib {
                 }
                 str += std::to_string(this->m_strides[dim]) + ")\nsize = " + 
                 std::to_string(this->m_size) + "\nndim = " +
-                std::to_string(this->m_ndim);
+                std::to_string(this->m_ndim) + "\ncontiguous = " + std::to_string(this->m_contig);
                 str.push_back('\n');
 
                 return str;
@@ -166,12 +173,16 @@ namespace laruen::ndlib {
                 return this->m_dim_sizes;
             }
 
-            inline const uint_fast64_t& size() const noexcept {
+            inline uint_fast64_t size() const noexcept {
                 return this->m_size;
             }
 
-            inline const uint_fast8_t& ndim() const noexcept {
+            inline uint_fast8_t ndim() const noexcept {
                 return this->m_ndim;
+            }
+
+            inline bool contig() const noexcept {
+                return this->m_contig;
             }
 
             friend inline std::ostream& operator<<(std::ostream &stream, const ArrayBase &base) noexcept {
