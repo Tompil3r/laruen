@@ -60,6 +60,10 @@ namespace laruen::ndlib {
             }
 
             void reshape(const Shape &shape) {
+                if(!this->m_contig) {
+                    throw std::invalid_argument("invalid operation - non contiguous array cannot be reshaped");
+                }
+
                 uint_fast64_t prev_size = this->m_size;
                 this->m_ndim = shape.size();
                 this->m_shape = shape;
