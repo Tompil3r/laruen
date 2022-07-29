@@ -1578,13 +1578,13 @@ namespace laruen::ndlib {
             }
             
             inline NDArray<T> view() noexcept {
-                return NDArray<T>(this->m_data, this->m_shape,
-                this->m_strides, this->m_size, this->m_ndim, this->forward_base());
+                return NDArray<T>(this->m_data, this->m_shape, this->m_strides,
+                this->m_dim_sizes, this->m_size, this->m_ndim, this->m_contig, this->forward_base());
             }
 
             inline const NDArray<T> view() const noexcept {
-                return NDArray<T>(this->m_data, this->m_shape,
-                this->m_strides, this->m_size, this->m_ndim, this->forward_base());
+                return NDArray<T>(this->m_data, this->m_shape, this->strides,
+                this->m_dim_sizes, this->m_size, this->m_ndim, this->m_contig, this->forward_base());
             }
 
             friend inline std::ostream& operator<<(std::ostream &stream, const NDArray &ndarray) noexcept {
