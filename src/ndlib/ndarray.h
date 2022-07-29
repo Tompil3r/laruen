@@ -650,6 +650,40 @@ namespace laruen::ndlib {
                 std::move(t_strides), std::move(t_dim_sizes), this->m_size, this->m_ndim, this->forward_base());
             }
 
+            NDArray<T> view_reshape(const Shape &shape) noexcept {
+                NDArray<T> view = this->view();
+                view.reshape(shape);
+                return view;
+            }
+
+            const NDArray<T> view_reshape(const Shape &shape) const noexcept {
+                NDArray<T> view = this->view();
+                view.reshape(shape);
+                return view;
+            }
+
+            NDArray<T> copy_reshape(const Shape &shape) noexcept {
+                NDArray<T> copy(shape);
+                assert(copy.m_size == this->m_size);
+                copy.copy_data_from(*this);
+                return copy;
+            }
+            
+            const NDArray<T> copy_reshape(const Shape &shape) const noexcept {
+                NDArray<T> copy(shape);
+                assert(copy.m_size == this->m_size);
+                copy.copy_data_from(*this);
+                return copy;
+            }
+
+            NDArray<T> new_reshape(const Shape &shape) noexcept {
+                return this->m_contig ? this->view_reshape(shape) : this->copy_reshape(shape);
+            }
+
+            const NDArray<T> new_reshape(const Shape &shape) const noexcept {
+                return this->m_contig ? this->view_reshape(shape) : this->copy_reshape(shape);
+            }
+
             // string function
             std::string str() const noexcept {
                 NDIndex ndindex(this->m_ndim, 0);
