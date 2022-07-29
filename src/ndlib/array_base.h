@@ -17,12 +17,12 @@ namespace laruen::ndlib {
         friend struct Impl;
 
         protected:
-            Shape m_shape;
-            Strides m_strides;
-            Strides m_dim_sizes;
-            uint_fast64_t m_size;
-            uint_fast8_t m_ndim;
-            bool m_contig;
+            Shape shape_;
+            Strides strides_;
+            Strides dim_sizes_;
+            uint_fast64_t size_;
+            uint_fast8_t ndim_;
+            bool contig_;
 
 
         public:
@@ -30,58 +30,58 @@ namespace laruen::ndlib {
 
             ArrayBase(const Shape &shape, const Strides &strides, const Strides &dim_sizes,
             uint_fast64_t size, uint_fast8_t ndim, bool contig) noexcept
-            : m_shape(shape), m_strides(strides), m_dim_sizes(dim_sizes),
-            m_size(size), m_ndim(ndim), m_contig(contig)
+            : shape_(shape), strides_(strides), dim_sizes_(dim_sizes),
+            size_(size), ndim_(ndim), contig_(contig)
             {}
 
             ArrayBase(Shape &&shape, Strides &&strides, Strides &&dim_sizes,
             uint_fast64_t size, uint_fast8_t ndim, bool contig) noexcept
-            : m_shape(std::move(shape)), m_strides(std::move(strides)),
-            m_dim_sizes(std::move(dim_sizes)), m_size(size), m_ndim(ndim), m_contig(contig)
+            : shape_(std::move(shape)), strides_(std::move(strides)),
+            dim_sizes_(std::move(dim_sizes)), size_(size), ndim_(ndim), contig_(contig)
             {}
 
             ArrayBase(uint_fast8_t ndim, uint_fast64_t size = 0, bool contig = true) noexcept
-            : m_shape(ndim), m_strides(ndim), m_dim_sizes(ndim), m_size(size), m_ndim(ndim), m_contig(contig)
+            : shape_(ndim), strides_(ndim), dim_sizes_(ndim), size_(size), ndim_(ndim), contig_(contig)
             {}
 
             explicit ArrayBase(const Shape &shape) noexcept
-            : m_shape(shape), m_strides(shape.size()), m_dim_sizes(shape.size()),
-            m_ndim(shape.size()), m_contig(true)
+            : shape_(shape), strides_(shape.size()), dim_sizes_(shape.size()),
+            ndim_(shape.size()), contig_(true)
             {
                 uint_fast64_t stride = 1;
-                this->m_size = (this->m_ndim > 0);
+                this->size_ = (this->ndim_ > 0);
                 
-                for(uint_fast8_t dim = this->m_ndim; dim-- > 0;) {
-                    this->m_strides[dim] = stride;
+                for(uint_fast8_t dim = this->ndim_; dim-- > 0;) {
+                    this->strides_[dim] = stride;
                     stride *= shape[dim];
-                    this->m_dim_sizes[dim] = stride;
-                    this->m_size *= shape[dim];
+                    this->dim_sizes_[dim] = stride;
+                    this->size_ *= shape[dim];
                 }
             }
 
             void reshape(const Shape &shape) {
-                if(!this->m_contig) {
+                if(!this->contig_) {
                     throw std::invalid_argument("invalid operation - non contiguous array cannot be reshaped");
                 }
 
-                uint_fast64_t prev_size = this->m_size;
-                this->m_ndim = shape.size();
-                this->m_shape = shape;
-                this->m_strides.resize(this->m_ndim);
-                this->m_dim_sizes.resize(this->m_ndim);
-                this->m_size = (this->m_ndim > 0);
-                this->m_contig = false;
+                uint_fast64_t prev_size = this->size_;
+                this->ndim_ = shape.size();
+                this->shape_ = shape;
+                this->strides_.resize(this->ndim_);
+                this->dim_sizes_.resize(this->ndim_);
+                this->size_ = (this->ndim_ > 0);
+                this->contig_ = false;
 
                 uint_fast64_t stride = 1;
                 
-                for(uint_fast8_t dim = this->m_ndim; dim-- > 0;) {
-                    this->m_strides[dim] = stride;
+                for(uint_fast8_t dim = this->ndim_; dim-- > 0;) {
+                    this->strides_[dim] = stride;
                     stride *= shape[dim];
-                    this->m_dim_sizes[dim] = stride;
-                    this->m_size *= shape[dim];
+                    this->dim_sizes_[dim] = stride;
+                    this->size_ *= shape[dim];
                 }
 
-                if(this->m_size != prev_size) {
+                if(this->size_ != prev_size) {
                     throw std::invalid_argument("invalid shape - number of elements do not match");
                 }
             }
@@ -91,18 +91,18 @@ namespace laruen::ndlib {
                 uint_fast8_t ndim = ndindex.size();
 
                 for(uint_fast8_t dim = 0;dim < ndim;dim++) {
-                    index += ndindex[dim] * this->m_strides[dim];
+                    index += ndindex[dim] * this->strides_[dim];
                 }
 
                 return index;
             }
 
             NDIndex unravel_index(uint_fast64_t index) const noexcept {
-                NDIndex ndindex(this->m_ndim);
+                NDIndex ndindex(this->ndim_);
 
-                for(uint_fast8_t dim = 0;dim < this->m_ndim;dim++) {
-                    ndindex[dim] = index / this->m_strides[dim];
-                    index -= ndindex[dim] * this->m_strides[dim];
+                for(uint_fast8_t dim = 0;dim < this->ndim_;dim++) {
+                    ndindex[dim] = index / this->strides_[dim];
+                    index -= ndindex[dim] * this->strides_[dim];
                 }
 
                 return ndindex;
@@ -111,54 +111,54 @@ namespace laruen::ndlib {
             void squeeze() noexcept {
                 uint_fast8_t new_ndim = 0;
 
-                for(uint_fast8_t dim = 0;dim < this->m_ndim;dim++) {
-                    if(this->m_shape[dim] > 1) {
-                        this->m_shape[new_ndim] = this->m_shape[dim];
-                        this->m_strides[new_ndim] = this->m_strides[dim];
-                        this->m_dim_sizes[new_ndim] = this->m_dim_sizes[dim];
+                for(uint_fast8_t dim = 0;dim < this->ndim_;dim++) {
+                    if(this->shape_[dim] > 1) {
+                        this->shape_[new_ndim] = this->shape_[dim];
+                        this->strides_[new_ndim] = this->strides_[dim];
+                        this->dim_sizes_[new_ndim] = this->dim_sizes_[dim];
                         new_ndim++;
                     }
                 }
 
-                this->m_ndim = new_ndim;
-                this->m_shape.resize(this->m_ndim);
-                this->m_strides.resize(this->m_ndim);
-                this->m_dim_sizes.resize(this->m_ndim);
+                this->ndim_ = new_ndim;
+                this->shape_.resize(this->ndim_);
+                this->strides_.resize(this->ndim_);
+                this->dim_sizes_.resize(this->ndim_);
             }
 
             std::string str() const noexcept {
                 std::string str("shape = (");
                 uint_fast8_t dim = 0;
 
-                for(dim = 0;dim < this->m_ndim - 1;dim++) {
-                    str += std::to_string(this->m_shape[dim]);
+                for(dim = 0;dim < this->ndim_ - 1;dim++) {
+                    str += std::to_string(this->shape_[dim]);
                     str.push_back(',');
                     str.push_back(' ');
                 }
-                str += std::to_string(this->m_shape[dim]) + ")\nstrides = (";
+                str += std::to_string(this->shape_[dim]) + ")\nstrides = (";
 
-                for(dim = 0;dim < this->m_ndim - 1;dim++) {
-                    str += std::to_string(this->m_strides[dim]);
+                for(dim = 0;dim < this->ndim_ - 1;dim++) {
+                    str += std::to_string(this->strides_[dim]);
                     str.push_back(',');
                     str.push_back(' ');
                 }
-                str += std::to_string(this->m_strides[dim]) + ")\nsize = " + 
-                std::to_string(this->m_size) + "\nndim = " +
-                std::to_string(this->m_ndim) + "\ncontiguous = " + std::to_string(this->m_contig);
+                str += std::to_string(this->strides_[dim]) + ")\nsize = " + 
+                std::to_string(this->size_) + "\nndim = " +
+                std::to_string(this->ndim_) + "\ncontiguous = " + std::to_string(this->contig_);
                 str.push_back('\n');
 
                 return str;
             }
 
             uint_fast64_t physical_index(uint_fast64_t logical_index) const noexcept {
-                uint_fast64_t cstride = this->m_size;
+                uint_fast64_t cstride = this->size_;
                 uint_fast64_t physical_index = 0;
                 uint_fast64_t dim_index;
 
-                for(uint_fast8_t dim = 0;dim < this->m_ndim;dim++) {
-                    cstride /= this->m_shape[dim];
+                for(uint_fast8_t dim = 0;dim < this->ndim_;dim++) {
+                    cstride /= this->shape_[dim];
                     dim_index = logical_index / cstride;
-                    physical_index += this->m_strides[dim] * dim_index;
+                    physical_index += this->strides_[dim] * dim_index;
                     logical_index -= cstride * dim_index;
                 }
 
@@ -166,27 +166,27 @@ namespace laruen::ndlib {
             }
 
             inline const Shape& shape() const noexcept {
-                return this->m_shape;
+                return this->shape_;
             }
 
             inline const Strides& strides() const noexcept {
-                return this->m_strides;
+                return this->strides_;
             }
 
             inline const Strides& dim_sizes() const noexcept {
-                return this->m_dim_sizes;
+                return this->dim_sizes_;
             }
 
             inline uint_fast64_t size() const noexcept {
-                return this->m_size;
+                return this->size_;
             }
 
             inline uint_fast8_t ndim() const noexcept {
-                return this->m_ndim;
+                return this->ndim_;
             }
 
             inline bool contig() const noexcept {
-                return this->m_contig;
+                return this->contig_;
             }
 
             friend inline std::ostream& operator<<(std::ostream &stream, const ArrayBase &base) noexcept {

@@ -17,31 +17,31 @@ namespace laruen::ndlib {
         NDIndex ndindex;
 
         NDIter(T *data, const ArrayBase &arraybase) noexcept
-        : ptr(data), arraybase(arraybase), ndindex(arraybase.m_ndim, 0)
+        : ptr(data), arraybase(arraybase), ndindex(arraybase.ndim_, 0)
         {}
 
         T& next(uint_fast8_t axis) noexcept {
             T &value = *this->ptr;
             this->ndindex[axis]++;
-            this->ptr += this->arraybase.m_strides[axis];
+            this->ptr += this->arraybase.strides_[axis];
             
-            for(uint_fast8_t dim = axis;(dim > 0) && (this->ndindex[dim] >= this->arraybase.m_shape[dim]);) {
+            for(uint_fast8_t dim = axis;(dim > 0) && (this->ndindex[dim] >= this->arraybase.shape_[dim]);) {
                 this->ndindex[dim] = 0;
-                this->ptr -= this->arraybase.m_dim_sizes[dim];
+                this->ptr -= this->arraybase.dim_sizes_[dim];
                 dim--; // decrease dim "ahead of time" for minor efficiency improvements
                 this->ndindex[dim]++;
-                this->ptr += this->arraybase.m_strides[dim];
+                this->ptr += this->arraybase.strides_[dim];
             }
 
             return value;
         }
 
         inline T& next() noexcept {
-            return this->next(this->arraybase.m_ndim - 1);
+            return this->next(this->arraybase.ndim_ - 1);
         }
 
         inline bool has_next() const noexcept {
-            return this->ndindex[0] < this->arraybase.m_shape[0];
+            return this->ndindex[0] < this->arraybase.shape_[0];
         }
 
         inline T& current() noexcept {
