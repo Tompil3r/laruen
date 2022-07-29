@@ -117,7 +117,7 @@ namespace laruen::ndlib {
                 }
             }
             
-            NDArray(const Range<T> &range, const Shape &shape)
+            NDArray(const Shape &shape, const Range<T> &range)
             : NDArray(shape)
             {
                 if(laruen::ndlib::utils::ceil_index((range.end - range.start) / range.step) != this->m_size) {
