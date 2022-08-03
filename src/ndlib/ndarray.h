@@ -1331,7 +1331,8 @@ namespace laruen::ndlib {
                 return *this;
             }
 
-            inline NDArray& power_eq(T value) noexcept {
+            template <typename T2>
+            inline NDArray& power_eq(T2 value) noexcept {
                 Impl::power_eq(this->data_, *this, value);
                 return *this;
             }
@@ -1344,8 +1345,8 @@ namespace laruen::ndlib {
                 return out;
             }
 
-            template <typename TR>
-            inline NDArray<TR>& power(TR value, NDArray<TR> &out) const noexcept {
+            template <typename T2, typename TR>
+            inline NDArray<TR>& power(T2 value, NDArray<TR> &out) const noexcept {
                 Impl::power(this->data_,
                 this->shape_ == out.shape_ ? *this : this->expansion(out),
                 value, out.data_, out);

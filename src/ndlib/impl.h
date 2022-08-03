@@ -735,8 +735,8 @@ namespace laruen::ndlib {
             return lhs_data;
         }
 
-        template <typename T>
-        static T* power_eq(T *data, const ArrayBase &base, T value) noexcept {
+        template <typename T, typename T2>
+        static T* power_eq(T *data, const ArrayBase &base, T2 value) noexcept {
             NDIter iter(data, base);
 
             for(uint_fast64_t i = 0;i < base.size_;i++) {
@@ -746,8 +746,8 @@ namespace laruen::ndlib {
             return data;
         }
 
-        template <typename T, typename TR>
-        static TR* power(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
+        template <typename T, typename T2, typename TR>
+        static TR* power(const T *lhs_data, const ArrayBase &lhs_base, T2 value, TR *out_data, const ArrayBase &out_base) noexcept {
             NDIter lhs_iter(lhs_data, lhs_base);
             NDIter out_iter(out_data, out_base);
 
