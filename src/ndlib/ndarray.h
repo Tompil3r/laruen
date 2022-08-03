@@ -22,6 +22,7 @@
 #include "src/ndlib/impl.h"
 #include "src/math/common.h"
 #include "src/math/bits.h"
+#include "src/math/constants.h"
 
 
 namespace laruen::ndlib {
@@ -1432,6 +1433,20 @@ namespace laruen::ndlib {
             template <typename T2>
             inline NDArray<types::result_type_t<T, T2>> inverse_power(const NDArray<T2> &rhs) const noexcept {
                 return this->template inverse_power<types::result_type_t<T, T2>, T2>(rhs);
+            }
+
+            inline NDArray& exp_eq() noexcept {
+                return this->inverse_power_eq(laruen::math::constants::EULERS_NUMBER);
+            }
+
+            template <typename TR>
+            inline NDArray<TR>& exp(NDArray<TR> &out) const {
+                return this->inverse_power(laruen::math::constants::EULERS_NUMBER, out);
+            }
+
+            template <typename TR = types::result_type_t<T, std::remove_const_t<decltype(laruen::math::constants::EULERS_NUMBER)>>>
+            inline NDArray<TR> exp() const noexcept {
+                return this->template inverse_power<TR>(laruen::math::constants::EULERS_NUMBER);
             }
 
             template <typename T2, typename TR>
