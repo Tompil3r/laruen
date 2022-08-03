@@ -1367,6 +1367,13 @@ namespace laruen::ndlib {
                 return out;
             }
 
+            template <typename TR, typename T2, typename = std::enable_if_t<!std::is_same_v<TR, T2>>>
+            inline NDArray<TR> power(T2 value) const noexcept {
+                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                this->power(value, out);
+                return out;
+            }
+
             template <typename T2>
             inline NDArray<types::result_type_t<T, T2>> power(const NDArray<T2> &rhs) const noexcept {
                 return this->template power<types::result_type_t<T, T2>, T2>(rhs);
@@ -1410,6 +1417,13 @@ namespace laruen::ndlib {
 
             template <typename TR>
             inline NDArray<TR> inverse_power(TR value) const noexcept {
+                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                this->inverse_power(value, out);
+                return out;
+            }
+
+            template <typename TR, typename T2, typename = std::enable_if_t<!std::is_same_v<TR, T2>>>
+            inline NDArray<TR> inverse_power(T2 value) const noexcept {
                 NDArray<TR> out(new TR[this->size_], *this, nullptr);
                 this->inverse_power(value, out);
                 return out;
