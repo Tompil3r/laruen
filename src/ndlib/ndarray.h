@@ -75,6 +75,18 @@ namespace laruen::ndlib {
                 }
             }
 
+            NDArray(const Shape &shape, T min, T max) noexcept : NDArray<T>(shape) {
+                static_assert(std::is_integral_v<T> || std::is_floating_point_v<T>,
+                "Type not supported in random constructor");
+                
+                if constexpr(std::is_integral_v<T>) {
+                    this->randint(min, max);
+                }
+                else if constexpr(std::is_floating_point_v<T>) {
+                    this->rand(min, max);
+                }
+            }
+
             NDArray(T *data, const Shape &shape, const Strides &strides, const Strides &dim_sizes,
             uint_fast64_t size, uint_fast8_t ndim, bool contig, const NDArray *base = nullptr) noexcept
             : ArrayBase(shape, strides, dim_sizes, size, ndim, contig), data_(data), base_(base)
@@ -303,6 +315,8 @@ namespace laruen::ndlib {
             }
 
             void rand(T min, T max) noexcept {
+                // [min, max)
+                // - min included, max excluded
                 std::uniform_real_distribution<T> dist(min, max);
                 NDIter iter(this->data_, *this);
 
@@ -316,6 +330,8 @@ namespace laruen::ndlib {
             }
 
             inline void randint(T min, T max) noexcept {
+                // [min, max]
+                // - min included, max included
                 std::uniform_int_distribution<T> dist(min, max);
                 NDIter iter(this->data_, *this);
 
