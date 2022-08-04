@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <cmath>
+#include <random>
 #include "src/ndlib/utils.h"
 #include "src/ndlib/types.h"
 #include "src/ndlib/nditer.h"
@@ -20,6 +21,7 @@
 #include "src/ndlib/range.h"
 #include "src/ndlib/type_selection.h"
 #include "src/ndlib/impl.h"
+#include "src/ndlib/rng.h"
 #include "src/math/common.h"
 #include "src/math/bits.h"
 #include "src/math/constants.h"
@@ -298,6 +300,32 @@ namespace laruen::ndlib {
                 for(uint_fast64_t i = 0;i < this->size_;i++) {
                     iter.next() = value;
                 }
+            }
+
+            void rand(T min, T max) noexcept {
+                std::uniform_real_distribution<T> dist(min, max);
+                NDIter iter(this->data_, *this);
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    iter.next() = dist(laruen::ndlib::RNG);
+                }
+            }
+
+            inline void rand(T max) noexcept {
+                this->rand(0, max);
+            }
+
+            inline void randint(T min, T max) noexcept {
+                std::uniform_int_distribution<T> dist(min, max);
+                NDIter iter(this->data_, *this);
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    iter.next() = dist(laruen::ndlib::RNG);
+                }
+            }
+
+            inline void randint(T max) noexcept {
+                this->randint(0, max);
             }
 
             // computational functions on the array
