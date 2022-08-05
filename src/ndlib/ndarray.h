@@ -1509,6 +1509,48 @@ namespace laruen::ndlib {
                 this->inverse_divide(value, out);
                 return out;
             }
+            
+            template <typename T2>
+            inline NDArray& inverse_remainder_eq(const NDArray<T2> &rhs) noexcept {
+                Impl::inverse_remainder_eq(this->data_, *this, rhs.data_,
+                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                return *this;
+            }
+
+            inline NDArray& inverse_remainder_eq(T value) noexcept {
+                Impl::inverse_remainder_eq(this->data_, *this, value);
+                return *this;
+            }
+
+            template <typename T2, typename TR>
+            inline NDArray<TR>& inverse_remainder(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
+                Impl::inverse_remainder(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                out.data_, out);
+                return out;
+            }
+
+            template <typename TR>
+            inline NDArray<TR>& inverse_remainder(T value, NDArray<TR> &out) const noexcept {
+                Impl::inverse_remainder(this->data_,
+                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                value, out.data_, out);
+                return out;
+            }
+
+            template <typename TR, typename T2>
+            inline NDArray<TR> inverse_remainder(const NDArray<T2> &rhs) const noexcept {
+                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                this->inverse_remainder(rhs, out);
+                return out;
+            }
+
+            template <typename TR>
+            inline NDArray<TR> inverse_remainder(TR value) const noexcept {
+                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                this->inverse_remainder(value, out);
+                return out;
+            }
 
             template <typename T2>
             inline NDArray& inverse_power_eq(const NDArray<T2> &rhs) noexcept {
