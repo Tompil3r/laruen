@@ -772,6 +772,59 @@ namespace laruen::ndlib {
 
             return out_data;
         }
+
+        template <typename T, typename T2>
+        static T* inverse_subtract_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+            /* implementation function: arrays must be broadcasted if needed */
+
+            NDIter lhs_iter(lhs_data, lhs_base);
+            NDIter rhs_iter(rhs_data, rhs_base);
+
+            for(uint_fast64_t i = 0;i < lhs_base.size_;i++) {
+                lhs_iter.next() = rhs_iter.next() - lhs_iter.current();
+            }
+
+            return lhs_data;
+        }
+
+        template <typename T>
+        static T* inverse_subtract_eq(T *data, const ArrayBase &base, T value) noexcept {
+            NDIter iter(data, base);
+
+            for(uint_fast64_t i = 0;i < base.size_;i++) {
+                iter.next() = value - iter.current();
+            }
+
+            return data;
+        }
+
+        template <typename T, typename TR>
+        static TR* inverse_subtract(const T *lhs_data, const ArrayBase &lhs_base, TR value, TR *out_data, const ArrayBase &out_base) noexcept {
+            NDIter lhs_iter(lhs_data, lhs_base);
+            NDIter out_iter(out_data, out_base);
+
+            for(uint64_t i = 0;i < lhs_base.size_;i++) {
+                out_iter.next() = value - lhs_iter.next();
+            }
+            
+            return out_data;
+        }
+
+        template <typename T, typename T2, typename TR>
+        static TR* inverse_subtract(const T *lhs_data, const ArrayBase &lhs_base,
+        const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+            /* implementation function: arrays must be broadcasted if needed */
+
+            NDIter lhs_iter(lhs_data, lhs_base);
+            NDIter rhs_iter(rhs_data, rhs_base);
+            NDIter out_iter(out_data, out_base);
+
+            for(uint64_t i = 0;i < lhs_base.size_;i++) {
+                out_iter.next() = rhs_iter.next() - lhs_iter.next();
+            }
+
+            return out_data;
+        }
         
         template <typename T, typename T2>
         static T* inverse_power_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
