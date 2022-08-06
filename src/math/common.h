@@ -17,6 +17,11 @@ namespace laruen::math::common {
         return (value1 < value2 ? value1 : value2);
     }
 
+    template <typename T>
+    inline constexpr T abs(T value) noexcept {
+        return value >= 0 ? value : -value;
+    }
+
     template <typename T1, typename T2>
     inline constexpr auto remainder(T1 lhs, T2 rhs) noexcept {
         if constexpr(std::is_arithmetic_v<T1> && std::is_arithmetic_v<T2>) {
