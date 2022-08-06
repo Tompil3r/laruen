@@ -1457,26 +1457,11 @@ namespace laruen::ndlib {
                 return *this;
             }
 
-            template <typename T2, typename TR>
-            inline NDArray<TR>& inverse_subtract(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::inverse_subtract(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
-                out.data_, out);
-                return out;
-            }
-
             template <typename TR>
             inline NDArray<TR>& inverse_subtract(T value, NDArray<TR> &out) const noexcept {
                 Impl::inverse_subtract(this->data_,
                 this->shape_ == out.shape_ ? *this : this->expansion(out),
                 value, out.data_, out);
-                return out;
-            }
-
-            template <typename TR, typename T2>
-            inline NDArray<TR> inverse_subtract(const NDArray<T2> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
-                this->inverse_subtract(rhs, out);
                 return out;
             }
 
@@ -1499,26 +1484,11 @@ namespace laruen::ndlib {
                 return *this;
             }
 
-            template <typename T2, typename TR>
-            inline NDArray<TR>& inverse_divide(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::inverse_divide(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
-                out.data_, out);
-                return out;
-            }
-
             template <typename TR>
             inline NDArray<TR>& inverse_divide(T value, NDArray<TR> &out) const noexcept {
                 Impl::inverse_divide(this->data_,
                 this->shape_ == out.shape_ ? *this : this->expansion(out),
                 value, out.data_, out);
-                return out;
-            }
-
-            template <typename TR, typename T2>
-            inline NDArray<TR> inverse_divide(const NDArray<T2> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
-                this->inverse_divide(rhs, out);
                 return out;
             }
 
@@ -1541,26 +1511,11 @@ namespace laruen::ndlib {
                 return *this;
             }
 
-            template <typename T2, typename TR>
-            inline NDArray<TR>& inverse_shl(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::inverse_shl(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
-                out.data_, out);
-                return out;
-            }
-
             template <typename TR>
             inline NDArray<TR>& inverse_shl(T value, NDArray<TR> &out) const noexcept {
                 Impl::inverse_shl(this->data_,
                 this->shape_ == out.shape_ ? *this : this->expansion(out),
                 value, out.data_, out);
-                return out;
-            }
-
-            template <typename TR, typename T2>
-            inline NDArray<TR> inverse_shl(const NDArray<T2> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
-                this->inverse_shl(rhs, out);
                 return out;
             }
 
@@ -1583,26 +1538,11 @@ namespace laruen::ndlib {
                 return *this;
             }
 
-            template <typename T2, typename TR>
-            inline NDArray<TR>& inverse_shr(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::inverse_shr(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
-                out.data_, out);
-                return out;
-            }
-
             template <typename TR>
             inline NDArray<TR>& inverse_shr(T value, NDArray<TR> &out) const noexcept {
                 Impl::inverse_shr(this->data_,
                 this->shape_ == out.shape_ ? *this : this->expansion(out),
                 value, out.data_, out);
-                return out;
-            }
-
-            template <typename TR, typename T2>
-            inline NDArray<TR> inverse_shr(const NDArray<T2> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
-                this->inverse_shr(rhs, out);
                 return out;
             }
 
@@ -1625,26 +1565,11 @@ namespace laruen::ndlib {
                 return *this;
             }
 
-            template <typename T2, typename TR>
-            inline NDArray<TR>& inverse_remainder(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::inverse_remainder(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
-                out.data_, out);
-                return out;
-            }
-
             template <typename TR>
             inline NDArray<TR>& inverse_remainder(T value, NDArray<TR> &out) const noexcept {
                 Impl::inverse_remainder(this->data_,
                 this->shape_ == out.shape_ ? *this : this->expansion(out),
                 value, out.data_, out);
-                return out;
-            }
-
-            template <typename TR, typename T2>
-            inline NDArray<TR> inverse_remainder(const NDArray<T2> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
-                this->inverse_remainder(rhs, out);
                 return out;
             }
 
@@ -1669,25 +1594,10 @@ namespace laruen::ndlib {
             }
 
             template <typename T2, typename TR>
-            inline NDArray<TR>& inverse_power(const NDArray<T2> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::inverse_power(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
-                out.data_, out);
-                return out;
-            }
-
-            template <typename T2, typename TR>
             inline NDArray<TR>& inverse_power(T2 value, NDArray<TR> &out) const noexcept {
                 Impl::inverse_power(this->data_,
                 this->shape_ == out.shape_ ? *this : this->expansion(out),
                 value, out.data_, out);
-                return out;
-            }
-
-            template <typename TR, typename T2>
-            inline NDArray<TR> inverse_power(const NDArray<T2> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
-                this->inverse_power(rhs, out);
                 return out;
             }
 
@@ -1703,11 +1613,6 @@ namespace laruen::ndlib {
                 NDArray<TR> out(new TR[this->size_], *this, nullptr);
                 this->inverse_power(value, out);
                 return out;
-            }
-
-            template <typename T2>
-            inline NDArray<types::result_type_t<T, T2>> inverse_power(const NDArray<T2> &rhs) const noexcept {
-                return this->template inverse_power<types::result_type_t<T, T2>, T2>(rhs);
             }
 
             inline NDArray& exp_eq() noexcept {
