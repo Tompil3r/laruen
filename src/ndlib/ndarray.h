@@ -252,7 +252,6 @@ namespace laruen::ndlib {
             
             template <typename T2>
             NDArray& operator=(const NDArray<T2> &ndarray) noexcept {
-                // needs fix
                 if(this->size_ != ndarray.size_) {
                     if(!this->base_) {
                         delete[] this->data_;
