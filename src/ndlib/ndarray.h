@@ -343,6 +343,28 @@ namespace laruen::ndlib {
                 this->randint(0, max);
             }
 
+            T random_choice() const noexcept {
+                std::uniform_int_distribution<T> dist(0, this->size_ - 1);
+                return this->data_[this->physical_index(dist(laruen::ndlib::RNG))];
+            }
+
+            T random_choice(NDArray<float64_t> weights) const noexcept {
+                assert(this->size_ == weights.size_);
+                
+                NDIter iter(this->data_, *this);
+                NDIter weights_iter(weights.data_, weights);
+
+                float64_t rand = std::uniform_real_distribution<float64_t>(0, 1)(laruen::ndlib::RNG);
+                float64_t weight_sum = weights_iter.next();
+
+                for(uint_fast64_t i = 0;i < this->size_ && weight_sum < rand;i++) {
+                    weight_sum += weights_iter.next();
+                    iter.next();
+                }
+
+                return iter.current();
+            }
+
             // computational functions on the array
             template <typename TR>
             NDArray<TR>& sum(const Axes &axes, NDArray<TR> &out) const noexcept {
