@@ -1551,7 +1551,7 @@ namespace laruen::ndlib {
                 this->inverse_shl(value, out);
                 return out;
             }
-            
+
             template <typename T2>
             inline NDArray& inverse_shr_eq(const NDArray<T2> &rhs) noexcept {
                 Impl::inverse_shr_eq(this->data_, *this, rhs.data_,
@@ -1930,6 +1930,47 @@ namespace laruen::ndlib {
 
             inline NDArray<T> operator%(T value) const noexcept {
                 return this->remainder(value);
+            }
+
+            // friend operators
+            inline friend NDArray<T> operator+(T value, const NDArray<T> &ndarray) noexcept {
+                return ndarray + value;
+            }
+
+            inline friend NDArray<T> operator-(T value, const NDArray<T> &ndarray) noexcept {
+                return ndarray.inverse_subtract(value);
+            }
+
+            inline friend NDArray<T> operator*(T value, const NDArray<T> &ndarray) noexcept {
+                return ndarray * value;
+            }
+            
+            inline friend NDArray<T> operator/(T value, const NDArray<T> &ndarray) noexcept {
+                return ndarray.inverse_divide(value);
+            }
+            
+            inline friend NDArray<T> operator^(T value, const NDArray<T> &ndarray) noexcept {
+                return ndarray.bit_xor(value);
+            }
+
+            inline friend NDArray<T> operator&(T value, const NDArray<T> &ndarray) noexcept {
+                return ndarray.bit_and(value);
+            }
+
+            inline friend NDArray<T> operator|(T value, const NDArray<T> &ndarray) noexcept {
+                return ndarray.bit_or(value);
+            }
+
+            inline friend NDArray<T> operator<<(T value, const NDArray<T> &ndarray) noexcept {
+                return ndarray.inverse_shl(value);
+            }
+
+            inline friend NDArray<T> operator>>(T value, const NDArray<T> &ndarray) noexcept {
+                return ndarray.inverse_shr(value);
+            }
+
+            inline friend NDArray<T> operator%(T value, const NDArray<T> &ndarray) noexcept {
+                return ndarray.inverse_remainder(value);
             }
 
             // more utility functions
