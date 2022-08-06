@@ -158,8 +158,8 @@ namespace laruen::ndlib {
                 for(uint_fast8_t dim = 0;dim < this->ndim_;dim++) {
                     cstride /= this->shape_[dim];
                     dim_index = logical_index / cstride;
+                    logical_index %= cstride;
                     physical_index += this->strides_[dim] * dim_index;
-                    logical_index -= cstride * dim_index;
                 }
 
                 return physical_index;
