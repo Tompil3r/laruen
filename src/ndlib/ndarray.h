@@ -365,6 +365,26 @@ namespace laruen::ndlib {
                 return out;
             }
 
+            void abs() noexcept {
+                NDIter iter(this->data_, *this);
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    iter.next() = laruen::math::common::abs(iter.current());
+                }
+            }
+
+            NDArray<T> new_abs() noexcept {
+                NDArray<T> out(this->shape_);
+                NDIter iter(this->data_, *this);
+                NDIter out_iter(out.data_, out);
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    out_iter.next() = laruen::math::common::abs(iter.next());
+                }
+                
+                return out;
+            }
+
             NDArray<T> sum(const Axes &axes) const noexcept {
                 NDArray<T> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
                 this->sum(axes, out);
