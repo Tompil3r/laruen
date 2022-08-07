@@ -313,6 +313,21 @@ namespace laruen::ndlib {
                 }
             }
 
+            template <typename T2>
+            void swap(NDArray<T2> &rhs) noexcept {
+                assert(this->size_ == rhs.size_);
+
+                NDIter lhs_iter(this->data_, *this);
+                NDIter rhs_iter(rhs.data_, rhs);
+                T tmp;
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    tmp = lhs_iter.current();
+                    lhs_iter.next() = rhs_iter.current();
+                    rhs_iter.next() = tmp;
+                }
+            }
+
             void rand(T min, T max) noexcept {
                 // [min, max)
                 // - min included, max excluded
