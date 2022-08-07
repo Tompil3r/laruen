@@ -349,7 +349,7 @@ namespace laruen::ndlib {
                 this->randint(0, max);
             }
 
-            void shuffle_all() noexcept {
+            void shuffle() noexcept {
                 NDIter iter(this->data_, *this);
 
                 for(uint_fast64_t i = 0;i < this->size_;i++) {
