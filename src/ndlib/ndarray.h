@@ -363,6 +363,21 @@ namespace laruen::ndlib {
                 }
             }
 
+            void shuffle(uint_fast8_t axis) noexcept {
+                ArrayBase view(Shape(this->shape_.begin() + 1, this->shape_.end()),
+                Strides(this->strides_.begin() + 1, this->strides_.end()),
+                Strides(this->dim_sizes_.begin() + 1, this->dim_sizes_.end()),
+                this->size_ / this->shape_[axis], this->ndim_ - 1, !axis && this->contig_);
+
+                T *ptr = this->data_;
+
+                for(uint_fast64_t i = 0;i < this->shape_[axis];i++) {
+                    std::uniform_int_distribution<uint_fast64_t> dist(i, this->shape_[axis] - 1);
+                    T *swap_ptr = this->data_ + dist(laruen::ndlib::RNG) * this->strides_[axis];
+                    Impl::swap(ptr, view, swap_ptr, view);
+                }
+            }
+
             T random_choice() const noexcept {
                 std::uniform_int_distribution<uint_fast64_t> dist(0, this->size_ - 1);
                 return this->contig_ ? this->data_[dist(laruen::ndlib::RNG)]
