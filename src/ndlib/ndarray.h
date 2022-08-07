@@ -360,7 +360,8 @@ namespace laruen::ndlib {
 
             T random_choice() const noexcept {
                 std::uniform_int_distribution<uint_fast64_t> dist(0, this->size_ - 1);
-                return this->data_[this->physical_index(dist(laruen::ndlib::RNG))];
+                return this->contig_ ? this->data_[dist(laruen::ndlib::RNG)]
+                : this->data_[this->physical_index(dist(laruen::ndlib::RNG))];
             }
 
             T random_choice(NDArray<float64_t> weights) const noexcept {
