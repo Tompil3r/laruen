@@ -9,6 +9,19 @@
 namespace laruen::ndlib {
 
     struct Impl {
+
+        template <typename T, typename T2>
+        static void swap(T *lhs_data, const ArrayBase &lhs_base, T2 &rhs_data, const ArrayBase &rhs_base) noexcept {
+            NDIter lhs_iter(lhs_data, lhs_base);
+            NDIter rhs_iter(rhs_data, rhs_base);
+            T tmp;
+
+            for(uint_fast64_t i = 0;i < lhs_base.size_;i++) {
+                tmp = lhs_iter.current();
+                lhs_iter.next() = rhs_iter.current();
+                rhs_iter.next() = tmp;
+            }
+        }
         
         template <typename TR, typename T, typename T2>
         static inline TR dot_1d(const T *lhs_ptr, uint_fast64_t lhs_stride,
