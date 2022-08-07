@@ -358,6 +358,20 @@ namespace laruen::ndlib {
                 this->randint(0, max);
             }
 
+            void shuffle_all() noexcept {
+                NDIter iter(this->data_, *this);
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    std::uniform_int_distribution<uint_fast64_t> dist(i, this->size_ - 1);
+                    T tmp = iter.current();
+                    T *swap_ptr = this->data_ + (this->contig_ ? dist(laruen::ndlib::RNG) :
+                    this->physical_index(dist(laruen::ndlib::RNG)));
+
+                    iter.next() = *swap_ptr;
+                    *swap_ptr = tmp;
+                }
+            }
+
             T random_choice() const noexcept {
                 std::uniform_int_distribution<uint_fast64_t> dist(0, this->size_ - 1);
                 return this->contig_ ? this->data_[dist(laruen::ndlib::RNG)]
