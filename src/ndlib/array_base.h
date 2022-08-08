@@ -59,6 +59,19 @@ namespace laruen::ndlib {
                 }
             }
 
+            ArrayBase(const ArrayBase &base, const Axes &axes, bool contig = false) noexcept
+            : shape_(axes.size()), strides_(axes.size()), dim_sizes_(axes.size()),
+            size_(axes.size() > 0), ndim_(axes.size()), contig_(contig)
+            {
+                for(uint_fast8_t i = 0;i < this->ndim_;i++) {
+                    uint_fast8_t axis = axes[i];
+                    this->shape_[i] = base.shape_[axis];
+                    this->strides_[i] = base.strides_[axis];
+                    this->dim_sizes_[i] = base.dim_sizes_[axis];
+                    this->size_ *= this->shape_[i];
+                }
+            }
+
             void reshape(const Shape &shape) {
                 if(!this->contig_) {
                     throw std::invalid_argument("invalid operation - non contiguous array cannot be reshaped");
