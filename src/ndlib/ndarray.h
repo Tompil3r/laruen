@@ -414,6 +414,18 @@ namespace laruen::ndlib {
                 return iter.current();
             }
 
+            template <typename TR>
+            void non_repeating_random_choice(NDArray<TR> &out) const noexcept {
+                NDArray<uint_fast64_t> rand_indices(Range(this->size_));
+                rand_indices.shuffle();
+
+                NDIter out_iter(out.data_, out);
+
+                for(uint_fast64_t i = 0;i < out.size_;i++) {
+                    out_iter.next() = this->data_[rand_indices[i]];
+                }
+            }
+
             // computational functions on the array
             template <typename TR>
             NDArray<TR>& sum(const Axes &axes, NDArray<TR> &out) const noexcept {
