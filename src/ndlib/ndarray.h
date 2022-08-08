@@ -378,6 +378,19 @@ namespace laruen::ndlib {
                 }
             }
 
+            void shuffle(const Axes &axes) noexcept {
+                ArrayBase swap_base(*this, utils::compress_axes(axes, this->ndim_));
+                ArrayBase iteration_base(*this, axes);
+
+                NDIter iter(this->data_, iteration_base);
+
+                for(uint_fast64_t i = 0;i < iteration_base.size_;i++) {
+                    std::uniform_int_distribution<uint_fast64_t> dist(i, iteration_base.size_ - 1);
+                    T *swap_ptr = this->data_ + iteration_base.physical_index(dist(laruen::ndlib::RNG));
+                    Impl::swap(iter.ptr, swap_base, swap_ptr, swap_base);
+                }
+            }
+
             T random_choice() const noexcept {
                 std::uniform_int_distribution<uint_fast64_t> dist(0, this->size_ - 1);
                 return this->contig_ ? this->data_[dist(laruen::ndlib::RNG)]
