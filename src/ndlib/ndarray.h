@@ -295,6 +295,19 @@ namespace laruen::ndlib {
             }
 
             // utility functions
+            inline void free() noexcept {
+                if(!this->base_) {
+                    delete[] this->data_;
+                }
+
+                this->shape_.clear();
+                this->strides_.clear();
+                this->dim_sizes_.clear();
+                this->size_ = 0;
+                this->ndim_ = 0;
+                this->base_ = nullptr;
+            }
+
             template <typename T2>
             void copy_data_from(const NDArray<T2> &ndarray) noexcept {
                 NDIter to(this->data_, *this);
