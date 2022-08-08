@@ -410,7 +410,7 @@ namespace laruen::ndlib {
                 : this->data_[this->physical_index(dist(laruen::ndlib::RNG))];
             }
 
-            T random_choice(NDArray<float64_t> weights) const noexcept {
+            T random_choice(NDArray<float64_t> &weights) const noexcept {
                 assert(this->size_ == weights.size_);
                 
                 NDIter iter(this->data_, *this);
