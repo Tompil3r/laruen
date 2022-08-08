@@ -428,7 +428,7 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
-            void non_repeating_random_choice(NDArray<TR> &out) const noexcept {
+            void no_repeat_random_choice(NDArray<TR> &out) const noexcept {
                 NDArray<uint_fast64_t> rand_indices(Range(this->size_));
                 rand_indices.shuffle();
 
