@@ -2048,16 +2048,6 @@ namespace laruen::ndlib {
             }
 
             // more utility functions
-            inline uint_fast64_t axes_size(const Axes &axes) const noexcept {
-                uint_fast64_t size = axes.size() > 0;
-
-                for(auto iter = axes.begin();iter != axes.end();iter++) {
-                    size *= this->shape_[*iter];
-                }
-
-                return size;
-            }
-
             inline ArrayBase& arraybase() noexcept {
                 return *this;
             }
