@@ -164,6 +164,10 @@ namespace laruen::ndlib {
             }
 
             uint_fast64_t physical_index(uint_fast64_t logical_index) const noexcept {
+                if(this->contig_) {
+                    return logical_index;
+                }
+
                 uint_fast64_t cstride = this->size_;
                 uint_fast64_t physical_index = 0;
                 uint_fast64_t dim_index;
