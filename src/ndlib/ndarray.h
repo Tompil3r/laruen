@@ -500,6 +500,57 @@ namespace laruen::ndlib {
             }
 
             template <typename TR>
+            NDArray<TR>& cumsum(const Axes &axes, NDArray<TR> &out) const noexcept {
+                const NDArray<T> reorder = this->axes_reorder(axes);
+
+                NDIter out_iter(out.data_, out);
+                NDIter src_iter(reorder.data_, reorder);
+                uint_fast64_t sample_size = this->axes_size(axes);
+                uint_fast64_t iterations = this->size_ / sample_size;
+                T sum;
+
+                for(uint_fast64_t i = 0;i < iterations;i++) {
+                    sum = 0;
+
+                    for(uint_fast64_t j = 0;j < sample_size;j++) {
+                        sum += src_iter.next();
+                        out_iter.next() = sum;
+                    }
+                }
+
+                return out;                
+            }
+            
+            template <typename TR = T>
+            NDArray<TR> cumsum(const Axes &axes) const noexcept {
+                NDArray<TR> out(this->shape_);
+                this->cumsum(axes, out);
+                return out;
+            }
+
+            template <typename TR>
+            NDArray<TR>& cumsum(NDArray<TR> &out) const noexcept {
+                NDIter out_iter(out.data_, out);
+                NDIter src_iter(this->data_, *this);
+
+                T sum = 0;
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    sum += src_iter.next();
+                    out_iter.next() = sum;
+                }
+
+                return out;                
+            }
+
+            template <typename TR = T>
+            NDArray<TR> cumsum() const noexcept {
+                NDArray<TR> out(this->shape_);
+                this->cumsum(out);
+                return out;
+            }
+
+            template <typename TR>
             NDArray<TR>& max(const Axes &axes, NDArray<TR> &out) const noexcept {
                 const NDArray<T> reorder = this->axes_reorder(axes);
 
