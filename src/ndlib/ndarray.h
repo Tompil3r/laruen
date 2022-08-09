@@ -481,8 +481,9 @@ namespace laruen::ndlib {
                 return out;
             }
 
-            NDArray<T> sum(const Axes &axes) const noexcept {
-                NDArray<T> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
+            template <typename TR = T>
+            NDArray<TR> sum(const Axes &axes) const noexcept {
+                NDArray<TR> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
                 this->sum(axes, out);
                 return out;
             }
@@ -519,8 +520,9 @@ namespace laruen::ndlib {
                 return out;
             }
 
-            NDArray<T> max(const Axes &axes) const noexcept {
-                NDArray<T> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
+            template <typename TR = T>
+            NDArray<TR> max(const Axes &axes) const noexcept {
+                NDArray<TR> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
                 this->max(axes, out);
                 return out;
             }
@@ -612,8 +614,9 @@ namespace laruen::ndlib {
                 return out;
             }
             
-            NDArray<T> min(const Axes &axes) const noexcept {
-                NDArray<T> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
+            template <typename TR = T>
+            NDArray<TR> min(const Axes &axes) const noexcept {
+                NDArray<TR> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
                 this->min(axes, out);
                 return out;
             }
