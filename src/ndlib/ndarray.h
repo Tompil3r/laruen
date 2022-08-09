@@ -440,6 +440,26 @@ namespace laruen::ndlib {
             }
 
             // computational functions on the array
+            void abs() noexcept {
+                NDIter iter(this->data_, *this);
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    iter.next() = laruen::math::common::abs(iter.current());
+                }
+            }
+
+            NDArray<T> new_abs() noexcept {
+                NDArray<T> out(this->shape_);
+                NDIter iter(this->data_, *this);
+                NDIter out_iter(out.data_, out);
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    out_iter.next() = laruen::math::common::abs(iter.next());
+                }
+                
+                return out;
+            }
+
             template <typename TR>
             NDArray<TR>& sum(const Axes &axes, NDArray<TR> &out) const noexcept {
                 const NDArray<T> reorder = this->axes_reorder(axes);
@@ -458,26 +478,6 @@ namespace laruen::ndlib {
                     out_iter.next() = sum;
                 }
 
-                return out;
-            }
-
-            void abs() noexcept {
-                NDIter iter(this->data_, *this);
-
-                for(uint_fast64_t i = 0;i < this->size_;i++) {
-                    iter.next() = laruen::math::common::abs(iter.current());
-                }
-            }
-
-            NDArray<T> new_abs() noexcept {
-                NDArray<T> out(this->shape_);
-                NDIter iter(this->data_, *this);
-                NDIter out_iter(out.data_, out);
-
-                for(uint_fast64_t i = 0;i < this->size_;i++) {
-                    out_iter.next() = laruen::math::common::abs(iter.next());
-                }
-                
                 return out;
             }
 
