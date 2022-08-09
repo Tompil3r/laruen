@@ -465,7 +465,7 @@ namespace laruen::ndlib {
                 const NDArray<T> reorder = this->axes_reorder(axes);
 
                 NDIter out_iter(out.data_, out);
-                NDIter this_iter(reorder.data_, reorder);
+                NDIter src_iter(reorder.data_, reorder);
                 uint_fast64_t sample_size = reorder.size_ / out.size_;
                 T sum;
 
@@ -473,7 +473,7 @@ namespace laruen::ndlib {
                     sum = 0;
 
                     for(uint_fast64_t j = 0;j < sample_size;j++) {
-                        sum += this_iter.next();
+                        sum += src_iter.next();
                     }
                     out_iter.next() = sum;
                 }
@@ -503,15 +503,15 @@ namespace laruen::ndlib {
                 const NDArray<T> reorder = this->axes_reorder(axes);
 
                 NDIter out_iter(out.data_, out);
-                NDIter this_iter(reorder.data_, reorder);
+                NDIter src_iter(reorder.data_, reorder);
                 uint_fast64_t sample_size = reorder.size_ / out.size_;
                 T max;
 
                 for(uint_fast64_t i = 0;i < out.size_;i++) {
-                    max = this_iter.next();
+                    max = src_iter.next();
                     
                     for(uint_fast64_t j = 0;j < sample_size - 1;j++) {
-                        max = laruen::math::common::max(max, this_iter.next());
+                        max = laruen::math::common::max(max, src_iter.next());
                     }
                     out_iter.next() = max;
                 }
@@ -596,15 +596,15 @@ namespace laruen::ndlib {
                 const NDArray<T> reorder = this->axes_reorder(axes);
 
                 NDIter out_iter(out.data_, out);
-                NDIter this_iter(reorder.data_, reorder);
+                NDIter src_iter(reorder.data_, reorder);
                 uint_fast64_t sample_size = reorder.size_ / out.size_;
                 T min;
 
                 for(uint_fast64_t i = 0;i < out.size_;i++) {
-                    min = this_iter.next();
+                    min = src_iter.next();
                     
                     for(uint_fast64_t j = 0;j < sample_size - 1;j++) {
-                        min = laruen::math::common::min(min, this_iter.next());
+                        min = laruen::math::common::min(min, src_iter.next());
                     }
                     out_iter.next() = min;
                 }
