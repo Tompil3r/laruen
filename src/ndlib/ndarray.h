@@ -368,7 +368,7 @@ namespace laruen::ndlib {
                 for(uint_fast64_t i = 0;i < this->size_;i++) {
                     std::uniform_int_distribution<uint_fast64_t> dist(i, this->size_ - 1);
                     T tmp = iter.current();
-                    T *swap_ptr = this->data_ + this->physical_index(dist(laruen::ndlib::RNG)));
+                    T *swap_ptr = this->data_ + this->physical_index(dist(laruen::ndlib::RNG));
 
                     iter.next() = *swap_ptr;
                     *swap_ptr = tmp;
