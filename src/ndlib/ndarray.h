@@ -29,7 +29,7 @@
 
 namespace laruen::ndlib {
 
-    template <typename T = float64_t>
+    template <typename T = float32_t>
     class NDArray : public ArrayBase {
 
         template <typename> friend class NDArray;
