@@ -42,8 +42,13 @@ namespace laruen::nn::layers {
                     // (all shapes initialized, not all data)
                 }
 
-                void forward() const noexcept override final {
+                NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
+                    // input.shape = (number samples, inputs)
+                    // out.shape = (number samples, nodes)
+                    input.matmul(this->w, output);
+                    out.add(b);
                     
+                    return output;
                 }
 
                 void backward() const noexcept override final {
