@@ -3,8 +3,8 @@
 #define MATH_UTILS_H_
 
 namespace laruen::math::utils {
-    template <typename T1, typename T2>
-    constexpr T1 ipow(T1 base, T2 exp) noexcept {
+    template <typename T1, typename TT>
+    constexpr T1 ipow(T1 base, TT exp) noexcept {
         T1 result = 1;
 
         for(;;) {

@@ -22,16 +22,16 @@ namespace laruen::math::common {
         return value >= 0 ? value : -value;
     }
 
-    template <typename T1, typename T2>
-    inline constexpr auto remainder(T1 lhs, T2 rhs) noexcept {
-        if constexpr(std::is_arithmetic_v<T1> && std::is_arithmetic_v<T2>) {
-            if constexpr(std::is_same_v<T1, long double> || std::is_same_v<T2, long double>) {
+    template <typename T1, typename TT>
+    inline constexpr auto remainder(T1 lhs, TT rhs) noexcept {
+        if constexpr(std::is_arithmetic_v<T1> && std::is_arithmetic_v<TT>) {
+            if constexpr(std::is_same_v<T1, long double> || std::is_same_v<TT, long double>) {
                 return fmodl(lhs, rhs);
             }
-            else if constexpr(std::is_same_v<T1, double> || std::is_same_v<T2, double>) {
+            else if constexpr(std::is_same_v<T1, double> || std::is_same_v<TT, double>) {
                 return fmod(lhs, rhs);
             }
-            else if constexpr(std::is_same_v<T1, float> || std::is_same_v<T2, float>) {
+            else if constexpr(std::is_same_v<T1, float> || std::is_same_v<TT, float>) {
                 return fmodf(lhs, rhs);
             }
             else {
@@ -43,9 +43,9 @@ namespace laruen::math::common {
         }
     }
 
-    template <typename T1, typename T2>
-    inline constexpr T1 pow(T1 base, T2 exp) {
-        if constexpr(std::is_floating_point_v<T2>) {
+    template <typename T1, typename TT>
+    inline constexpr T1 pow(T1 base, TT exp) {
+        if constexpr(std::is_floating_point_v<TT>) {
             return std::pow(base, exp);
         }
         else {

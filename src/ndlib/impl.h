@@ -10,8 +10,8 @@ namespace laruen::ndlib {
 
     struct Impl {
 
-        template <typename T, typename T2>
-        static void swap(T *lhs_data, const ArrayBase &lhs_base, T2 &rhs_data, const ArrayBase &rhs_base) noexcept {
+        template <typename T, typename TT>
+        static void swap(T *lhs_data, const ArrayBase &lhs_base, TT &rhs_data, const ArrayBase &rhs_base) noexcept {
             NDIter lhs_iter(lhs_data, lhs_base);
             NDIter rhs_iter(rhs_data, rhs_base);
             T tmp;
@@ -23,9 +23,9 @@ namespace laruen::ndlib {
             }
         }
         
-        template <typename TR, typename T, typename T2>
+        template <typename TR, typename T, typename TT>
         static inline TR dot_1d(const T *lhs_ptr, uint_fast64_t lhs_stride,
-        const T2 *rhs_ptr, uint_fast64_t rhs_stride, uint_fast64_t size) noexcept {
+        const TT *rhs_ptr, uint_fast64_t rhs_stride, uint_fast64_t size) noexcept {
             TR product = 0;
             for(uint_fast64_t i = 0;i < size;i++) {
                 product += (*lhs_ptr) * (*rhs_ptr);
@@ -36,13 +36,13 @@ namespace laruen::ndlib {
             return product;
         }
 
-        template <typename T, typename T2, typename TR>
+        template <typename T, typename TT, typename TR>
         static TR* matmul_2d_n3(const T *lhs_ptr, uint_fast64_t lhs_row_stride, uint_fast64_t lhs_col_stride,
-        const T2 *rhs_ptr, uint_fast64_t rhs_row_stride, uint_fast64_t rhs_col_stride,
+        const TT *rhs_ptr, uint_fast64_t rhs_row_stride, uint_fast64_t rhs_col_stride,
         TR *out_ptr, uint_fast64_t out_row_stride, uint_fast64_t out_col_stride,
         uint_fast64_t rows, uint_fast64_t cols, uint_fast64_t shared)
         {
-            const T2 *rhs_start_ptr = rhs_ptr;
+            const TT *rhs_start_ptr = rhs_ptr;
             TR *out_start_ptr = out_ptr;
             TR *out_checkpoint = out_ptr;
 
@@ -61,8 +61,8 @@ namespace laruen::ndlib {
             return out_start_ptr;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* matmul_n3(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data,
+        template <typename T, typename TT, typename TR>
+        static TR* matmul_n3(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data,
         const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) noexcept {
             /* assumes the following:
                 - shapes are valid
@@ -101,8 +101,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* matmul(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data,
+        template <typename T, typename TT, typename TR>
+        static TR* matmul(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data,
         const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base, uint_fast8_t depth) noexcept {
             /*
                 function requirements:
@@ -148,10 +148,10 @@ namespace laruen::ndlib {
             const T* const lhs_q21 = lhs_data + lhs_q_base.dim_sizes_[rows_axis];
             const T* const lhs_q22 = lhs_data + lhs_q_base.dim_sizes_[cols_axis] + lhs_q_base.dim_sizes_[rows_axis];
 
-            const T2* const rhs_q11 = rhs_data;
-            const T2* const rhs_q12 = rhs_data + rhs_q_base.dim_sizes_[cols_axis];
-            const T2* const rhs_q21 = rhs_data + rhs_q_base.dim_sizes_[rows_axis];
-            const T2* const rhs_q22 = rhs_data + rhs_q_base.dim_sizes_[cols_axis] + rhs_q_base.dim_sizes_[rows_axis];
+            const TT* const rhs_q11 = rhs_data;
+            const TT* const rhs_q12 = rhs_data + rhs_q_base.dim_sizes_[cols_axis];
+            const TT* const rhs_q21 = rhs_data + rhs_q_base.dim_sizes_[rows_axis];
+            const TT* const rhs_q22 = rhs_data + rhs_q_base.dim_sizes_[cols_axis] + rhs_q_base.dim_sizes_[rows_axis];
             
             TR* const out_q11 = out_data;
             TR* const out_q12 = out_data + out_q_base.dim_sizes_[cols_axis];
@@ -160,7 +160,7 @@ namespace laruen::ndlib {
             
             // extra arrays for calculation memory
             NDArray<T> lhs_ext(lhs_q_base.shape_);
-            NDArray<T2> rhs_ext(rhs_q_base.shape_);
+            NDArray<TT> rhs_ext(rhs_q_base.shape_);
             NDArray<TR> out_ext(out_q_base.shape_);
 
             depth--;
@@ -191,8 +191,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* add_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* add_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
 
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -230,8 +230,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* add(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+        template <typename T, typename TT, typename TR>
+        static TR* add(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
             /* implementation function: arrays must be broadcasted if needed */
 
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -245,8 +245,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* subtract_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* subtract_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
 
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -282,8 +282,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* subtract(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+        template <typename T, typename TT, typename TR>
+        static TR* subtract(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
             /* implementation function: arrays must be broadcasted if needed */
 
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -297,8 +297,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* multiply_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* multiply_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
 
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -334,8 +334,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* multiply(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+        template <typename T, typename TT, typename TR>
+        static TR* multiply(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
             /* implementation function: arrays must be broadcasted if needed */
 
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -349,8 +349,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* divide_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* divide_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
 
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -386,8 +386,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* divide(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+        template <typename T, typename TT, typename TR>
+        static TR* divide(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
             /* implementation function: arrays must be broadcasted if needed */
 
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -401,8 +401,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* bit_xor_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* bit_xor_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -438,8 +438,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* bit_xor(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+        template <typename T, typename TT, typename TR>
+        static TR* bit_xor(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -453,8 +453,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* bit_and_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* bit_and_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -490,8 +490,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* bit_and(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+        template <typename T, typename TT, typename TR>
+        static TR* bit_and(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -505,8 +505,8 @@ namespace laruen::ndlib {
             return out_data;
         }
         
-        template <typename T, typename T2>
-        static T* bit_or_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* bit_or_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -542,8 +542,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* bit_or(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+        template <typename T, typename TT, typename TR>
+        static TR* bit_or(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -557,8 +557,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* shl_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* shl_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -594,8 +594,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* shl(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+        template <typename T, typename TT, typename TR>
+        static TR* shl(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -609,8 +609,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* shr_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* shr_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -646,8 +646,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* shr(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+        template <typename T, typename TT, typename TR>
+        static TR* shr(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -684,8 +684,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* remainder_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* remainder_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -721,8 +721,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* remainder(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+        template <typename T, typename TT, typename TR>
+        static TR* remainder(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -736,8 +736,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* power_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* power_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             NDIter lhs_iter(lhs_data, lhs_base);
             NDIter rhs_iter(rhs_data, rhs_base);
 
@@ -748,8 +748,8 @@ namespace laruen::ndlib {
             return lhs_data;
         }
 
-        template <typename T, typename T2>
-        static T* power_eq(T *data, const ArrayBase &base, T2 value) noexcept {
+        template <typename T, typename TT>
+        static T* power_eq(T *data, const ArrayBase &base, TT value) noexcept {
             NDIter iter(data, base);
 
             for(uint_fast64_t i = 0;i < base.size_;i++) {
@@ -759,8 +759,8 @@ namespace laruen::ndlib {
             return data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* power(const T *lhs_data, const ArrayBase &lhs_base, T2 value, TR *out_data, const ArrayBase &out_base) noexcept {
+        template <typename T, typename TT, typename TR>
+        static TR* power(const T *lhs_data, const ArrayBase &lhs_base, TT value, TR *out_data, const ArrayBase &out_base) noexcept {
             NDIter lhs_iter(lhs_data, lhs_base);
             NDIter out_iter(out_data, out_base);
 
@@ -771,8 +771,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* power(const T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
+        template <typename T, typename TT, typename TR>
+        static TR* power(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -787,8 +787,8 @@ namespace laruen::ndlib {
         }
 
         // inverse math functions
-        template <typename T, typename T2>
-        static T* inverse_subtract_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* inverse_subtract_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
 
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -824,8 +824,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* inverse_divide_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* inverse_divide_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
 
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -861,8 +861,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* inverse_shl_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* inverse_shl_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -898,8 +898,8 @@ namespace laruen::ndlib {
             return out_data;
         }
         
-        template <typename T, typename T2>
-        static T* inverse_shr_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* inverse_shr_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -935,8 +935,8 @@ namespace laruen::ndlib {
             return out_data;
         }
 
-        template <typename T, typename T2>
-        static T* inverse_remainder_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* inverse_remainder_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */
             
             NDIter lhs_iter(lhs_data, lhs_base);
@@ -972,8 +972,8 @@ namespace laruen::ndlib {
             return out_data;
         }
         
-        template <typename T, typename T2>
-        static T* inverse_power_eq(T *lhs_data, const ArrayBase &lhs_base, const T2 *rhs_data, const ArrayBase &rhs_base) {
+        template <typename T, typename TT>
+        static T* inverse_power_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             NDIter lhs_iter(lhs_data, lhs_base);
             NDIter rhs_iter(rhs_data, rhs_base);
 
@@ -984,8 +984,8 @@ namespace laruen::ndlib {
             return lhs_data;
         }
 
-        template <typename T, typename T2>
-        static T* inverse_power_eq(T *data, const ArrayBase &base, T2 value) noexcept {
+        template <typename T, typename TT>
+        static T* inverse_power_eq(T *data, const ArrayBase &base, TT value) noexcept {
             NDIter iter(data, base);
 
             for(uint_fast64_t i = 0;i < base.size_;i++) {
@@ -995,8 +995,8 @@ namespace laruen::ndlib {
             return data;
         }
 
-        template <typename T, typename T2, typename TR>
-        static TR* inverse_power(const T *lhs_data, const ArrayBase &lhs_base, T2 value, TR *out_data, const ArrayBase &out_base) noexcept {
+        template <typename T, typename TT, typename TR>
+        static TR* inverse_power(const T *lhs_data, const ArrayBase &lhs_base, TT value, TR *out_data, const ArrayBase &out_base) noexcept {
             NDIter lhs_iter(lhs_data, lhs_base);
             NDIter out_iter(out_data, out_base);
 
