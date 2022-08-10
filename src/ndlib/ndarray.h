@@ -625,6 +625,50 @@ namespace laruen::ndlib {
                 return out;
             }
 
+            template <typename TT, typename TR>
+            NDArray<TR>& minimum(const NDArray<TT> &rhs, NDArray<TR> &out) const {
+                NDIter lhs_iter(this->data_, *this);
+                NDIter rhs_iter(rhs.data_, rhs);
+                NDIter out_iter(out.data_, out);
+                
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    out_iter.next() = laruen::math::common::min(lhs_iter.next(), rhs_iter.next());
+                }
+
+                return out;
+            }
+
+            template <typename TR, typename TT>
+            NDArray<TR> minimum(const NDArray<TT> &rhs) const {
+                NDArray<TR> out(this->shape_);
+                this->minimum(rhs, out);
+                return out;
+            }
+
+            template <typename TT>
+            inline NDArray<types::result_type_t<T, TT>> minimum(const NDArray<TT> &rhs) const {
+                return this->minimum<types::result_type_t<T, TT>, TT>(rhs);
+            }
+            
+            template <typename TR>
+            NDArray<TR>& minimum(T value, NDArray<TR> &out) const {
+                NDIter lhs_iter(this->data_, *this);
+                NDIter out_iter(out.data_, out);
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    out_iter.next() = laruen::math::common::min(lhs_iter.next(), value);
+                }
+
+                return out;
+            } 
+
+            template <typename TR = T>
+            NDArray<TR> minimum(T value) const noexcept {
+                NDArray<TR> out(this->shape_);
+                this->minimum(value, out);
+                return out;
+            }
+
             template <typename TR>
             NDArray<TR>& max(const Axes &axes, NDArray<TR> &out) const noexcept {
                 const NDArray<T> reorder = this->axes_reorder(axes);
