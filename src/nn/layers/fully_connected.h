@@ -19,10 +19,10 @@ namespace laruen::nn::layers {
         class FullyConnected : public Layer<T> {
             private:
                 /*
-                    w.shape = (nodes, inputs)
-                    b.shape = (inputs)
-                    dw.shape = (nodes, inputs)
-                    db.shape = (inputs)
+                    w.shape = (inputs, nodes)
+                    b.shape = (nodes)
+                    dw.shape = (inputs, nodes)
+                    db.shape = (nodes)
                 */
                 NDArray<T> w;
                 NDArray<T> b;
@@ -33,7 +33,7 @@ namespace laruen::nn::layers {
                 FullyConnected(const Shape &shape) noexcept
                 : w(shape, 0, 1), b({shape[1]}, 0), dw(w.shape()), db(b.shape())
                 {
-                    // shape should be (nodes, inputs)
+                    // shape should be (inputs, nodes)
                     assert(shape.size() == 2);
                     // w - initialized with random numbers in range 0-1
                     // b - initialized with 0s
