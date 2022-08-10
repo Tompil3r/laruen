@@ -16,7 +16,7 @@ namespace laruen::nn::layers {
         class Layer {
 
             public:
-                virtual void forward() const noexcept = 0;
+                virtual NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const = 0;
                 virtual void backward() const noexcept = 0;
         };
     }
