@@ -191,6 +191,30 @@ namespace laruen::ndlib {
             return out_data;
         }
 
+        template <typename T>
+        static T* negate_eq(T *data, const ArrayBase &base) noexcept {
+            NDIter iter(data, base);
+
+            for(uint_fast64_t i = 0;i < base.size_;i++) {
+                iter.next() = -iter.current();
+            }
+
+            return data;
+        }
+
+        template <typename T, typename TR>
+        static TR* negate(T *lhs_data, const ArrayBase &lhs_base, TR *out_data, const ArrayBase &out_base) {
+            NDIter lhs_iter(lhs_data, lhs_base);
+            NDIter out_iter(out_data, out_base);
+
+            for(uint_fast64_t i = 0;i < lhs_base.size_;i++) {
+                out_iter.next() = -lhs_iter.next();
+            }
+
+            return out_data;
+        } 
+
+
         template <typename T, typename TT>
         static T* add_eq(T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data, const ArrayBase &rhs_base) {
             /* implementation function: arrays must be broadcasted if needed */

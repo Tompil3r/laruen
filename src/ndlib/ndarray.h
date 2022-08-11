@@ -1167,6 +1167,24 @@ namespace laruen::ndlib {
             }
 
             // arithmetical functions
+            inline NDArray& negate_eq() const noexcept {
+                Impl::negate_eq(this->data_, *this);
+                return *this;
+            }
+
+            template <typename TR>
+            inline NDArray<TR>& negate(NDArray<TR> &out) const {
+                Impl::negate(this->data_, *this, out.data_, out);
+                return out;
+            }
+
+            template <typename TR = T>
+            inline NDArray<TR> negate() const noexcept {
+                NDArray<TR> out(this->shape_);
+                this->negate(out);
+                return out;
+            }
+
             template <typename TT>
             inline NDArray& add_eq(const NDArray<TT> &rhs) noexcept {
                 Impl::add_eq(this->data_, *this, rhs.data_,
@@ -1975,6 +1993,10 @@ namespace laruen::ndlib {
 
             inline NDArray<T> operator-(T value) const noexcept {
                 return this->subtract(value);
+            }
+
+            inline NDArray<T> operator-() const noexcept {
+                return this->negate();
             }
 
             template <typename TT>
