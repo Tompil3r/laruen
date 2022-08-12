@@ -2207,7 +2207,7 @@ namespace laruen::ndlib {
             }
 
             inline const NDArray<T> view() const noexcept {
-                return NDArray<T>(this->data_, this->shape_, this->strides,
+                return NDArray<T>(this->data_, this->shape_, this->strides_,
                 this->dim_sizes_, this->size_, this->ndim_, this->contig_, this->forward_base());
             }
 
