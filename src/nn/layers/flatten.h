@@ -13,19 +13,19 @@ namespace laruen::nn::layers {
 
         template <typename T>
         class Flatten : public Layer<T> {
-            public:
 
+            public:
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
-                    // input.shape = (samples, dim1, ...)
-                    // output.shape = (samples, dim1 * ...)
+                    // input.shape = (dim0, dim1, ...)
+                    // output.shape = (dim0, dim1 * ...)
                     
-                    output = input.new_reshape({input.shape()[0], input.size() / input.shape()[0]});
+                    assert(input.contig());
+                    output = input.view_reshape({input.shape()[0], input.size() / input.shape()[0]});
                     return output;
                 }
 
-                void backward() const noexcept override final {
-
-                }
+                void backward() const noexcept override final
+                {}
         };
 
     }
