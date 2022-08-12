@@ -19,14 +19,14 @@ namespace laruen::nn::layers {
                     // input.shape = (samples, dim1, ...)
                     // output.shape = (samples, dim1 * ...)
                     
-                    // ***implement***
-                    return out;
+                    output = input.new_reshape({input.shape()[0], input.size() / input.shape()[0]});
+                    return output;
                 }
 
                 void backward() const noexcept override final {
 
                 }
-        }
+        };
 
     }
 
