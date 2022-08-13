@@ -24,29 +24,22 @@ namespace laruen::nn::layers {
                     dw.shape = (inputs, nodes)
                     db.shape = (nodes)
                 */
-                NDArray<T> w;
-                NDArray<T> b;
-                NDArray<T> dw;
-                NDArray<T> db;
+                NDArray<T> w_;
+                NDArray<T> b_;
+                NDArray<T> dw_;
+                NDArray<T> db_;
+                uint_fast32_t nodes_;
 
             public:
-                FullyConnected(const Shape &shape) noexcept
-                : w(shape, 0, 1), b({shape[1]}, 0), dw(w.shape()), db(b.shape())
-                {
-                    // shape should be (inputs, nodes)
-                    assert(shape.size() == 2);
-                    // w - initialized with random numbers in range 0-1
-                    // b - initialized with 0s
-                    // dw - uninitialized
-                    // db - uninitialized
-                    // (all shapes initialized, not all data)
-                }
+                FullyConnected(uint_fast32_t nodes) noexcept
+                : nodes_(nodes)
+                {}
 
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
                     // input.shape = (number samples, inputs)
                     // out.shape = (number samples, nodes)
-                    input.matmul(this->w, output);
-                    output.add(b);
+                    input.matmul(this->w_, output);
+                    output.add(this->b_);
                     
                     return output;
                 }
