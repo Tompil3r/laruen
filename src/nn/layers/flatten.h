@@ -28,7 +28,7 @@ namespace laruen::nn::layers {
                     // output.shape = (dim0, dim1 * ...)
                     
                     assert(input.contig());
-                    output = input.view_reshape({input.shape()[0], input.size() / input.shape()[0]});
+                    output = input.view_reshape({input.shape()[0], this->output_shape_[1]);
                     return output;
                 }
 
