@@ -12,6 +12,7 @@ namespace laruen::nn::layers {
     namespace impl {
         using laruen::ndlib::NDArray;
         using laruen::ndlib::float32_t;
+        using laruen::ndlib::Shape;
 
         template <typename T = float32_t>
         class Layer {
@@ -19,6 +20,7 @@ namespace laruen::nn::layers {
             public:
                 virtual NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const = 0;
                 virtual void backward() const noexcept = 0;
+                virtual Shape build(const Shape &input_shape) = 0;
         };
     }
 

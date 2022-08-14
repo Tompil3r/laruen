@@ -41,6 +41,10 @@ namespace laruen::nn::layers {
 
                 }
 
+                Shape build(const Shape &input_shape) override final {
+                    return input_shape;
+                }
+
                 inline void axis(int_fast8_t axis) noexcept {
                     this->axis_ = axis;
                 }

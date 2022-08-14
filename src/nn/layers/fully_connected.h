@@ -37,7 +37,7 @@ namespace laruen::nn::layers {
 
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
                     // input.shape = (number samples, inputs)
-                    // out.shape = (number samples, nodes)
+                    // output.shape = (number samples, nodes)
                     input.matmul(this->w_, output);
                     output.add(this->b_);
                     
@@ -46,6 +46,18 @@ namespace laruen::nn::layers {
 
                 void backward() const noexcept override final {
                     
+                }
+
+                Shape build(const Shape &input_shape) override final {
+                    // input_shape = (number samples = 0, inputs)
+                    assert(input_shape.size() == 2);
+
+                    this->w_ = NDArray<T>({input_shape[1], this->nodes_}, -1, 1);
+                    this->b_ = NDArray<T>({this->nodes_}, 0);
+                    this->dw_ = NDArray<T>(this->w_.shape());
+                    this->db_ = NDArray<T>(this->b_.shape());
+
+                    return Shape{0, this->nodes_}; // 0 - number of samples - unknown
                 }
         };
     }

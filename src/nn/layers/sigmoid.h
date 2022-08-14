@@ -26,6 +26,10 @@ namespace laruen::nn::layers {
                 void backward() const noexcept override final {
 
                 }
+
+                Shape build(const Shape &input_shape) override final {
+                    return input_shape;
+                }
         };
     }
 
