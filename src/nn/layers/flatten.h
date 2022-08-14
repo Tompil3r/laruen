@@ -14,8 +14,9 @@ namespace laruen::nn::layers {
 
         using laruen::ndlib::NDArray;
         using laruen::ndlib::Shape;
+        using laruen::ndlib::float32_t;
 
-        template <typename T>
+        template <typename T = float32_t>
         class Flatten : public Layer<T> {
             Shape output_shape_; 
 
