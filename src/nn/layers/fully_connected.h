@@ -31,6 +31,8 @@ namespace laruen::nn::layers {
                 uint_fast32_t nodes_;
 
             public:
+                static constexpr char NAME[] = "Fully Connected";
+
                 FullyConnected(uint_fast32_t nodes) noexcept
                 : nodes_(nodes)
                 {}
@@ -58,6 +60,10 @@ namespace laruen::nn::layers {
                     this->db_ = NDArray<T>(this->b_.shape());
 
                     return Shape{0, this->nodes_}; // 0 - number of samples - unknown
+                }
+
+                const char* name() const noexcept override final {
+                    return this->NAME;
                 }
         };
     }

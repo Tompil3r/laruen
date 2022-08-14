@@ -20,6 +20,8 @@ namespace laruen::nn::layers {
             Shape output_shape_; 
 
             public:
+                static constexpr char NAME[] = "Flatten";
+
                 Flatten() noexcept : output_shape_{0, 0}
                 {}
 
@@ -40,6 +42,10 @@ namespace laruen::nn::layers {
                     this->output_shape_[1] = std::accumulate(input_shape.cbegin() + 1, input_shape.cend(), 1, std::multiplies<T>{});
 
                     return this->output_shape_;
+                }
+
+                const char* name() const noexcept override final {
+                    return this->NAME;
                 }
         };
 

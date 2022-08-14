@@ -20,6 +20,8 @@ namespace laruen::nn::layers {
                 int_fast8_t axis_;
             
             public:
+                static constexpr char NAME[] = "Softmax";
+
                 Softmax(int_fast8_t axis = -1) noexcept : axis_(axis)
                 {}
 
@@ -43,6 +45,10 @@ namespace laruen::nn::layers {
 
                 Shape build(const Shape &input_shape) override final {
                     return input_shape;
+                }
+
+                const char* name() const noexcept override final {
+                    return this->NAME;
                 }
 
                 inline void axis(int_fast8_t axis) noexcept {
