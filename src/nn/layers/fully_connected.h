@@ -65,6 +65,10 @@ namespace laruen::nn::layers {
                 const char* name() const noexcept override final {
                     return this->NAME;
                 }
+
+                uint_fast64_t params() const noexcept override final {
+                    return this->w_.size() + this->b_.size();
+                }
         };
     }
 

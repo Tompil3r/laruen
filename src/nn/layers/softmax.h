@@ -59,6 +59,10 @@ namespace laruen::nn::layers {
                 inline int_fast8_t axis() const noexcept {
                     return this->axis_;
                 }
+
+                uint_fast64_t params() const noexcept override final {
+                    return 0;
+                }
         };
     }
 

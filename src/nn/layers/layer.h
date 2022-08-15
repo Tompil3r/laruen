@@ -33,6 +33,7 @@ namespace laruen::nn::layers {
                 virtual void backward() const noexcept = 0;
                 virtual void build(const Shape &input_shape) = 0;
                 virtual const char* name() const noexcept = 0;
+                virtual uint_fast64_t params() const noexcept = 0;
         };
     }
 
