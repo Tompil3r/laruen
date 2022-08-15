@@ -50,7 +50,7 @@ namespace laruen::nn::layers {
                     
                 }
 
-                Shape build(const Shape &input_shape) override final {
+                void build(const Shape &input_shape) override final {
                     // input_shape = (number samples = 0, inputs)
                     assert(input_shape.size() == 2);
 
@@ -59,7 +59,7 @@ namespace laruen::nn::layers {
                     this->dw_ = NDArray<T>(this->w_.shape());
                     this->db_ = NDArray<T>(this->b_.shape());
 
-                    return Shape{this->nodes_};
+                    this->output_shape_ = {this->nodes_};
                 }
 
                 const char* name() const noexcept override final {

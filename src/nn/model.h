@@ -40,12 +40,11 @@ namespace laruen::nn {
                 {}
                 
                 void build(const Shape &input_shape) {
-                    // input_shape = (number of samples, dim1, ...)
-                    Shape next_shape = input_shape;
+                    // input_shape = (dim0, ...)
+                    this->layers_[0]->build(input_shape);
 
-                    for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
-                        next_shape = this->layers_[i]->build(next_shape);
-                        this->outputs_[i] = NDArray<T>(next_shape);
+                    for(uint_fast64_t i = 1;i < this->layers_.size();i++) {
+                        this->layers_[i]->build(this->layers_[i - 1]->output_shape());
                     }
                 }
 

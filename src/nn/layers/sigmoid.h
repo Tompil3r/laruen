@@ -31,8 +31,8 @@ namespace laruen::nn::layers {
 
                 }
 
-                Shape build(const Shape &input_shape) override final {
-                    return input_shape;
+                void build(const Shape &input_shape) override final {
+                    this->output_shape_ = input_shape;
                 }
 
                 const char* name() const noexcept override final {

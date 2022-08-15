@@ -39,11 +39,10 @@ namespace laruen::nn::layers {
                 void backward() const noexcept override final
                 {}
 
-                Shape build(const Shape &input_shape) override final {
+                void build(const Shape &input_shape) override final {
                     // input_shape = (dim0, ...)
                     this->size_ = std::accumulate(input_shape.cbegin(), input_shape.cend(), 1, std::multiplies<T>{});
-
-                    return Shape{this->size_};
+                    this->output_shape_ = {this->size_};
                 }
 
                 const char* name() const noexcept override final {
