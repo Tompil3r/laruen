@@ -24,6 +24,10 @@ namespace laruen::nn::layers {
 
                 Layer(const Shape &output_shape) noexcept : output_shape_(output_shape)
                 {}
+                
+                const Shape& output_shape() const noexcept {
+                    return this->output_shape_;
+                }
 
                 virtual NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const = 0;
                 virtual void backward() const noexcept = 0;
