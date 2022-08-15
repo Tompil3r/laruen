@@ -52,7 +52,7 @@ namespace laruen::nn::layers {
 
                 void build(const Shape &input_shape) override final {
                     // input_shape = (number samples = 0, inputs)
-                    assert(input_shape.size() == 2);
+                    assert(input_shape.size() == 1);
 
                     this->w_ = NDArray<T>({input_shape[1], this->nodes_}, -1, 1);
                     this->b_ = NDArray<T>({this->nodes_}, 0);
