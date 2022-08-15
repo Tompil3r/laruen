@@ -26,18 +26,18 @@ namespace laruen::nn::layers {
                 Softmax(int_fast8_t axis = -1) noexcept : axis_(axis)
                 {}
 
-                NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const override final {
+                NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
                     uint_fast8_t real_axis = this->axis_ >= 0 ? this->axis_ : input.ndim() + this->axis_;
                     Shape sums_shape(input.shape());
                     sums_shape[real_axis] = 1;
 
                     NDArray<T> exp_sums(sums_shape);
 
-                    input.exp(out);
-                    out.sum({real_axis}, exp_sums);
-                    out.divide_eq(exp_sums);
+                    input.exp(output);
+                    output.sum({real_axis}, exp_sums);
+                    output.divide_eq(exp_sums);
 
-                    return out;
+                    return output;
                 }
 
                 void backward() const noexcept override final {

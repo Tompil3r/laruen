@@ -18,13 +18,13 @@ namespace laruen::nn::layers {
             public:
                 static constexpr char NAME[] = "Sigmoid";
 
-                NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const override final {
-                    input.negate(out);
-                    out.exp_eq();
-                    out.add_eq(1);
-                    out.inverse_divide_eq(1);
+                NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
+                    input.negate(output);
+                    output.exp_eq();
+                    output.add_eq(1);
+                    output.inverse_divide_eq(1);
 
-                    return out;
+                    return output;
                 }
 
                 void backward() const noexcept override final {
