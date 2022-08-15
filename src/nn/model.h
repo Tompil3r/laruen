@@ -55,7 +55,7 @@ namespace laruen::nn {
                     str += '\n';
 
                     auto shape_str = [](auto shape) noexcept -> std::string {
-                        std::string str("(");
+                        std::string str("(None, ");
                         auto iter = shape.cbegin();
                         for(;iter != shape.cend() - 1;iter++) {
                             str += std::to_string(*iter) + ", ";
@@ -67,7 +67,7 @@ namespace laruen::nn {
                     for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
                         str += this->layers_[i]->name();
                         str += "\t\t\t";
-                        str += shape_str(this->outputs_[i].shape());
+                        str += shape_str(this->layers_[i]->output_shape());
                         str += '\n';
                     }
                     
