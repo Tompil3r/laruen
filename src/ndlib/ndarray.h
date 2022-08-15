@@ -101,6 +101,10 @@ namespace laruen::ndlib {
             explicit NDArray(const Shape &shape) noexcept
             : ArrayBase(shape), data_(new T[this->size_])
             {}
+
+            explicit NDArray(Shape &&shape) noexcept
+            : ArrayBase(std::move(shape)), data_(new T[this->size_])
+            {}
             
             NDArray(const Shape &shape, T value) noexcept
             : NDArray(shape) {
