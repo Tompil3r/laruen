@@ -75,6 +75,15 @@ namespace laruen::nn {
                     
                     return str;
                 }
+
+
+                inline const std::vector<Layer<T>*>& layers() const noexcept {
+                    return this->layers_;
+                }
+
+                inline const std::vector<NDArray<T>>& outputs() const noexcept {
+                    return this->outputs_;
+                }
             
             private:
                 Shape array_shape(const Shape &shape) const noexcept {
