@@ -40,8 +40,8 @@ namespace laruen::nn::layers {
                 {}
 
                 Shape build(const Shape &input_shape) override final {
-                    // input_shape = (number samples = 0, dim1, ...)
-                    this->size_ = std::accumulate(input_shape.cbegin() + 1, input_shape.cend(), 1, std::multiplies<T>{});
+                    // input_shape = (dim0, ...)
+                    this->size_ = std::accumulate(input_shape.cbegin(), input_shape.cend(), 1, std::multiplies<T>{});
 
                     return Shape{this->size_};
                 }
