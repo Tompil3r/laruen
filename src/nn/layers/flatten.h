@@ -43,7 +43,7 @@ namespace laruen::nn::layers {
                     // input_shape = (number samples = 0, dim1, ...)
                     this->size_ = std::accumulate(input_shape.cbegin() + 1, input_shape.cend(), 1, std::multiplies<T>{});
 
-                    return {0, this->size_};
+                    return Shape{this->size_};
                 }
 
                 const char* name() const noexcept override final {

@@ -59,7 +59,7 @@ namespace laruen::nn::layers {
                     this->dw_ = NDArray<T>(this->w_.shape());
                     this->db_ = NDArray<T>(this->b_.shape());
 
-                    return Shape{0, this->nodes_}; // 0 - number of samples - unknown
+                    return Shape{this->nodes_};
                 }
 
                 const char* name() const noexcept override final {
