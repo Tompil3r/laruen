@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "src/ndlib/ndarray.h"
 #include "src/ndlib/types.h"
 #include "src/nn/layers/layer.h"
@@ -71,6 +72,15 @@ namespace laruen::nn {
                     }
                     
                     return str;
+                }
+            
+            private:
+                Shape array_shape(const Shape &shape) const noexcept {
+                    Shape out(shape.size() + 1);
+                    out[0] = this->batch_size_;
+                    std::copy(shape.cbegin(), shape.cend(), out.begin() + 1);
+
+                    return out;
                 }
         };
     }
