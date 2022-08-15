@@ -16,8 +16,15 @@ namespace laruen::nn::layers {
 
         template <typename T = float32_t>
         class Layer {
+            protected:
+                Shape output_shape_;
 
             public:
+                Layer() noexcept = default;
+
+                Layer(const Shape &output_shape) noexcept : output_shape_(output_shape)
+                {}
+
                 virtual NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const = 0;
                 virtual void backward() const noexcept = 0;
                 virtual Shape build(const Shape &input_shape) = 0;
