@@ -50,8 +50,8 @@ namespace laruen::nn {
                 }
 
                 std::string summary() const noexcept {
-                    std::string str("Layer Name\t\tOutput Shape\n");
-                    str += std::string(36, '-');
+                    std::string str("Layer Name\t\tOutput Shape\t\tParams\n");
+                    str += std::string(60, '-');
                     str += '\n';
 
                     auto shape_str = [](auto shape) noexcept -> std::string {
@@ -68,6 +68,8 @@ namespace laruen::nn {
                         str += this->layers_[i]->name();
                         str += "\t\t\t";
                         str += shape_str(this->layers_[i]->output_shape());
+                        str += "\t\t";
+                        str += std::to_string(this->layers_[i]->params());
                         str += '\n';
                     }
                     
