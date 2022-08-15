@@ -4,6 +4,7 @@
 
 #include <numeric>
 #include <functional>
+#include <cstdint>
 #include "src/ndlib/ndarray.h"
 #include "src/ndlib/types.h"
 #include "src/nn/layers/layer.h"
@@ -18,12 +19,12 @@ namespace laruen::nn::layers {
 
         template <typename T = float32_t>
         class Flatten : public Layer<T> {
-            Shape output_shape_; 
+            uint_fast64_t size_;
 
             public:
                 static constexpr char NAME[] = "Flatten";
 
-                Flatten() noexcept : output_shape_{0, 0}
+                Flatten() noexcept : size_(0)
                 {}
 
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
@@ -31,7 +32,7 @@ namespace laruen::nn::layers {
                     // output.shape = (dim0, dim1 * ...)
                     
                     assert(input.contig());
-                    output = input.view_reshape({input.shape()[0], this->output_shape_[1]});
+                    output = input.view_reshape({input.shape()[0], this->size_});
                     return output;
                 }
 
@@ -40,9 +41,9 @@ namespace laruen::nn::layers {
 
                 Shape build(const Shape &input_shape) override final {
                     // input_shape = (number samples = 0, dim1, ...)
-                    this->output_shape_[1] = std::accumulate(input_shape.cbegin() + 1, input_shape.cend(), 1, std::multiplies<T>{});
+                    this->size_ = std::accumulate(input_shape.cbegin() + 1, input_shape.cend(), 1, std::multiplies<T>{});
 
-                    return this->output_shape_;
+                    return {0, this->size_};
                 }
 
                 const char* name() const noexcept override final {
