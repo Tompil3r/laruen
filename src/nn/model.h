@@ -22,6 +22,7 @@ namespace laruen::nn {
             private:
                 std::vector<Layer<T>*> layers_;
                 std::vector<NDArray<T>> outputs_;
+                uint_fast64_t batch_size_;
                 bool manage_layers_;
                 
             public:
@@ -34,7 +35,8 @@ namespace laruen::nn {
                 }
 
                 Model(std::vector<Layer<T>*> &layers, bool manage_layers = true)
-                : layers_(layers), outputs_(layers.size()), manage_layers_(manage_layers)
+                : layers_(layers), outputs_(layers.size()),
+                batch_size_(0), manage_layers_(manage_layers)
                 {}
                 
                 void build(const Shape &input_shape) {
