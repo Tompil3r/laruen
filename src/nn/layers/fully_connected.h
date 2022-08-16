@@ -69,6 +69,22 @@ namespace laruen::nn::layers {
                 uint_fast64_t params() const noexcept override final {
                     return this->w_.size() + this->b_.size();
                 }
+                
+                inline const NDArray<T>& w() const noexcept {
+                    return this->w_;
+                }
+
+                inline const NDArray<T>& b() const noexcept {
+                    return this->b_;
+                }
+
+                inline const NDArray<T>& dw() const noexcept {
+                    return this->dw_;
+                }
+
+                inline const NDArray<T>& db() const noexcept {
+                    return this->db_;
+                }
         };
     }
 
