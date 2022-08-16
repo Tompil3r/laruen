@@ -61,7 +61,7 @@ namespace laruen::ndlib {
 
             explicit ArrayBase(Shape &&shape) noexcept
             : shape_(std::move(shape)), strides_(shape.size()), dim_sizes_(shape.size()),
-            ndim_(shape.size()), contig_(true)
+            ndim_(this->shape_.size()), contig_(true)
             {
                 uint_fast64_t stride = 1;
                 this->size_ = (this->ndim_ > 0);
