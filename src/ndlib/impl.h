@@ -2,6 +2,7 @@
 #define NDLIB_IMPL_H_
 
 #include <cstdint>
+#include <cmath>
 #include "src/ndlib/nditer.h"
 #include "src/ndlib/ndarray.h"
 #include "src/math/common.h"
@@ -809,6 +810,128 @@ namespace laruen::ndlib {
 
             return out_data;
         }
+
+        template <typename T>
+        static T* ln_eq(T *data, const ArrayBase &base) noexcept {
+            NDIter iter(data, base);
+
+            for(uint_fast64_t i = 0;i < base.size_;i++) {
+                iter.next() = std::log(iter.current());
+            }
+
+            return data;
+        }
+
+        template <typename T, typename TR>
+        static TR* ln(const T *lhs_data, const ArrayBase &lhs_base, TR *out_data, const ArrayBase &out_base) {
+            NDIter lhs_iter(lhs_data, lhs_base);
+            NDIter out_iter(out_data, out_base);
+
+            for(uint_fast64_t i = 0;i < lhs_base.size_;i++) {
+                out_iter.next() = std::log(lhs_iter.next());
+            }
+
+            return out_data;
+        }
+
+        template <typename T>
+        static T* log2_eq(T *data, const ArrayBase &base) noexcept {
+            NDIter iter(data, base);
+
+            for(uint_fast64_t i = 0;i < base.size_;i++) {
+                iter.next() = std::log2(iter.current());
+            }
+
+            return data;
+        }
+
+        template <typename T, typename TR>
+        static TR* log2(const T *lhs_data, const ArrayBase &lhs_base, TR *out_data, const ArrayBase &out_base) {
+            NDIter lhs_iter(lhs_data, lhs_base);
+            NDIter out_iter(out_data, out_base);
+
+            for(uint_fast64_t i = 0;i < lhs_base.size_;i++) {
+                out_iter.next() = std::log2(lhs_iter.next());
+            }
+
+            return out_data;
+        }
+
+        template <typename T>
+        static T* log10_eq(T *data, const ArrayBase &base) noexcept {
+            NDIter iter(data, base);
+
+            for(uint_fast64_t i = 0;i < base.size_;i++) {
+                iter.next() = std::log10(iter.current());
+            }
+
+            return data;
+        }
+
+        template <typename T, typename TR>
+        static TR* log10(const T *lhs_data, const ArrayBase &lhs_base, TR *out_data, const ArrayBase &out_base) {
+            NDIter lhs_iter(lhs_data, lhs_base);
+            NDIter out_iter(out_data, out_base);
+
+            for(uint_fast64_t i = 0;i < lhs_base.size_;i++) {
+                out_iter.next() = std::log10(lhs_iter.next());
+            }
+
+            return out_data;
+        }
+
+        template <typename T, typename TT>
+        static T* log_eq(T *power_data, const ArrayBase &power_base, const TT *base_data, const ArrayBase &base_base) {
+            NDIter power_iter(power_data, power_base);
+            NDIter base_iter(base_data, base_base);
+
+            for(uint_fast64_t i = 0;i < power_base.size_;i++) {
+                power_iter.next() = laruen::math::common::log(base_iter.next(), power_iter.current());
+            }
+
+            return power_data;
+        }
+
+        template <typename T, typename TT>
+        static T* log_eq(T *power_data, const ArrayBase &power_base, TT base) noexcept {
+            NDIter power_iter(power_data, power_base);
+
+            for(uint_fast64_t i = 0;i < power_base.size_;i++) {
+                power_iter.next() = laruen::math::common::log(base, power_iter.current());
+            }
+
+            return power_data;
+        }
+
+        template <typename T, typename TT, typename TR>
+        static TR* log(const T *power_data, const ArrayBase &power_base,
+        const TT *base_data, const ArrayBase &base_base, TR *out_data, const ArrayBase &out_base)
+        {
+            NDIter power_iter(power_data, power_base);
+            NDIter base_iter(base_data, base_base);
+            NDIter out_iter(out_data, out_base);
+
+            for(uint_fast64_t i = 0;i < power_base.size_;i++) {
+                out_iter.next() = laruen::math::common::log(base_iter.next(), power_iter.next());
+            }
+
+            return out_data;
+        }
+
+        template <typename T, typename TT, typename TR>
+        static T* log(const T *power_data, const ArrayBase &power_base, TT base,
+        TR *out_data, const ArrayBase &out_base) noexcept
+        {
+            NDIter power_iter(power_data, power_base);
+            NDIter out_iter(out_data, out_base);
+
+            for(uint_fast64_t i = 0;i < power_base.size_;i++) {
+                out_iter.next() = laruen::math::common::log(base, power_iter.next());
+            }
+
+            return out_data;
+        }
+
 
         // inverse math functions
         template <typename T, typename TT>

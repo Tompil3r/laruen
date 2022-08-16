@@ -1734,6 +1734,111 @@ namespace laruen::ndlib {
                 return this->template power<types::result_type_t<T, TT>, TT>(rhs);
             }
 
+            inline NDArray& ln_eq() noexcept {
+                Impl::ln_eq(this->data_, *this);
+                return *this;
+            }
+
+            template <typename TR>
+            inline NDArray<TR>& ln(NDArray<TR> &out) const {
+                Impl::ln(this->data_, *this, out.data_, out);
+                return out;
+            }
+
+            template <typename TR = T>
+            inline NDArray<TR> ln() const noexcept {
+                NDArray<TR> out(this->shape_);
+                this->ln(out);
+                return out;
+            }
+
+            inline NDArray& log2_eq() noexcept {
+                Impl::log2_eq(this->data_, *this);
+                return *this;
+            }
+
+            template <typename TR>
+            inline NDArray<TR>& log2(NDArray<TR> &out) const {
+                Impl::log2(this->data_, *this, out.data_, out);
+                return out;
+            }
+
+            template <typename TR = T>
+            inline NDArray<TR> log2() const noexcept {
+                NDArray<TR> out(this->shape_);
+                this->log2(out);
+                return out;
+            }
+
+            inline NDArray& log10_eq() noexcept {
+                Impl::log10_eq(this->data_, *this);
+                return *this;
+            }
+
+            template <typename TR>
+            inline NDArray<TR>& log10(NDArray<TR> &out) const {
+                Impl::log10(this->data_, *this, out.data_, out);
+                return out;
+            }
+
+            template <typename TR = T>
+            inline NDArray<TR> log10() const noexcept {
+                NDArray<TR> out(this->shape_);
+                this->log10(out);
+                return out;
+            }
+
+            template <typename TT>
+            inline NDArray& log_eq(const NDArray<TT> &base) {
+                Impl::log_eq(this->data_, *this, base.data_, base);
+                return *this;
+            }
+
+            template <typename TT>
+            inline NDArray& log_eq(TT base) noexcept {
+                Impl::log_eq(this->data_, *this, base);
+                return *this;
+            }
+
+            template <typename TT, typename TR>
+            inline NDArray<TR>& log(const NDArray<TT> &base, NDArray<TR> &out) const {
+                Impl::log(this->data_, *this, base.data_, base, out.data_, out);
+                return out;
+            }
+
+            template <typename TT, typename TR>
+            inline NDArray<TR>& log(TT base, NDArray<TR> &out) const {
+                Impl::log(this->data_, *this, base, out.data_, out);
+                return out;
+            }
+
+            template <typename TR, typename TT>
+            inline NDArray<TR> log(const NDArray<TT> &base) const {
+                NDArray<TR> out(this->shape_);
+                this->log(base, out);
+                return out;
+            }
+
+            template <typename TR, typename TT>
+            inline NDArray<TR> log(TT base) const {
+                NDArray<TR> out(this->shape_);
+                this->log(base, out);
+                return out;
+            }
+
+            template <typename TT>
+            inline NDArray<types::result_type_t<T, TT>> log(const NDArray<TT> &base) const {
+                NDArray<types::result_type_t<T, TT>> out(this->shape_);
+                this->log(base, out);
+                return out;
+            }
+
+            template <typename TT, typename = std::enable_if_t<!types::is_ndarray_v<TT>>>
+            inline NDArray<types::result_type_t<T, TT>> log(TT base) const {
+                NDArray<types::result_type_t<T, TT>> out(this->shape_);
+                this->log(base, out);
+                return out;
+            }
 
             // inverse math functions
             template <typename TT>
