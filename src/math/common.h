@@ -57,6 +57,12 @@ namespace laruen::math::common {
     inline bool is_pow2(T n) noexcept {
         return n && !(n & (n - 1));
     }
+
+    template <typename T, typename TT>
+    inline constexpr auto log(T base, TT power) noexcept {
+        return std::log10(power) / std::log10(base);
+    }
+
 };
 
 #endif
