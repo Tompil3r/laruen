@@ -1153,6 +1153,42 @@ namespace laruen::ndlib {
             
             return out_data;
         }
+
+        template <typename T, typename TT>
+        static T* inverse_log_eq(T *base_data, const ArrayBase &base_base, const TT *power_data, const ArrayBase &power_base) {
+            NDIter base_iter(base_data, base_base);
+            NDIter power_iter(power_data, power_base);
+
+            for(uint_fast64_t i = 0;i < base_base.size_;i++) {
+                base_iter.next() = laruen::math::common::log(base_iter.current(), power_iter.next());
+            }
+
+            return base_data;
+        }
+        
+        template <typename T, typename TT>
+        static T* inverse_log_eq(T *base_data, const ArrayBase &base_base, TT power) noexcept {
+            NDIter base_iter(base_data, base_base);
+
+            for(uint_fast64_t i = 0;i < base_base.size_;i++) {
+                base_iter.next() = laruen::math::common::log(base_iter.current(), power);
+            }
+
+            return base_data;
+        }
+
+        template <typename T, typename TT, typename TR>
+        static TR* inverse_log(const T *base_data, const ArrayBase &base_base,
+        TT power, TR *out_data, const ArrayBase &out_base) {
+            NDIter base_iter(base_data, base_base);
+            NDIter out_iter(out_data, out_base);
+
+            for(uint_fast64_t i = 0;i < base_base.size_;i++) {
+                out_iter.next() = laruen::math::common::log(base_iter.next(), power);
+            }
+
+            return out_data;
+        }
     };
 }
 

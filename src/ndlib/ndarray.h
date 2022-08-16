@@ -2011,6 +2011,38 @@ namespace laruen::ndlib {
                 return out;
             }
 
+            template <typename TT>
+            inline NDArray& inverse_log_eq(const NDArray<TT> &power) {
+                Impl::inverse_log_eq(this->data_, *this, power.data_, power);
+                return *this;
+            }
+            
+            template <typename TT>
+            inline NDArray& inverse_log_eq(TT power) noexcept {
+                Impl::inverse_log_eq(this->data_, *this, power);
+                return *this;
+            }
+
+            template <typename TT, typename TR>
+            inline NDArray<TR>& inverse_log(TT power, NDArray<TR> &out) const {
+                Impl::inverse_log(this->data_, *this, power, out.data_, out);
+                return out;
+            }
+
+            template <typename TR, typename TT>
+            inline NDArray<TR> inverse_log(TT power) const {
+                NDArray<TR> out(this->shape_);
+                Impl::inverse_log(this->data_, *this, power, out.data_, out);
+                return out;
+            }
+
+            template <typename TT>
+            inline NDArray<types::result_type_t<T, TT>> inverse_log(TT power) const {
+                NDArray<types::result_type_t<T, TT>> out(this->shape_);
+                Impl::inverse_log(this->data_, *this, power, out.data_, out);
+                return out;
+            }
+
             inline NDArray& exp_eq() noexcept {
                 return this->inverse_power_eq(laruen::math::constants::EULERS_NUMBER);
             }
