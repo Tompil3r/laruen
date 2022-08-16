@@ -76,6 +76,13 @@ namespace laruen::nn {
                     return str;
                 }
 
+                void forward(const NDArray<T> &input) {
+                    this->layers_[0]->forward(input, this->outputs_[0]);
+                    
+                    for(uint_fast64_t i = 1;i < this->layers_.size();i++) {
+                        this->layers_[i]->forward(this->outputs_[i - 1], this->outputs_[i]);
+                    }
+                }
 
                 inline const std::vector<Layer<T>*>& layers() const noexcept {
                     return this->layers_;
