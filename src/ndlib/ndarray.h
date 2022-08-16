@@ -1935,7 +1935,7 @@ namespace laruen::ndlib {
 
                 uint_fast8_t depth = min(lsb64(lhs_rows), min(lsb64(rhs_cols), lsb64(lhs_shared)));
 
-                if(is_pow2(lhs_rows) && is_pow2(rhs_cols) && is_pow2(lhs_shared)) {
+                if(depth && is_pow2(lhs_rows) && is_pow2(rhs_cols) && is_pow2(lhs_shared)) {
                     depth--;
                 }
 
