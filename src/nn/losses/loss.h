@@ -14,7 +14,7 @@ namespace laruen::nn::losses {
         class Loss {
 
             public:
-                void operator()(const NDArray<T> &y_pred, const NDArray<T> &y_true, NDArray<T> &output) const = 0;
+                T operator()(const NDArray<T> &y_pred, const NDArray<T> &y_true) const = 0;
         };
     }
 
