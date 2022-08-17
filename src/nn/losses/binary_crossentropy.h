@@ -2,6 +2,7 @@
 #ifndef NN_LOSSES_BINARY_CROSSENTROPY_H_
 #define NN_LOSSES_BINARY_CROSSENTROPY_H_
 
+#include <cassert>
 #include <cmath>
 #include <limits>
 #include "src/ndlib/ndarray.h"
