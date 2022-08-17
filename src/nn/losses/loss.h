@@ -3,14 +3,16 @@
 #define NN_LOSSES_LOSE_H_
 
 #include "src/ndlib/ndarray.h"
+#include "src/ndlib/types.h"
 
 namespace laruen::nn::losses {
 
     namespace impl {
 
         using laruen::ndlib::NDArray;
+        using laruen::ndlib::float32_t;
 
-        template <typename T>
+        template <typename T = float32_t>
         class Loss {
 
             public:
