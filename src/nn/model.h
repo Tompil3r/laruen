@@ -42,8 +42,8 @@ namespace laruen::nn {
                 }
 
                 Model(std::vector<Layer<T>*> &layers, bool manage_resources = true)
-                : layers_(layers), batch_outputs_(layers.size()), batch_d_outputs_(layers.size()),
-                batch_size_(0), rem_size_(0), manage_resources_(manage_resources)
+                : layers_(layers), batch_size_(0),
+                rem_size_(0), manage_resources_(manage_resources)
                 {}
                 
                 void build(const Shape &input_shape) {
