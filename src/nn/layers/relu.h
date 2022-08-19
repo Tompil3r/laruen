@@ -4,6 +4,7 @@
 
 #include "src/ndlib/ndarray.h"
 #include "src/ndlib/types.h"
+#include "src/ndlib/nditer.h"
 #include "src/nn/layers/layer.h"
 
 
@@ -13,6 +14,7 @@ namespace laruen::nn::layers {
         using laruen::ndlib::NDArray;
         using laruen::ndlib::Shape;
         using laruen::ndlib::float32_t;
+        using laruen::ndlib::NDIter;
 
         template <typename T = float32_t>
         class ReLU : public Layer<T> {
@@ -25,6 +27,14 @@ namespace laruen::nn::layers {
                 }
 
                 void backward(const NDArray<T> &deriv, NDArray<T> &prev_deriv_output) noexcept override final {
+                    assert(deriv.shape() == prev_deriv_output.shape());
+
+                    NDIter deriv_iter(deriv.data(), deriv);
+                    NDIter pdo_iter(prev_deriv_output.data(), prev_deriv_output);
+
+                    for(uint_fast64_t i = 0;i < deriv.size();i++) {
+                        pdo_iter.next() = deriv_iter.next() > 0 ? 1 : 0;
+                    }
                 }
 
                 void build(const Shape &input_shape) override final {
