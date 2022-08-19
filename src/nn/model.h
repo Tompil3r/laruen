@@ -8,6 +8,7 @@
 #include "src/ndlib/ndarray.h"
 #include "src/ndlib/types.h"
 #include "src/nn/layers/layer.h"
+#include "src/nn/utils.h"
 
 namespace laruen::nn {
 
@@ -96,6 +97,21 @@ namespace laruen::nn {
 
                 inline const std::vector<NDArray<T>>& batch_outputs() const noexcept {
                     return this->batch_outputs_;
+                }
+                        
+            private:
+                void shape_outputs(std::vector<NDArray<T>> &outputs, std::vector<NDArray<T>> &d_outputs,
+                uint_fast64_t batch_size) noexcept
+                {
+                    using laruen::nn::utils::batch_shape;
+
+                    outputs.resize(this->layers_.size());
+                    d_outputs.resize(this->layers_.size());
+
+                    for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
+                        outputs[i] = NDArray<T>(batch_shape(this->layers_[i]->output_shape(), batch_size));
+                        d_outputs[i] = NDArray<T>(outputs[i].shape());
+                    }
                 }
         };
     }
