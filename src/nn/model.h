@@ -91,15 +91,6 @@ namespace laruen::nn {
                 inline const std::vector<NDArray<T>>& outputs() const noexcept {
                     return this->outputs_;
                 }
-            
-            private:
-                Shape array_shape(const Shape &shape) const noexcept {
-                    Shape out(shape.size() + 1);
-                    out[0] = this->batch_size_;
-                    std::copy(shape.cbegin(), shape.cend(), out.begin() + 1);
-
-                    return out;
-                }
         };
     }
 
