@@ -100,12 +100,6 @@ namespace laruen::nn {
 
                     return out;
                 }
-
-                void init_outputs() noexcept {
-                    for(uint_fast64_t i = 0;i < this->outputs_.size();i++) {
-                        this->outputs_[i] = NDArray<T>(this->array_shape(this->layers_[i]->output_shape()));
-                    }
-                }
         };
     }
 
