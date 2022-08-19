@@ -76,11 +76,11 @@ namespace laruen::nn {
                     return str;
                 }
 
-                void forward(const NDArray<T> &input) {
-                    this->layers_[0]->forward(input, this->outputs_[0]);
+                void forward(const NDArray<T> &input, std::vector<NDArray<T>> &outputs) {
+                    this->layers_[0]->forward(input, outputs[0]);
                     
                     for(uint_fast64_t i = 1;i < this->layers_.size();i++) {
-                        this->layers_[i]->forward(this->outputs_[i - 1], this->outputs_[i]);
+                        this->layers_[i]->forward(outputs[i - 1], outputs[i]);
                     }
                 }
 
