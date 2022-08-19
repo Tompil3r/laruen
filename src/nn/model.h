@@ -23,7 +23,9 @@ namespace laruen::nn {
             private:
                 std::vector<Layer<T>*> layers_;
                 std::vector<NDArray<T>> batch_outputs_;
+                std::vector<NDArray<T>> batch_d_outputs_;
                 std::vector<NDArray<T>> rem_outputs_;
+                std::vector<NDArray<T>> rem_d_outputs_;
                 uint_fast64_t batch_size_;
                 bool manage_resources_;
                 
@@ -39,7 +41,7 @@ namespace laruen::nn {
                 }
 
                 Model(std::vector<Layer<T>*> &layers, bool manage_resources = true)
-                : layers_(layers), batch_outputs_(layers.size()), rem_outputs_(layers.size()),
+                : layers_(layers), batch_outputs_(layers.size()), batch_d_outputs_(layers.size()),
                 batch_size_(0), manage_resources_(manage_resources)
                 {}
                 
