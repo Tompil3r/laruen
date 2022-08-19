@@ -24,20 +24,20 @@ namespace laruen::nn {
                 std::vector<Layer<T>*> layers_;
                 std::vector<NDArray<T>> outputs_;
                 uint_fast64_t batch_size_;
-                bool manage_layers_;
+                bool manage_resources_;
                 
             public:
                 ~Model() {
-                    if(this->manage_layers_) {
+                    if(this->manage_resources_) {
                         for(auto iter = this->layers_.begin();iter != this->layers_.end();iter++) {
                             delete *iter;
                         }
                     }
                 }
 
-                Model(std::vector<Layer<T>*> &layers, bool manage_layers = true)
+                Model(std::vector<Layer<T>*> &layers, bool manage_resources = true)
                 : layers_(layers), outputs_(layers.size()),
-                batch_size_(0), manage_layers_(manage_layers)
+                batch_size_(0), manage_resources_(manage_resources)
                 {}
                 
                 void build(const Shape &input_shape) {
