@@ -40,7 +40,7 @@ namespace laruen::nn::layers {
                     return output;
                 }
 
-                void backward() const noexcept override final {
+                void backward(const NDArray<T> &deriv, NDArray<T> &prev_deriv_output) noexcept override final {
 
                 }
 

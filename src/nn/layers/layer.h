@@ -30,7 +30,7 @@ namespace laruen::nn::layers {
                 }
 
                 virtual NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const = 0;
-                virtual void backward() const noexcept = 0;
+                virtual void backward(const NDArray<T> &deriv, NDArray<T> &prev_deriv_output) noexcept = 0;
                 virtual void build(const Shape &input_shape) = 0;
                 virtual const char* name() const noexcept = 0;
                 virtual uint_fast64_t params() const noexcept = 0;
