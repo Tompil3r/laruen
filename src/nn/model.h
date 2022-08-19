@@ -28,10 +28,12 @@ namespace laruen::nn {
                 
             public:
                 ~Model() {
-                    if(this->manage_resources_) {
-                        for(auto iter = this->layers_.begin();iter != this->layers_.end();iter++) {
-                            delete *iter;
-                        }
+                    if(!this->manage_resources_) {
+                        return;
+                    }
+
+                    for(auto iter = this->layers_.begin();iter != this->layers_.end();iter++) {
+                        delete *iter;
                     }
                 }
 
