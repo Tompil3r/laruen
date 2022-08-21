@@ -36,7 +36,8 @@ namespace laruen::nn::layers {
                     return output;
                 }
 
-                void backward(const NDArray<T> &deriv, NDArray<T> &prev_deriv_output) noexcept override final
+                void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
+                const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept override final
                 {}
 
                 void build(const Shape &input_shape) override final {

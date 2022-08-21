@@ -26,7 +26,9 @@ namespace laruen::nn::layers {
                     return output;
                 }
 
-                void backward(const NDArray<T> &deriv, NDArray<T> &prev_deriv_output) noexcept override final {
+                void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
+                const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept override final
+                {
                     assert(deriv.shape() == prev_deriv_output.shape());
 
                     NDIter deriv_iter(deriv.data(), deriv);
