@@ -2,6 +2,7 @@
 #ifndef NN_LAYERS_RELU_H_
 #define NN_LAYERS_RELU_H_
 
+#include <cassert>
 #include "src/ndlib/ndarray.h"
 #include "src/ndlib/types.h"
 #include "src/ndlib/nditer.h"
