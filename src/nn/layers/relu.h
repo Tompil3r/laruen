@@ -40,7 +40,7 @@ namespace laruen::nn::layers {
                     assert(deriv.shape() == prev_deriv_output.shape());
 
                     NDIter deriv_iter(deriv.data(), deriv);
-                    NDIter input_iter(cached_input.data(), cached_input);
+                    NDIter cached_input_iter(cached_input.data(), cached_input);
                     NDIter output_iter(prev_deriv_output.data(), prev_deriv_output);
 
                     /*
@@ -53,7 +53,7 @@ namespace laruen::nn::layers {
                         ** [i] denotes the i'th element
                     */
                     for(uint_fast64_t i = 0;i < deriv.size();i++) {
-                        output_iter.next() = input_iter.next() <= 0 ? 0 : deriv_iter.current();
+                        output_iter.next() = cached_input_iter.next() <= 0 ? 0 : deriv_iter.current();
                         deriv_iter.next();
                     }
                 }
