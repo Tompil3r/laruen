@@ -63,6 +63,11 @@ namespace laruen::math::common {
         return std::log10(power) / std::log10(base);
     }
 
+    template <typename T>
+    inline constexpr T sign(T num) noexcept {
+        return (num > 0) - (num < 0);
+    }
+
 };
 
 #endif
