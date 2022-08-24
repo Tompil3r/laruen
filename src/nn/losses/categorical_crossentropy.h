@@ -8,6 +8,7 @@
 #include "src/ndlib/ndarray.h"
 #include "src/ndlib/nditer.h"
 #include "src/nn/losses/loss.h"
+#include "src/math/utils.h"
 
 namespace laruen::nn::losses {
 
@@ -20,6 +21,8 @@ namespace laruen::nn::losses {
         class CategoricalCrossentropy : Loss<T> {
             public:
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
+                    using laruen::math::utils::nonzero;
+
                     assert(y_true.ndim() == 2 && y_pred.ndim() == 2 && y_true.size() == y_pred.size());
 
                     NDIter true_iter(y_true.data(), y_true);
@@ -28,7 +31,7 @@ namespace laruen::nn::losses {
                     T tmp;
 
                     for(uint_fast64_t i = 0;i < y_pred.size();i++) {
-                        loss += true_iter.next() * std::log((tmp = pred_iter.next()) ? tmp : std::numeric_limits<T>::min()); 
+                        loss += true_iter.next() * std::log(nonzero(pred_iter.next())); 
                     }
 
                     return (-loss) / y_pred.shape().front();

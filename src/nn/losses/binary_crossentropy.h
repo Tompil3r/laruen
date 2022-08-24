@@ -23,6 +23,8 @@ namespace laruen::nn::losses {
         class BinaryCrossentropy : Loss<T> {
             public:
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
+                    using laruen::math::utils::nonzero;
+
                     assert(y_true.ndim() == 2 && y_pred.ndim() == 2 && y_true.size() == y_pred.size());
                     // y_true.shape = y_pred.shape = (batch size, 1)
 
@@ -32,8 +34,8 @@ namespace laruen::nn::losses {
                     T tmp;
 
                     for(uint_fast64_t i = 0;i < y_pred.size();i++) {
-                        loss += true_iter.current() * std::log((tmp = pred_iter.current()) ? tmp : std::numeric_limits<T>::min())
-                        + (1 - true_iter.current()) * std::log((tmp = 1 - pred_iter.current()) ? tmp : std::numeric_limits<T>::min());
+                        loss += true_iter.current() * std::log(nonzero(pred_iter.current()))
+                        + (1 - true_iter.current()) * std::log(nonzero(1 - pred_iter.current()));
 
                         true_iter.next();
                         pred_iter.next();

@@ -9,6 +9,7 @@
 #include "src/ndlib/nditer.h"
 #include "src/ndlib/types.h"
 #include "src/nn/losses/loss.h"
+#include "src/math/utils.h"
 
 namespace laruen::nn::losses {
 
@@ -22,6 +23,8 @@ namespace laruen::nn::losses {
         class SparseCategoricalCrossentropy : Loss<T> {
             public:
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
+                    using laruen::math::utils::nonzero;
+
                     assert(y_pred.ndim() == 2);
                     // y_true.shape = (batch_size, 1)
                     // y_pred.shape = (batch_size, classes)
@@ -34,8 +37,7 @@ namespace laruen::nn::losses {
                     T tmp;
 
                     for(uint_fast64_t i = 0;i < y_true.size();i++) {
-                        loss += std::log((tmp = y_pred.data()[pred_axis0 + (uint_fast64_t)true_iter.next() * pred_axis1_stride])
-                        ? tmp : std::numeric_limits<T>::min());
+                        loss += std::log(nonzero(y_pred.data()[pred_axis0 + (uint_fast64_t)true_iter.next() * pred_axis1_stride]));
                         pred_axis0 += pred_axis0_stride;
                     }
 
