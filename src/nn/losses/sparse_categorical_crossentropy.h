@@ -41,6 +41,10 @@ namespace laruen::nn::losses {
 
                     return (-loss) / y_true.size();
                 }
+
+                void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
+                    
+                }
         };
     }
 

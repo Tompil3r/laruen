@@ -17,6 +17,7 @@ namespace laruen::nn::losses {
 
             public:
                 virtual T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const = 0;
+                virtual void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred) const = 0;
         };
     }
 
