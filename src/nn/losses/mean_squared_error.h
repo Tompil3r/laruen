@@ -37,7 +37,15 @@ namespace laruen::nn::losses {
                 }
 
                 void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred, NDArray<T> &deriv_output) const override final {
-                    
+                    NDIter true_iter(y_true.data(), y_true);
+                    NDIter pred_iter(y_pred.data(), y_pred);
+                    NDIter output_iter(deriv_output.data(), deriv_output);
+
+                    uint_fast64_t batch_size = y_pred.shape().front();
+
+                    for(uint_fast64_t i = 0;i < y_pred.size();i++) {
+                        output_iter.next() = 2*(pred_iter.next() - true_iter.next()) / batch_size;
+                    }
                 }
         };
     }
