@@ -2,6 +2,8 @@
 #ifndef MATH_UTILS_H_
 #define MATH_UTILS_H_
 
+#include <limits>
+
 namespace laruen::math::utils {
     template <typename T, typename TT>
     constexpr T ipow(T base, TT exp) noexcept {
@@ -19,6 +21,11 @@ namespace laruen::math::utils {
         }
 
         return result;
+    }
+
+    template <typename T>
+    constexpr inline T nonzero(T num) noexcept {
+        return num ? num : std::numeric_limits<T>::min();
     }
 }
 
