@@ -34,7 +34,6 @@ namespace laruen::nn::losses {
                     uint_fast64_t pred_axis0_stride = y_pred.strides().front();
                     uint_fast64_t pred_axis1_stride = y_pred.strides()[1]; // axis 1 - probabilities axis
                     T loss = 0;
-                    T tmp;
 
                     for(uint_fast64_t i = 0;i < y_true.size();i++) {
                         loss += std::log(nonzero(y_pred.data()[pred_axis0 + (uint_fast64_t)true_iter.next() * pred_axis1_stride]));

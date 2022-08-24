@@ -28,7 +28,6 @@ namespace laruen::nn::losses {
                     NDIter true_iter(y_true.data(), y_true);
                     NDIter pred_iter(y_pred.data(), y_pred);
                     T loss = 0;
-                    T tmp;
 
                     for(uint_fast64_t i = 0;i < y_pred.size();i++) {
                         loss += true_iter.next() * std::log(nonzero(pred_iter.next())); 
