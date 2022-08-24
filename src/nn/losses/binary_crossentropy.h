@@ -51,7 +51,6 @@ namespace laruen::nn::losses {
                     NDIter pred_iter(y_pred.data(), y_pred);
                     NDIter output_iter(deriv_output.data(), deriv_output);
 
-                    T tmp;
                     uint_fast64_t batch_size = y_pred.shape().front();
 
                     for(uint_fast64_t i = 0;i < y_pred.size();i++) {
