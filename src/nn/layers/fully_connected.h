@@ -46,10 +46,42 @@ namespace laruen::nn::layers {
                     return output;
                 }
 
+                /**
+                 * @brief calculates the gradient of the Loss function with respect to A
+                 * @param deriv dZ (dL / dZ) (dL = dLoss)
+                 * @param cached_input A
+                 * @param cached_output Z (A * W) (matmul)
+                 * @param prev_deriv_output dA (dL / dA)
+                 */
                 void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
                 const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept override final
                 {
+                    /*
+                        deriv.shape = (batch_size, nodes)
+                        cached_input.shape = (batch_size, nb_inputs)
+                        cached_output.shape = (batch_size, nodes)
+                        prev_deriv_output.shape = (batch_size, nb_inputs)
+                        this->w_.shape = (nb_inputs, nodes)
+                        this->b_.shape = (nodes)
+                        this->dw_.shape = (nb_inputs, nodes)
+                        this->db_.shape = (nodes)
+                    */
+
+                    uint_fast64_t batch_size = deriv.shape().front();
+
+                    // dA[l-1]
+                    deriv.matmul(this->w_.transpose(), prev_deriv_output); // dA[l-1] = dZ[l] * W[l]
                     
+                    // dW[l]
+                    cached_input.transpose().matmul(deriv, this->dw_); // dW[l] = A[l-1] * dZ[l]
+                    this->dw_.divide_eq(batch_size); // dW[l] /= batch_size (* (1 / m));
+                    
+                    // db[l]
+                    deriv.sum({0}, this->db_); // db[l] = sum of dZ (axis = 0)
+                    // since (dZ / db) = 1, (dL / db) = (dL / dZ) * 1 = (dL / dZ)
+                    this->db_.divide_eq(batch_size); // db[l] /= batch_size
+
+                    // *** implement - weights update ***
                 }
 
                 void build(const Shape &input_shape) override final {
