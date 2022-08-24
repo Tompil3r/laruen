@@ -52,11 +52,12 @@ namespace laruen::nn::losses {
                     NDIter output_iter(deriv_output.data(), deriv_output);
 
                     T tmp;
+                    uint_fast64_t batch_size = y_pred.shape().front();
 
                     for(uint_fast64_t i = 0;i < y_pred.size();i++) {
-                        // (dL / dy_hat[i]) = (1 - y[i]) / (1 - y_hat[i]) - y[i] / y_hat[i]
-                        output_iter.next() = (1 - true_iter.current()) / nonzero(1 - pred_iter.current())
-                        - true_iter.current() / nonzero(pred_iter.current());
+                        // (dL / dy_hat[i]) = ((1 - y[i]) / (1 - y_hat[i]) - y[i] / y_hat[i]) / batch_size
+                        output_iter.next() = ((1 - true_iter.current()) / nonzero(1 - pred_iter.current())
+                        - true_iter.current() / nonzero(pred_iter.current())) / batch_size;
 
                         true_iter.next();
                         pred_iter.next();
