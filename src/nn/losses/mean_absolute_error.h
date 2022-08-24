@@ -8,6 +8,8 @@
 #include "src/ndlib/nditer.h"
 #include "src/ndlib/types.h"
 #include "src/nn/losses/loss.h"
+#include "src/math/common.h"
+#include "src/math/utils.h"
 
 namespace laruen::nn::losses {
 
@@ -35,7 +37,21 @@ namespace laruen::nn::losses {
                 }
 
                 void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred, NDArray<T> &deriv_output) const override final {
-                    
+                    using laruen::math::common::sign;
+
+                    NDIter true_iter(y_true.data(), y_true);
+                    NDIter pred_iter(y_pred.data(), y_pred);
+                    NDIter output_iter(deriv_output.data(), deriv_output);
+
+                    uint_fast64_t batch_size = y_pred.shape().front();
+
+                    for(uint_fast64_t i = 0;i < y_pred.size();i++) {
+                        // dL =
+                        // -1 if y_pred < y_true
+                        // 0 if y_pred == y_true
+                        // 1 if y_pred > y_true
+                        output_iter.next() = sign(pred_iter.next() - true_iter.next()) / batch_size;
+                    }
                 }
         };
     }
