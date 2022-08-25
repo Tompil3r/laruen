@@ -22,7 +22,7 @@ namespace laruen::nn::optimizers {
                 : learning_rate_(learning_rate)
                 {}
 
-                void update(NDArray<T> &weights, const NDArray<T> &gradients) override final {
+                void update(NDArray<T> &weights, NDArray<T> &gradients) override final {
 
                 }
 

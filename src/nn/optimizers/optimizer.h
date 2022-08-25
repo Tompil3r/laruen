@@ -14,7 +14,7 @@ namespace laruen::nn::optimizers {
         template <typename T = float32_t>
         class Optimizer {
             public:
-                virtual void update(NDArray<T> &weights, const NDArray<T> &gradients) = 0;
+                virtual void update(NDArray<T> &weights, NDArray<T> &gradients) = 0;
         };
 
     }
