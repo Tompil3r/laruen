@@ -59,6 +59,10 @@ namespace laruen::nn::layers {
                     }
                 }
 
+                void build(Shape::const_iterator begin, Shape::const_iterator end) override final {
+                    this->output_shape_ = Shape(begin, end);
+                }
+
                 void build(const Shape &input_shape) override final {
                     this->output_shape_ = input_shape;
                 }

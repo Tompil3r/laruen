@@ -40,10 +40,14 @@ namespace laruen::nn::layers {
                 const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept override final
                 {}
 
-                void build(const Shape &input_shape) override final {
-                    // input_shape = (dim0, ...)
-                    this->size_ = std::accumulate(input_shape.cbegin(), input_shape.cend(), 1, std::multiplies<T>{});
+                void build(Shape::const_iterator begin, Shape::const_iterator end) override final {
+                    // input_shape = (dim1, ...)
+                    this->size_ = std::accumulate(begin, end, 1, std::multiplies<T>{});
                     this->output_shape_ = {this->size_};
+                }
+
+                inline void build(const Shape &input_shape) override final {
+                    this->build(input_shape.begin(), input_shape.end());
                 }
 
                 const char* name() const noexcept override final {

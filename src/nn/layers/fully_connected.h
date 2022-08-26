@@ -88,11 +88,11 @@ namespace laruen::nn::layers {
                     // *** implement - weights update ***
                 }
 
-                void build(const Shape &input_shape) override final {
-                    // input_shape = (inputs)
-                    assert(input_shape.size() == 1);
+                void build(Shape::const_iterator begin, Shape::const_iterator end) override final {
+                    // input shape = (inputs)
+                    assert((Shape::size_type)(end - begin) == 1);
 
-                    this->w_ = NDArray<T>({input_shape.front(), this->nodes_}, -1, 1);
+                    this->w_ = NDArray<T>({*begin, this->nodes_}, -1, 1);
                     this->b_ = NDArray<T>({this->nodes_}, 0);
                     this->raw_dw_ = NDArray<T>(this->w_.shape());
                     this->raw_db_ = NDArray<T>(this->b_.shape());
@@ -100,6 +100,10 @@ namespace laruen::nn::layers {
                     this->final_db_ = NDArray<T>(this->b_.shape());
 
                     this->output_shape_ = {this->nodes_};
+                }
+
+                inline void build(const Shape &input_shape) override final {
+                    this->build(input_shape.cbegin(), input_shape.cend());
                 }
 
                 const char* name() const noexcept override final {
