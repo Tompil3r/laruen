@@ -22,9 +22,9 @@ namespace laruen::nn::optimizers {
                 : learning_rate_(learning_rate)
                 {}
 
-                void update(NDArray<T> &weights, NDArray<T> &gradients) override final {
-                    gradients.multiply_eq(this->learning_rate_);
-                    weights.subtract_eq(gradients);
+                void update(NDArray<T> &weights, NDArray<T> &raw_gradients, NDArray<T> &final_gradients) override final {
+                    raw_gradients.multiply(this->learning_rate_, final_gradients);
+                    weights.subtract_eq(final_gradients);
                 }
 
                 inline T learning_rate() const noexcept {
