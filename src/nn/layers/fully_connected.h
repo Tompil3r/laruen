@@ -26,8 +26,10 @@ namespace laruen::nn::layers {
                 */
                 NDArray<T> w_;
                 NDArray<T> b_;
-                NDArray<T> dw_;
-                NDArray<T> db_;
+                NDArray<T> raw_dw_;
+                NDArray<T> raw_db_;
+                NDArray<T> final_dw_;
+                NDArray<T> final_db_;
                 uint_fast32_t nodes_;
 
             public:
@@ -63,8 +65,10 @@ namespace laruen::nn::layers {
                         prev_deriv_output.shape = (batch_size, nb_inputs)
                         this->w_.shape = (nb_inputs, nodes)
                         this->b_.shape = (nodes)
-                        this->dw_.shape = (nb_inputs, nodes)
-                        this->db_.shape = (nodes)
+                        this->raw_dw_.shape = (nb_inputs, nodes)
+                        this->raw_db_.shape = (nodes)
+                        this->final_dw_.shape = (nb_inputs, nodes)
+                        this->final_db_.shape = (nodes)
                     */
 
                     uint_fast64_t batch_size = deriv.shape().front();
@@ -73,13 +77,13 @@ namespace laruen::nn::layers {
                     deriv.matmul(this->w_.transpose(), prev_deriv_output); // dA[l-1] = dZ[l] * W[l]
                     
                     // dW[l]
-                    cached_input.transpose().matmul(deriv, this->dw_); // dW[l] = A[l-1] * dZ[l]
-                    this->dw_.divide_eq(batch_size); // dW[l] /= batch_size (* (1 / m));
+                    cached_input.transpose().matmul(deriv, this->raw_dw_); // dW[l] = A[l-1] * dZ[l]
+                    this->raw_dw_.divide_eq(batch_size); // dW[l] /= batch_size (* (1 / m));
                     
                     // db[l]
-                    deriv.sum({0}, this->db_); // db[l] = sum of dZ (axis = 0)
+                    deriv.sum({0}, this->raw_db_); // db[l] = sum of dZ (axis = 0)
                     // since (dZ / db) = 1, (dL / db) = (dL / dZ) * 1 = (dL / dZ)
-                    this->db_.divide_eq(batch_size); // db[l] /= batch_size
+                    this->raw_db_.divide_eq(batch_size); // db[l] /= batch_size
 
                     // *** implement - weights update ***
                 }
@@ -90,8 +94,10 @@ namespace laruen::nn::layers {
 
                     this->w_ = NDArray<T>({input_shape.front(), this->nodes_}, -1, 1);
                     this->b_ = NDArray<T>({this->nodes_}, 0);
-                    this->dw_ = NDArray<T>(this->w_.shape());
-                    this->db_ = NDArray<T>(this->b_.shape());
+                    this->raw_dw_ = NDArray<T>(this->w_.shape());
+                    this->raw_db_ = NDArray<T>(this->b_.shape());
+                    this->final_dw_ = NDArray<T>(this->w_.shape());
+                    this->final_db_ = NDArray<T>(this->b_.shape());
 
                     this->output_shape_ = {this->nodes_};
                 }
@@ -112,12 +118,20 @@ namespace laruen::nn::layers {
                     return this->b_;
                 }
 
-                inline const NDArray<T>& dw() const noexcept {
-                    return this->dw_;
+                inline const NDArray<T>& raw_dw() const noexcept {
+                    return this->raw_dw_;
                 }
 
-                inline const NDArray<T>& db() const noexcept {
-                    return this->db_;
+                inline const NDArray<T>& raw_db() const noexcept {
+                    return this->raw_db_;
+                }
+
+                inline const NDArray<T>& final_dw() const noexcept {
+                    return this->final_dw_;
+                }
+
+                inline const NDArray<T>& final_db() const noexcept {
+                    return this->final_db_;
                 }
         };
     }
