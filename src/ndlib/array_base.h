@@ -44,20 +44,24 @@ namespace laruen::ndlib {
             : shape_(ndim), strides_(ndim), dim_sizes_(ndim), size_(size), ndim_(ndim), contig_(contig)
             {}
 
-            explicit ArrayBase(const Shape &shape) noexcept
-            : shape_(shape), strides_(shape.size()), dim_sizes_(shape.size()),
-            ndim_(shape.size()), contig_(true)
+            ArrayBase(Shape::const_iterator begin, Shape::const_iterator end) noexcept
+            : shape_(begin, end), strides_(this->shape_.size()), dim_sizes_(this->shape_.size()),
+            ndim_(this->shape_.size()), contig_(true)
             {
                 uint_fast64_t stride = 1;
                 this->size_ = (this->ndim_ > 0);
                 
                 for(uint_fast8_t dim = this->ndim_; dim-- > 0;) {
                     this->strides_[dim] = stride;
-                    stride *= shape[dim];
+                    stride *= this->shape_[dim];
                     this->dim_sizes_[dim] = stride;
-                    this->size_ *= shape[dim];
+                    this->size_ *= this->shape_[dim];
                 }
             }
+
+            explicit ArrayBase(const Shape &shape) noexcept
+            : ArrayBase(shape.cbegin(), shape.cend())
+            {}
 
             explicit ArrayBase(Shape &&shape) noexcept
             : shape_(std::move(shape)), strides_(this->shape_.size()), dim_sizes_(this->shape_.size()),
