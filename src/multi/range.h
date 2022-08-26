@@ -5,7 +5,7 @@
 #include <string>
 #include <ostream>
 
-namespace laruen::ndlib {
+namespace laruen::multi {
     
     template <typename T> struct Range {
         T start;

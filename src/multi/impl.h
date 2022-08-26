@@ -3,11 +3,11 @@
 
 #include <cstdint>
 #include <cmath>
-#include "src/ndlib/nditer.h"
-#include "src/ndlib/ndarray.h"
+#include "src/multi/nditer.h"
+#include "src/multi/ndarray.h"
 #include "src/math/common.h"
 
-namespace laruen::ndlib {
+namespace laruen::multi {
 
     struct Impl {
 
@@ -70,7 +70,7 @@ namespace laruen::ndlib {
                 - no broadcasting needed
                 - min ndim == 2 (no dot product)
             */
-            using laruen::ndlib::NDIter;
+            using laruen::multi::NDIter;
 
             uint_fast8_t rows_axis = lhs_base.ndim_ - 2;
             uint_fast8_t cols_axis = lhs_base.ndim_ - 1;

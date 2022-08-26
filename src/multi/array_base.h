@@ -7,9 +7,9 @@
 #include <stdexcept>
 #include <string>
 #include <ostream>
-#include "src/ndlib/types.h"
+#include "src/multi/types.h"
 
-namespace laruen::ndlib {
+namespace laruen::multi {
 
     class ArrayBase {
         template <typename> friend class NDArray;

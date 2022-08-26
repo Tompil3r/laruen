@@ -4,9 +4,9 @@
 
 #include <cstdint>
 #include <type_traits>
-#include "src/ndlib/ndarray.h"
+#include "src/multi/ndarray.h"
 
-namespace laruen::ndlib {
+namespace laruen::multi {
     // NDArray forward declaration
     template <typename T> class NDArray;
 

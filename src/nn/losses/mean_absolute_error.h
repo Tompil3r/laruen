@@ -4,18 +4,18 @@
 
 #include <cassert>
 #include <cmath>
-#include "src/ndlib/ndarray.h"
-#include "src/ndlib/nditer.h"
-#include "src/ndlib/types.h"
+#include "src/multi/ndarray.h"
+#include "src/multi/nditer.h"
+#include "src/multi/types.h"
 #include "src/nn/losses/loss.h"
 #include "src/math/common.h"
 #include "src/math/utils.h"
 
 namespace laruen::nn::losses {
 
-    using laruen::ndlib::NDArray;
-    using laruen::ndlib::float32_t;
-    using laruen::ndlib::NDIter;
+    using laruen::multi::NDArray;
+    using laruen::multi::float32_t;
+    using laruen::multi::NDIter;
 
     namespace impl {
 

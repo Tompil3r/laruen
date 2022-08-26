@@ -3,17 +3,17 @@
 #define NN_LAYERS_SOFTMAX_H_
 
 #include <algorithm>
-#include "src/ndlib/ndarray.h"
-#include "src/ndlib/types.h"
+#include "src/multi/ndarray.h"
+#include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
 
 namespace laruen::nn::layers {
 
     namespace impl {
 
-        using laruen::ndlib::NDArray;
-        using laruen::ndlib::Shape;
-        using laruen::ndlib::float32_t;
+        using laruen::multi::NDArray;
+        using laruen::multi::Shape;
+        using laruen::multi::float32_t;
 
         template <typename T = float32_t>
         class Softmax : public Layer<T> {

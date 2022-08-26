@@ -4,13 +4,13 @@
 
 #include <cstdint>
 #include <algorithm>
-#include "src/ndlib/types.h"
+#include "src/multi/types.h"
 
 namespace laruen::nn::utils {
 
     namespace impl {
 
-        using laruen::ndlib::Shape;
+        using laruen::multi::Shape;
 
         Shape batch_shape(const Shape &shape, uint_fast64_t batch_size) noexcept {
             Shape result(shape.size() + 1);

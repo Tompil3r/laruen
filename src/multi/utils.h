@@ -4,15 +4,15 @@
 
 #include <cstdint>
 #include <stdexcept>
-#include "src/ndlib/types.h"
+#include "src/multi/types.h"
 #include "src/math/common.h"
 
-namespace laruen::ndlib::utils {
+namespace laruen::multi::utils {
 
     namespace impl {
 
-        using laruen::ndlib::Shape;
-        using laruen::ndlib::Axes;
+        using laruen::multi::Shape;
+        using laruen::multi::Axes;
 
         Shape broadcast_(const Shape &lhs, const Shape &rhs) {
             // assume lhs.size() >= rhs.size()

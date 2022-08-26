@@ -4,11 +4,11 @@
 
 #include <type_traits>
 #include <utility>
-#include "src/ndlib/array_base.h"
-#include "src/ndlib/types.h"
-#include "src/ndlib/type_selection.h"
+#include "src/multi/array_base.h"
+#include "src/multi/types.h"
+#include "src/multi/type_selection.h"
 
-namespace laruen::ndlib {
+namespace laruen::multi {
 
     template <typename T>
     struct NDIter {

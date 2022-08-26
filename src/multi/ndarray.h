@@ -14,20 +14,20 @@
 #include <stdexcept>
 #include <cmath>
 #include <random>
-#include "src/ndlib/utils.h"
-#include "src/ndlib/types.h"
-#include "src/ndlib/nditer.h"
-#include "src/ndlib/array_base.h"
-#include "src/ndlib/range.h"
-#include "src/ndlib/type_selection.h"
-#include "src/ndlib/impl.h"
-#include "src/ndlib/rng.h"
+#include "src/multi/utils.h"
+#include "src/multi/types.h"
+#include "src/multi/nditer.h"
+#include "src/multi/array_base.h"
+#include "src/multi/range.h"
+#include "src/multi/type_selection.h"
+#include "src/multi/impl.h"
+#include "src/multi/rng.h"
 #include "src/math/common.h"
 #include "src/math/bits.h"
 #include "src/math/constants.h"
 
 
-namespace laruen::ndlib {
+namespace laruen::multi {
 
     template <typename T = float32_t>
     class NDArray : public ArrayBase {
@@ -130,7 +130,7 @@ namespace laruen::ndlib {
             }
             
             explicit NDArray(const Range<T> &range) noexcept
-            : NDArray(Shape{laruen::ndlib::utils::ceil_index((range.end - range.start) / range.step)})
+            : NDArray(Shape{laruen::multi::utils::ceil_index((range.end - range.start) / range.step)})
             {
                 T value = range.start;
 
@@ -143,7 +143,7 @@ namespace laruen::ndlib {
             NDArray(const Shape &shape, const Range<T> &range)
             : NDArray(shape)
             {
-                if(laruen::ndlib::utils::ceil_index((range.end - range.start) / range.step) != this->size_) {
+                if(laruen::multi::utils::ceil_index((range.end - range.start) / range.step) != this->size_) {
                     throw std::invalid_argument("shape size does not match range");
                 }
 
@@ -184,7 +184,7 @@ namespace laruen::ndlib {
                     size_ratio *= this->shape_[dim];
                     this->data_ += ranges[dim].start * this->strides_[dim];
                     this->strides_[dim] *= ranges[dim].step;
-                    this->shape_[dim] = laruen::ndlib::utils::ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
+                    this->shape_[dim] = laruen::multi::utils::ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
                     this->dim_sizes_[dim] = this->shape_[dim] * this->strides_[dim];
                     size_ratio /= this->shape_[dim];
                 }
@@ -380,7 +380,7 @@ namespace laruen::ndlib {
                 NDIter iter(this->data_, *this);
 
                 for(uint_fast64_t i = 0;i < this->size_;i++) {
-                    iter.next() = dist(laruen::ndlib::RNG);
+                    iter.next() = dist(laruen::multi::RNG);
                 }
             }
 
@@ -395,7 +395,7 @@ namespace laruen::ndlib {
                 NDIter iter(this->data_, *this);
 
                 for(uint_fast64_t i = 0;i < this->size_;i++) {
-                    iter.next() = dist(laruen::ndlib::RNG);
+                    iter.next() = dist(laruen::multi::RNG);
                 }
             }
 
@@ -409,7 +409,7 @@ namespace laruen::ndlib {
                 for(uint_fast64_t i = 0;i < this->size_;i++) {
                     std::uniform_int_distribution<uint_fast64_t> dist(i, this->size_ - 1);
                     T tmp = iter.current();
-                    T *swap_ptr = this->data_ + this->physical_index(dist(laruen::ndlib::RNG));
+                    T *swap_ptr = this->data_ + this->physical_index(dist(laruen::multi::RNG));
 
                     iter.next() = *swap_ptr;
                     *swap_ptr = tmp;
@@ -426,7 +426,7 @@ namespace laruen::ndlib {
 
                 for(uint_fast64_t i = 0;i < this->shape_[axis];i++) {
                     std::uniform_int_distribution<uint_fast64_t> dist(i, this->shape_[axis] - 1);
-                    T *swap_ptr = this->data_ + dist(laruen::ndlib::RNG) * this->strides_[axis];
+                    T *swap_ptr = this->data_ + dist(laruen::multi::RNG) * this->strides_[axis];
                     Impl::swap(ptr, view, swap_ptr, view);
                 }
             }
@@ -439,14 +439,14 @@ namespace laruen::ndlib {
 
                 for(uint_fast64_t i = 0;i < iteration_base.size_;i++) {
                     std::uniform_int_distribution<uint_fast64_t> dist(i, iteration_base.size_ - 1);
-                    T *swap_ptr = this->data_ + iteration_base.physical_index(dist(laruen::ndlib::RNG));
+                    T *swap_ptr = this->data_ + iteration_base.physical_index(dist(laruen::multi::RNG));
                     Impl::swap(iter.ptr, swap_base, swap_ptr, swap_base);
                 }
             }
 
             T random_choice() const noexcept {
                 std::uniform_int_distribution<uint_fast64_t> dist(0, this->size_ - 1);
-                return this->data_[this->physical_index(dist(laruen::ndlib::RNG))];
+                return this->data_[this->physical_index(dist(laruen::multi::RNG))];
             }
 
             T random_choice(const NDArray<float64_t> &weights) const noexcept {
@@ -455,7 +455,7 @@ namespace laruen::ndlib {
                 NDIter iter(this->data_, *this);
                 NDIter weights_iter(weights.data_, weights);
 
-                float64_t rand = std::uniform_real_distribution<float64_t>(0, 1)(laruen::ndlib::RNG);
+                float64_t rand = std::uniform_real_distribution<float64_t>(0, 1)(laruen::multi::RNG);
                 float64_t weight_sum = weights_iter.next();
 
                 for(uint_fast64_t i = 0;i < this->size_ && weight_sum < rand;i++) {
@@ -522,7 +522,7 @@ namespace laruen::ndlib {
 
             template <typename TR = T>
             NDArray<TR> sum(const Axes &axes) const noexcept {
-                NDArray<TR> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
+                NDArray<TR> out(*this, laruen::multi::utils::compress_axes(axes, this->ndim_));
                 this->sum(axes, out);
                 return out;
             }
@@ -700,7 +700,7 @@ namespace laruen::ndlib {
 
             template <typename TR = T>
             NDArray<TR> max(const Axes &axes) const noexcept {
-                NDArray<TR> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
+                NDArray<TR> out(*this, laruen::multi::utils::compress_axes(axes, this->ndim_));
                 this->max(axes, out);
                 return out;
             }
@@ -746,7 +746,7 @@ namespace laruen::ndlib {
             }
 
             NDArray<uint_fast64_t> indices_max(const Axes &axes) const noexcept {
-                NDArray<uint_fast64_t> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
+                NDArray<uint_fast64_t> out(*this, laruen::multi::utils::compress_axes(axes, this->ndim_));
                 this->indices_max(axes, out);
                 return out;
             }
@@ -794,7 +794,7 @@ namespace laruen::ndlib {
             
             template <typename TR = T>
             NDArray<TR> min(const Axes &axes) const noexcept {
-                NDArray<TR> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
+                NDArray<TR> out(*this, laruen::multi::utils::compress_axes(axes, this->ndim_));
                 this->min(axes, out);
                 return out;
             }
@@ -840,7 +840,7 @@ namespace laruen::ndlib {
             }
 
             NDArray<uint_fast64_t> indices_min(const Axes &axes) const noexcept {
-                NDArray<uint_fast64_t> out(*this, laruen::ndlib::utils::compress_axes(axes, this->ndim_));
+                NDArray<uint_fast64_t> out(*this, laruen::multi::utils::compress_axes(axes, this->ndim_));
                 this->indices_min(axes, out);
                 return out;
             }
@@ -1223,7 +1223,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> add(const NDArray<TT> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::broadcast(this->shape_, rhs.shape_));
                 this->add(rhs, out);
                 return out;
             }
@@ -1270,7 +1270,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> subtract(const NDArray<TT> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::broadcast(this->shape_, rhs.shape_));
                 this->subtract(rhs, out);
                 return out;
             }
@@ -1317,7 +1317,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> multiply(const NDArray<TT> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::broadcast(this->shape_, rhs.shape_));
                 this->multiply(rhs, out);
                 return out;
             }
@@ -1364,7 +1364,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> divide(const NDArray<TT> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::broadcast(this->shape_, rhs.shape_));
                 this->divide(rhs, out);
                 return out;
             }
@@ -1411,7 +1411,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> bit_xor(const NDArray<TT> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::broadcast(this->shape_, rhs.shape_));
                 this->bit_xor(rhs, out);
                 return out;
             }
@@ -1458,7 +1458,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> bit_and(const NDArray<TT> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::broadcast(this->shape_, rhs.shape_));
                 this->bit_and(rhs, out);
                 return out;
             }
@@ -1505,7 +1505,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> bit_or(const NDArray<TT> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::broadcast(this->shape_, rhs.shape_));
                 this->bit_or(rhs, out);
                 return out;
             }
@@ -1552,7 +1552,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> shl(const NDArray<TT> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::broadcast(this->shape_, rhs.shape_));
                 this->shl(rhs, out);
                 return out;
             }
@@ -1599,7 +1599,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> shr(const NDArray<TT> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::broadcast(this->shape_, rhs.shape_));
                 this->shr(rhs, out);
                 return out;
             }
@@ -1666,7 +1666,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> remainder(const NDArray<TT> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::broadcast(this->shape_, rhs.shape_));
                 this->remainder(rhs, out);
                 return out;
             }
@@ -1714,7 +1714,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> power(const NDArray<TT> &rhs) const noexcept {
-                NDArray<TR> out(laruen::ndlib::utils::broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::broadcast(this->shape_, rhs.shape_));
                 this->power(rhs, out);
                 return out;
             }
@@ -2093,7 +2093,7 @@ namespace laruen::ndlib {
 
             template <typename TR, typename TT>
             inline NDArray<TR> matmul(const NDArray<TT> &rhs) const {
-                NDArray<TR> out(laruen::ndlib::utils::matmul_broadcast(this->shape_, rhs.shape_));
+                NDArray<TR> out(laruen::multi::utils::matmul_broadcast(this->shape_, rhs.shape_));
                 this->matmul(rhs, out);
                 return out;
             }

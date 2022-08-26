@@ -2,15 +2,15 @@
 #ifndef NN_OPTIMIZERS_GRADIENT_DESCENT_H_
 #define NN_OPTIMIZERS_GRADIENT_DESCENT_H_
 
-#include "src/ndlib/ndarray.h"
-#include "src/ndlib/types.h"
+#include "src/multi/ndarray.h"
+#include "src/multi/types.h"
 #include "src/nn/optimizers/optimizer.h"
 
 namespace laruen::nn::optimizers {
 
     namespace impl {
-        using laruen::ndlib::NDArray;
-        using laruen::ndlib::float32_t;
+        using laruen::multi::NDArray;
+        using laruen::multi::float32_t;
 
         template <typename T = float32_t>
         class GradientDescent : public Optimizer<T> {

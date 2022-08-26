@@ -5,8 +5,8 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include "src/ndlib/ndarray.h"
-#include "src/ndlib/types.h"
+#include "src/multi/ndarray.h"
+#include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
 #include "src/nn/utils.h"
 
@@ -14,9 +14,9 @@ namespace laruen::nn {
 
     namespace impl {
 
-        using laruen::ndlib::NDArray;
-        using laruen::ndlib::Shape;
-        using laruen::ndlib::float32_t;
+        using laruen::multi::NDArray;
+        using laruen::multi::Shape;
+        using laruen::multi::float32_t;
         using laruen::nn::layers::Layer;
 
         template <typename T = float32_t>

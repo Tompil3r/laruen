@@ -5,9 +5,9 @@
 #include <cstdint>
 #include <vector>
 #include <cmath>
-#include "src/ndlib/range.h"
+#include "src/multi/range.h"
 
-namespace laruen::ndlib {
+namespace laruen::multi {
     using float32_t = std::float_t;
     using float64_t = std::double_t;
 

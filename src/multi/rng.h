@@ -4,7 +4,7 @@
 
 #include <random>
 
-namespace laruen::ndlib {
+namespace laruen::multi {
 
     std::mt19937 RNG(std::random_device{}());
     
