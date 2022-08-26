@@ -13,8 +13,23 @@ namespace laruen::nn::optimizers {
 
         template <typename T = float32_t>
         class Optimizer {
+            protected:
+                T learning_rate_;
+
             public:
+                Optimizer(T learning_rate) noexcept
+                : learning_rate_(learning_rate)
+                {}
+
                 virtual void update(NDArray<T> &weights, NDArray<T> &raw_gradients, NDArray<T> &final_gradients) = 0;
+
+                inline T learning_rate() const noexcept {
+                    return this->learning_rate_;
+                }
+
+                inline void learning_rate(T learning_rate) noexcept {
+                    this->learning_rate_ = learning_rate;
+                }
         };
 
     }
