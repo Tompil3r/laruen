@@ -97,6 +97,10 @@ namespace laruen::ndlib {
             : ArrayBase(std::move(shape), std::move(strides), std::move(dim_sizes), size, ndim, contig),
             data_(data), base_(base)
             {}
+
+            NDArray(Shape::const_iterator begin, Shape::const_iterator end) noexcept
+            : ArrayBase(begin, end), data_(new T[this->size_])
+            {}
             
             explicit NDArray(const Shape &shape) noexcept
             : ArrayBase(shape), data_(new T[this->size_])
