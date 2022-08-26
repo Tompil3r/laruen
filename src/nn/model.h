@@ -47,13 +47,17 @@ namespace laruen::nn {
                 rem_size_(0), manage_resources_(manage_resources)
                 {}
                 
-                void build(const Shape &input_shape) {
-                    // input_shape = (dim0, ...)
-                    this->layers_[0]->build(input_shape);
+                void build(Shape::const_iterator begin, Shape::const_iterator end) {
+                    // input_shape = (dim1, ...)
+                    this->layers_[0]->build(begin, end);
 
                     for(uint_fast64_t i = 1;i < this->layers_.size();i++) {
                         this->layers_[i]->build(this->layers_[i - 1]->output_shape());
                     }
+                }
+
+                inline void build(const Shape &input_shape) {
+                    this->build(input_shape.cbegin(), input_shape.cend());
                 }
 
                 std::string summary() const noexcept {
