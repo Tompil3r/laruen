@@ -79,6 +79,9 @@ namespace laruen::nn::layers {
                     this->output_shape_ = input_shape;
                 }
 
+                inline void compile(uint_fast64_t required_caches) override final
+                {}
+
                 const char* name() const noexcept override final {
                     return this->NAME;
                 }

@@ -35,6 +35,7 @@ namespace laruen::nn::layers {
                 const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept = 0;
                 virtual void build(const Shape &input_shape) = 0;
                 virtual void build(Shape::const_iterator begin, Shape::const_iterator end) = 0;
+                virtual void compile(uint_fast64_t required_caches) = 0;
                 virtual const char* name() const noexcept = 0;
                 virtual uint_fast64_t params() const noexcept = 0;
         };
