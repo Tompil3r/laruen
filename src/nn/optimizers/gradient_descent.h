@@ -18,7 +18,7 @@ namespace laruen::nn::optimizers {
                 T momentum_; // sometimes referred to as beta
 
             public:
-                GradientDescent(T learning_rate = 0.01f, T momentum = 0.0) noexcept
+                GradientDescent(T learning_rate = 0.01f, T momentum = 0.0f)
                 : Optimizer<T>(learning_rate), momentum_(momentum)
                 {}
 

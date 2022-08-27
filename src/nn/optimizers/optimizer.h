@@ -24,6 +24,7 @@ namespace laruen::nn::optimizers {
 
                 virtual void update(NDArray<T> &weights, NDArray<T> &raw_gradients,
                 NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) = 0;
+                
                 virtual uint_fast64_t required_caches() const noexcept = 0;
 
                 inline T learning_rate() const noexcept {
