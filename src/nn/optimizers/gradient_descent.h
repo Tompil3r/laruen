@@ -14,9 +14,12 @@ namespace laruen::nn::optimizers {
 
         template <typename T = float32_t>
         class GradientDescent : public Optimizer<T> {
+            private:
+                T momentum_;
+
             public:
-                GradientDescent(T learning_rate = 0.01f) noexcept
-                : Optimizer<T>(learning_rate)
+                GradientDescent(T learning_rate = 0.01f, T momentum = 0.0) noexcept
+                : Optimizer<T>(learning_rate), momentum_(momentum)
                 {}
 
                 void update(NDArray<T> &weights, NDArray<T> &raw_gradients,
