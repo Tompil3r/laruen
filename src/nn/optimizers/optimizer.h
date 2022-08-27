@@ -2,6 +2,7 @@
 #ifndef NN_OPTIMIZERS_OPTIMIZER_H_
 #define NN_OPTIMIZERS_OPTIMIZER_H_
 
+#include <vector>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 
@@ -21,7 +22,8 @@ namespace laruen::nn::optimizers {
                 : learning_rate_(learning_rate)
                 {}
 
-                virtual void update(NDArray<T> &weights, NDArray<T> &raw_gradients, NDArray<T> &final_gradients) = 0;
+                virtual void update(NDArray<T> &weights, NDArray<T> &raw_gradients,
+                NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) = 0;
                 virtual uint_fast64_t required_caches() const noexcept = 0;
 
                 inline T learning_rate() const noexcept {

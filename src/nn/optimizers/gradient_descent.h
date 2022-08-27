@@ -19,7 +19,9 @@ namespace laruen::nn::optimizers {
                 : Optimizer<T>(learning_rate)
                 {}
 
-                void update(NDArray<T> &weights, NDArray<T> &raw_gradients, NDArray<T> &final_gradients) override final {
+                void update(NDArray<T> &weights, NDArray<T> &raw_gradients,
+                NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) override final
+                {
                     raw_gradients.multiply(this->learning_rate_, final_gradients);
                     weights.subtract_eq(final_gradients);
                 }
