@@ -3,6 +3,7 @@
 #define NN_LAYERS_RELU_H_
 
 #include <cassert>
+#include <algorithm>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/multi/nditer.h"
@@ -24,6 +25,17 @@ namespace laruen::nn::layers {
 
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
                     input.maximum(0, output);
+                    return output;
+                }
+
+                NDArray<T> forward(const NDArray<T> &input) override final {
+                    if(!std::equal(input.shape().cbegin() + 1, input.shape().cend(), this->output_shape_.cbegin())) {
+                        this->build(input.shape().cbegin() + 1, input.shape().cend());
+                    }
+
+                    NDArray<T> output(input.shape());
+                    this->forward(input, output);
+
                     return output;
                 }
 

@@ -48,6 +48,19 @@ namespace laruen::nn::layers {
                     return output;
                 }
 
+                NDArray<T> forward(const NDArray<T> &input) override final {
+                    assert(input.ndim() == 2);
+
+                    if(!this->w_.size() || (input.shape().back() != this->w_.shape().front())) {
+                        this->build(input.shape().cbegin() + 1, input.shape().cend());
+                    }
+
+                    NDArray<T> output(Shape{input.shape().front(), this->nodes_});
+                    this->forward(input, output);
+
+                    return output;
+                }
+
                 /**
                  * @brief calculates the gradient of the Loss function with respect to A
                  * @param deriv dZ (dL / dZ) (dL = dLoss)

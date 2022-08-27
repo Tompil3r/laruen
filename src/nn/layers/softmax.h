@@ -40,6 +40,17 @@ namespace laruen::nn::layers {
                     return output;
                 }
 
+                NDArray<T> forward(const NDArray<T> &input) override final {
+                    if(!std::equal(input.shape().cbegin() + 1, input.shape().cend(), this->output_shape_.cbegin())) {
+                        this->build(input.shape().cbegin() + 1, input.shape().cend());
+                    }
+
+                    NDArray<T> output(input.shape());
+                    this->forward(input, output);
+
+                    return output;
+                }
+
                 void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
                 const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept override final
                 {

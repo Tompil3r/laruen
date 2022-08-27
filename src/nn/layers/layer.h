@@ -30,6 +30,7 @@ namespace laruen::nn::layers {
                 }
 
                 virtual NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const = 0;
+                virtual NDArray<T> forward(const NDArray<T> &input) = 0;
                 virtual void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
                 const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept = 0;
                 virtual void build(const Shape &input_shape) = 0;
