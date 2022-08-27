@@ -50,6 +50,14 @@ namespace laruen::nn::optimizers {
                 inline constexpr uint_fast64_t required_caches() const noexcept override final {
                     return 1;
                 }
+
+                inline T momentum() const noexcept {
+                    return this->momentum_;
+                }
+
+                inline void momentum(T momentum) noexcept {
+                    this->momentum_ = momentum;
+                }
         };
     }
 
