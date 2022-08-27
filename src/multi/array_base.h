@@ -26,7 +26,8 @@ namespace laruen::multi {
 
 
         public:
-            ArrayBase() noexcept = default;
+            ArrayBase() noexcept
+            : size_(0), ndim_(0), contig_(true);
 
             ArrayBase(const Shape &shape, const Strides &strides, const Strides &dim_sizes,
             uint_fast64_t size, uint_fast8_t ndim, bool contig) noexcept
