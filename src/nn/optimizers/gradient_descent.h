@@ -23,6 +23,10 @@ namespace laruen::nn::optimizers {
                     raw_gradients.multiply(this->learning_rate_, final_gradients);
                     weights.subtract_eq(final_gradients);
                 }
+
+                inline constexpr uint_fast64_t required_caches() const noexcept override final {
+                    return 1;
+                }
         };
     }
 
