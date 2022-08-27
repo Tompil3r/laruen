@@ -24,7 +24,7 @@ namespace laruen::math::utils {
     }
 
     template <typename T>
-    constexpr inline T nonzero(T num) noexcept {
+    inline constexpr T nonzero(T num) noexcept {
         return num ? num : std::numeric_limits<T>::min();
     }
 }
