@@ -4,6 +4,7 @@
 
 #include <cassert>
 #include <utility>
+#include <vector>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
@@ -30,6 +31,8 @@ namespace laruen::nn::layers {
                 NDArray<T> raw_db_;
                 NDArray<T> final_dw_;
                 NDArray<T> final_db_;
+                std::vector<NDArray<T>> opt_dw_caches;
+                std::vector<NDArray<T>> opt_db_caches;
                 uint_fast32_t nodes_;
 
             public:
