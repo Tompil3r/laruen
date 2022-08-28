@@ -23,7 +23,7 @@ namespace laruen::nn::optimizers {
                 T beta2_correction_;
             
             public:
-                Adam(T learning_rate = 0.001f, T beta1 = 0.9f, T beta2 = 0.999, T epsilon = 1e-7f)
+                Adam(T learning_rate = 0.001f, T beta1 = 0.9f, T beta2 = 0.999f, T epsilon = 1e-7f)
                 : Optimizer<T>(learning_rate), beta1_(beta1), beta2_(beta2), epsilon_(epsilon),
                 beta1_correction_(beta1), beta2_correction_(beta2)
                 {}
