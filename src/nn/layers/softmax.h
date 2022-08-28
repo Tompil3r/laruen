@@ -17,24 +17,19 @@ namespace laruen::nn::layers {
 
         template <typename T = float32_t>
         class Softmax : public Layer<T> {
-            private:
-                int_fast8_t axis_;
-            
             public:
                 static constexpr char NAME[] = "Softmax";
 
-                Softmax(int_fast8_t axis = -1) noexcept : axis_(axis)
+                Softmax() noexcept
                 {}
 
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
-                    uint_fast8_t real_axis = this->axis_ >= 0 ? this->axis_ : input.ndim() + this->axis_;
-                    Shape sums_shape(input.shape());
-                    sums_shape[real_axis] = 1;
+                    assert(input.ndim() == 2);
 
-                    NDArray<T> exp_sums(sums_shape);
+                    NDArray<T> exp_sums(Shape{input.shape().front(), 1});
 
                     input.exp(output);
-                    output.sum({real_axis}, exp_sums);
+                    output.sum({1}, exp_sums);
                     output.divide_eq(exp_sums);
 
                     return output;
