@@ -44,7 +44,7 @@ namespace laruen::math::common {
     }
 
     template <typename T, typename TT>
-    inline constexpr T pow(T base, TT exp) {
+    inline constexpr auto pow(T base, TT exp) {
         if constexpr(std::is_floating_point_v<TT>) {
             return std::pow(base, exp);
         }
