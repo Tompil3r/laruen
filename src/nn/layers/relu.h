@@ -29,7 +29,9 @@ namespace laruen::nn::layers {
                 }
 
                 NDArray<T> forward(const NDArray<T> &input) override final {
-                    if(!std::equal(input.shape().cbegin() + 1, input.shape().cend(), this->output_shape_.cbegin())) {
+                    if(input.ndim() != this->output_shape_.size() ||
+                        !std::equal(input.shape().cbegin() + 1, input.shape().cend(), this->output_shape_.cbegin()))
+                    {
                         this->build(input.shape().cbegin() + 1, input.shape().cend());
                     }
 
