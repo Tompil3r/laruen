@@ -937,58 +937,38 @@ namespace laruen::multi {
                 return !(*this >= ndarray);
             }
 
-            NDArray<T> transpose() noexcept {
-                Shape t_shape(this->ndim_);
-                Strides t_strides(this->ndim_);
-                Strides t_dim_sizes(this->ndim_);
+            NDArray<T> transpose(uint_fast8_t dim_begin, uint_fast8_t dim_end) {
+                NDArray<T> result = this->view();
+                result.contig_ = false;
 
-                uint_fast8_t f = 0;
-                uint_fast8_t b = this->ndim_ - 1;
-                uint_fast8_t mid = this->ndim_ >> 1;
+                const uint_fast8_t middle = (dim_end + dim_begin) >> 1;
 
-                t_shape[mid] = this->shape_[mid];
-                t_strides[mid] = this->strides_[mid];
-                t_dim_sizes[mid] = this->dim_sizes_[mid];
+                for(;dim_begin < middle;dim_begin++) {
+                    dim_end--;
 
-
-                for(;f < mid;f++, b--) {
-                    t_shape[f] = this->shape_[b];
-                    t_shape[b] = this->shape_[f];
-                    t_strides[f] = this->strides_[b];
-                    t_strides[b] = this->strides_[f];
-                    t_dim_sizes[f] = this->dim_sizes_[b];
-                    t_dim_sizes[b] = this->dim_sizes_[f];
+                    result.shape_[dim_begin] = this->shape_[dim_end];
+                    result.shape_[dim_end] = this->shape_[dim_begin];
+                    result.strides_[dim_begin] = this->strides_[dim_end];
+                    result.strides_[dim_end] = this->strides_[dim_begin];
+                    result.dim_sizes_[dim_begin] = this->dim_sizes_[dim_end];
+                    result.dim_sizes_[dim_end] = this->dim_sizes_[dim_begin];
                 }
 
-                return NDArray<T>(this->data_, std::move(t_shape),
-                std::move(t_strides), std::move(t_dim_sizes), this->size_, this->ndim_, this->forward_base());
+                return result;
             }
 
-            const NDArray<T> transpose() const noexcept {
-                Shape t_shape(this->ndim_);
-                Strides t_strides(this->ndim_);
-                Strides t_dim_sizes(this->ndim_);
+            inline const NDArray<T> transpose(uint_fast8_t dim_begin, uint_fast8_t dim_end) const {
+                // no modification occurs
+                return const_cast<NDArray<T>*>(this)->transpose(dim_begin, dim_end);
+            }
 
-                uint_fast8_t f = 0;
-                uint_fast8_t b = this->ndim_ - 1;
-                uint_fast8_t mid = this->ndim_ >> 1;
+            inline NDArray<T> transpose() noexcept {
+                return this->transpose(0, this->ndim_);
+            }
 
-                t_shape[mid] = this->shape_[mid];
-                t_strides[mid] = this->strides_[mid];
-                t_dim_sizes[mid] = this->dim_sizes_[mid];
-
-
-                for(;f < mid;f++, b--) {
-                    t_shape[f] = this->shape_[b];
-                    t_shape[b] = this->shape_[f];
-                    t_strides[f] = this->strides_[b];
-                    t_strides[b] = this->strides_[f];
-                    t_dim_sizes[f] = this->dim_sizes_[b];
-                    t_dim_sizes[b] = this->dim_sizes_[f];
-                }
-
-                return NDArray<T>(this->data_, std::move(t_shape),
-                std::move(t_strides), std::move(t_dim_sizes), this->size_, this->ndim_, this->forward_base());
+            inline const NDArray<T> transpose() const noexcept {
+                // no modification occurs
+                return const_cast<NDArray<T>*>(this)->transpose(0, this->ndim_);
             }
 
             NDArray<T> view_reshape(const Shape &shape) noexcept {
