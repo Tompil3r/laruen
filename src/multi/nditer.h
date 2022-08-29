@@ -41,11 +41,24 @@ namespace laruen::multi {
         }
 
         inline bool has_next() const noexcept {
-            return this->ndindex[0] < this->arraybase.shape_[0];
+            return this->ndindex.front() < this->arraybase.shape_.front();
         }
 
         inline T& current() noexcept {
             return *this->ptr;
+        }
+
+        inline T& operator*() noexcept {
+            return this->current();
+        }
+
+        inline T& operator++(int) noexcept {
+            return this->next();
+        }
+
+        inline T& operator++() noexcept {
+            this->next();
+            return this->current();
         }
     };
 };
