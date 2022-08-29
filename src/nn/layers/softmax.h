@@ -63,6 +63,13 @@ namespace laruen::nn::layers {
                     return output;
                 }
 
+                /**
+                 * @brief calculates the gradient of the Loss function with respect to Z
+                 * @param deriv dA (dL / dA) (dL = dLoss)
+                 * @param cached_input Z (unused)
+                 * @param cached_output A (Softmax(Z))
+                 * @param prev_deriv_output dZ (dL / dZ)
+                 */
                 void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
                 const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept override final
                 {
@@ -75,13 +82,6 @@ namespace laruen::nn::layers {
                     NDIter cached_output_iter_i(cached_output.data(), cached_output);
                     NDIter cached_output_iter_j(cached_output.data(), cached_output);
 
-                    /**
-                     * @brief calculates the gradient of the Loss function with respect to Z
-                     * @param deriv dA (dL / dA) (dL = dLoss)
-                     * @param cached_input Z (unused)
-                     * @param cached_output A (Softmax(Z))
-                     * @param prev_deriv_output dZ (dL / dZ)
-                     */
                     for(uint_fast64_t k = 0;k < batch_size;k++) {
 
                         for(uint_fast64_t i = 0;i < deriv.shape().back();i++) {
