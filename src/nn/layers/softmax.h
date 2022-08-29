@@ -3,8 +3,10 @@
 #define NN_LAYERS_SOFTMAX_H_
 
 #include <algorithm>
+#include <cmath>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
+#include "src/multi/nditer.h"
 #include "src/nn/layers/layer.h"
 
 namespace laruen::nn::layers {
@@ -14,6 +16,7 @@ namespace laruen::nn::layers {
         using laruen::multi::NDArray;
         using laruen::multi::Shape;
         using laruen::multi::float32_t;
+        using laruen::multi::NDIter;
 
         template <typename T = float32_t>
         class Softmax : public Layer<T> {
@@ -24,13 +27,24 @@ namespace laruen::nn::layers {
                 {}
 
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
-                    assert(input.ndim() == 2);
+                    NDIter input_iter(input.data(), input);
+                    NDIter output_iter(output.data(), output);
 
-                    NDArray<T> exp_sums(Shape{input.shape().front(), 1});
+                    for(uint_fast64_t i = 0;i < input.size() / input.shape().back();i++) {
+                        T exp_sum = 0;
+                        uint_fast64_t j;
 
-                    input.exp(output);
-                    output.sum({1}, exp_sums);
-                    output.divide_eq(exp_sums);
+                        for(j = 0;j < input.shape().back();j++) {
+                            output_iter.current() = std::exp(input_iter.next());
+                            exp_sum += output_iter.next();
+                        }
+
+                        output_iter.ptr -= output.dim_sizes().back();
+
+                        for(j = 0;j < output.shape().back();j++) {
+                            output_iter.next() /= exp_sum;
+                        }
+                    }
 
                     return output;
                 }
