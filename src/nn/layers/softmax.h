@@ -40,6 +40,7 @@ namespace laruen::nn::layers {
                         }
 
                         output_iter.ptr -= output.dim_sizes().back();
+                        output_iter.ndindex.back() = 0;
 
                         for(j = 0;j < output.shape().back();j++) {
                             output_iter.next() /= exp_sum;
