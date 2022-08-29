@@ -66,7 +66,46 @@ namespace laruen::nn::layers {
                 void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
                 const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept override final
                 {
+                    const uint_fast64_t batch_size = deriv.size() / deriv.shape().back();
+                    const uint_fast8_t deriv_batch_axis = deriv.ndim() - 2;
+                    const uint_fast8_t cached_output_batch_axis = cached_output.ndim() - 2;
 
+                    NDIter deriv_iter(deriv.data(), deriv);
+                    NDIter result_iter(prev_deriv_output.data(), prev_deriv_output);
+                    NDIter cached_output_iter_i(cached_output.data(), cached_output);
+                    NDIter cached_output_iter_j(cached_output.data(), cached_output);
+
+                    /**
+                     * @brief calculates the gradient of the Loss function with respect to Z
+                     * @param deriv dA (dL / dA) (dL = dLoss)
+                     * @param cached_input Z (unused)
+                     * @param cached_output A (Softmax(Z))
+                     * @param prev_deriv_output dZ (dL / dZ)
+                     */
+                    for(uint_fast64_t k = 0;k < batch_size;k++) {
+
+                        for(uint_fast64_t i = 0;i < deriv.shape().back();i++) {
+                            result_iter.current() = 0;
+
+                            for(uint_fast64_t j = 0;j < deriv.shape().back();j++) {
+                                result_iter.current() += deriv_iter.next() * cached_output_iter_i.current()
+                                * ((i == j) - cached_output_iter_j.next());
+                            }
+
+                            cached_output_iter_i.next();
+    
+                            result_iter.next();
+    
+                            deriv_iter.ptr -= deriv.dim_sizes().back();
+                            deriv_iter.ndindex.back() = 0;
+
+                            cached_output_iter_j.ptr -= cached_output.dim_sizes().back();
+                            cached_output_iter_j.ndindex.back() = 0;
+                        }
+
+                        deriv_iter.next(deriv_batch_axis);
+                        cached_output_iter_j.next(cached_output_batch_axis);
+                    }
                 }
 
                 void build(Shape::const_iterator begin, Shape::const_iterator end) override final {
