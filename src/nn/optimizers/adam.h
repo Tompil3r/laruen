@@ -77,7 +77,9 @@ namespace laruen::nn::optimizers {
 
                     // update weights
                     weights.subtract_eq(final_gradients); // weights -= final_dw
+                }
 
+                inline void update_optimizer_params() noexcept override final {
                     // update bias correction for beta1 and beta2
                     this->beta1_correction_ *= this->beta1_;
                     this->beta2_correction_ *= this->beta2_;

@@ -49,6 +49,9 @@ namespace laruen::nn::optimizers {
                     weights.subtract_eq(final_gradients); // w -= final_dw
                 }
 
+                inline void update_optimizer_params() noexcept override final
+                {}
+
                 inline constexpr uint_fast64_t required_caches() const noexcept override final {
                     return 1;
                 }
