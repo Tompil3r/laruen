@@ -51,7 +51,7 @@ namespace laruen::nn {
                     }
                 }
 
-                Model(std::vector<Layer<T>*> &layers, bool manage_resources = true)
+                Model(const std::vector<Layer<T>*> &layers, bool manage_resources = true)
                 : layers_(layers), loss_(nullptr), optimizer_(nullptr), batch_size_(0),
                 remaining_size_(0), manage_resources_(manage_resources)
                 {}
