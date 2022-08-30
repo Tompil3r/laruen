@@ -14,8 +14,10 @@ namespace laruen::nn::losses {
 
         template <typename T = float32_t>
         class Loss {
-
             public:
+                virtual ~Loss()
+                {}
+
                 virtual T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const = 0;
                 virtual void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred, NDArray<T> &deriv_output) const = 0;
         };

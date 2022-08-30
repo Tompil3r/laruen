@@ -18,6 +18,9 @@ namespace laruen::nn::optimizers {
                 T learning_rate_;
 
             public:
+                virtual ~Optimizer()
+                {}
+
                 Optimizer(T learning_rate) noexcept
                 : learning_rate_(learning_rate)
                 {}

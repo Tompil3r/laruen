@@ -20,6 +20,9 @@ namespace laruen::nn::layers {
                 Shape output_shape_;
 
             public:
+                virtual ~Layer()
+                {}
+
                 Layer() noexcept = default;
 
                 Layer(const Shape &output_shape) noexcept : output_shape_(output_shape)
