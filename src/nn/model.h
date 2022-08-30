@@ -120,6 +120,18 @@ namespace laruen::nn {
                     }
                 }
 
+                void backward(const NDArray<T> &input, const NDArray<T> &y_true,
+                const std::vector<NDArray<T>> &outputs, std::vector<NDArray<T>> &derivs, NDArray<T> &input_deriv)
+                {
+                    this->loss_->backward(y_true, outputs.back(), derivs.back());
+
+                    for(uint_fast64_t i = derivs.size();i-- > 1;) {
+                        this->layers_[i]->backward(derivs[i], outputs[i - 1], outputs[i], derivs[i - 1]);
+                    }
+
+                    this->layers_.front()->backward(derivs.front(), input, outputs.front(), input_deriv);
+                }
+
                 inline const std::vector<Layer<T>*>& layers() const noexcept {
                     return this->layers_;
                 }
