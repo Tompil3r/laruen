@@ -31,8 +31,8 @@ namespace laruen::nn::layers {
                 NDArray<T> raw_db_;
                 NDArray<T> final_dw_;
                 NDArray<T> final_db_;
-                std::vector<NDArray<T>> opt_dw_caches;
-                std::vector<NDArray<T>> opt_db_caches;
+                std::vector<NDArray<T>> opt_dw_caches_;
+                std::vector<NDArray<T>> opt_db_caches_;
                 uint_fast32_t nodes_;
 
             public:
@@ -123,12 +123,12 @@ namespace laruen::nn::layers {
                 }
 
                 void compile(uint_fast64_t required_caches) override final {
-                    this->opt_dw_caches.resize(required_caches);
-                    this->opt_db_caches.resize(required_caches);
+                    this->opt_dw_caches_.resize(required_caches);
+                    this->opt_db_caches_.resize(required_caches);
 
                     for(uint_fast64_t i = 0;i < required_caches;i++) {
-                        this->opt_dw_caches[i] = NDArray<T>(this->raw_dw_.shape(), 0);
-                        this->opt_db_caches[i] = NDArray<T>(this->raw_db_.shape(), 0);
+                        this->opt_dw_caches_[i] = NDArray<T>(this->raw_dw_.shape(), 0);
+                        this->opt_db_caches_[i] = NDArray<T>(this->raw_db_.shape(), 0);
                     }
                 }
 
