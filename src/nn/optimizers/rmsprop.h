@@ -25,7 +25,7 @@ namespace laruen::nn::optimizers {
                 {}
 
                 void update_weights(NDArray<T> &weights, NDArray<T> &raw_gradients,
-                NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) override final
+                NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) const override final
                 {
                     // opt_caches.size = 1 (s_dw)
                     // s_dw initialized as 0's in first iteration

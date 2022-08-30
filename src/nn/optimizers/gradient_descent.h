@@ -23,7 +23,7 @@ namespace laruen::nn::optimizers {
                 {}
 
                 void update_weights(NDArray<T> &weights, NDArray<T> &raw_gradients,
-                NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) override final
+                NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) const override final
                 {
                     // opt_caches relevant only when momentum > 0
 

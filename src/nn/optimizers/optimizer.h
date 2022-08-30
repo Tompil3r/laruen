@@ -26,7 +26,7 @@ namespace laruen::nn::optimizers {
                 {}
 
                 virtual void update_weights(NDArray<T> &weights, NDArray<T> &raw_gradients,
-                NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) = 0;
+                NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) const = 0;
 
                 virtual void update_optimizer_params() noexcept = 0;
                 
