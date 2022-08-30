@@ -28,7 +28,7 @@ namespace laruen::nn::optimizers {
                 beta1_correction_(beta1), beta2_correction_(beta2)
                 {}
 
-                void update(NDArray<T> &weights, NDArray<T> &raw_gradients,
+                void update_weights(NDArray<T> &weights, NDArray<T> &raw_gradients,
                 NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) override final
                 {
                     // opt_caches.size = 3
