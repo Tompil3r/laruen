@@ -112,7 +112,7 @@ namespace laruen::nn {
                     return str;
                 }
 
-                void forward(const NDArray<T> &input, std::vector<NDArray<T>> &outputs) {
+                inline void forward(const NDArray<T> &input, std::vector<NDArray<T>> &outputs) {
                     this->layers_.front()->forward(input, outputs.front());
                     
                     for(uint_fast64_t i = 1;i < this->layers_.size();i++) {
@@ -120,7 +120,7 @@ namespace laruen::nn {
                     }
                 }
 
-                void backward(const NDArray<T> &input, const NDArray<T> &y_true,
+                inline void backward(const NDArray<T> &input, const NDArray<T> &y_true,
                 const std::vector<NDArray<T>> &outputs, std::vector<NDArray<T>> &derivs, NDArray<T> &input_deriv)
                 {
                     this->loss_->backward(y_true, outputs.back(), derivs.back());
@@ -130,6 +130,13 @@ namespace laruen::nn {
                     }
 
                     this->layers_.front()->backward(derivs.front(), input, outputs.front(), input_deriv);
+                }
+
+                inline void train_batch(const NDArray<T> &input, const NDArray<T> &y_true,
+                std::vector<NDArray<T>> &outputs, std::vector<NDArray<T>> &derivs, NDArray<T> &input_deriv)
+                {
+                    this->forward(input, outputs);
+                    this->backward(input, y_true, outputs, derivs, input_deriv);
                 }
 
                 inline const std::vector<Layer<T>*>& layers() const noexcept {
