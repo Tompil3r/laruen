@@ -12,7 +12,7 @@ namespace laruen::nn::utils {
 
         using laruen::multi::Shape;
 
-        Shape batch_shape(const Shape &shape, uint_fast64_t batch_size) noexcept {
+        Shape add_batch_shape(const Shape &shape, uint_fast64_t batch_size) noexcept {
             Shape result(shape.size() + 1);
             std::copy(shape.cbegin(), shape.cend(), result.begin() + 1);
             result.front() = batch_size;

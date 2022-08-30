@@ -158,13 +158,13 @@ namespace laruen::nn {
                 void construct(std::vector<NDArray<T>> &batch_outputs, std::vector<NDArray<T>> &batch_derivs,
                 uint_fast64_t batch_size) noexcept
                 {
-                    using laruen::nn::utils::batch_shape;
+                    using laruen::nn::utils::add_batch_shape;
 
                     batch_outputs.resize(this->layers_.size());
                     batch_derivs.resize(this->layers_.size());
 
                     for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
-                        batch_outputs[i] = NDArray<T>(batch_shape(this->layers_[i]->output_shape(), batch_size));
+                        batch_outputs[i] = NDArray<T>(add_batch_shape(this->layers_[i]->output_shape(), batch_size));
                         batch_derivs[i] = NDArray<T>(batch_outputs[i].shape());
                     }
                 }
