@@ -28,9 +28,9 @@ namespace laruen::nn {
             private:
                 std::vector<Layer<T>*> layers_;
                 std::vector<NDArray<T>> batch_outputs_;
-                std::vector<NDArray<T>> batch_deriv_;
+                std::vector<NDArray<T>> batch_derivs_;
                 std::vector<NDArray<T>> remaining_outputs_;
-                std::vector<NDArray<T>> remaining_deriv_;
+                std::vector<NDArray<T>> remaining_derivs_;
                 Loss<T> *loss_;
                 Optimizer<T> *optimizer_;
                 uint_fast64_t batch_size_;
