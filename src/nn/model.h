@@ -113,7 +113,7 @@ namespace laruen::nn {
                 }
 
                 void forward(const NDArray<T> &input, std::vector<NDArray<T>> &outputs) {
-                    this->layers_[0]->forward(input, outputs[0]);
+                    this->layers_.front()->forward(input, outputs.front());
                     
                     for(uint_fast64_t i = 1;i < this->layers_.size();i++) {
                         this->layers_[i]->forward(outputs[i - 1], outputs[i]);
