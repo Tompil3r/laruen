@@ -7,6 +7,7 @@
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/multi/nditer.h"
+#include "src/math/common.h"
 #include "src/nn/layers/layer.h"
 
 namespace laruen::nn::layers {
@@ -32,10 +33,18 @@ namespace laruen::nn::layers {
 
                     for(uint_fast64_t i = 0;i < input.size() / input.shape().back();i++) {
                         T exp_sum = 0;
+                        T max = input_iter.next();
                         uint_fast64_t j;
 
+                        for(j = 1;j < input.shape().back();j++) {
+                            max = laruen::math::common::max(max, input_iter.next());
+                        }
+
+                        input_iter.ptr -= input.dim_sizes().back();
+                        input_iter.ndindex.back() = 0;
+
                         for(j = 0;j < input.shape().back();j++) {
-                            output_iter.current() = std::exp(input_iter.next());
+                            output_iter.current() = std::exp(input_iter.next() - max);
                             exp_sum += output_iter.next();
                         }
 
