@@ -8,6 +8,7 @@
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
+#include "src/nn/optimizers/optimizer.h"
 
 namespace laruen::nn::layers {
 
@@ -15,6 +16,7 @@ namespace laruen::nn::layers {
         using laruen::multi::NDArray;
         using laruen::multi::Shape;
         using laruen::multi::float32_t;
+        using laruen::nn::optimizers::Optimizer;
 
         template <typename T = float32_t>
         class FullyConnected : public Layer<T> {
@@ -102,6 +104,11 @@ namespace laruen::nn::layers {
                     this->raw_db_.divide_eq(batch_size); // db[l] /= batch_size
 
                     // *** implement - weights update ***
+                }
+
+                inline void update_weights(const Optimizer<T> &optimizer) override final {
+                    optimizer.update_weights(this->w_, this->raw_dw_, this->final_dw_, this->opt_dw_caches_);
+                    optimizer.update_weights(this->b_, this->raw_db_, this->final_db_, this->opt_db_caches_);
                 }
 
                 void build(Shape::const_iterator begin, Shape::const_iterator end) override final {

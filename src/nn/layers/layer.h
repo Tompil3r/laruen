@@ -6,6 +6,7 @@
 #include <utility>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
+#include "src/nn/optimizers/optimizer.h"
 
 namespace laruen::nn::layers {
 
@@ -13,6 +14,7 @@ namespace laruen::nn::layers {
         using laruen::multi::NDArray;
         using laruen::multi::float32_t;
         using laruen::multi::Shape;
+        using laruen::nn::optimizers::Optimizer;
 
         template <typename T = float32_t>
         class Layer {
@@ -42,6 +44,8 @@ namespace laruen::nn::layers {
 
                 virtual void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
                 const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept = 0;
+
+                virtual void update_weights(const Optimizer<T> &optimizer) = 0;
 
                 virtual void build(const Shape &input_shape) = 0;
 

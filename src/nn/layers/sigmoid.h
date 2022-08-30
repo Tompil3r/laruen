@@ -8,6 +8,7 @@
 #include "src/multi/types.h"
 #include "src/multi/nditer.h"
 #include "src/nn/layers/layer.h"
+#include "src/nn/optimizers/optimizer.h"
 
 namespace laruen::nn::layers {
 
@@ -15,6 +16,7 @@ namespace laruen::nn::layers {
         using laruen::multi::NDArray;
         using laruen::multi::float32_t;
         using laruen::multi::NDIter;
+        using laruen::nn::optimizers::Optimizer;
 
         template <typename T = float32_t>
         class Sigmoid : public Layer<T> {
@@ -72,6 +74,9 @@ namespace laruen::nn::layers {
                         cached_output_iter.next();
                     }
                 }
+
+                inline void update_weights(const Optimizer<T> &optimizer) override final
+                {}
 
                 void build(Shape::const_iterator begin, Shape::const_iterator end) override final {
                     this->output_shape_ = Shape(begin, end);
