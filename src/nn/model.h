@@ -8,6 +8,8 @@
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
+#include "src/nn/optimizers/optimizer.h"
+#include "src/nn/losses/loss.h"
 #include "src/nn/utils.h"
 
 namespace laruen::nn {
@@ -18,6 +20,8 @@ namespace laruen::nn {
         using laruen::multi::Shape;
         using laruen::multi::float32_t;
         using laruen::nn::layers::Layer;
+        using laruen::nn::optimizers::Optimizer;
+        using laruen::nn::losses::Loss;
 
         template <typename T = float32_t>
         class Model {
@@ -27,6 +31,8 @@ namespace laruen::nn {
                 std::vector<NDArray<T>> batch_deriv_;
                 std::vector<NDArray<T>> remaining_outputs_;
                 std::vector<NDArray<T>> remaining_deriv_;
+                Loss<T> *loss_;
+                Optimizer<T> *optimizer_;
                 uint_fast64_t batch_size_;
                 uint_fast64_t remaining_size_;
                 bool manage_resources_;
@@ -37,13 +43,16 @@ namespace laruen::nn {
                         return;
                     }
 
+                    delete this->loss_;
+                    delete this->optimizer_;
+
                     for(auto iter = this->layers_.begin();iter != this->layers_.end();iter++) {
                         delete *iter;
                     }
                 }
 
                 Model(std::vector<Layer<T>*> &layers, bool manage_resources = true)
-                : layers_(layers), batch_size_(0),
+                : layers_(layers), loss_(nullptr), optimizer_(nullptr), batch_size_(0),
                 remaining_size_(0), manage_resources_(manage_resources)
                 {}
                 
