@@ -19,6 +19,12 @@ namespace laruen::nn::utils {
 
             return result;
         }
+
+        Shape replace_batch_shape(const Shape &shape, uint_fast64_t batch_size) noexcept {
+            Shape result(shape);
+            result.front() = batch_size;
+            return result;
+        }
     }
 
     using namespace impl;
