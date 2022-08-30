@@ -20,7 +20,7 @@ namespace laruen::nn::losses {
     namespace impl {
 
         template <typename T = float32_t>
-        class MeanAbsoluteError : Loss<T> {
+        class MeanAbsoluteError : public Loss<T> {
             public:
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     assert(y_true.shape() == y_pred.shape());

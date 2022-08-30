@@ -20,7 +20,7 @@ namespace laruen::nn::losses {
         using laruen::multi::float32_t;
 
         template <typename T = float32_t>
-        class SparseCategoricalCrossentropy : Loss<T> {
+        class SparseCategoricalCrossentropy : public Loss<T> {
             public:
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     using laruen::math::utils::nonzero;

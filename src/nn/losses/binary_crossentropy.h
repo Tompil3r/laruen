@@ -20,7 +20,7 @@ namespace laruen::nn::losses {
     namespace impl {
 
         template <typename T = float32_t>
-        class BinaryCrossentropy : Loss<T> {
+        class BinaryCrossentropy : public Loss<T> {
             public:
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     using laruen::math::utils::nonzero;
