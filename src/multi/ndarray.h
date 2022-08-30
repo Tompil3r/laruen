@@ -1133,6 +1133,11 @@ namespace laruen::multi {
             }
 
         public:
+            // setters
+            inline void data(T *data) noexcept {
+                this->data_ = data;
+            }
+
             // getters
             inline const T* data() const noexcept {
                 return this->data_;
