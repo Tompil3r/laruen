@@ -28,7 +28,7 @@ namespace laruen::nn {
                 std::vector<NDArray<T>> remaining_outputs_;
                 std::vector<NDArray<T>> remaining_deriv_;
                 uint_fast64_t batch_size_;
-                uint_fast64_t rem_size_;
+                uint_fast64_t remaining_size_;
                 bool manage_resources_;
                 
             public:
@@ -44,7 +44,7 @@ namespace laruen::nn {
 
                 Model(std::vector<Layer<T>*> &layers, bool manage_resources = true)
                 : layers_(layers), batch_size_(0),
-                rem_size_(0), manage_resources_(manage_resources)
+                remaining_size_(0), manage_resources_(manage_resources)
                 {}
                 
                 void build(Shape::const_iterator begin, Shape::const_iterator end) {
