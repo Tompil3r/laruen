@@ -127,16 +127,23 @@ namespace laruen::nn {
 
                     for(uint_fast64_t i = derivs.size();i-- > 1;) {
                         this->layers_[i]->backward(derivs[i], outputs[i - 1], outputs[i], derivs[i - 1]);
+                        this->layers_[i]->update_weights(*this->optimizer_);
                     }
 
                     this->layers_.front()->backward(derivs.front(), input, outputs.front(), input_deriv);
+                    this->layers_.front()->update_weights(*this->optimizer_);
                 }
 
                 inline void train_batch(const NDArray<T> &input, const NDArray<T> &y_true,
-                std::vector<NDArray<T>> &outputs, std::vector<NDArray<T>> &derivs, NDArray<T> &input_deriv)
+                std::vector<NDArray<T>> &outputs, std::vector<NDArray<T>> &derivs, NDArray<T> &input_deriv,
+                bool update_optimizer_params = false)
                 {
                     this->forward(input, outputs);
                     this->backward(input, y_true, outputs, derivs, input_deriv);
+
+                    if(update_optimizer_params) {
+                        this->optimizer_->update_optimizer_params();
+                    }
                 }
 
                 inline const std::vector<Layer<T>*>& layers() const noexcept {
