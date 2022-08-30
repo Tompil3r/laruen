@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <cstdint>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
@@ -67,6 +68,17 @@ namespace laruen::nn {
 
                 inline void build(const Shape &input_shape) {
                     this->build(input_shape.cbegin(), input_shape.cend());
+                }
+
+                void compile(Optimizer<T> *optimizer, Loss<T> *loss) {
+                    this->optimizer_ = optimizer;
+                    this->loss_ = loss;
+
+                    uint_fast64_t required_caches = this->optimizer_->required_caches();
+
+                    for(auto layer = this->layers_.begin();layer != this->layers_.end();layer++) {
+                        (*layer)->compile(required_caches);
+                    }
                 }
 
                 std::string summary() const noexcept {
