@@ -50,6 +50,11 @@ namespace laruen::nn::metrics {
                     return this->NAME;
                 }
         };
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Metric<T>> shared_cat_acc() noexcept {
+            return std::shared_ptr<Metric<T>>(new CategoricalAccuracy<T>());
+        }
     }
 
     using namespace impl;
