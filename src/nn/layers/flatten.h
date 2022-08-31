@@ -33,7 +33,6 @@ namespace laruen::nn::layers {
                     // input.shape = (dim0, dim1, ...)
                     // output.shape = (dim0, dim1 * ...)
                     
-                    assert(input.contig());
                     output = input.view_reshape({input.shape()[0], this->size_});
                     return output;
                 }
