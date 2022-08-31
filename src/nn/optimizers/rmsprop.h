@@ -72,6 +72,11 @@ namespace laruen::nn::optimizers {
                     this->epsilon_ = epsilon;
                 }
         };
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Optimizer<T>> shared_rmsprop() noexcept {
+            return std::shared_ptr<Optimizer<T>>(new RMSprop<T>());
+        }
     }
 
     using namespace impl;

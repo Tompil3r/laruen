@@ -126,6 +126,11 @@ namespace laruen::nn::optimizers {
                     this->beta2_correction_ = std::pow(this->beta2_, iteration_nb);
                 }
         };
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Optimizer<T>> shared_adam() noexcept {
+            return std::shared_ptr<Optimizer<T>>(new Adam<T>());
+        }
     }
 
     using namespace impl;
