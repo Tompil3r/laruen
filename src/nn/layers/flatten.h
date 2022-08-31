@@ -33,12 +33,12 @@ namespace laruen::nn::layers {
                     // input.shape = (dim0, dim1, ...)
                     // output.shape = (dim0, dim1 * ...)
                     
-                    output = input.view_reshape({input.shape()[0], this->size_});
+                    output = input.copy_reshape({input.shape().front(), this->size_});
                     return output;
                 }
 
                 NDArray<T> forward(const NDArray<T> &input) override final {
-                    if(input.size() / input.shape()[0] != this->size_) {
+                    if(input.size() / input.shape().front() != this->size_) {
                         this->build(input.shape().cbegin() + 1, input.shape().cend());
                     }
 
