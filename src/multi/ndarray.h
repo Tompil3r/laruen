@@ -1120,7 +1120,7 @@ namespace laruen::multi {
                 return this->data_;
             }
 
-            inline T* data() noexcept {
+            inline T*& data() noexcept {
                 return this->data_;
             }
 
