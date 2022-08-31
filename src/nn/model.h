@@ -32,8 +32,8 @@ namespace laruen::nn {
                 std::vector<NDArray<T>> batch_derivs_;
                 std::vector<NDArray<T>> remaining_outputs_;
                 std::vector<NDArray<T>> remaining_derivs_;
-                NDArray<T> input_batch_deriv;
-                NDArray<T> input_remaining_deriv;
+                NDArray<T> input_batch_deriv_;
+                NDArray<T> input_remaining_deriv_;
                 Loss<T> *loss_;
                 Optimizer<T> *optimizer_;
                 uint_fast64_t batch_size_;
