@@ -149,6 +149,11 @@ namespace laruen::nn::layers {
                     return 0;
                 }
         };
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Layer<T>> shared_softmax() noexcept {
+            return std::shared_ptr<Layer<T>>(new Softmax<T>());
+        }
     }
 
     using namespace impl;

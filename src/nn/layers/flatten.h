@@ -80,6 +80,10 @@ namespace laruen::nn::layers {
                 }
         };
 
+        template <typename T = float32_t>
+        inline std::shared_ptr<Layer<T>> shared_flatten() noexcept {
+            return std::shared_ptr<Layer<T>>(new Flatten<T>());
+        }
     }
 
     using namespace impl;

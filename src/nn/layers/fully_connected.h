@@ -171,6 +171,11 @@ namespace laruen::nn::layers {
                     return this->final_db_;
                 }
         };
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Layer<T>> shared_fc(uint_fast32_t nodes) noexcept {
+            return std::shared_ptr<Layer<T>>(new FullyConnected<T>(nodes));
+        }
     }
 
     using namespace impl;
