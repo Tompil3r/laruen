@@ -975,7 +975,7 @@ namespace laruen::multi {
                 return view;
             }
 
-            NDArray<T> copy_reshape(const Shape &shape) noexcept {
+            NDArray<T> copy_reshape(const Shape &shape) const noexcept {
                 NDArray<T> copy(shape);
                 assert(copy.size_ == this->size_);
                 copy.copy_data_from(*this);
