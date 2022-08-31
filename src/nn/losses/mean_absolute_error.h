@@ -57,7 +57,7 @@ namespace laruen::nn::losses {
 
         template <typename T = float32_t>
         inline std::shared_ptr<Loss<T>> shared_mae() noexcept {
-            return std::shared_ptr<Loss<T>>(new MeanAbsoluteError());
+            return std::shared_ptr<Loss<T>>(new MeanAbsoluteError<T>());
         }
     }
 
