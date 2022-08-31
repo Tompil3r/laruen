@@ -63,7 +63,7 @@ namespace laruen::nn {
                 
                 void build(Shape::const_iterator begin, Shape::const_iterator end) {
                     // input_shape = (dim1, ...)
-                    this->layers_[0]->build(begin, end);
+                    this->layers_.front()->build(begin, end);
 
                     for(uint_fast64_t i = 1;i < this->layers_.size();i++) {
                         this->layers_[i]->build(this->layers_[i - 1]->output_shape());
