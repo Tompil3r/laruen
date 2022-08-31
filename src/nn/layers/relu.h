@@ -4,6 +4,7 @@
 
 #include <cassert>
 #include <algorithm>
+#include <memory>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/multi/nditer.h"

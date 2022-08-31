@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cmath>
 #include <limits>
+#include <memory>
 #include "src/multi/ndarray.h"
 #include "src/multi/nditer.h"
 #include "src/nn/losses/loss.h"

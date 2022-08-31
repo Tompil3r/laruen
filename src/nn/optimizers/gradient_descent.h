@@ -2,6 +2,7 @@
 #ifndef NN_OPTIMIZERS_GRADIENT_DESCENT_H_
 #define NN_OPTIMIZERS_GRADIENT_DESCENT_H_
 
+#include <memory>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/optimizers/optimizer.h"

@@ -5,6 +5,7 @@
 #include <cassert>
 #include <utility>
 #include <vector>
+#include <memory>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"

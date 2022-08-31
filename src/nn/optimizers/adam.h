@@ -2,6 +2,7 @@
 #ifndef NN_OPTIMIZERS_ADAM_H_
 #define NN_OPTIMIZERS_ADAM_H_
 
+#include <memory>
 #include <cmath>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"

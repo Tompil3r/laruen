@@ -2,6 +2,7 @@
 #ifndef NN_METRICS_SPARSE_CATEGORICAL_ACCURACY_H_
 #define NN_METRICS_SPARSE_CATEGORICAL_ACCURACY_H_
 
+#include <memory>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/multi/nditer.h"
