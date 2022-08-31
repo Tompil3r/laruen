@@ -37,24 +37,24 @@ namespace laruen::multi {
 
         private:
             T *data_;
-            const NDArray<T> *base_ = nullptr;
+            bool data_owner_;
 
         public:
             typedef T DType;
 
             ~NDArray() {
-                if(!this->base_) {
+                if(this->data_owner_) {
                     delete[] this->data_;
                 }
             }
 
             // constructors and assignment operators
-            NDArray() noexcept : ArrayBase(), data_(nullptr)
+            NDArray() noexcept : ArrayBase(), data_(nullptr), data_owner_(true)
             {}
 
             NDArray(std::initializer_list<T> init_list) noexcept
             : ArrayBase(Shape{init_list.size()}, Strides{1}, Strides{init_list.size()}, init_list.size(), 1, true),
-            data_(new T[init_list.size()])
+            data_(new T[init_list.size()]), data_owner_(true)
             {
                 NDIter iter(this->data_, *this);
 
@@ -88,26 +88,26 @@ namespace laruen::multi {
             }
 
             NDArray(T *data, const Shape &shape, const Strides &strides, const Strides &dim_sizes,
-            uint_fast64_t size, uint_fast8_t ndim, bool contig, const NDArray *base = nullptr) noexcept
-            : ArrayBase(shape, strides, dim_sizes, size, ndim, contig), data_(data), base_(base)
+            uint_fast64_t size, uint_fast8_t ndim, bool contig, bool data_owner) noexcept
+            : ArrayBase(shape, strides, dim_sizes, size, ndim, contig), data_(data), data_owner_(data_owner)
             {}
 
             NDArray(T *data, Shape &&shape, Strides &&strides, Strides &&dim_sizes,
-            uint_fast64_t size, uint_fast8_t ndim, bool contig, const NDArray *base = nullptr) noexcept
+            uint_fast64_t size, uint_fast8_t ndim, bool contig, bool data_owner) noexcept
             : ArrayBase(std::move(shape), std::move(strides), std::move(dim_sizes), size, ndim, contig),
-            data_(data), base_(base)
+            data_(data), data_owner_(data_owner)
             {}
 
             NDArray(Shape::const_iterator begin, Shape::const_iterator end) noexcept
-            : ArrayBase(begin, end), data_(new T[this->size_])
+            : ArrayBase(begin, end), data_(new T[this->size_]), data_owner_(true)
             {}
             
             explicit NDArray(const Shape &shape) noexcept
-            : ArrayBase(shape), data_(new T[this->size_])
+            : ArrayBase(shape), data_(new T[this->size_]), data_owner_(true)
             {}
 
             explicit NDArray(Shape &&shape) noexcept
-            : ArrayBase(std::move(shape)), data_(new T[this->size_])
+            : ArrayBase(std::move(shape)), data_(new T[this->size_]), data_owner_(true)
             {}
             
             NDArray(const Shape &shape, T value) noexcept
@@ -115,17 +115,18 @@ namespace laruen::multi {
                 this->fill(value);
             }
             
-            NDArray(T *data, const ArrayBase &arraybase, const NDArray<T> *base = nullptr) noexcept
-            : ArrayBase(arraybase), data_(data), base_(base)
+            NDArray(T *data, const ArrayBase &arraybase, bool data_owner) noexcept
+            : ArrayBase(arraybase), data_(data), data_owner_(data_owner)
             {}
             
             NDArray(const NDArray &ndarray) noexcept 
-            : NDArray(new T[ndarray.size_], ndarray) {
+            : NDArray(new T[ndarray.size_], ndarray, true) {
                 this->copy_data_from(ndarray);
             }
             
             NDArray(NDArray &&ndarray) noexcept
-            : ArrayBase(std::move(ndarray)), data_(ndarray.data_) {
+            : ArrayBase(std::move(ndarray)), data_(ndarray.data_), data_owner_(ndarray.data_owner_)
+            {
                 ndarray.data_ = nullptr;
             }
             
@@ -156,7 +157,7 @@ namespace laruen::multi {
             }
             
             NDArray(const ArrayBase &arraybase, const Axes &axes) noexcept
-            : ArrayBase(axes.size(), axes.size() > 0)
+            : ArrayBase(axes.size(), axes.size() > 0), data_owner_(true)
             {
                 uint_fast8_t axis;
                 uint_fast64_t stride = 1;
@@ -175,7 +176,7 @@ namespace laruen::multi {
             }
             
             NDArray(NDArray<T> &ndarray, const SliceRanges &ranges) noexcept
-            : NDArray(ndarray.data_, ndarray, ndarray.forward_base())
+            : NDArray(ndarray.data_, ndarray, false)
             {
                 uint_fast8_t ndim = ranges.size();
                 float64_t size_ratio = 1;
@@ -195,13 +196,13 @@ namespace laruen::multi {
             
             template <typename TT>
             NDArray(const NDArray<TT> &ndarray) noexcept
-            : NDArray<T>(new T[ndarray.size_], ndarray) {
+            : NDArray<T>(new T[ndarray.size_], ndarray, true) {
                 this->copy_data_from(ndarray);
             }
             
             template <typename TT>
             NDArray(NDArray<TT> &&ndarray) noexcept
-            : ArrayBase(std::move(ndarray)), data_(new T[ndarray.size_]) {
+            : ArrayBase(std::move(ndarray)), data_(new T[ndarray.size_]), data_owner_(true) {
                 this->copy_data_from(ndarray);
             }
 
@@ -211,15 +212,12 @@ namespace laruen::multi {
                 }
 
                 if(this->size_ != ndarray.size_) {
-                    if(!this->base_) {
+                    if(this->data_owner_) {
                         delete[] this->data_;
                     }
                     this->data_ = new T[ndarray.size_];
                     this->contig_ = true;
-                    // base update is required - 
-                    // creating new data means
-                    // 'this' object is the owner
-                    this->base_ = nullptr;
+                    this->data_owner_ = true;
                 }
 
                 this->shape_ = ndarray.shape_;
@@ -238,7 +236,7 @@ namespace laruen::multi {
                     return *this;
                 }
 
-                if(!this->base_) {
+                if(this->data_owner_) {
                     delete[] this->data_;
                 }
                 
@@ -248,9 +246,7 @@ namespace laruen::multi {
                 this->size_ = ndarray.size_;
                 this->ndim_ = ndarray.ndim_;
                 this->contig_ = ndarray.contig_;
-                // base update required since memory space
-                // of data is not ours
-                this->base_ = ndarray.base_;
+                this->data_owner_ = ndarray.data_owner_;
                 
                 this->data_ = ndarray.data_;
                 ndarray.data_ = nullptr;
@@ -261,15 +257,12 @@ namespace laruen::multi {
             template <typename TT>
             NDArray& operator=(const NDArray<TT> &ndarray) noexcept {
                 if(this->size_ != ndarray.size_) {
-                    if(!this->base_) {
+                    if(this->data_owner_) {
                         delete[] this->data_;
                     }
                     this->data_ = new T[ndarray.size_];
                     this->contig_ = true;
-                    // base update is required - 
-                    // creating new data means
-                    // 'this' object is the owner
-                    this->base_ = nullptr;
+                    this->data_owner_ = true;
                 }
 
                 this->shape_ = ndarray.shape_;
@@ -292,10 +285,7 @@ namespace laruen::multi {
                 this->size_ = ndarray.size_;
                 this->ndim_ = ndarray.ndim_;
                 this->contig_ = true;
-                // base change needs to be done -
-                // new data means 'this' object
-                // is the owner of the data
-                this->base_ = nullptr;
+                this->data_owner_ = true;
 
                 this->copy_data_from(ndarray);
 
@@ -304,16 +294,16 @@ namespace laruen::multi {
 
             // utility functions
             inline void free() noexcept {
-                if(!this->base_) {
+                if(this->data_owner_) {
                     delete[] this->data_;
                 }
 
+                this->data_ = nullptr;
                 this->shape_.clear();
                 this->strides_.clear();
                 this->dim_sizes_.clear();
                 this->size_ = 0;
                 this->ndim_ = 0;
-                this->base_ = nullptr;
             }
 
             template <typename TT>
@@ -1062,7 +1052,7 @@ namespace laruen::multi {
                 /* expand the dimensions of this to the dimensions of expansion */
                 
                 NDArray<T> expansion(this->data_, Shape(expand_to.shape_), Strides(expand_to.ndim_, 0),
-                Strides(expand_to.ndim_, 0), expand_to.size_, expand_to.ndim_, false, this->forward_base());
+                Strides(expand_to.ndim_, 0), expand_to.size_, expand_to.ndim_, false, false);
                 
                 uint_fast8_t expansion_idx = expansion.ndim_ - this->ndim_;
 
@@ -1081,7 +1071,7 @@ namespace laruen::multi {
                 /* expand the dimensions of this to the dimensions of expand_to */
                 
                 NDArray<T> expansion(this->data_, Shape(expand_to.shape_), Strides(expand_to.ndim_, 0),
-                Strides(expand_to.ndim_, 0), expand_to.size_, expand_to.ndim_, false, this->forward_base());
+                Strides(expand_to.ndim_, 0), expand_to.size_, expand_to.ndim_, false, false);
                 
                 uint_fast8_t expansion_idx = expand_to.ndim_ - 1;
                 uint_fast8_t expanded_idx = this->ndim_ - 1;
@@ -1107,7 +1097,7 @@ namespace laruen::multi {
 
             const NDArray<T> axes_reorder(const Axes &axes) const noexcept {
                 NDArray<T> reorder(this->data_, Shape(this->ndim_), Strides(this->ndim_),
-                Strides(this->ndim_), this->size_, this->ndim_, false, this->forward_base());
+                Strides(this->ndim_), this->size_, this->ndim_, false, false);
 
                 uint_fast8_t axes_added = 0;
                 uint_fast8_t dest_idx = reorder.ndim_ - 1;
@@ -1147,8 +1137,12 @@ namespace laruen::multi {
                 return this->data_;
             }
 
-            inline const NDArray<T>* base() const noexcept {
-                return this->base_;
+            inline bool& data_owner() noexcept {
+                return this->data_owner_;
+            }
+
+            inline bool data_owner() const noexcept {
+                return this->data_owner_;
             }
 
             inline T& operator[](uint_fast64_t index) noexcept {
@@ -1215,7 +1209,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> add(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->add(value, out);
                 return out;
             }
@@ -1262,7 +1256,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> subtract(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->subtract(value, out);
                 return out;
             }
@@ -1309,7 +1303,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> multiply(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->multiply(value, out);
                 return out;
             }
@@ -1356,7 +1350,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> divide(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->divide(value, out);
                 return out;
             }
@@ -1403,7 +1397,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> bit_xor(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->bit_xor(value, out);
                 return out;
             }
@@ -1450,7 +1444,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> bit_and(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->bit_and(value, out);
                 return out;
             }
@@ -1497,7 +1491,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> bit_or(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->bit_or(value, out);
                 return out;
             }
@@ -1544,7 +1538,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> shl(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->shl(value, out);
                 return out;
             }
@@ -1591,7 +1585,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> shr(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->shr(value, out);
                 return out;
             }
@@ -1611,7 +1605,7 @@ namespace laruen::multi {
 
             template <typename TR = T>
             inline NDArray<TR> bit_not() const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->bit_not(out);
                 return out;
             }
@@ -1658,7 +1652,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> remainder(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->remainder(value, out);
                 return out;
             }
@@ -1706,14 +1700,14 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> power(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->power(value, out);
                 return out;
             }
 
             template <typename TR, typename TT, typename = std::enable_if_t<!std::is_same_v<TR, TT>>>
             inline NDArray<TR> power(TT value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->power(value, out);
                 return out;
             }
@@ -1852,7 +1846,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> inverse_subtract(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->inverse_subtract(value, out);
                 return out;
             }
@@ -1879,7 +1873,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> inverse_divide(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->inverse_divide(value, out);
                 return out;
             }
@@ -1906,7 +1900,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> inverse_shl(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->inverse_shl(value, out);
                 return out;
             }
@@ -1933,7 +1927,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> inverse_shr(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->inverse_shr(value, out);
                 return out;
             }
@@ -1960,7 +1954,7 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> inverse_remainder(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->inverse_remainder(value, out);
                 return out;
             }
@@ -1988,14 +1982,14 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR> inverse_power(TR value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->inverse_power(value, out);
                 return out;
             }
 
             template <typename TR, typename TT, typename = std::enable_if_t<!std::is_same_v<TR, TT>>>
             inline NDArray<TR> inverse_power(TT value) const noexcept {
-                NDArray<TR> out(new TR[this->size_], *this, nullptr);
+                NDArray<TR> out(new TR[this->size_], *this, true);
                 this->inverse_power(value, out);
                 return out;
             }
@@ -2326,19 +2320,15 @@ namespace laruen::multi {
             inline const ArrayBase& arraybase() const noexcept {
                 return *this;
             }
-
-            inline const NDArray<T>* forward_base() const noexcept {
-                return this->base_ ? this->base_ : this;
-            }
             
             inline NDArray<T> view() noexcept {
                 return NDArray<T>(this->data_, this->shape_, this->strides_,
-                this->dim_sizes_, this->size_, this->ndim_, this->contig_, this->forward_base());
+                this->dim_sizes_, this->size_, this->ndim_, this->contig_, false);
             }
 
             inline const NDArray<T> view() const noexcept {
                 return NDArray<T>(this->data_, this->shape_, this->strides_,
-                this->dim_sizes_, this->size_, this->ndim_, this->contig_, this->forward_base());
+                this->dim_sizes_, this->size_, this->ndim_, this->contig_, false);
             }
 
             friend inline std::ostream& operator<<(std::ostream &stream, const NDArray &ndarray) noexcept {
