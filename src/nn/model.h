@@ -6,6 +6,7 @@
 #include <string>
 #include <algorithm>
 #include <cstdint>
+#include <memory>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
@@ -26,39 +27,24 @@ namespace laruen::nn {
 
         template <typename T = float32_t>
         class Model {
-            private:
-                std::vector<Layer<T>*> layers_;
+            public:
+                std::vector<std::shared_ptr<Layer<T>>> layers_;
                 std::vector<NDArray<T>> batch_outputs_;
                 std::vector<NDArray<T>> batch_derivs_;
                 std::vector<NDArray<T>> remaining_outputs_;
                 std::vector<NDArray<T>> remaining_derivs_;
                 NDArray<T> input_batch_deriv_;
                 NDArray<T> input_remaining_deriv_;
-                Loss<T> *loss_;
-                Optimizer<T> *optimizer_;
+                std::shared_ptr<Loss<T>> loss_;
+                std::shared_ptr<Optimizer<T>> optimizer_;
                 uint_fast64_t batch_size_;
                 uint_fast64_t remaining_size_;
-                bool manage_resources_;
                 
             public:
-                ~Model() {
-                    if(!this->manage_resources_) {
-                        return;
-                    }
-
-                    delete this->loss_;
-                    delete this->optimizer_;
-
-                    for(auto iter = this->layers_.begin();iter != this->layers_.end();iter++) {
-                        delete *iter;
-                    }
-                }
-
-                Model(const std::vector<Layer<T>*> &layers, bool manage_resources = true)
+                Model(const std::vector<std::shared_ptr<Layer<T>>> &layers)
                 : layers_(layers), batch_outputs_(layers.size()), batch_derivs_(layers.size()),
                 remaining_outputs_(layers.size()), remaining_derivs_(layers.size()),
-                loss_(nullptr), optimizer_(nullptr), batch_size_(0),
-                remaining_size_(0), manage_resources_(manage_resources)
+                batch_size_(0), remaining_size_(0)
                 {}
                 
                 void build(Shape::const_iterator begin, Shape::const_iterator end) {
@@ -74,7 +60,7 @@ namespace laruen::nn {
                     this->build(input_shape.cbegin(), input_shape.cend());
                 }
 
-                void compile(Optimizer<T> *optimizer, Loss<T> *loss) {
+                void compile(const std::shared_ptr<Optimizer<T>> &optimizer, const std::shared_ptr<Loss<T>> &loss) {
                     this->optimizer_ = optimizer;
                     this->loss_ = loss;
 
@@ -154,7 +140,7 @@ namespace laruen::nn {
                     return this->batch_outputs_;
                 }
                         
-            private:
+            public:
                 void construct(std::vector<NDArray<T>> &batch_outputs, std::vector<NDArray<T>> &batch_derivs,
                 uint_fast64_t batch_size) noexcept
                 {
@@ -169,6 +155,8 @@ namespace laruen::nn {
                     }
                 }
         };
+
+        template <typename T> Model(std::vector<std::shared_ptr<Layer<T>>>&) -> Model<T>;
     }
 
     using namespace impl;
