@@ -18,6 +18,8 @@ namespace laruen::nn::metrics {
         template <typename T = float32_t>
         class SparseCategoricalAccuracy : public Metric<T> {            
             public:
+                static constexpr char NAME[] = "sparse categorical accuracy";
+
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     NDIter true_iter(y_true.data(), y_true);
                     NDIter pred_iter(y_pred.data(), y_pred);
@@ -39,6 +41,10 @@ namespace laruen::nn::metrics {
                     }
 
                     return (score / y_true.size());
+                }
+
+                const char* name() const noexcept override final {
+                    return this->NAME;
                 }
         };
     }

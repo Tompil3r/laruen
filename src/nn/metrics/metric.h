@@ -16,6 +16,7 @@ namespace laruen::nn::metrics {
         class Metric {
             public:
                 virtual T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const = 0;
+                virtual const char* name() const noexcept = 0;
         };
     }
 
