@@ -50,7 +50,10 @@ namespace laruen::nn::layers {
 
                 void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
                 const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept override final
-                {}
+                {
+                    assert(deriv.size() == prev_deriv_output.size());
+                    prev_deriv_output.copy_data_from(deriv);
+                }
 
                 inline void update_weights(const Optimizer<T> &optimizer) override final
                 {}
