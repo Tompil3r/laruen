@@ -962,12 +962,14 @@ namespace laruen::multi {
             }
 
             NDArray<T> view_reshape(const Shape &shape) noexcept {
+                assert(this->contig_);
                 NDArray<T> view = this->view();
                 view.reshape(shape);
                 return view;
             }
 
             const NDArray<T> view_reshape(const Shape &shape) const noexcept {
+                assert(this->contig_);
                 NDArray<T> view = this->view();
                 view.reshape(shape);
                 return view;
@@ -978,21 +980,6 @@ namespace laruen::multi {
                 assert(copy.size_ == this->size_);
                 copy.copy_data_from(*this);
                 return copy;
-            }
-            
-            const NDArray<T> copy_reshape(const Shape &shape) const noexcept {
-                NDArray<T> copy(shape);
-                assert(copy.size_ == this->size_);
-                copy.copy_data_from(*this);
-                return copy;
-            }
-
-            NDArray<T> new_reshape(const Shape &shape) noexcept {
-                return this->contig_ ? this->view_reshape(shape) : this->copy_reshape(shape);
-            }
-
-            const NDArray<T> new_reshape(const Shape &shape) const noexcept {
-                return this->contig_ ? this->view_reshape(shape) : this->copy_reshape(shape);
             }
 
             // string function
