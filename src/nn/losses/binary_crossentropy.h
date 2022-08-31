@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cmath>
 #include <limits>
+#include <memory>
 #include "src/multi/ndarray.h"
 #include "src/multi/nditer.h"
 #include "src/multi/types.h"
@@ -62,6 +63,11 @@ namespace laruen::nn::losses {
                     }
                 }
         };
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Loss<T>> shared_bce() noexcept {
+            return std::shared_ptr<Loss<T>>(new BinaryCrossentropy());
+        }
     }
 
     using namespace impl;
