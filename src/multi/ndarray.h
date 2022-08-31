@@ -202,7 +202,7 @@ namespace laruen::multi {
             
             template <typename TT>
             NDArray(NDArray<TT> &&ndarray) noexcept
-            : ArrayBase(std::move(ndarray)), data_(new T[ndarray.size_]), data_owner_(true) {
+            : NDArray<T>(new T[ndarray.size_], ndarray, true) {
                 this->copy_data_from(ndarray);
             }
 
