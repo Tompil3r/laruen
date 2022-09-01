@@ -947,9 +947,24 @@ namespace laruen::multi {
                 return result;
             }
 
-            inline const NDArray<T> transpose(uint_fast8_t dim_begin, uint_fast8_t dim_end) const {
-                // no modification occurs
-                return const_cast<NDArray<T>*>(this)->transpose(dim_begin, dim_end);
+            const NDArray<T> transpose(uint_fast8_t dim_begin, uint_fast8_t dim_end) const {
+                NDArray<T> result = this->view();
+                result.contig_ = false;
+
+                const uint_fast8_t middle = (dim_end + dim_begin) >> 1;
+
+                for(;dim_begin < middle;dim_begin++) {
+                    dim_end--;
+
+                    result.shape_[dim_begin] = this->shape_[dim_end];
+                    result.shape_[dim_end] = this->shape_[dim_begin];
+                    result.strides_[dim_begin] = this->strides_[dim_end];
+                    result.strides_[dim_end] = this->strides_[dim_begin];
+                    result.dim_sizes_[dim_begin] = this->dim_sizes_[dim_end];
+                    result.dim_sizes_[dim_end] = this->dim_sizes_[dim_begin];
+                }
+
+                return result;
             }
 
             inline NDArray<T> transpose() noexcept {
@@ -957,8 +972,7 @@ namespace laruen::multi {
             }
 
             inline const NDArray<T> transpose() const noexcept {
-                // no modification occurs
-                return const_cast<NDArray<T>*>(this)->transpose(0, this->ndim_);
+                return this->transpose(0, this->ndim_);
             }
 
             NDArray<T> view_reshape(const Shape &shape) noexcept {
