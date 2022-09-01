@@ -2061,10 +2061,10 @@ namespace laruen::multi {
                 }
 
                 Impl::matmul(this->data_,
-                std::equal(out.shape_.begin(), out.shape_.end() - 2, this->shape_.begin())
+                std::equal(out.shape_.cbegin(), out.shape_.cend() - 2, this->shape_.cbegin())
                 ? *this : this->matmul_expansion(out),
                 rhs.data_,
-                std::equal(out.shape_.begin(), out.shape_.end() - 2, rhs.shape_.begin())
+                std::equal(out.shape_.cbegin(), out.shape_.cend() - 2, rhs.shape_.cbegin())
                 ? rhs : rhs.matmul_expansion(out),
                 out.data_, out, depth);
 
