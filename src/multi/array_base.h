@@ -176,7 +176,16 @@ namespace laruen::multi {
                     str.push_back(',');
                     str.push_back(' ');
                 }
-                str += std::to_string(this->strides_[dim]) + ")\nsize = " + 
+
+                str += std::to_string(this->strides_[dim]) + ")\ndim_sizes = (";
+
+                for(dim = 0;dim < this->ndim_ - 1;dim++) {
+                    str += std::to_string(this->dim_sizes_[dim]);
+                    str.push_back(',');
+                    str.push_back(' ');
+                }
+                
+                str += std::to_string(this->dim_sizes_[dim]) + ")\nsize = " + 
                 std::to_string(this->size_) + "\nndim = " +
                 std::to_string(this->ndim_) + "\ncontiguous = " + std::to_string(this->contig_);
                 str.push_back('\n');
