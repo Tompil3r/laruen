@@ -119,7 +119,7 @@ namespace laruen::multi {
             : ArrayBase(arraybase), data_(data), data_owner_(data_owner)
             {}
             
-            NDArray(const NDArray &ndarray) noexcept 
+            explicit NDArray(const NDArray &ndarray) noexcept 
             : NDArray(new T[ndarray.size_], ndarray, true) {
                 this->copy_data_from(ndarray);
             }
@@ -195,7 +195,7 @@ namespace laruen::multi {
             }
             
             template <typename TT>
-            NDArray(const NDArray<TT> &ndarray) noexcept
+            explicit NDArray(const NDArray<TT> &ndarray) noexcept
             : NDArray<T>(new T[ndarray.size_], ndarray, true) {
                 this->copy_data_from(ndarray);
             }
