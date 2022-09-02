@@ -320,9 +320,9 @@ namespace laruen::multi {
             template <typename TT>
             NDArray& operator=(const NDArray<TT> &&ndarray) noexcept {
                 this->data_ = new T[ndarray.size_];
-                this->shape_ = std::move(ndarray.shape_);
-                this->strides_ = std::move(ndarray.strides_);
-                this->dim_sizes_ = std::move(ndarray.dim_sizes_);
+                this->shape_ = ndarray.shape_;
+                this->strides_ = ndarray.strides_;
+                this->dim_sizes_ = ndarray.dim_sizes_;
                 this->size_ = ndarray.size_;
                 this->ndim_ = ndarray.ndim_;
                 this->contig_ = true;
