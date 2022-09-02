@@ -270,7 +270,7 @@ namespace laruen::multi {
                 return *this;
             }
             
-            NDArray& operator=(const NDArray &&ndarray) noexcept {
+            NDArray& operator=(const NDArray &&ndarray) const noexcept {
                 if(this == &ndarray) {
                     return *this;
                 }
