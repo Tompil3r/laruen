@@ -31,16 +31,14 @@ namespace laruen::nn::utils {
         }
 
         template <typename T>
-        NDArray<T> batch_view(NDArray<T> &ndarray, uint_fast64_t batch_size) {
-            Shape new_shape(ndarray.shape());
-            Strides new_dim_sizes(ndarray.dim_sizes());
+        const NDArray<T> batch_view(const NDArray<T> &ndarray, uint_fast64_t batch_size) {
+            const NDArray<T> view = ndarray.view();
 
-            uint_fast64_t new_size = (ndarray.size() / ndarray.shape().front()) * batch_size;
-            new_shape.front() = batch_size;
-            new_dim_sizes.front() = (new_dim_sizes.front() / ndarray.shape().front()) * batch_size;
+            view.size() = (ndarray.size() / ndarray.shape().front()) * batch_size;
+            view.shape().front() = batch_size;
+            view.dim_sizes().front() = (ndarray.dim_sizes().front() / ndarray.shape().front()) * batch_size;
 
-            return NDArray<T>(ndarray.data(), std::move(new_shape), Strides(ndarray.strides()),
-            std::move(new_dim_sizes), new_size, ndarray.ndim(), ndarray.contig(), false);
+            return view;
         }
     }
 
