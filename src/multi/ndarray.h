@@ -130,6 +130,15 @@ namespace laruen::multi {
             {
                 ndarray.data_ = nullptr;
             }
+
+            NDArray(const NDArray &&ndarray) noexcept
+            : ArrayBase(std::move(ndarray.shape_), std::move(ndarray.strides_), std::move(ndarray.dim_sizes_),
+            ndarray.size_, ndarray.ndim_, ndarray.contig_),
+            data_(ndarray.data_), data_owner_(ndarray.data_owner_)
+            {
+                ndarray.data_ = nullptr;
+                assert(!this->data_owner_);
+            }
             
             explicit NDArray(const Range<T> &range) noexcept
             : NDArray(Shape{laruen::multi::utils::ceil_index((range.end - range.start) / range.step)})
@@ -207,6 +216,12 @@ namespace laruen::multi {
                 this->copy_data_from(ndarray);
             }
 
+            template <typename TT>
+            NDArray(const NDArray<TT> &&ndarray) noexcept
+            : NDArray<T>(new T[ndarray.size_], ndarray, true) {
+                this->copy_data_from(ndarray);
+            }
+
             NDArray& operator=(const NDArray &ndarray) noexcept {
                 if(this == &ndarray) {
                     return *this;
@@ -255,6 +270,31 @@ namespace laruen::multi {
                 return *this;
             }
             
+            NDArray& operator=(const NDArray &&ndarray) noexcept {
+                if(this == &ndarray) {
+                    return *this;
+                }
+
+                assert(!ndarray.data_owner_);
+
+                if(this->data_owner_) {
+                    delete[] this->data_;
+                }
+                
+                this->shape_ = std::move(ndarray.shape_);
+                this->strides_ = std::move(ndarray.strides_);
+                this->dim_sizes_ = std::move(ndarray.dim_sizes_);
+                this->size_ = ndarray.size_;
+                this->ndim_ = ndarray.ndim_;
+                this->contig_ = ndarray.contig_;
+                this->data_owner_ = ndarray.data_owner_;
+                
+                this->data_ = ndarray.data_;
+                ndarray.data_ = nullptr;
+
+                return *this;
+            }
+            
             template <typename TT>
             NDArray& operator=(const NDArray<TT> &ndarray) noexcept {
                 if(this->size_ != ndarray.size_) {
@@ -278,7 +318,7 @@ namespace laruen::multi {
             }
             
             template <typename TT>
-            NDArray& operator=(NDArray<TT> &&ndarray) noexcept {
+            NDArray& operator=(const NDArray<TT> &&ndarray) noexcept {
                 this->data_ = new T[ndarray.size_];
                 this->shape_ = std::move(ndarray.shape_);
                 this->strides_ = std::move(ndarray.strides_);
