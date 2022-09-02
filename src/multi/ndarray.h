@@ -1165,8 +1165,22 @@ namespace laruen::multi {
 
         public:
             // getters & setters
-            inline void data(T *data) const noexcept {
+            inline void data(T *data) noexcept {
                 this->data_ = data;
+            }
+
+            inline void data(const T *data) const noexcept {
+                /*
+                *** important ***
+                This function is used to change the address
+                the pointer this->data_ points to without
+                having access to the data.
+                Use only when 'data' is not actually const!
+                else could lead to undefined behavior
+                */
+                static_assert(!std::is_const_v<T>);
+                
+                this->data_ = const_cast<T*>(data);
             }
 
             inline const T* data() const noexcept {
