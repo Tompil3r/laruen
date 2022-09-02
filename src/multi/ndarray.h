@@ -1125,25 +1125,20 @@ namespace laruen::multi {
             }
 
         public:
-            // setters
-            inline void data(T *data) noexcept {
+            // getters & setters
+            inline void data(T *data) const noexcept {
                 this->data_ = data;
             }
 
-            // getters
             inline const T* data() const noexcept {
                 return this->data_;
             }
 
-            inline T*& data() noexcept {
+            inline T* data() noexcept {
                 return this->data_;
             }
 
-            inline bool& data_owner() noexcept {
-                return this->data_owner_;
-            }
-
-            inline bool data_owner() const noexcept {
+            inline bool& data_owner() const noexcept {
                 return this->data_owner_;
             }
 

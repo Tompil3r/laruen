@@ -223,51 +223,27 @@ namespace laruen::multi {
                 return size;
             }
 
-            inline const Shape& shape() const noexcept {
+            inline Shape& shape() const noexcept {
                 return this->shape_;
             }
 
-            inline Shape& shape() noexcept {
-                return this->shape_;
-            }
-
-            inline const Strides& strides() const noexcept {
+            inline Strides& strides() const noexcept {
                 return this->strides_;
             }
 
-            inline Strides& strides() noexcept {
-                return this->strides_;
-            }
-
-            inline const Strides& dim_sizes() const noexcept {
+            inline Strides& dim_sizes() const noexcept {
                 return this->dim_sizes_;
             }
 
-            inline Strides& dim_sizes() noexcept {
-                return this->dim_sizes_;
-            }
-
-            inline uint_fast64_t size() const noexcept {
+            inline uint_fast64_t& size() const noexcept {
                 return this->size_;
             }
 
-            inline uint_fast64_t& size() noexcept {
-                return this->size_;
-            }
-
-            inline uint_fast8_t ndim() const noexcept {
+            inline uint_fast8_t& ndim() const noexcept {
                 return this->ndim_;
             }
 
-            inline uint_fast8_t& ndim() noexcept {
-                return this->ndim_;
-            }
-
-            inline bool contig() const noexcept {
-                return this->contig_;
-            }
-
-            inline bool& contig() noexcept {
+            inline bool& contig() const noexcept {
                 return this->contig_;
             }
 
