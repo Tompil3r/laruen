@@ -355,7 +355,6 @@ namespace laruen::multi {
                 for(uint_fast64_t i = 0;i < this->size_;i++) {
                     to.next() = from.next();
                 }
-                std::cout << "copy made1" << std::endl;
             }
             
             void fill(T value) noexcept {
@@ -1179,7 +1178,7 @@ namespace laruen::multi {
                 else could lead to undefined behavior
                 */
                 static_assert(!std::is_const_v<T>);
-                
+
                 this->data_ = const_cast<T*>(data);
             }
 
