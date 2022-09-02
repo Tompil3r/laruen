@@ -1049,8 +1049,7 @@ namespace laruen::multi {
 
         private:
             // private utility functions
-            template <typename TT>
-            const NDArray<T> expansion(const NDArray<TT> &expand_to) const noexcept {
+            const NDArray<T> expansion(const ArrayBase &expand_to) const noexcept {
                 /* expand the dimensions of this to the dimensions of expansion */
                 
                 NDArray<T> expansion(this->data_, Shape(expand_to.shape_), Strides(expand_to.ndim_, 0),
@@ -1068,8 +1067,7 @@ namespace laruen::multi {
                 return expansion;
             }
 
-            template <typename TT>
-            const NDArray<T> matmul_expansion(const NDArray<TT> &expand_to) const noexcept {
+            const NDArray<T> matmul_expansion(const ArrayBase &expand_to) const noexcept {
                 /* expand the dimensions of this to the dimensions of expand_to */
                 
                 NDArray<T> expansion(this->data_, Shape(expand_to.shape_), Strides(expand_to.ndim_, 0),
