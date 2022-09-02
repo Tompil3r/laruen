@@ -7,11 +7,16 @@
 #include <algorithm>
 #include <cstdint>
 #include <memory>
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <cmath>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
 #include "src/nn/optimizers/optimizer.h"
 #include "src/nn/losses/loss.h"
+#include "src/nn/metrics/metric.h"
 #include "src/nn/utils.h"
 
 namespace laruen::nn {
@@ -20,14 +25,16 @@ namespace laruen::nn {
 
         using laruen::multi::NDArray;
         using laruen::multi::Shape;
+        using laruen::multi::Strides;
         using laruen::multi::float32_t;
         using laruen::nn::layers::Layer;
         using laruen::nn::optimizers::Optimizer;
         using laruen::nn::losses::Loss;
+        using laruen::nn::metrics::Metric;
 
         template <typename T = float32_t>
         class Model {
-            public:
+            private:
                 std::vector<std::shared_ptr<Layer<T>>> layers_;
                 std::vector<NDArray<T>> batch_outputs_;
                 std::vector<NDArray<T>> batch_derivs_;
@@ -132,6 +139,74 @@ namespace laruen::nn {
                     }
                 }
 
+                void fit(const NDArray<T> &x, const NDArray<T> &y, const std::vector<std::shared_ptr<Metric<T>>> &metrics,
+                uint_fast64_t batch_size = 32, uint_fast64_t epochs = 1, bool verbose = true)
+                {
+                    using laruen::nn::utils::batch_view;
+
+                    uint_fast64_t batches = x.shape().front() / batch_size;
+                    uint_fast64_t remaining_size = x.shape().front() % batch_size;
+                    uint_fast64_t verbose_batches = batches + (remaining_size > 0); // for verbose purposes only
+
+                    const NDArray<T> x_batch_view = batch_view(x, batch_size);
+                    const NDArray<T> y_batch_view = batch_view(y, batch_size);
+
+                    const NDArray<T> x_remaining_view;
+                    const NDArray<T> y_remaining_view;
+
+                    uint_fast64_t x_batch_stride = batch_size * x.strides().front();
+                    uint_fast64_t y_batch_stride = batch_size * y.strides().front();
+
+                    if(this->batch_size_ != batch_size) {
+                        this->construct(this->batch_outputs_, this->batch_derivs_, this->input_batch_deriv_,
+                        x_batch_view.shape(), batch_size);
+                        this->batch_size_ = batch_size;
+                    }
+
+                    if(remaining_size && this->remaining_size_ != remaining_size) {
+                        x_remaining_view = batch_view(x, remaining_size);
+                        y_remaining_view = batch_view(y, remaining_size);
+                        x_remaining_view.data(x.data() + batches * x.strides().front());
+                        y_remaining_view.data(y.data() + batches * y.strides().front());
+
+                        this->construct(this->remaining_outputs_, this->remaining_derivs_, this->input_remaining_deriv_,
+                        x_remaining_view.shape(), remaining_size);
+                        
+                        this->remaining_size_ = remaining_size;                    
+                    }
+
+                    uint_fast64_t epoch;
+                    uint_fast64_t batch;
+
+                    for(epoch = 1;epoch <= epochs;epoch++) {
+                        for(batch = 1;batch <= batches;batch++) {
+                            this->train_batch(x_batch_view, y_batch_view, this->batch_outputs_,
+                            this->batch_derivs_, this->input_batch_deriv_, true);
+
+                            x_batch_view.data(x_batch_view.data() + x_batch_stride);
+                            y_batch_view.data(y_batch_view.data() + y_batch_stride);
+
+                            if(verbose) {
+                                this->verbose(epoch, epochs, batch, verbose_batches, y_batch_view, this->batch_outputs_.back(),
+                                metrics, !remaining_size && batch == batches - 1);
+                            }
+                        }
+
+                        if(remaining_size) {
+                            this->train_batch(x_remaining_view, y_remaining_view, this->remaining_outputs_,
+                            this->remaining_derivs_, this->input_remaining_deriv_, true);
+
+                            if(verbose) {
+                                this->verbose(epoch, epochs, batch, verbose_batches, y_remaining_view, this->remaining_outputs_.back(),
+                                metrics, true);
+                            }
+                        }
+
+                        x_batch_view.data(x.data());
+                        y_batch_view.data(y.data());
+                    }
+                }
+
                 inline const std::vector<Layer<T>*>& layers() const noexcept {
                     return this->layers_;
                 }
@@ -140,11 +215,14 @@ namespace laruen::nn {
                     return this->batch_outputs_;
                 }
                         
-            public:
+            private:
                 void construct(std::vector<NDArray<T>> &batch_outputs, std::vector<NDArray<T>> &batch_derivs,
-                uint_fast64_t batch_size) noexcept
+                NDArray<T> &input_deriv, const Shape &input_shape, uint_fast64_t batch_size) noexcept
                 {
                     using laruen::nn::utils::add_batch_shape;
+
+                    input_deriv = NDArray<T>(input_shape);
+                    input_deriv.shape().front() = batch_size;
 
                     batch_outputs.resize(this->layers_.size());
                     batch_derivs.resize(this->layers_.size());
@@ -152,6 +230,32 @@ namespace laruen::nn {
                     for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
                         batch_outputs[i] = NDArray<T>(add_batch_shape(this->layers_[i]->output_shape(), batch_size));
                         batch_derivs[i] = NDArray<T>(batch_outputs[i].shape());
+                    }
+                }
+
+                void verbose(uint_fast64_t epoch, uint_fast64_t epochs, uint_fast64_t batch,
+                uint_fast64_t batches, const NDArray<T> &y_true, const NDArray<T> &y_pred,
+                const std::vector<std::shared_ptr<Metric<T>>> &metrics, bool last)
+                {
+                    constexpr uint_fast8_t precision = 3;
+                    constexpr uint_fast16_t progress_bar_len = 20;
+
+                    uint_fast16_t progress = (uint_fast16_t)std::round(((T)(batch - 1)) * progress_bar_len / batches);
+
+                    std::cout << "epoch: " << epoch << '/' << epochs << " - [" << std::string(progress, '=') <<
+                    '>' << std::string(std::min(batches - (progress + 1), (uint_fast64_t)0), ' ') << "] - loss: "
+                    << std::setprecision(precision) << (*this->loss_)(y_true, y_pred);
+
+                    for(auto metric = metrics.cbegin();metric != metrics.cend();metric++) {
+                        std::cout << " - " << (*metric)->name() << ": " <<
+                        std::setprecision(precision) << (**metric)(y_true, y_pred);
+                    }
+
+                    if(last) {
+                        std::cout << std::endl;
+                    }
+                    else {
+                        std::cout << '\r';
                     }
                 }
         };
