@@ -36,8 +36,9 @@ namespace laruen::multi {
         friend struct Impl;
 
         private:
-            T *data_;
-            bool data_owner_;
+            // *** member variables are mutable to allow editing of "view"s ***
+            mutable T *data_;
+            mutable bool data_owner_;
 
         public:
             typedef T DType;

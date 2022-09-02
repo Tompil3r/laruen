@@ -17,12 +17,13 @@ namespace laruen::multi {
         friend struct Impl;
 
         protected:
-            Shape shape_;
-            Strides strides_;
-            Strides dim_sizes_;
-            uint_fast64_t size_;
-            uint_fast8_t ndim_;
-            bool contig_;
+            // *** member variables are mutable to allow editing of "view"s ***
+            mutable Shape shape_;
+            mutable Strides strides_;
+            mutable Strides dim_sizes_;
+            mutable uint_fast64_t size_;
+            mutable uint_fast8_t ndim_;
+            mutable bool contig_;
 
 
         public:
