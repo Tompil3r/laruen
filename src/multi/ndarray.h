@@ -355,6 +355,7 @@ namespace laruen::multi {
                 for(uint_fast64_t i = 0;i < this->size_;i++) {
                     to.next() = from.next();
                 }
+                std::cout << "copy made1" << std::endl;
             }
             
             void fill(T value) noexcept {
@@ -1209,8 +1210,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& add_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::add_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1221,16 +1224,21 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& add(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::add(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+
+                Impl::add(this->data_, this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : (rhs_exp = rhs.expansion(out)),
                 out.data_, out);
                 return out;
             }
 
             template <typename TR>
             inline NDArray<TR>& add(TR value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+
                 Impl::add(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1256,8 +1264,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& subtract_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::subtract_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1268,16 +1278,21 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& subtract(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::subtract(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+                
+                Impl::subtract(this->data_, this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : (rhs_exp = rhs.expansion(out)),
                 out.data_, out);
                 return out;
             }
 
             template <typename TR>
             inline NDArray<TR>& subtract(TR value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+
                 Impl::subtract(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1303,8 +1318,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& multiply_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::multiply_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1315,16 +1332,21 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& multiply(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::multiply(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+
+                Impl::multiply(this->data_, this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : (rhs_exp = rhs.expansion(out)),
                 out.data_, out);
                 return out;
             }
 
             template <typename TR>
             inline NDArray<TR>& multiply(TR value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::multiply(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1350,8 +1372,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& divide_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::divide_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1362,16 +1386,21 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& divide(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::divide(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+
+                Impl::divide(this->data_, this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : (rhs_exp = rhs.expansion(out)),
                 out.data_, out);
                 return out;
             }
 
             template <typename TR>
             inline NDArray<TR>& divide(TR value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::divide(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1397,8 +1426,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& bit_xor_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::bit_xor_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1409,16 +1440,21 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& bit_xor(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::bit_xor(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+
+                Impl::bit_xor(this->data_, this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : (rhs_exp = rhs.expansion(out)),
                 out.data_, out);
                 return out;
             }
 
             template <typename TR>
             inline NDArray<TR>& bit_xor(TR value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+
                 Impl::bit_xor(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1444,8 +1480,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& bit_and_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::bit_and_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1456,16 +1494,21 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& bit_and(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::bit_and(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+
+                Impl::bit_and(this->data_, this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : (rhs_exp = rhs.expansion(out)),
                 out.data_, out);
                 return out;
             }
 
             template <typename TR>
             inline NDArray<TR>& bit_and(TR value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::bit_and(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1491,8 +1534,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& bit_or_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::bit_or_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1503,16 +1548,21 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& bit_or(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::bit_or(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+
+                Impl::bit_or(this->data_, this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : (rhs_exp = rhs.expansion(out)),
                 out.data_, out);
                 return out;
             }
 
             template <typename TR>
             inline NDArray<TR>& bit_or(TR value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::bit_or(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1538,8 +1588,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& shl_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::shl_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1550,16 +1602,21 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& shl(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::shl(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+
+                Impl::shl(this->data_, this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : (rhs_exp = rhs.expansion(out)),
                 out.data_, out);
                 return out;
             }
 
             template <typename TR>
             inline NDArray<TR>& shl(TR value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::shl(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1585,8 +1642,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& shr_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::shr_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1597,16 +1656,21 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& shr(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::shr(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+
+                Impl::shr(this->data_, this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : (rhs_exp = rhs.expansion(out)),
                 out.data_, out);
                 return out;
             }
 
             template <typename TR>
             inline NDArray<TR>& shr(TR value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+
                 Impl::shr(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1632,8 +1696,10 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR>& bit_not(NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+
                 Impl::bit_not(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 out.data_, out);
                 return out;
             }
@@ -1652,8 +1718,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& remainder_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::remainder_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1664,16 +1732,21 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& remainder(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::remainder(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+
+                Impl::remainder(this->data_, this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : (rhs_exp = rhs.expansion(out)),
                 out.data_, out);
                 return out;
             }
 
             template <typename TR>
             inline NDArray<TR>& remainder(TR value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::remainder(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1699,8 +1772,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& power_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::power_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1712,16 +1787,21 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& power(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
-                Impl::power(this->data_, this->shape_ == out.shape_ ? *this : this->expansion(out),
-                rhs.data_, rhs.shape_ == out.shape_ ? rhs : rhs.expansion(out),
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+
+                Impl::power(this->data_, this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
+                rhs.data_, rhs.shape_ == out.shape_ ? rhs : (rhs_exp = rhs.expansion(out)),
                 out.data_, out);
                 return out;
             }
 
             template <typename TT, typename TR>
             inline NDArray<TR>& power(TT value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::power(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1861,8 +1941,10 @@ namespace laruen::multi {
             // inverse math functions
             template <typename TT>
             inline NDArray& inverse_subtract_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::inverse_subtract_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1873,8 +1955,10 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR>& inverse_subtract(T value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::inverse_subtract(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1888,8 +1972,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& inverse_divide_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::inverse_divide_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1900,8 +1986,10 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR>& inverse_divide(T value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::inverse_divide(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1915,8 +2003,10 @@ namespace laruen::multi {
             
             template <typename TT>
             inline NDArray& inverse_shl_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::inverse_shl_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1927,8 +2017,10 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR>& inverse_shl(T value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::inverse_shl(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1942,8 +2034,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& inverse_shr_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+                
                 Impl::inverse_shr_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1954,8 +2048,10 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR>& inverse_shr(T value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::inverse_shr(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1969,8 +2065,10 @@ namespace laruen::multi {
             
             template <typename TT>
             inline NDArray& inverse_remainder_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::inverse_remainder_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -1981,8 +2079,10 @@ namespace laruen::multi {
 
             template <typename TR>
             inline NDArray<TR>& inverse_remainder(T value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+
                 Impl::inverse_remainder(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -1996,8 +2096,10 @@ namespace laruen::multi {
 
             template <typename TT>
             inline NDArray& inverse_power_eq(const NDArray<TT> &rhs) noexcept {
+                const NDArray<TT> rhs_exp;
+
                 Impl::inverse_power_eq(this->data_, *this, rhs.data_,
-                this->shape_ == rhs.shape_ ? rhs : rhs.expansion(*this));
+                this->shape_ == rhs.shape_ ? rhs : (rhs_exp = rhs.expansion(*this)));
                 return *this;
             }
 
@@ -2009,8 +2111,10 @@ namespace laruen::multi {
 
             template <typename TT, typename TR>
             inline NDArray<TR>& inverse_power(TT value, NDArray<TR> &out) const noexcept {
+                const NDArray<T> lhs_exp;
+                
                 Impl::inverse_power(this->data_,
-                this->shape_ == out.shape_ ? *this : this->expansion(out),
+                this->shape_ == out.shape_ ? *this : (lhs_exp = this->expansion(out)),
                 value, out.data_, out);
                 return out;
             }
@@ -2094,12 +2198,15 @@ namespace laruen::multi {
                     depth--;
                 }
 
+                const NDArray<T> lhs_exp;
+                const NDArray<TT> rhs_exp;
+
                 Impl::matmul(this->data_,
                 std::equal(out.shape_.cbegin(), out.shape_.cend() - 2, this->shape_.cbegin())
-                ? *this : this->matmul_expansion(out),
+                ? *this : (lhs_exp = this->matmul_expansion(out)),
                 rhs.data_,
                 std::equal(out.shape_.cbegin(), out.shape_.cend() - 2, rhs.shape_.cbegin())
-                ? rhs : rhs.matmul_expansion(out),
+                ? rhs : (rhs_exp = rhs.matmul_expansion(out)),
                 out.data_, out, depth);
 
                 return out;
