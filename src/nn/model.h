@@ -166,7 +166,10 @@ namespace laruen::nn {
 
                     uint_fast64_t batches = x.shape().front() / batch_size;
                     uint_fast64_t remaining_size = x.shape().front() % batch_size;
-                    uint_fast64_t verbose_batches = batches + (remaining_size > 0); // for verbose purposes only
+                    uint_fast64_t epoch;
+                    uint_fast64_t batch;
+                    uint_fast64_t cumulative_batch = 1; // for verbose purposes only
+                    uint_fast64_t total_batches = batches + (remaining_size > 0); // for verbose purposes only
 
                     const NDArray<T> x_batch_view = batch_view(x, batch_size);
                     const NDArray<T> y_batch_view = batch_view(y, batch_size);
@@ -195,9 +198,6 @@ namespace laruen::nn {
                         this->remaining_size_ = remaining_size;                    
                     }
 
-                    uint_fast64_t epoch;
-                    uint_fast64_t batch;
-
                     for(epoch = 1;epoch <= epochs;epoch++) {
                         for(batch = 1;batch <= batches;batch++) {
                             this->train_batch(x_batch_view, y_batch_view, this->batch_outputs_,
@@ -207,7 +207,7 @@ namespace laruen::nn {
                             y_batch_view.data(y_batch_view.data() + y_batch_stride);
 
                             if(verbose) {
-                                this->verbose(epoch, epochs, batch, verbose_batches, y_batch_view,
+                                this->verbose(epoch, epochs, cumulative_batch++, total_batches, y_batch_view,
                                 this->batch_outputs_.back(), !remaining_size && batch == batches - 1);
                             }
                         }
@@ -217,7 +217,7 @@ namespace laruen::nn {
                             this->remaining_derivs_, this->input_remaining_deriv_, true);
 
                             if(verbose) {
-                                this->verbose(epoch, epochs, batch, verbose_batches, y_remaining_view,
+                                this->verbose(epoch, epochs, cumulative_batch++, total_batches, y_remaining_view,
                                 this->remaining_outputs_.back(), true);
                             }
                         }
@@ -253,17 +253,18 @@ namespace laruen::nn {
                     }
                 }
 
-                void verbose(uint_fast64_t epoch, uint_fast64_t epochs, uint_fast64_t batch,
-                uint_fast64_t batches, const NDArray<T> &y_true, const NDArray<T> &y_pred, bool last)
+                void verbose(uint_fast64_t epoch, uint_fast64_t epochs,
+                uint_fast64_t batch, uint_fast64_t batches, const NDArray<T> &y_true, const NDArray<T> &y_pred, bool last)
                 {
                     constexpr uint_fast8_t precision = 3;
-                    constexpr uint_fast16_t progress_bar_len = 20;
+                    constexpr int_fast64_t progress_bar_len = 20;
 
                     uint_fast16_t progress = (uint_fast16_t)std::round(((T)(batch - 1)) * progress_bar_len / batches);
+                    uint_fast64_t remaining_bar_len = std::max((int_fast32_t)(progress_bar_len - (progress + 1)), (int_fast32_t)0);
 
-                    std::cout << "epoch: " << epoch << '/' << epochs << " - [" << std::string(progress, '=') <<
-                    '>' << std::string(std::max(progress_bar_len - (progress + 1), (uint_fast64_t)0), ' ') << "] - loss: "
-                    << std::setprecision(precision) << (*this->loss_)(y_true, y_pred);
+                    std::cout << "epoch " << epoch << '/' << epochs << " - " << batch << '/' << batches << " - [" <<
+                    std::string(progress, '=') << '>' << std::string(remaining_bar_len, ' ')
+                    << "] - loss: " << std::setprecision(precision) << (*this->loss_)(y_true, y_pred);
 
                     for(auto metric = this->metrics_.cbegin();metric != this->metrics_.cend();metric++) {
                         std::cout << " - " << (*metric)->name() << ": " <<
