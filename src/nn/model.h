@@ -227,6 +227,65 @@ namespace laruen::nn {
                     }
                 }
 
+                void evaluate(const NDArray<T> &x, const NDArray<T> &y,
+                uint_fast64_t batch_size = 32, bool verbose = true)
+                {
+                    using laruen::nn::utils::batch_view;
+
+                    uint_fast64_t batches = x.shape().front() / batch_size;
+                    uint_fast64_t remaining_size = x.shape().front() % batch_size;
+                    uint_fast64_t batch;
+                    uint_fast64_t total_batches = batches + (remaining_size > 0); // for verbose purposes only
+
+                    const NDArray<T> x_batch_view = batch_view(x, batch_size);
+                    const NDArray<T> y_batch_view = batch_view(y, batch_size);
+
+                    const NDArray<T> x_remaining_view;
+                    const NDArray<T> y_remaining_view;
+
+                    uint_fast64_t x_batch_stride = batch_size * x.strides().front();
+                    uint_fast64_t y_batch_stride = batch_size * y.strides().front();
+
+                    if(this->batch_size_ != batch_size) {
+                        this->construct(this->batch_outputs_, this->batch_derivs_, this->input_batch_deriv_,
+                        x_batch_view.shape(), batch_size);
+                        this->batch_size_ = batch_size;
+                    }
+
+                    if(remaining_size && this->remaining_size_ != remaining_size) {
+                        x_remaining_view = batch_view(x, remaining_size);
+                        y_remaining_view = batch_view(y, remaining_size);
+                        x_remaining_view.data(x.data() + batches * x.strides().front());
+                        y_remaining_view.data(y.data() + batches * y.strides().front());
+
+                        this->construct(this->remaining_outputs_, this->remaining_derivs_, this->input_remaining_deriv_,
+                        x_remaining_view.shape(), remaining_size);
+                        
+                        this->remaining_size_ = remaining_size;                    
+                    }
+
+                    for(batch = 1;batch <= batches;batch++) {
+                        this->forward(x_batch_view, this->batch_outputs_);
+
+                        x_batch_view.data(x_batch_view.data() + x_batch_stride);
+                        y_batch_view.data(y_batch_view.data() + y_batch_stride);
+
+                        if(verbose) {
+                            this->verbose(1, 1, batch, total_batches, y_batch_view,
+                            this->batch_outputs_.back(), !remaining_size && batch == batches - 1);
+                        }
+                    }
+
+                    if(remaining_size) {
+                        this->forward(x_remaining_view, this->remaining_outputs_);
+
+                        if(verbose) {
+                            this->verbose(1, 1, batch, total_batches, y_remaining_view,
+                            this->remaining_outputs_.back(), true);
+                        }
+                    }
+                }
+
                 inline const std::vector<Layer<T>*>& layers() const noexcept {
                     return this->layers_;
                 }
