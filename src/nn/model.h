@@ -286,6 +286,19 @@ namespace laruen::nn {
                     }
                 }
 
+                NDArray<T>& predict(const NDArray<T> &x) {
+                    if(this->batch_size_ != x.shape().front()) {
+                        this->construct(this->batch_outputs_, this->batch_derivs_, this->input_batch_deriv_,
+                        x.shape(), x.shape().front());
+
+                        this->batch_size_ = x.shape().front();
+                    }
+
+                    this->forward(x, this->batch_outputs_);
+
+                    return this->batch_outputs_.back();
+                }
+
                 inline const std::vector<Layer<T>*>& layers() const noexcept {
                     return this->layers_;
                 }
