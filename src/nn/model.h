@@ -168,7 +168,6 @@ namespace laruen::nn {
                     uint_fast64_t remaining_size = x.shape().front() % batch_size;
                     uint_fast64_t epoch;
                     uint_fast64_t batch;
-                    uint_fast64_t cumulative_batch = 1; // for verbose purposes only
                     uint_fast64_t total_batches = batches + (remaining_size > 0); // for verbose purposes only
 
                     const NDArray<T> x_batch_view = batch_view(x, batch_size);
@@ -207,8 +206,8 @@ namespace laruen::nn {
                             y_batch_view.data(y_batch_view.data() + y_batch_stride);
 
                             if(verbose) {
-                                this->verbose(epoch, epochs, cumulative_batch++, total_batches, y_batch_view,
-                                this->batch_outputs_.back(), !remaining_size && batch == batches - 1);
+                                this->verbose(epoch, epochs, batch, total_batches, y_batch_view,
+                                this->batch_outputs_.back(), !remaining_size && batch == batches);
                             }
                         }
 
@@ -217,7 +216,7 @@ namespace laruen::nn {
                             this->remaining_derivs_, this->input_remaining_deriv_, true);
 
                             if(verbose) {
-                                this->verbose(epoch, epochs, cumulative_batch++, total_batches, y_remaining_view,
+                                this->verbose(epoch, epochs, batch, total_batches, y_remaining_view,
                                 this->remaining_outputs_.back(), true);
                             }
                         }
@@ -272,7 +271,7 @@ namespace laruen::nn {
 
                         if(verbose) {
                             this->verbose(1, 1, batch, total_batches, y_batch_view,
-                            this->batch_outputs_.back(), !remaining_size && batch == batches - 1);
+                            this->batch_outputs_.back(), !remaining_size && batch == batches);
                         }
                     }
 
