@@ -11,6 +11,7 @@
 #include <iomanip>
 #include <string>
 #include <cmath>
+#include <cstring>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
@@ -79,9 +80,9 @@ namespace laruen::nn {
                 }
 
                 std::string summary() const noexcept {
-                    std::string str("Layer Name\t\tOutput Shape\t\tParams\n");
-                    str += std::string(60, '-');
-                    str += '\n';
+                    constexpr uint_fast64_t sec1_len = 18;
+                    constexpr uint_fast64_t sec2_len = 20;
+                    constexpr uint_fast64_t all_len = 44;
 
                     auto shape_str = [](auto shape) noexcept -> std::string {
                         std::string str("(None, ");
@@ -91,16 +92,27 @@ namespace laruen::nn {
                         }
                         str += std::to_string(*iter) + ')';
                         return str;
-                    };
+                    };                    
+
+                    uint_fast64_t total_params = 0;
+                    uint_fast64_t curr_params;
+                    std::string shape_string;
+
+                    std::string str("Layer Name        Output Shape        Params\n");
+                    str += std::string(all_len, '-');
+                    str += '\n';
 
                     for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
                         str += this->layers_[i]->name();
-                        str += "\t\t\t";
-                        str += shape_str(this->layers_[i]->output_shape());
-                        str += "\t\t";
-                        str += std::to_string(this->layers_[i]->params());
+                        str += std::string(sec1_len - std::strlen(this->layers_[i]->name()), ' ');
+                        str += (shape_string = shape_str(this->layers_[i]->output_shape()));
+                        str += std::string(sec2_len - shape_string.size(), ' ');
+                        str += std::to_string((curr_params = this->layers_[i]->params()));
                         str += '\n';
+                        total_params += curr_params;
                     }
+
+                    str += "\nTotal Params: " + std::to_string(total_params);
                     
                     return str;
                 }
