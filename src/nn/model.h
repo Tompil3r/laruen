@@ -45,6 +45,7 @@ namespace laruen::nn {
                 NDArray<T> input_remaining_deriv_;
                 std::shared_ptr<Loss<T>> loss_;
                 std::shared_ptr<Optimizer<T>> optimizer_;
+                std::vector<std::shared_ptr<Metric<T>>> metrics_;
                 uint_fast64_t batch_size_;
                 uint_fast64_t remaining_size_;
                 
@@ -68,15 +69,22 @@ namespace laruen::nn {
                     this->build(input_shape.cbegin(), input_shape.cend());
                 }
 
-                void compile(const std::shared_ptr<Optimizer<T>> &optimizer, const std::shared_ptr<Loss<T>> &loss) {
+                void compile(const std::shared_ptr<Optimizer<T>> &optimizer, const std::shared_ptr<Loss<T>> &loss,
+                const std::vector<std::shared_ptr<Metric<T>>> &metrics)
+                {
                     this->optimizer_ = optimizer;
                     this->loss_ = loss;
+                    this->metrics_ = metrics;
 
                     uint_fast64_t required_caches = this->optimizer_->required_caches();
 
                     for(auto layer = this->layers_.begin();layer != this->layers_.end();layer++) {
                         (*layer)->compile(required_caches);
                     }
+                }
+
+                inline void compile(const std::shared_ptr<Optimizer<T>> &optimizer, const std::shared_ptr<Loss<T>> &loss) {
+                    this->compile(optimizer, loss, {});
                 }
 
                 std::string summary() const noexcept {
@@ -151,8 +159,8 @@ namespace laruen::nn {
                     }
                 }
 
-                void fit(const NDArray<T> &x, const NDArray<T> &y, const std::vector<std::shared_ptr<Metric<T>>> &metrics,
-                uint_fast64_t batch_size = 32, uint_fast64_t epochs = 1, bool verbose = true)
+                void fit(const NDArray<T> &x, const NDArray<T> &y, uint_fast64_t batch_size = 32,
+                uint_fast64_t epochs = 1, bool verbose = true)
                 {
                     using laruen::nn::utils::batch_view;
 
@@ -199,8 +207,8 @@ namespace laruen::nn {
                             y_batch_view.data(y_batch_view.data() + y_batch_stride);
 
                             if(verbose) {
-                                this->verbose(epoch, epochs, batch, verbose_batches, y_batch_view, this->batch_outputs_.back(),
-                                metrics, !remaining_size && batch == batches - 1);
+                                this->verbose(epoch, epochs, batch, verbose_batches, y_batch_view,
+                                this->batch_outputs_.back(), !remaining_size && batch == batches - 1);
                             }
                         }
 
@@ -209,8 +217,8 @@ namespace laruen::nn {
                             this->remaining_derivs_, this->input_remaining_deriv_, true);
 
                             if(verbose) {
-                                this->verbose(epoch, epochs, batch, verbose_batches, y_remaining_view, this->remaining_outputs_.back(),
-                                metrics, true);
+                                this->verbose(epoch, epochs, batch, verbose_batches, y_remaining_view,
+                                this->remaining_outputs_.back(), true);
                             }
                         }
 
@@ -246,8 +254,7 @@ namespace laruen::nn {
                 }
 
                 void verbose(uint_fast64_t epoch, uint_fast64_t epochs, uint_fast64_t batch,
-                uint_fast64_t batches, const NDArray<T> &y_true, const NDArray<T> &y_pred,
-                const std::vector<std::shared_ptr<Metric<T>>> &metrics, bool last)
+                uint_fast64_t batches, const NDArray<T> &y_true, const NDArray<T> &y_pred, bool last)
                 {
                     constexpr uint_fast8_t precision = 3;
                     constexpr uint_fast16_t progress_bar_len = 20;
@@ -258,7 +265,7 @@ namespace laruen::nn {
                     '>' << std::string(std::min(batches - (progress + 1), (uint_fast64_t)0), ' ') << "] - loss: "
                     << std::setprecision(precision) << (*this->loss_)(y_true, y_pred);
 
-                    for(auto metric = metrics.cbegin();metric != metrics.cend();metric++) {
+                    for(auto metric = this->metrics_.cbegin();metric != this->_metrics.cend();metric++) {
                         std::cout << " - " << (*metric)->name() << ": " <<
                         std::setprecision(precision) << (**metric)(y_true, y_pred);
                     }
