@@ -22,6 +22,7 @@
 #include "src/multi/type_selection.h"
 #include "src/multi/impl.h"
 #include "src/multi/rng.h"
+#include "src/multi/constructors.h"
 #include "src/math/common.h"
 #include "src/math/bits.h"
 #include "src/math/constants.h"
