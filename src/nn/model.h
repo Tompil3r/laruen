@@ -330,11 +330,11 @@ namespace laruen::nn {
                     constexpr uint_fast8_t precision = 3;
                     constexpr int_fast64_t progress_bar_len = 20;
 
-                    uint_fast16_t progress = (uint_fast16_t)std::round(((T)(batch - 1)) * progress_bar_len / batches);
+                    uint_fast16_t progress = (uint_fast16_t)std::round(((T)(batch - (batch < batches))) * progress_bar_len / batches);
                     uint_fast64_t remaining_bar_len = std::max((int_fast32_t)(progress_bar_len - (progress + 1)), (int_fast32_t)0);
 
                     std::cout << "epoch " << epoch << '/' << epochs << " - " << batch << '/' << batches << " - [" <<
-                    std::string(progress, '=') << '>' << std::string(remaining_bar_len, ' ')
+                    std::string(progress, '=') << (batch < batches ? ">" : "") << std::string(remaining_bar_len, ' ')
                     << "] - loss: " << std::setprecision(precision) << (*this->loss_)(y_true, y_pred);
 
                     for(auto metric = this->metrics_.cbegin();metric != this->metrics_.cend();metric++) {
