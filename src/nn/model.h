@@ -265,7 +265,7 @@ namespace laruen::nn {
                     '>' << std::string(std::min(batches - (progress + 1), (uint_fast64_t)0), ' ') << "] - loss: "
                     << std::setprecision(precision) << (*this->loss_)(y_true, y_pred);
 
-                    for(auto metric = this->metrics_.cbegin();metric != this->_metrics.cend();metric++) {
+                    for(auto metric = this->metrics_.cbegin();metric != this->metrics_.cend();metric++) {
                         std::cout << " - " << (*metric)->name() << ": " <<
                         std::setprecision(precision) << (**metric)(y_true, y_pred);
                     }
