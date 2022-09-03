@@ -88,7 +88,7 @@ namespace laruen::multi {
         return NDArray<T>(init_list, shape);
     }
 
-    template <typename T>
+    template <typename T = float32_t>
     inline NDArray<T> array(std::initializer_list<T> init_list = {}) {
         return NDArray<T>(init_list);
     }
