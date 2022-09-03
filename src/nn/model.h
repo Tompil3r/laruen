@@ -262,7 +262,7 @@ namespace laruen::nn {
                     uint_fast16_t progress = (uint_fast16_t)std::round(((T)(batch - 1)) * progress_bar_len / batches);
 
                     std::cout << "epoch: " << epoch << '/' << epochs << " - [" << std::string(progress, '=') <<
-                    '>' << std::string(std::min(batches - (progress + 1), (uint_fast64_t)0), ' ') << "] - loss: "
+                    '>' << std::string(std::max(progress_bar_len - (progress + 1), (uint_fast64_t)0), ' ') << "] - loss: "
                     << std::setprecision(precision) << (*this->loss_)(y_true, y_pred);
 
                     for(auto metric = this->metrics_.cbegin();metric != this->metrics_.cend();metric++) {
