@@ -169,6 +169,7 @@ namespace laruen::nn {
                     uint_fast64_t epoch;
                     uint_fast64_t batch;
                     uint_fast64_t total_batches = batches + (remaining_size > 0); // for verbose purposes only
+                    uint_fast64_t str_max_len = 0; // for verbose purposes only
 
                     const NDArray<T> x_batch_view = batch_view(x, batch_size);
                     const NDArray<T> y_batch_view = batch_view(y, batch_size);
@@ -206,8 +207,9 @@ namespace laruen::nn {
                             y_batch_view.data(y_batch_view.data() + y_batch_stride);
 
                             if(verbose) {
-                                this->verbose(epoch, epochs, batch, total_batches, y_batch_view,
-                                this->batch_outputs_.back(), !remaining_size && batch == batches);
+                                str_max_len = std::max(this->verbose(epoch, epochs, batch, total_batches, y_batch_view,
+                                this->batch_outputs_.back(), !remaining_size && batch == batches, str_max_len),
+                                str_max_len);
                             }
                         }
 
@@ -216,8 +218,9 @@ namespace laruen::nn {
                             this->remaining_derivs_, this->input_remaining_deriv_, true);
 
                             if(verbose) {
-                                this->verbose(epoch, epochs, batch, total_batches, y_remaining_view,
-                                this->remaining_outputs_.back(), true);
+                                str_max_len = std::max(this->verbose(epoch, epochs, batch, total_batches, y_remaining_view,
+                                this->remaining_outputs_.back(), true, str_max_len),
+                                str_max_len);
                             }
                         }
 
@@ -235,6 +238,7 @@ namespace laruen::nn {
                     uint_fast64_t remaining_size = x.shape().front() % batch_size;
                     uint_fast64_t batch;
                     uint_fast64_t total_batches = batches + (remaining_size > 0); // for verbose purposes only
+                    uint_fast64_t str_max_len = 0; // for verbose purposes only
 
                     const NDArray<T> x_batch_view = batch_view(x, batch_size);
                     const NDArray<T> y_batch_view = batch_view(y, batch_size);
@@ -270,8 +274,9 @@ namespace laruen::nn {
                         y_batch_view.data(y_batch_view.data() + y_batch_stride);
 
                         if(verbose) {
-                            this->verbose(1, 1, batch, total_batches, y_batch_view,
-                            this->batch_outputs_.back(), !remaining_size && batch == batches);
+                            str_max_len = std::max(this->verbose(1, 1, batch, total_batches, y_batch_view,
+                            this->batch_outputs_.back(), !remaining_size && batch == batches, str_max_len),
+                            str_max_len);
                         }
                     }
 
@@ -279,8 +284,9 @@ namespace laruen::nn {
                         this->forward(x_remaining_view, this->remaining_outputs_);
 
                         if(verbose) {
-                            this->verbose(1, 1, batch, total_batches, y_remaining_view,
-                            this->remaining_outputs_.back(), true);
+                            str_max_len = std::max(this->verbose(1, 1, batch, total_batches, y_remaining_view,
+                            this->remaining_outputs_.back(), true, str_max_len),
+                            str_max_len);
                         }
                     }
                 }
@@ -324,30 +330,57 @@ namespace laruen::nn {
                     }
                 }
 
-                void verbose(uint_fast64_t epoch, uint_fast64_t epochs,
-                uint_fast64_t batch, uint_fast64_t batches, const NDArray<T> &y_true, const NDArray<T> &y_pred, bool last)
+                uint_fast64_t verbose(uint_fast64_t epoch, uint_fast64_t epochs, uint_fast64_t batch, uint_fast64_t batches,
+                const NDArray<T> &y_true, const NDArray<T> &y_pred, bool last, uint_fast64_t max_len)
                 {
+                    // *** written very badly ***
                     constexpr uint_fast8_t precision = 3;
                     constexpr int_fast64_t progress_bar_len = 20;
 
                     uint_fast16_t progress = (uint_fast16_t)std::round(((T)(batch - (batch < batches))) * progress_bar_len / batches);
                     uint_fast64_t remaining_bar_len = std::max((int_fast32_t)(progress_bar_len - (progress + 1)), (int_fast32_t)0);
+                    std::string loss_str = std::to_string((*this->loss_)(y_true, y_pred));
 
-                    std::cout << "epoch " << epoch << '/' << epochs << " - " << batch << '/' << batches << " - [" <<
-                    std::string(progress, '=') << (batch < batches ? ">" : "") << std::string(remaining_bar_len, ' ')
-                    << "] - loss: " << std::setprecision(precision) << (*this->loss_)(y_true, y_pred);
+                    std::string str;
+                    str.resize(max_len);
+
+                    str.append("epoch ");
+                    str.append(std::to_string(epoch));
+                    str.push_back('/');
+                    str.append(std::to_string(epochs));
+                    str.append(" - ");
+                    str.append(std::to_string(batch));
+                    str.push_back('/');
+                    str.append(std::to_string(batches));
+                    str.append(" - [");
+                    str.append(progress, '=');
+
+                    if(batch < batches) {
+                        str.push_back('>');
+                    }
+
+                    str.append(remaining_bar_len, ' ');
+                    str.append("] - loss: ");
+                    str.append(loss_str.cbegin(), loss_str.cbegin() + loss_str.find('.') + precision + 1);
 
                     for(auto metric = this->metrics_.cbegin();metric != this->metrics_.cend();metric++) {
-                        std::cout << " - " << (*metric)->name() << ": " <<
-                        std::setprecision(precision) << (**metric)(y_true, y_pred);
+                        std::string metric_str = std::to_string((**metric)(y_true, y_pred));
+
+                        str.append(" - ");
+                        str.append((*metric)->name());
+                        str.push_back(':');
+                        str.push_back(' ');
+                        str.append(metric_str.cbegin(), metric_str.cbegin() + metric_str.find('.') + precision + 1);
                     }
 
-                    if(last) {
-                        std::cout << std::endl;
+                    if(str.size() < max_len) {
+                        str.append(max_len - str.size(), ' ');
                     }
-                    else {
-                        std::cout << '\r';
-                    }
+
+                    str.push_back(last ? '\n' : '\r');
+                    std::cout << str;
+
+                    return str.size();
                 }
         };
 
