@@ -307,7 +307,7 @@ namespace laruen::nn {
                     return this->batch_outputs_.back();
                 }
 
-                inline const auto& layers() const noexcept {
+                inline auto& layers() const noexcept {
                     return this->layers_;
                 }
 
