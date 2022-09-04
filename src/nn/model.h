@@ -380,8 +380,14 @@ namespace laruen::nn {
                         str.append(max_len - str.size(), ' ');
                     }
 
-                    str.push_back(last ? '\n' : '\r');
-                    std::cout << str;
+                    if(last) {
+                        str.push_back('\n');
+                        std::cout << str << std::flush;
+                    }
+                    else {
+                        str.push_back('\r');
+                        std::cout << str;
+                    }
 
                     return str.size();
                 }
