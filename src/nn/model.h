@@ -87,7 +87,7 @@ namespace laruen::nn {
                     this->compile(optimizer, loss, {});
                 }
 
-                std::string summary() const noexcept {
+                void summary() const noexcept {
                     constexpr uint_fast64_t sec1_len = 18;
                     constexpr uint_fast64_t sec2_len = 20;
                     constexpr uint_fast64_t all_len = 44;
@@ -106,23 +106,26 @@ namespace laruen::nn {
                     uint_fast64_t curr_params;
                     std::string shape_string;
 
-                    std::string str("Layer Name        Output Shape        Params\n");
-                    str += std::string(all_len, '-');
-                    str += '\n';
+                    std::string str("Layer Type        Output Shape        Params\n");
+                    str.append(all_len, '-');
+                    str.push_back('\n');
 
                     for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
-                        str += this->layers_[i]->name();
-                        str += std::string(sec1_len - std::strlen(this->layers_[i]->name()), ' ');
-                        str += (shape_string = shape_str(this->layers_[i]->output_shape()));
-                        str += std::string(sec2_len - shape_string.size(), ' ');
-                        str += std::to_string((curr_params = this->layers_[i]->params()));
-                        str += '\n';
+                        str.append(this->layers_[i]->name());
+                        str.append(sec1_len - std::strlen(this->layers_[i]->name()), ' ');
+                        str.append(shape_string = shape_str(this->layers_[i]->output_shape()));
+                        str.append(sec2_len - shape_string.size(), ' ');
+                        str.append(std::to_string(curr_params = this->layers_[i]->params()));
+                        str.push_back('\n');
                         total_params += curr_params;
                     }
 
-                    str += "\nTotal Params: " + std::to_string(total_params);
-                    
-                    return str;
+                    str.append("\nTotal Params: ");
+                    str.append(std::to_string(total_params));
+                    str.push_back('\n');
+                    str.append(all_len, '-');
+
+                    std::cout << str << std::endl;
                 }
 
                 inline void forward(const NDArray<T> &input, std::vector<NDArray<T>> &outputs) {
