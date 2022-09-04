@@ -307,7 +307,7 @@ namespace laruen::nn {
                     return this->batch_outputs_.back();
                 }
 
-                inline const std::vector<Layer<T>*>& layers() const noexcept {
+                inline const auto& layers() const noexcept {
                     return this->layers_;
                 }
 
