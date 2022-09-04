@@ -49,7 +49,7 @@ namespace laruen::nn::layers {
                     // input.shape = (number samples, inputs)
                     // output.shape = (number samples, nodes)
                     input.matmul(this->w_, output);
-                    output.add(this->b_);
+                    output.add_eq(this->b_);
                     
                     return output;
                 }
