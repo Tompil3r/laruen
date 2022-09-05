@@ -152,16 +152,16 @@ namespace laruen::nn::layers {
                     return this->w_;
                 }
 
-                inline void w(const NDArray<T> &weights) {
-                    this->w_ = weights;
+                inline NDArray<T>& w() noexcept {
+                    return this->w_;
                 }
 
                 inline const NDArray<T>& b() const noexcept {
                     return this->b_;
                 }
 
-                inline void b(const NDArray<T> &weights) {
-                    this->b_ = weights;
+                inline NDArray<T>& b() noexcept {
+                    return this->b_;
                 }
 
                 inline const NDArray<T>& raw_dw() const noexcept {
