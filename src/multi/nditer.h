@@ -1,6 +1,6 @@
 
-#ifndef NDLIB_NDITER_H_
-#define NDLIB_NDITER_H_
+#ifndef MULTI_NDITER_H_
+#define MULTI_NDITER_H_
 
 #include <type_traits>
 #include <utility>

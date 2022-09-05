@@ -1,6 +1,6 @@
 
-#ifndef NDLIB_TYPE_SELECTION_H_
-#define NDLIB_TYPE_SELECTION_H_
+#ifndef MULTI_TYPE_SELECTION_H_
+#define MULTI_TYPE_SELECTION_H_
 
 #include <cstdint>
 #include <type_traits>

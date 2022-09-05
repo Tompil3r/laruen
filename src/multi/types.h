@@ -1,6 +1,6 @@
 
-#ifndef NDLIB_TYPES_H_
-#define NDLIB_TYPES_H_
+#ifndef MULTI_TYPES_H_
+#define MULTI_TYPES_H_
 
 #include <cstdint>
 #include <vector>

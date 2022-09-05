@@ -1,6 +1,6 @@
 
-#ifndef NDLIB_RANGE_H_
-#define NDLIB_RANGE_H_
+#ifndef MULTI_RANGE_H_
+#define MULTI_RANGE_H_
 
 #include <string>
 #include <ostream>

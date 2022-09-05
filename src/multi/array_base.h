@@ -1,6 +1,6 @@
 
-#ifndef NDLIB_ARRAY_BASE_H_
-#define NDLIB_ARRAY_BASE_H_
+#ifndef MULTI_ARRAY_BASE_H_
+#define MULTI_ARRAY_BASE_H_
 
 #include <cstdint>
 #include <utility>

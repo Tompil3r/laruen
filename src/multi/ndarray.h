@@ -1,6 +1,6 @@
 
-#ifndef NDLIB_NDARRAY_H_
-#define NDLIB_NDARRAY_H_
+#ifndef MULTI_NDARRAY_H_
+#define MULTI_NDARRAY_H_
 
 #include <vector>
 #include <cstdint>

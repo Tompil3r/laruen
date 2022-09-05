@@ -1,6 +1,6 @@
 
-#ifndef NDLIB_UTILS_H_
-#define NDLIB_UTILS_H_
+#ifndef MULTI_UTILS_H_
+#define MULTI_UTILS_H_
 
 #include <cstdint>
 #include <stdexcept>

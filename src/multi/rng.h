@@ -1,6 +1,6 @@
 
-#ifndef NDLIB_RNG_H_
-#define NDLIB_RNG_H_
+#ifndef MULTI_RNG_H_
+#define MULTI_RNG_H_
 
 #include <random>
 

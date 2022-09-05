@@ -1,5 +1,5 @@
-#ifndef NDLIB_IMPL_H_
-#define NDLIB_IMPL_H_
+#ifndef MULTI_IMPL_H_
+#define MULTI_IMPL_H_
 
 #include <cstdint>
 #include <cmath>
