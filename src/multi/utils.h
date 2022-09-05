@@ -78,6 +78,16 @@ namespace laruen::multi::utils {
             return result;
         }
 
+        Shape retrieve_axes(const Shape &shape, const Axes &axes) {
+            Shape result(axes.size());
+
+            for(uint_fast8_t i = 0;i < axes.size();i++) {
+                result[i] = shape[axes[i]];
+            }
+
+            return result;
+        }
+
         inline Shape broadcast(const Shape &lhs, const Shape &rhs) {
             return lhs.size() >= rhs.size() ? broadcast_(lhs, rhs) : broadcast_(rhs, lhs);
         }
