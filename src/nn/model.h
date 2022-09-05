@@ -173,6 +173,7 @@ namespace laruen::nn {
                     uint_fast64_t batch;
                     uint_fast64_t total_batches = batches + (remaining_size > 0); // for verbose purposes only
                     uint_fast64_t str_max_len = 0; // for verbose purposes only
+                    T remaining_size_ratio = remaining_size / batch_size;
 
                     const NDArray<T> x_batch_view = batch_view(x, batch_size);
                     const NDArray<T> y_batch_view = batch_view(y, batch_size);
@@ -182,6 +183,9 @@ namespace laruen::nn {
 
                     uint_fast64_t x_batch_stride = batch_size * x.strides().front();
                     uint_fast64_t y_batch_stride = batch_size * y.strides().front();
+
+                    T total_epoch_loss;
+                    std::vector<T> metrics_total(this->metrics_.size());
 
                     if(this->batch_size_ != batch_size) {
                         this->construct(this->batch_outputs_, this->batch_derivs_, this->input_batch_deriv_,
@@ -202,13 +206,22 @@ namespace laruen::nn {
                     }
 
                     for(epoch = 1;epoch <= epochs;epoch++) {
+                        total_epoch_loss = 0;
+                        metrics_total.assign(metrics_total.size(), (T)0);
+
                         for(batch = 1;batch <= batches;batch++) {
                             this->train_batch(x_batch_view, y_batch_view, this->batch_outputs_,
                             this->batch_derivs_, this->input_batch_deriv_, true);
 
+                            total_epoch_loss += (*this->loss_)(y_batch_view, this->batch_outputs_.back());
+
+                            for(uint_fast64_t i = 0;i < this->metrics_.size();i++) {
+                                metrics_total[i] += (*this->metrics_[i])(y_batch_view, this->batch_outputs_.back());
+                            }
+
                             if(verbose) {
-                                str_max_len = std::max(this->verbose(epoch, epochs, batch, total_batches, y_batch_view,
-                                this->batch_outputs_.back(), !remaining_size && batch == batches, str_max_len),
+                                str_max_len = std::max(this->verbose(epoch, epochs, batch, total_batches, total_epoch_loss,
+                                metrics_total, !remaining_size && batch == batches, str_max_len),
                                 str_max_len);
                             }
 
@@ -220,9 +233,17 @@ namespace laruen::nn {
                             this->train_batch(x_remaining_view, y_remaining_view, this->remaining_outputs_,
                             this->remaining_derivs_, this->input_remaining_deriv_, true);
 
+                            total_epoch_loss += remaining_size_ratio *
+                            (*this->loss_)(y_batch_view, this->remaining_outputs_.back());
+
+                            for(uint_fast64_t i = 0;i < this->metrics_.size();i++) {
+                                metrics_total[i] += remaining_size_ratio *
+                                (*this->metrics_[i])(y_batch_view, this->remaining_outputs_.back());
+                            }
+
                             if(verbose) {
-                                str_max_len = std::max(this->verbose(epoch, epochs, batch, total_batches, y_remaining_view,
-                                this->remaining_outputs_.back(), true, str_max_len),
+                                str_max_len = std::max(this->verbose(epoch, epochs, batch, total_batches, total_epoch_loss,
+                                metrics_total, true, str_max_len),
                                 str_max_len);
                             }
                         }
@@ -242,6 +263,7 @@ namespace laruen::nn {
                     uint_fast64_t batch;
                     uint_fast64_t total_batches = batches + (remaining_size > 0); // for verbose purposes only
                     uint_fast64_t str_max_len = 0; // for verbose purposes only
+                    T remaining_size_ratio = remaining_size / batch_size;
 
                     const NDArray<T> x_batch_view = batch_view(x, batch_size);
                     const NDArray<T> y_batch_view = batch_view(y, batch_size);
@@ -251,6 +273,9 @@ namespace laruen::nn {
 
                     uint_fast64_t x_batch_stride = batch_size * x.strides().front();
                     uint_fast64_t y_batch_stride = batch_size * y.strides().front();
+
+                    T total_loss = 0;
+                    std::vector<T> metrics_total(this->metrics_.size(), (T)0);
 
                     if(this->batch_size_ != batch_size) {
                         this->construct(this->batch_outputs_, this->batch_derivs_, this->input_batch_deriv_,
@@ -273,9 +298,15 @@ namespace laruen::nn {
                     for(batch = 1;batch <= batches;batch++) {
                         this->forward(x_batch_view, this->batch_outputs_);
 
+                        total_loss += (*this->loss_)(y_batch_view, this->batch_outputs_.back());
+
+                        for(uint_fast64_t i = 0;i < this->metrics_.size();i++) {
+                            metrics_total[i] += (*this->metrics_[i])(y_batch_view, this->batch_outputs_.back());
+                        }
+
                         if(verbose) {
-                            str_max_len = std::max(this->verbose(1, 1, batch, total_batches, y_batch_view,
-                            this->batch_outputs_.back(), !remaining_size && batch == batches, str_max_len),
+                            str_max_len = std::max(this->verbose(1, 1, batch, total_batches, total_loss,
+                            metrics_total, !remaining_size && batch == batches, str_max_len),
                             str_max_len);
                         }
 
@@ -286,9 +317,17 @@ namespace laruen::nn {
                     if(remaining_size) {
                         this->forward(x_remaining_view, this->remaining_outputs_);
 
+                        total_loss += remaining_size_ratio *
+                        (*this->loss_)(y_batch_view, this->remaining_outputs_.back());
+
+                        for(uint_fast64_t i = 0;i < this->metrics_.size();i++) {
+                            metrics_total[i] += remaining_size_ratio *
+                            (*this->metrics_[i])(y_batch_view, this->remaining_outputs_.back());
+                        }
+
                         if(verbose) {
-                            str_max_len = std::max(this->verbose(1, 1, batch, total_batches, y_remaining_view,
-                            this->remaining_outputs_.back(), true, str_max_len),
+                            str_max_len = std::max(this->verbose(1, 1, batch, total_batches,
+                            total_loss, metrics_total, true, str_max_len),
                             str_max_len);
                         }
                     }
@@ -334,7 +373,7 @@ namespace laruen::nn {
                 }
 
                 uint_fast64_t verbose(uint_fast64_t epoch, uint_fast64_t epochs, uint_fast64_t batch, uint_fast64_t batches,
-                const NDArray<T> &y_true, const NDArray<T> &y_pred, bool last, uint_fast64_t max_len)
+                T total_loss, const std::vector<T> &metrics_total, bool last, uint_fast64_t max_len)
                 {
                     // *** written very badly ***
                     constexpr uint_fast8_t precision = 3;
@@ -342,7 +381,7 @@ namespace laruen::nn {
 
                     uint_fast16_t progress = (uint_fast16_t)std::round(((T)(batch - (batch < batches))) * progress_bar_len / batches);
                     uint_fast64_t remaining_bar_len = std::max((int_fast32_t)(progress_bar_len - (progress + 1)), (int_fast32_t)0);
-                    std::string loss_str = std::to_string((*this->loss_)(y_true, y_pred));
+                    std::string loss_str = std::to_string(total_loss / batch);
 
                     std::string str;
                     str.resize(max_len);
@@ -366,11 +405,11 @@ namespace laruen::nn {
                     str.append("] - loss: ");
                     str.append(loss_str.cbegin(), loss_str.cbegin() + loss_str.find('.') + precision + 1);
 
-                    for(auto metric = this->metrics_.cbegin();metric != this->metrics_.cend();metric++) {
-                        std::string metric_str = std::to_string((**metric)(y_true, y_pred));
+                    for(uint_fast64_t i = 0;i < this->metrics_.size();i++) {
+                        std::string metric_str = std::to_string(metrics_total[i] / batch);
 
                         str.append(" - ");
-                        str.append((*metric)->name());
+                        str.append(this->metrics_[i]->name());
                         str.push_back(':');
                         str.push_back(' ');
                         str.append(metric_str.cbegin(), metric_str.cbegin() + metric_str.find('.') + precision + 1);
