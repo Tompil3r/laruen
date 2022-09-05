@@ -10,6 +10,9 @@
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
 #include "src/nn/optimizers/optimizer.h"
+#include "src/nn/initializers/initializer.h"
+#include "src/nn/initializers/glorot_uniform.h"
+#include "src/nn/initializers/zeros.h"
 
 namespace laruen::nn::layers {
 
@@ -18,6 +21,9 @@ namespace laruen::nn::layers {
         using laruen::multi::Shape;
         using laruen::multi::float32_t;
         using laruen::nn::optimizers::Optimizer;
+        using laruen::nn::initializers::Initializer;
+        using laruen::nn::initializers::shared_glorot_uni;
+        using laruen::nn::initializers::shared_zeros;
 
         template <typename T = float32_t>
         class FullyConnected : public Layer<T> {
@@ -37,12 +43,16 @@ namespace laruen::nn::layers {
                 std::vector<NDArray<T>> opt_dw_caches_;
                 std::vector<NDArray<T>> opt_db_caches_;
                 uint_fast32_t nodes_;
+                std::shared_ptr<Initializer<T>> kernel_initializer_;
+                std::shared_ptr<Initializer<T>> bias_initializer_;
 
             public:
                 static constexpr char NAME[] = "Fully Connected";
 
-                FullyConnected(uint_fast32_t nodes) noexcept
-                : nodes_(nodes)
+                FullyConnected(uint_fast32_t nodes,
+                std::shared_ptr<Initializer<T>> kernel_initializer = shared_glorot_uni(),
+                std::shared_ptr<Initializer<T>> bias_initializer = shared_zeros()) noexcept
+                : nodes_(nodes), kernel_initializer_(kernel_initializer), bias_initializer_(bias_initializer)
                 {}
 
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
@@ -116,8 +126,12 @@ namespace laruen::nn::layers {
                     // input shape = (inputs)
                     assert((Shape::size_type)(end - begin) == 1);
 
-                    this->w_ = NDArray<T>({*begin, this->nodes_}, -1, 1);
-                    this->b_ = NDArray<T>({this->nodes_}, 0);
+                    this->w_ = laruen::multi::empty(Shape{*begin, this->nodes_});
+                    this->b_ = laruen::multi::empty(Shape{this->nodes_});
+
+                    (*this->kernel_initializer_)(*begin, this->nodes_, this->w_);
+                    (*this->bias_initializer_)(*begin, this->nodes_, this->b_);
+
                     this->raw_dw_ = NDArray<T>(this->w_.shape());
                     this->raw_db_ = NDArray<T>(this->b_.shape());
                     this->final_dw_ = NDArray<T>(this->w_.shape());
@@ -182,8 +196,11 @@ namespace laruen::nn::layers {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Layer<T>> shared_fc(uint_fast32_t nodes) noexcept {
-            return std::shared_ptr<Layer<T>>(new FullyConnected<T>(nodes));
+        inline std::shared_ptr<Layer<T>> shared_fc(uint_fast32_t nodes,
+        std::shared_ptr<Initializer<T>> kernel_initializer = shared_glorot_uni(),
+        std::shared_ptr<Initializer<T>> bias_initializer = shared_zeros()) noexcept
+        {
+            return std::shared_ptr<Layer<T>>(new FullyConnected<T>(nodes, kernel_initializer, bias_initializer));
         }
     }
 
