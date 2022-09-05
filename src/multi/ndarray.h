@@ -888,14 +888,6 @@ namespace laruen::multi {
             }
 
             // indexing and slicing operators
-            T& operator[](const NDIndex &ndindex) noexcept {
-                return this->data_[this->ravel_ndindex(ndindex)];
-            }
-
-            const T& operator[](const NDIndex &ndindex) const noexcept {
-                return this->data_[this->ravel_ndindex(ndindex)];
-            }
-
             NDArray<T> operator[](const SliceRanges &ranges) noexcept {
                 return NDArray<T>(*this, ranges);
             }
