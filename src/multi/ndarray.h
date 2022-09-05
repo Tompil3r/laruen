@@ -120,6 +120,10 @@ namespace laruen::multi {
             NDArray(T *data, const ArrayBase &arraybase, bool data_owner) noexcept
             : ArrayBase(arraybase), data_(data), data_owner_(data_owner)
             {}
+
+            NDArray(T *data, const ArrayBase &&arraybase, bool data_owner) noexcept
+            : ArrayBase(std::move(arraybase)), data_(data), data_owner_(data_owner)
+            {}
             
             explicit NDArray(const NDArray &ndarray) noexcept 
             : NDArray(new T[ndarray.size_], ndarray, true) {
