@@ -914,6 +914,30 @@ namespace laruen::multi {
                 return NDArray<T>(*this, ranges);
             }
 
+            inline T& operator[](uint_fast64_t index) noexcept {
+                return this->data_[index];
+            }
+
+            inline const T& operator[](uint_fast64_t index) const noexcept {
+                return this->data_[index];
+            }
+
+            inline T& at(const NDIndex &ndindex) noexcept {
+                return this->data_[this->ravel_ndindex(ndindex)];
+            }
+
+            inline const T& at(const NDIndex &ndindex) const noexcept {
+                return this->data_[this->ravel_ndindex(ndindex)];
+            }
+
+            inline T& at(uint_fast64_t index) noexcept {
+                return this->data_[index];
+            }
+            
+            inline const T& at(uint_fast64_t index) const noexcept {
+                return this->data_[index];
+            }
+
             // bool operators between arrays
             template <typename TT>
             bool operator==(const NDArray<TT> &ndarray) const noexcept {
@@ -1193,14 +1217,6 @@ namespace laruen::multi {
 
             inline bool& data_owner() const noexcept {
                 return this->data_owner_;
-            }
-
-            inline T& operator[](uint_fast64_t index) noexcept {
-                return this->data_[index];
-            }
-
-            inline const T& operator[](uint_fast64_t index) const noexcept {
-                return this->data_[index];
             }
 
             // arithmetical functions
