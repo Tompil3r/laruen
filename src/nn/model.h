@@ -384,7 +384,7 @@ namespace laruen::nn {
                     std::string loss_str = std::to_string(total_loss / batch);
 
                     std::string str;
-                    str.resize(max_len);
+                    str.reserve(max_len);
 
                     str.append("epoch ");
                     str.append(std::to_string(epoch));
@@ -420,12 +420,10 @@ namespace laruen::nn {
                     }
 
                     if(last) {
-                        str.push_back('\n');
-                        std::cout << str << std::flush;
+                        std::cout << str << std::endl;
                     }
                     else {
-                        str.push_back('\r');
-                        std::cout << str;
+                        std::cout << str << '\r';
                     }
 
                     return str.size();
