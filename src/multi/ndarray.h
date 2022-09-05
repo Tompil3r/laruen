@@ -554,7 +554,8 @@ namespace laruen::multi {
 
             template <typename TR = T>
             NDArray<TR> sum(const Axes &axes) const noexcept {
-                NDArray<TR> out(*this, laruen::multi::utils::compress_axes(axes, this->ndim_));
+                NDArray<TR> out(laruen::multi::utils::retrieve_axes(this->shape_,
+                laruen::multi::utils::compress_axes(axes, this->ndim_)));
                 this->sum(axes, out);
                 return out;
             }
@@ -732,7 +733,8 @@ namespace laruen::multi {
 
             template <typename TR = T>
             NDArray<TR> max(const Axes &axes) const noexcept {
-                NDArray<TR> out(*this, laruen::multi::utils::compress_axes(axes, this->ndim_));
+                NDArray<TR> out(laruen::multi::utils::retrieve_axes(this->shape_,
+                laruen::multi::utils::compress_axes(axes, this->ndim_)));
                 this->max(axes, out);
                 return out;
             }
@@ -778,7 +780,8 @@ namespace laruen::multi {
             }
 
             NDArray<uint_fast64_t> indices_max(const Axes &axes) const noexcept {
-                NDArray<uint_fast64_t> out(*this, laruen::multi::utils::compress_axes(axes, this->ndim_));
+                NDArray<uint_fast64_t> out(laruen::multi::utils::retrieve_axes(this->shape_,
+                laruen::multi::utils::compress_axes(axes, this->ndim_)));
                 this->indices_max(axes, out);
                 return out;
             }
@@ -826,7 +829,8 @@ namespace laruen::multi {
             
             template <typename TR = T>
             NDArray<TR> min(const Axes &axes) const noexcept {
-                NDArray<TR> out(*this, laruen::multi::utils::compress_axes(axes, this->ndim_));
+                NDArray<TR> out(laruen::multi::utils::retrieve_axes(this->shape_,
+                laruen::multi::utils::compress_axes(axes, this->ndim_)));
                 this->min(axes, out);
                 return out;
             }
@@ -872,7 +876,8 @@ namespace laruen::multi {
             }
 
             NDArray<uint_fast64_t> indices_min(const Axes &axes) const noexcept {
-                NDArray<uint_fast64_t> out(*this, laruen::multi::utils::compress_axes(axes, this->ndim_));
+                NDArray<uint_fast64_t> out(laruen::multi::utils::retrieve_axes(this->shape_,
+                laruen::multi::utils::compress_axes(axes, this->ndim_)));
                 this->indices_min(axes, out);
                 return out;
             }
