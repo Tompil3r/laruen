@@ -869,11 +869,11 @@ namespace laruen::multi {
             }
 
             // indexing and slicing operators
-            NDArray<T> operator[](const SliceRanges &ranges) noexcept {
+            NDArray<T> operator[](const Slicings &ranges) noexcept {
                 return this->sliced_view(ranges);
             }
             
-            const NDArray<T> operator[](const SliceRanges &ranges) const noexcept {
+            const NDArray<T> operator[](const Slicings &ranges) const noexcept {
                 return this->sliced_view(ranges);
             }
 
@@ -2466,7 +2466,7 @@ namespace laruen::multi {
                 this->dim_sizes_, this->size_, this->ndim_, this->contig_, false);
             }
 
-            inline NDArray<T> sliced_view(const SliceRanges &ranges) {
+            inline NDArray<T> sliced_view(const Slicings &ranges) {
                 NDArray<T> sliced(this->data_, *this, false);
                 uint_fast8_t ndim = ranges.size();
                 float64_t size_ratio = 1;
@@ -2486,7 +2486,7 @@ namespace laruen::multi {
                 return sliced;
             }
 
-            inline const NDArray<T> sliced_view(const SliceRanges &ranges) const {
+            inline const NDArray<T> sliced_view(const Slicings &ranges) const {
                 NDArray<T> sliced(this->data_, *this, false);
                 uint_fast8_t ndim = ranges.size();
                 float64_t size_ratio = 1;
