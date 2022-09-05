@@ -416,7 +416,7 @@ namespace laruen::nn {
                 T total_loss, const std::vector<T> &metrics_total, bool last, uint_fast64_t max_len)
                 {
                     // *** written very badly ***
-                    constexpr uint_fast8_t precision = 3;
+                    constexpr uint_fast8_t precision = 4;
                     constexpr int_fast64_t progress_bar_len = 20;
 
                     uint_fast16_t progress = (uint_fast16_t)std::round(((T)(batch - (batch < batches))) * progress_bar_len / batches);
