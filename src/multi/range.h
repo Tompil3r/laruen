@@ -1,6 +1,6 @@
 
-#ifndef MULTI_RANGE_H_
-#define MULTI_RANGE_H_
+#ifndef LARUEN_MULTI_RANGE_H_
+#define LARUEN_MULTI_RANGE_H_
 
 #include <string>
 #include <ostream>

@@ -1,5 +1,5 @@
-#ifndef MULTI_IMPL_H_
-#define MULTI_IMPL_H_
+#ifndef LARUEN_MULTI_IMPL_H_
+#define LARUEN_MULTI_IMPL_H_
 
 #include <cstdint>
 #include <cmath>

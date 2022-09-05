@@ -1,6 +1,6 @@
 
-#ifndef NN_OPTIMIZERS_ADAM_H_
-#define NN_OPTIMIZERS_ADAM_H_
+#ifndef LARUEN_NN_OPTIMIZERS_ADAM_H_
+#define LARUEN_NN_OPTIMIZERS_ADAM_H_
 
 #include <memory>
 #include <cmath>

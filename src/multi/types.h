@@ -1,6 +1,6 @@
 
-#ifndef MULTI_TYPES_H_
-#define MULTI_TYPES_H_
+#ifndef LARUEN_MULTI_TYPES_H_
+#define LARUEN_MULTI_TYPES_H_
 
 #include <cstdint>
 #include <vector>

@@ -1,6 +1,6 @@
 
-#ifndef MATH_CONSTANTS_H_
-#define MATH_CONSTANTS_H_
+#ifndef LARUEN_MATH_CONSTANTS_H_
+#define LARUEN_MATH_CONSTANTS_H_
 
 #include <cmath>
 

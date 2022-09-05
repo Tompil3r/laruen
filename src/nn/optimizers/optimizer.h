@@ -1,6 +1,6 @@
 
-#ifndef NN_OPTIMIZERS_OPTIMIZER_H_
-#define NN_OPTIMIZERS_OPTIMIZER_H_
+#ifndef LARUEN_NN_OPTIMIZERS_OPTIMIZER_H_
+#define LARUEN_NN_OPTIMIZERS_OPTIMIZER_H_
 
 #include <vector>
 #include "src/multi/ndarray.h"

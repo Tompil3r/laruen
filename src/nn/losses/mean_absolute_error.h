@@ -1,6 +1,6 @@
 
-#ifndef NN_LOSSES_MEAN_ABSOLUTE_ERROR_H_
-#define NN_LOSSES_MEAN_ABSOLUTE_ERROR_H_
+#ifndef LARUEN_NN_LOSSES_MEAN_ABSOLUTE_ERROR_H_
+#define LARUEN_NN_LOSSES_MEAN_ABSOLUTE_ERROR_H_
 
 #include <cassert>
 #include <cmath>

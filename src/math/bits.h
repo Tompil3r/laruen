@@ -1,6 +1,6 @@
 
-#ifndef MATH_BITS_H_
-#define MATH_BITS_H_
+#ifndef LARUEN_MATH_BITS_H_
+#define LARUEN_MATH_BITS_H_
 
 #include <cassert>
 

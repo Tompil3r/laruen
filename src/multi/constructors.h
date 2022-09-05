@@ -1,6 +1,6 @@
 
-#ifndef MULTI_CONSTRUCTORS_H_
-#define MULTI_CONSTRUCTORS_H_
+#ifndef LARUEN_MULTI_CONSTRUCTORS_H_
+#define LARUEN_MULTI_CONSTRUCTORS_H_
 
 #include <initializer_list>
 #include <numeric>

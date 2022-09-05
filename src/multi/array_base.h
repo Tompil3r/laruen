@@ -1,6 +1,6 @@
 
-#ifndef MULTI_ARRAY_BASE_H_
-#define MULTI_ARRAY_BASE_H_
+#ifndef LARUEN_MULTI_ARRAY_BASE_H_
+#define LARUEN_MULTI_ARRAY_BASE_H_
 
 #include <cstdint>
 #include <utility>

@@ -1,6 +1,6 @@
 
-#ifndef MATH_UTILS_H_
-#define MATH_UTILS_H_
+#ifndef LARUEN_MATH_UTILS_H_
+#define LARUEN_MATH_UTILS_H_
 
 #include <limits>
 

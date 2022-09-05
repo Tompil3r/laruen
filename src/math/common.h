@@ -1,6 +1,6 @@
 
-#ifndef MATH_COMMON_H_
-#define MATH_COMMON_H_
+#ifndef LARUEN_MATH_COMMON_H_
+#define LARUEN_MATH_COMMON_H_
 
 #include <type_traits>
 #include <cmath>

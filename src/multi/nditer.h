@@ -1,6 +1,6 @@
 
-#ifndef MULTI_NDITER_H_
-#define MULTI_NDITER_H_
+#ifndef LARUEN_MULTI_NDITER_H_
+#define LARUEN_MULTI_NDITER_H_
 
 #include <type_traits>
 #include <utility>

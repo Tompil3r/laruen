@@ -1,6 +1,6 @@
 
-#ifndef MULTI_UTILS_H_
-#define MULTI_UTILS_H_
+#ifndef LARUEN_MULTI_UTILS_H_
+#define LARUEN_MULTI_UTILS_H_
 
 #include <cstdint>
 #include <stdexcept>

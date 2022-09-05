@@ -1,6 +1,6 @@
 
-#ifndef MULTI_SLICING_RANGE_H_
-#define MULTI_SLICING_RANGE_H_
+#ifndef LARUEN_MULTI_SLICING_RANGE_H_
+#define LARUEN_MULTI_SLICING_RANGE_H_
 
 #include <cstdint>
 #include <string>

@@ -1,6 +1,6 @@
 
-#ifndef NN_METRICS_METRIC_H_
-#define NN_METRICS_METRIC_H_
+#ifndef LARUEN_NN_METRICS_METRIC_H_
+#define LARUEN_NN_METRICS_METRIC_H_
 
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"

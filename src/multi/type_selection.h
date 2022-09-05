@@ -1,6 +1,6 @@
 
-#ifndef MULTI_TYPE_SELECTION_H_
-#define MULTI_TYPE_SELECTION_H_
+#ifndef LARUEN_MULTI_TYPE_SELECTION_H_
+#define LARUEN_MULTI_TYPE_SELECTION_H_
 
 #include <cstdint>
 #include <type_traits>

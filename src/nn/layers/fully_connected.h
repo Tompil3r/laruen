@@ -1,6 +1,6 @@
 
-#ifndef NN_LAYERS_FULLY_CONNECTED_H_
-#define NN_LAYERS_FULLY_CONNECTED_H_
+#ifndef LARUEN_NN_LAYERS_FULLY_CONNECTED_H_
+#define LARUEN_NN_LAYERS_FULLY_CONNECTED_H_
 
 #include <cassert>
 #include <utility>

@@ -1,6 +1,6 @@
 
-#ifndef NN_MODEL_H_
-#define NN_MODEL_H_
+#ifndef LARUEN_NN_MODEL_H_
+#define LARUEN_NN_MODEL_H_
 
 #include <vector>
 #include <string>

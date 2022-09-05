@@ -1,6 +1,6 @@
 
-#ifndef NN_LAYERS_SOFTMAX_H_
-#define NN_LAYERS_SOFTMAX_H_
+#ifndef LARUEN_NN_LAYERS_SOFTMAX_H_
+#define LARUEN_NN_LAYERS_SOFTMAX_H_
 
 #include <algorithm>
 #include <cmath>

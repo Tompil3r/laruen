@@ -1,6 +1,6 @@
 
-#ifndef NN_LAYERS_FLATTEN_H_
-#define NN_LAYERS_FLATTEN_H_
+#ifndef LARUEN_NN_LAYERS_FLATTEN_H_
+#define LARUEN_NN_LAYERS_FLATTEN_H_
 
 #include <numeric>
 #include <functional>

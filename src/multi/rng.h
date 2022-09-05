@@ -1,6 +1,6 @@
 
-#ifndef MULTI_RNG_H_
-#define MULTI_RNG_H_
+#ifndef LARUEN_MULTI_RNG_H_
+#define LARUEN_MULTI_RNG_H_
 
 #include <random>
 
