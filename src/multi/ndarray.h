@@ -171,25 +171,6 @@ namespace laruen::multi {
                 }
             }
             
-            NDArray(NDArray<T> &ndarray, const SliceRanges &ranges) noexcept
-            : NDArray(ndarray.data_, ndarray, false)
-            {
-                uint_fast8_t ndim = ranges.size();
-                float64_t size_ratio = 1;
-
-                for(uint_fast8_t dim = 0;dim < ndim;dim++) {
-                    size_ratio *= this->shape_[dim];
-                    this->data_ += ranges[dim].start * this->strides_[dim];
-                    this->strides_[dim] *= ranges[dim].step;
-                    this->shape_[dim] = laruen::multi::utils::ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
-                    this->dim_sizes_[dim] = this->shape_[dim] * this->strides_[dim];
-                    size_ratio /= this->shape_[dim];
-                }
-
-                this->size_ /= size_ratio;
-                this->contig_ = false;
-            }
-            
             template <typename TT>
             explicit NDArray(const NDArray<TT> &ndarray) noexcept
             : NDArray<T>(new T[ndarray.size_], ndarray, true) {
@@ -889,11 +870,11 @@ namespace laruen::multi {
 
             // indexing and slicing operators
             NDArray<T> operator[](const SliceRanges &ranges) noexcept {
-                return NDArray<T>(*this, ranges);
+                return this->sliced_view(ranges);
             }
             
             const NDArray<T> operator[](const SliceRanges &ranges) const noexcept {
-                return NDArray<T>(*this, ranges);
+                return this->sliced_view(ranges);
             }
 
             inline T& operator[](uint_fast64_t index) noexcept {
@@ -2483,6 +2464,46 @@ namespace laruen::multi {
             inline const NDArray<T> view() const noexcept {
                 return NDArray<T>(this->data_, this->shape_, this->strides_,
                 this->dim_sizes_, this->size_, this->ndim_, this->contig_, false);
+            }
+
+            inline NDArray<T> sliced_view(const SliceRanges &ranges) {
+                NDArray<T> sliced(this->data_, *this, false);
+                uint_fast8_t ndim = ranges.size();
+                float64_t size_ratio = 1;
+
+                for(uint_fast8_t dim = 0;dim < ndim;dim++) {
+                    size_ratio *= sliced.shape_[dim];
+                    sliced.data_ += ranges[dim].start * sliced.strides_[dim];
+                    sliced.strides_[dim] *= ranges[dim].step;
+                    sliced.shape_[dim] = laruen::multi::utils::ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
+                    sliced.dim_sizes_[dim] = sliced.shape_[dim] * sliced.strides_[dim];
+                    size_ratio /= sliced.shape_[dim];
+                }
+
+                sliced.size_ /= size_ratio;
+                sliced.contig_ = false;
+
+                return sliced;
+            }
+
+            inline const NDArray<T> sliced_view(const SliceRanges &ranges) const {
+                NDArray<T> sliced(this->data_, *this, false);
+                uint_fast8_t ndim = ranges.size();
+                float64_t size_ratio = 1;
+
+                for(uint_fast8_t dim = 0;dim < ndim;dim++) {
+                    size_ratio *= sliced.shape_[dim];
+                    sliced.data_ += ranges[dim].start * sliced.strides_[dim];
+                    sliced.strides_[dim] *= ranges[dim].step;
+                    sliced.shape_[dim] = laruen::multi::utils::ceil_index((float64_t)(ranges[dim].end - ranges[dim].start) / (float64_t)ranges[dim].step);
+                    sliced.dim_sizes_[dim] = sliced.shape_[dim] * sliced.strides_[dim];
+                    size_ratio /= sliced.shape_[dim];
+                }
+
+                sliced.size_ /= size_ratio;
+                sliced.contig_ = false;
+
+                return sliced;
             }
 
             friend inline std::ostream& operator<<(std::ostream &stream, const NDArray &ndarray) noexcept {
