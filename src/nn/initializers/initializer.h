@@ -16,7 +16,6 @@ namespace laruen::nn::initializers {
         class Initializer {
             public:
                 void operator()(uint_fast64_t nb_inputs, uint_fast64_t nb_nodes, NDArray<T> &output) const = 0;
-                NDArray<T> operator()(uint_fast64_t nb_inputs, uint_fast64_t nb_nodes) const = 0;
         };
     }
 
