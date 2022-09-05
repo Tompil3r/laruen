@@ -346,12 +346,52 @@ namespace laruen::nn {
                     return this->batch_outputs_.back();
                 }
 
-                inline auto& layers() const noexcept {
+                inline auto& layers() noexcept {
                     return this->layers_;
                 }
 
-                inline const std::vector<NDArray<T>>& batch_outputs() const noexcept {
+                inline std::vector<NDArray<T>>& batch_outputs() noexcept {
                     return this->batch_outputs_;
+                }
+
+                inline std::vector<NDArray<T>>& batch_derivs() noexcept {
+                    return this->batch_derivs_;
+                }
+
+                inline std::vector<NDArray<T>>& remaining_outputs() noexcept {
+                    return this->remaining_outputs_;
+                }
+
+                inline std::vector<NDArray<T>>& remaining_derivs() noexcept {
+                    return this->remaining_derivs_;
+                }
+
+                inline NDArray<T>& input_batch_deriv() noexcept {
+                    return this->input_batch_deriv_;
+                }
+
+                inline NDArray<T>& input_remaining_deriv() noexcept {
+                    return this->input_remaining_deriv_;
+                }
+
+                inline std::shared_ptr<Loss<T>>& loss() noexcept {
+                    return this->loss_;
+                }
+
+                inline std::shared_ptr<Optimizer<T>>& optimizer() noexcept {
+                    return this->optimizer_;
+                }
+
+                inline auto& metrics() noexcept {
+                    return this->metrics_;
+                }
+
+                inline uint_fast64_t batch_size() const noexcept {
+                    return this->batch_size_;
+                }
+
+                inline uint_fast64_t remaining_size() const noexcept {
+                    return this->remaining_size_;
                 }
                         
             private:
