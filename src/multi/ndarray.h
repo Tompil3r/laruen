@@ -167,25 +167,6 @@ namespace laruen::multi {
                 }
             }
             
-            NDArray(const ArrayBase &arraybase, const Axes &axes) noexcept
-            : ArrayBase(axes.size(), axes.size() > 0), data_owner_(true)
-            {
-                uint_fast8_t axis;
-                uint_fast64_t stride = 1;
-
-                for(uint_fast8_t i = this->ndim_;i-- > 0;) {
-                    axis = axes[i];
-                    this->shape_[i] = arraybase.shape_[axis];
-                    this->strides_[i] = stride;
-                    stride *= this->shape_[i];
-                    this->dim_sizes_[i] = stride;
-                    this->size_ *= this->shape_[i];
-                }
-
-                this->data_ = new T[this->size_];
-                this->contig_ = false;
-            }
-            
             NDArray(NDArray<T> &ndarray, const SliceRanges &ranges) noexcept
             : NDArray(ndarray.data_, ndarray, false)
             {
