@@ -56,13 +56,16 @@ namespace laruen::nn::losses {
                     for(uint_fast64_t i = 0;i < y_pred.size();i++) {
                         if(pred_iter.ndindex.back() == true_iter.current()) {
                             output_iter.next() = ((T)(-1)/stable_nonzero(pred_iter.current())) / batch_size;
-                            true_iter.next();
                         }
                         else {
                             output_iter.next() = 0;
                         }
 
                         pred_iter.next();
+
+                        if(!((i + 1) % y_pred.shape().back())) {
+                            true_iter.next();
+                        }
                     }
                 }
         };
