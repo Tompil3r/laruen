@@ -338,39 +338,6 @@ namespace laruen::multi {
                 Impl::swap(this->data_, *this, rhs.data_, rhs);
             }
 
-            // searching algorithms
-            int64_t binary_search(T value) const noexcept {
-                uint_fast64_t log_index = this->size_ >> 1;
-                uint_fast64_t phy_index = this->physical_index(log_index);
-                uint_fast8_t max_depth = laruen::math::bits::msb64(this->size_);
-                // uint_fast64_t start = 0;
-                // uint_fast64_t end = this->physical_index(this->size_);
-                
-                for(uint_fast8_t depth = 1;depth <= max_depth;) {
-                    depth++;
-                    
-                    if(value == this->data_[phy_index]) {
-                        return phy_index;
-                    }
-
-                    else if(value < this->data_[phy_index]) {
-                        // end = log_index;
-                        log_index -= this->size_ >> depth;
-                    }
-                    
-                    else {
-                        // start = log_index + 1;
-                        log_index += this->size_ >> depth;
-                    }
-
-                    phy_index = this->physical_index(log_index);
-                }
-
-                phy_index = this->physical_index(log_index - 1);
-
-                return this->data_[phy_index] == value ? phy_index : -1;
-            }
-
             void rand(T min, T max) noexcept {
                 // [min, max)
                 // - min included, max excluded
