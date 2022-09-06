@@ -9,7 +9,7 @@
 #include "src/multi/ndarray.h"
 #include "src/multi/nditer.h"
 #include "src/nn/losses/loss.h"
-#include "src/math/utils.h"
+#include "src/nn/utils.h"
 
 namespace laruen::nn::losses {
 
@@ -22,7 +22,7 @@ namespace laruen::nn::losses {
         class CategoricalCrossentropy : public Loss<T> {
             public:
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
-                    using laruen::math::utils::nonzero;
+                    using laruen::nn::utils::stable_nonzero;
 
                     assert(y_true.ndim() == 2 && y_pred.ndim() == 2 && y_true.size() == y_pred.size());
 
@@ -31,14 +31,14 @@ namespace laruen::nn::losses {
                     T loss = 0;
 
                     for(uint_fast64_t i = 0;i < y_pred.size();i++) {
-                        loss += true_iter.next() * std::log(nonzero(pred_iter.next())); 
+                        loss += true_iter.next() * std::log(stable_nonzero(pred_iter.next())); 
                     }
 
                     return (-loss) / y_pred.shape().front();
                 }
 
                 void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred, NDArray<T> &deriv_output) const override final {
-                    using laruen::math::utils::nonzero;
+                    using laruen::nn::utils::stable_nonzero;
 
                     NDIter true_iter(y_true.data(), y_true);
                     NDIter pred_iter(y_pred.data(), y_pred);
@@ -47,7 +47,7 @@ namespace laruen::nn::losses {
                     uint_fast64_t batch_size = y_pred.shape().front();
 
                     for(uint_fast64_t i = 0;i < y_pred.size();i++) {
-                        output_iter.next() = (-true_iter.next() / nonzero(pred_iter.next()))
+                        output_iter.next() = (-true_iter.next() / stable_nonzero(pred_iter.next()))
                         / batch_size;
                     }
                 }

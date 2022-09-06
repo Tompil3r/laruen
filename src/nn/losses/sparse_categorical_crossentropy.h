@@ -10,7 +10,7 @@
 #include "src/multi/nditer.h"
 #include "src/multi/types.h"
 #include "src/nn/losses/loss.h"
-#include "src/math/utils.h"
+#include "src/nn/utils.h"
 
 namespace laruen::nn::losses {
 
@@ -24,7 +24,7 @@ namespace laruen::nn::losses {
         class SparseCategoricalCrossentropy : public Loss<T> {
             public:
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
-                    using laruen::math::utils::nonzero;
+                    using laruen::nn::utils::stable_nonzero;
 
                     assert(y_pred.ndim() == 2);
                     // y_true.shape = (batch_size, 1)
@@ -37,7 +37,7 @@ namespace laruen::nn::losses {
                     T loss = 0;
 
                     for(uint_fast64_t i = 0;i < y_true.size();i++) {
-                        loss += std::log(nonzero(y_pred.data()[pred_axis0 + (uint_fast64_t)true_iter.next() * pred_axis1_stride]));
+                        loss += std::log(stable_nonzero(y_pred.data()[pred_axis0 + (uint_fast64_t)true_iter.next() * pred_axis1_stride]));
                         pred_axis0 += pred_axis0_stride;
                     }
 
@@ -45,7 +45,7 @@ namespace laruen::nn::losses {
                 }
 
                 void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred, NDArray<T> &deriv_output) const override final {
-                    using laruen::math::utils::nonzero;
+                    using laruen::nn::utils::stable_nonzero;
 
                     NDIter true_iter(y_true.data(), y_true);
                     NDIter pred_iter(y_pred.data(), y_pred);
@@ -55,7 +55,7 @@ namespace laruen::nn::losses {
 
                     for(uint_fast64_t i = 0;i < y_pred.size();i++) {
                         if(pred_iter.ndindex.back() == true_iter.current()) {
-                            output_iter.next() = (-1/nonzero(pred_iter.current())) / batch_size;
+                            output_iter.next() = ((T)(-1)/stable_nonzero(pred_iter.current())) / batch_size;
                             true_iter.next();
                         }
                         else {

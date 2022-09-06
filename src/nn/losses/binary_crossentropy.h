@@ -10,7 +10,7 @@
 #include "src/multi/nditer.h"
 #include "src/multi/types.h"
 #include "src/nn/losses/loss.h"
-#include "src/math/utils.h"
+#include "src/nn/utils.h"
 
 namespace laruen::nn::losses {
 
@@ -24,7 +24,7 @@ namespace laruen::nn::losses {
         class BinaryCrossentropy : public Loss<T> {
             public:
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
-                    using laruen::math::utils::nonzero;
+                    using laruen::nn::utils::stable_nonzero;
 
                     assert(y_true.ndim() == 2 && y_pred.ndim() == 2 && y_true.size() == y_pred.size());
                     // y_true.shape = y_pred.shape = (batch size, 1)
@@ -34,8 +34,8 @@ namespace laruen::nn::losses {
                     T loss = 0;
 
                     for(uint_fast64_t i = 0;i < y_pred.size();i++) {
-                        loss += true_iter.current() * std::log(nonzero(pred_iter.current()))
-                        + (1 - true_iter.current()) * std::log(nonzero(1 - pred_iter.current()));
+                        loss += true_iter.current() * std::log(stable_nonzero(pred_iter.current()))
+                        + (1 - true_iter.current()) * std::log(stable_nonzero(1 - pred_iter.current()));
 
                         true_iter.next();
                         pred_iter.next();
@@ -45,7 +45,7 @@ namespace laruen::nn::losses {
                 }
 
                 void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred, NDArray<T> &deriv_output) const override final {
-                    using math::utils::nonzero;
+                    using laruen::nn::utils::stable_nonzero;
 
                     NDIter true_iter(y_true.data(), y_true);
                     NDIter pred_iter(y_pred.data(), y_pred);
@@ -55,8 +55,8 @@ namespace laruen::nn::losses {
 
                     for(uint_fast64_t i = 0;i < y_pred.size();i++) {
                         // (dL / dy_hat[i]) = ((1 - y[i]) / (1 - y_hat[i]) - y[i] / y_hat[i]) / batch_size
-                        output_iter.next() = ((1 - true_iter.current()) / nonzero(1 - pred_iter.current())
-                        - true_iter.current() / nonzero(pred_iter.current())) / batch_size;
+                        output_iter.next() = ((1 - true_iter.current()) / stable_nonzero(1 - pred_iter.current())
+                        - true_iter.current() / stable_nonzero(pred_iter.current())) / batch_size;
 
                         true_iter.next();
                         pred_iter.next();
