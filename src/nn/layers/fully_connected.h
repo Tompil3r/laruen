@@ -113,8 +113,6 @@ namespace laruen::nn::layers {
                     deriv.sum({0}, this->raw_db_); // db[l] = sum of dZ (axis = 0)
                     // since (dZ / db) = 1, (dL / db) = (dL / dZ) * 1 = (dL / dZ)
                     this->raw_db_.divide_eq(batch_size); // db[l] /= batch_size
-
-                    // *** implement - weights update ***
                 }
 
                 inline void update_weights(const Optimizer<T> &optimizer) override final {
