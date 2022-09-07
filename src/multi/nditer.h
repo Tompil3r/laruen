@@ -4,11 +4,14 @@
 
 #include <type_traits>
 #include <utility>
+#include "src/multi/ndarray.h"
 #include "src/multi/array_base.h"
 #include "src/multi/types.h"
 #include "src/multi/type_selection.h"
 
 namespace laruen::multi {
+
+    template <typename> class NDArray;
 
     template <typename T>
     struct NDIter {
@@ -18,6 +21,15 @@ namespace laruen::multi {
 
         NDIter(T *data, const ArrayBase &arraybase) noexcept
         : ptr(data), arraybase(arraybase), ndindex(arraybase.ndim_, 0)
+        {}
+
+        NDIter(NDArray<T> &ndarray) noexcept
+        : ptr(ndarray.data_), arraybase(ndarray), ndindex(ndarray.ndim_, 0)
+        {}
+
+        template <typename TT>
+        NDIter(const NDArray<TT> &ndarray) noexcept
+        : ptr(std::as_const(ndarray.data_)), arraybase(ndarray), ndindex(ndarray.ndim_, 0)
         {}
 
         T& next(uint_fast8_t axis) noexcept {
@@ -61,6 +73,9 @@ namespace laruen::multi {
             return this->current();
         }
     };
+
+    template <typename T> NDIter(NDArray<T>&) -> NDIter<T>;
+    template <typename TT> NDIter(const NDArray<TT>&) -> NDIter<const TT>;
 };
 
 #endif

@@ -35,8 +35,8 @@ namespace laruen::multi {
     class NDArray : public ArrayBase {
 
         template <typename> friend class NDArray;
+        template <typename> friend struct NDIter;
         friend struct Impl;
-
         private:
             // *** member variables are mutable to allow editing of "view"s ***
             mutable T *data_;
