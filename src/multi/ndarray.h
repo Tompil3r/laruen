@@ -354,7 +354,7 @@ namespace laruen::multi {
                 file.write(reinterpret_cast<char*>(&this->ndim_), sizeof(decltype(this->ndim_)));
 
                 for(auto dim = this->shape_.cbegin();dim != this->shape_.cend();dim++) {
-                    file.write(reinterpret_cast<char*>(&(*dim)), sizeof(Shape::value_type));
+                    file.write(reinterpret_cast<const char*>(&(*dim)), sizeof(Shape::value_type));
                 }
 
                 for(uint_fast64_t i = 0;i < this->size_;i++) {
