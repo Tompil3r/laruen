@@ -121,7 +121,7 @@ namespace laruen::multi {
                 }
             }
 
-            void resize(const Shape &shape) {
+            virtual void resize(const Shape &shape) {
                 this->ndim_ = shape.size();
                 this->shape_ = shape;
                 this->strides_.resize(this->ndim_);
