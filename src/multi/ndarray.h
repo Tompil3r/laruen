@@ -14,6 +14,7 @@
 #include <stdexcept>
 #include <cmath>
 #include <random>
+#include <fstream>
 #include "src/multi/utils.h"
 #include "src/multi/types.h"
 #include "src/multi/nditer.h"
@@ -312,6 +313,21 @@ namespace laruen::multi {
                 this->dim_sizes_.clear();
                 this->size_ = 0;
                 this->ndim_ = 0;
+            }
+
+            template <typename TT>
+            void load_binary(const std::string &filepath, uint_fast64_t offset = 0) {
+                // TT - the dtype the file is saved as
+                std::ifstream file(filepath, std::ios::binary);
+                NDIter iter(this->data_, *this);
+                TT data;
+
+                file.seekg(offset);
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    file.read(reinterpret_cast<char*>(&data), sizeof(TT));
+                    iter.next() = (T)data;
+                }
             }
 
             template <typename TT>
