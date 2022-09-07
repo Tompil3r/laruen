@@ -316,7 +316,7 @@ namespace laruen::multi {
             }
 
             template <typename TT>
-            void load_binary(const std::string &filepath, uint_fast64_t offset = 0) {
+            void load_buffer(const std::string &filepath, uint_fast64_t offset = 0) {
                 // TT - the dtype the file is saved as
                 std::ifstream file(filepath, std::ios::binary);
                 NDIter iter(this->data_, *this);
@@ -331,7 +331,7 @@ namespace laruen::multi {
             }
 
             template <typename TT = T>
-            void save_binary(const std::string &filepath) {
+            void save_buffer(const std::string &filepath) {
                 // TT - the dtype to save as
                 std::ofstream file(filepath, std::ios::binary);
                 NDIter iter(this->data_, *this);
