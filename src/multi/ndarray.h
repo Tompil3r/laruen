@@ -343,6 +343,27 @@ namespace laruen::multi {
                 }
             }
 
+            template <typename TT = T>
+            void full_save(const std::string &filepath) const {
+                // TT - the dtype to save as
+                // format: ndim (1 byte), shape (ndim * 8 bytes), data (N bytes) 
+                std::ofstream file(filepath, std::ios::binary);
+                NDIter iter(this->data_, *this);
+                TT data;
+
+                file.write(reinterpret_cast<char*>(&this->ndim_), sizeof(decltype(this->ndim_)));
+
+                for(auto dim = this->shape_.cbegin();dim != this->shape_.cend();dim++) {
+                    file.write(reinterpret_cast<char*>(&(*dim)), sizeof(Shape::value_type));
+                }
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    data = (TT)iter.next();
+                    file.write(reinterpret_cast<char*>(&data), sizeof(TT));
+                }
+            }
+
+
             template <typename TT>
             void copy_data_from(const NDArray<TT> &ndarray) noexcept {
                 NDIter to(this->data_, *this);
