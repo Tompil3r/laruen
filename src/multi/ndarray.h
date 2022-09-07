@@ -331,7 +331,7 @@ namespace laruen::multi {
             }
 
             template <typename TT = T>
-            void save_buffer(const std::string &filepath) {
+            void save_buffer(const std::string &filepath) const {
                 // TT - the dtype to save as
                 std::ofstream file(filepath, std::ios::binary);
                 NDIter iter(this->data_, *this);
