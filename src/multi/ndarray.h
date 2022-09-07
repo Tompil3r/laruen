@@ -316,13 +316,15 @@ namespace laruen::multi {
             }
 
             template <typename TT>
-            void load_buffer(const std::string &filepath, uint_fast64_t offset = 0) {
+            void load_buffer(std::ifstream &file, int_fast64_t offset = 0) {
                 // TT - the dtype the file is saved as
-                std::ifstream file(filepath, std::ios::binary);
+                // file must be opened in binary mode
+                assert(file.is_open());
+
                 NDIter iter(this->data_, *this);
                 TT data;
 
-                file.seekg(offset);
+                file.seekg(file.tellg() + offset);
 
                 for(uint_fast64_t i = 0;i < this->size_;i++) {
                     file.read(reinterpret_cast<char*>(&data), sizeof(TT));
@@ -330,12 +332,22 @@ namespace laruen::multi {
                 }
             }
 
+            template <typename TT>
+            inline void load_buffer(const std::string &filepath, int_fast64_t offset = 0) {
+                // TT - the dtype the file is saved as
+                std::ifstream file(filepath, std::ios::binary);
+                this->load_buffer<TT>(file, offset);
+            }
+
             template <typename TT = T>
-            void save_buffer(const std::string &filepath) const {
+            void save_buffer(std::ofstream &file, int_fast64_t offset = 0) const {
                 // TT - the dtype to save as
-                std::ofstream file(filepath, std::ios::binary);
+                // file must be opened in binary mode
+
                 NDIter iter(this->data_, *this);
                 TT data;
+
+                file.seekp(file.tellp() + offset);
 
                 for(uint_fast64_t i = 0;i < this->size_;i++) {
                     data = (TT)iter.next();
@@ -343,16 +355,24 @@ namespace laruen::multi {
                 }
             }
 
+            template <typename TT = T>
+            inline void save_buffer(const std::string &filepath, int_fast64_t offset = 0) const {
+                // TT - the dtype to save as
+                std::ofstream file(filepath, std::ios::binary);
+                this->save_buffer(file, offset);
+            }
+            
             template <typename TT>
-            void full_load(const std::string &filepath, uint_fast64_t offset = 0) {
-                std::ifstream file(filepath, std::ios::binary);
+            void full_load(std::ifstream &file, int_fast64_t offset = 0) {
+                // TT - the dtype the file is saved as
+                // file must be opened in binary mode
                 TT data;
 
                 if(this->data_owner_) {
                     delete[] this->data_;
                 }
 
-                file.seekg(offset);
+                file.seekg(file.tellg() + offset);
 
                 file.read(reinterpret_cast<char*>(&this->ndim_), sizeof(decltype(this->ndim_)));
 
@@ -385,11 +405,19 @@ namespace laruen::multi {
                 }
             }
 
+            template <typename TT>
+            inline void full_load(const std::string &filepath, int_fast64_t offset = 0) {
+                // TT - the dtype the file is saved as
+                std::ifstream file(filepath, std::ios::binary);
+                this->full_load<TT>(file, offset);
+            }
+
             template <typename TT = T>
-            void full_save(const std::string &filepath) const {
+            void full_save(std::ofstream &file, int_fast64_t offset = 0) const {
                 // TT - the dtype to save as
+                // file must be opened in binary mode
                 // format: ndim (1 byte), shape (ndim * 8 bytes), data (N bytes) 
-                std::ofstream file(filepath, std::ios::binary);
+
                 NDIter iter(this->data_, *this);
                 TT data;
 
@@ -405,6 +433,12 @@ namespace laruen::multi {
                 }
             }
 
+            template <typename TT = T>
+            inline void full_save(const std::string &filepath, int_fast64_t offset = 0) const {
+                // TT - the dtype to save as
+                std::ofstream file(filepath, std::ios::binary);
+                this->full_save(file, offset);
+            }
 
             template <typename TT>
             void copy_data_from(const NDArray<TT> &ndarray) noexcept {
