@@ -330,6 +330,19 @@ namespace laruen::multi {
                 }
             }
 
+            template <typename TT = T>
+            void save_binary(const std::string &filepath) {
+                // TT - the dtype to save as
+                std::ofstream file(filepath, std::ios::binary);
+                NDIter iter(this->data_, *this);
+                TT data;
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    data = (TT)iter.next();
+                    file.write(reinterpret_cast<char*>(&data), sizeof(TT));
+                }
+            }
+
             template <typename TT>
             void copy_data_from(const NDArray<TT> &ndarray) noexcept {
                 NDIter to(this->data_, *this);
