@@ -343,6 +343,48 @@ namespace laruen::multi {
                 }
             }
 
+            template <typename TT>
+            void full_load(const std::string &filepath, uint_fast64_t offset = 0) {
+                std::ifstream file(filepath, std::ios::binary);
+                TT data;
+
+                if(this->data_owner_) {
+                    delete[] this->data_;
+                }
+
+                file.seekg(offset);
+
+                file.read(reinterpret_cast<char*>(&this->ndim_), sizeof(decltype(this->ndim_)));
+
+                this->shape_.resize(this->ndim_);
+                this->strides_.resize(this->ndim_);
+                this->dim_sizes_.resize(this->ndim_);
+                this->size_ = this->ndim_ > 0;
+                this->contig_ = true;
+
+                for(auto dim = this->shape_.begin();dim != this->shape_.end();dim++) {
+                    file.read(reinterpret_cast<char*>(&(*dim)), sizeof(Shape::value_type));
+                }
+
+                uint_fast64_t stride = 1;
+
+                for(uint_fast8_t dim = this->ndim_; dim-- > 0;) {
+                    this->strides_[dim] = stride;
+                    stride *= this->shape_[dim];
+                    this->dim_sizes_[dim] = stride;
+                    this->size_ *= this->shape_[dim];
+                }
+
+                this->data_ = new T[this->size_];
+                
+                T *end = this->data_ + this->size_;
+
+                for(T *ptr = this->data_;ptr != end;ptr++) {
+                    file.read(reinterpret_cast<char*>(&data), sizeof(TT));
+                    *ptr = (T)data;
+                }
+            }
+
             template <typename TT = T>
             void full_save(const std::string &filepath) const {
                 // TT - the dtype to save as
