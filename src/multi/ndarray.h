@@ -952,6 +952,16 @@ namespace laruen::multi {
                 return !(*this >= ndarray);
             }
 
+            void resize(const Shape &shape) {
+                if(this->data_owner_) {
+                    delete[] this->data_;
+                }
+
+                ArrayBase::resize(shape);
+                this->data_ = new T[this->size_];
+                this->data_owner_ = true;
+            }
+
             NDArray<T> transpose(uint_fast8_t dim_begin, uint_fast8_t dim_end) {
                 NDArray<T> result = this->view();
                 result.contig_ = false;
