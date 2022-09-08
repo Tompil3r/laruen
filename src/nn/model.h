@@ -13,6 +13,7 @@
 #include <cmath>
 #include <cstring>
 #include <fstream>
+#include <stdexcept>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
@@ -49,12 +50,14 @@ namespace laruen::nn {
                 std::vector<std::shared_ptr<Metric<T>>> metrics_;
                 uint_fast64_t batch_size_;
                 uint_fast64_t remaining_size_;
+                bool built_;
+                bool compiled_;
                 
             public:
                 Model(const std::vector<std::shared_ptr<Layer<T>>> &layers)
                 : layers_(layers), batch_outputs_(layers.size()), batch_derivs_(layers.size()),
                 remaining_outputs_(layers.size()), remaining_derivs_(layers.size()),
-                batch_size_(0), remaining_size_(0)
+                batch_size_(0), remaining_size_(0), built_(false), compiled_(false)
                 {}
                 
                 void build(Shape::const_iterator begin, Shape::const_iterator end) {
@@ -64,6 +67,8 @@ namespace laruen::nn {
                     for(uint_fast64_t i = 1;i < this->layers_.size();i++) {
                         this->layers_[i]->build(this->layers_[i - 1]->output_shape());
                     }
+
+                    this->built_ = true;
                 }
 
                 inline void build(const Shape &input_shape) {
@@ -82,13 +87,15 @@ namespace laruen::nn {
                     for(auto layer = this->layers_.begin();layer != this->layers_.end();layer++) {
                         (*layer)->compile(required_caches);
                     }
+
+                    this->compiled_ = true;
                 }
 
                 inline void compile(const std::shared_ptr<Optimizer<T>> &optimizer, const std::shared_ptr<Loss<T>> &loss) {
                     this->compile(optimizer, loss, {});
                 }
 
-                void summary() const noexcept {
+                void summary() const {
                     constexpr uint_fast64_t sec1_len = 18;
                     constexpr uint_fast64_t sec2_len = 20;
                     constexpr uint_fast64_t all_len = 44;
@@ -101,7 +108,11 @@ namespace laruen::nn {
                         }
                         str += std::to_string(*iter) + ')';
                         return str;
-                    };                    
+                    };
+
+                    if(!this->built_) {
+                        throw std::logic_error("model must be built before calling summary");
+                    }
 
                     uint_fast64_t total_params = 0;
                     uint_fast64_t curr_params;
@@ -167,6 +178,10 @@ namespace laruen::nn {
                 uint_fast64_t epochs = 1, bool verbose = true)
                 {
                     using laruen::nn::utils::batch_view;
+
+                    if(!this->built_ || !this->compiled_) {
+                        throw std::logic_error("model must be built & compiled before calling fit");
+                    }
 
                     uint_fast64_t batches = x.shape().front() / batch_size;
                     uint_fast64_t remaining_size = x.shape().front() % batch_size;
@@ -260,6 +275,10 @@ namespace laruen::nn {
                 {
                     using laruen::nn::utils::batch_view;
 
+                    if(!this->built_ || !this->compiled_) {
+                        throw std::logic_error("model must be built & compiled before calling evaluate");
+                    }
+
                     uint_fast64_t batches = x.shape().front() / batch_size;
                     uint_fast64_t remaining_size = x.shape().front() % batch_size;
                     uint_fast64_t batch;
@@ -351,6 +370,10 @@ namespace laruen::nn {
 
                 void load_weights(std::ifstream &file) {
                     // file must be opened in binary mode
+                    if(!this->built_) {
+                        throw std::logic_error("model must be built before calling load_weights");
+                    }
+
                     for(auto layer = this->layers_.cbegin();layer != this->layers_.cend();layer++) {
                         (*layer)->load_weights(file);
                     }
