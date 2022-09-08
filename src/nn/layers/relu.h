@@ -96,7 +96,7 @@ namespace laruen::nn::layers {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Layer<T>> shared_relu() noexcept {
+        inline std::shared_ptr<Layer<T>> relu() noexcept {
             return std::shared_ptr<Layer<T>>(new ReLU<T>());
         }
     }

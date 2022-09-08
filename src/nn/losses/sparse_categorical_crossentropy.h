@@ -71,7 +71,7 @@ namespace laruen::nn::losses {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Loss<T>> shared_scce() noexcept {
+        inline std::shared_ptr<Loss<T>> sparse_categorical_crossentropy() noexcept {
             return std::shared_ptr<Loss<T>>(new SparseCategoricalCrossentropy<T>());
         }
     }

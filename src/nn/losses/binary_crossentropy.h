@@ -65,7 +65,7 @@ namespace laruen::nn::losses {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Loss<T>> shared_bce() noexcept {
+        inline std::shared_ptr<Loss<T>> binary_crossentropy() noexcept {
             return std::shared_ptr<Loss<T>>(new BinaryCrossentropy<T>());
         }
     }

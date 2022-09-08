@@ -149,7 +149,7 @@ namespace laruen::nn::layers {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Layer<T>> shared_softmax() noexcept {
+        inline std::shared_ptr<Layer<T>> softmax() noexcept {
             return std::shared_ptr<Layer<T>>(new Softmax<T>());
         }
     }

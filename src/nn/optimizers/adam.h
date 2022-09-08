@@ -129,7 +129,7 @@ namespace laruen::nn::optimizers {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Optimizer<T>> shared_adam(T learning_rate = 0.001f,
+        inline std::shared_ptr<Optimizer<T>> adam(T learning_rate = 0.001f,
         T beta1 = 0.9f, T beta2 = 0.999f, T epsilon = 1e-7f) noexcept
         {
             return std::shared_ptr<Optimizer<T>>(new Adam<T>(learning_rate, beta1, beta2, epsilon));

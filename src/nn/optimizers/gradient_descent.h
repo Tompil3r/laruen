@@ -65,7 +65,7 @@ namespace laruen::nn::optimizers {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Optimizer<T>> shared_gd(T learning_rate = 0.01f, T momentum = 0.0f) noexcept {
+        inline std::shared_ptr<Optimizer<T>> gradient_descent(T learning_rate = 0.01f, T momentum = 0.0f) noexcept {
             return std::shared_ptr<Optimizer<T>>(new GradientDescent<T>(learning_rate, momentum));
         }
     }

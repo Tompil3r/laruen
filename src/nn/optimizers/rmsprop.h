@@ -75,7 +75,7 @@ namespace laruen::nn::optimizers {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Optimizer<T>> shared_rmsprop(T learning_rate = 0.001f,
+        inline std::shared_ptr<Optimizer<T>> rmsprop(T learning_rate = 0.001f,
         T rho = 0.9f, T epsilon = 1e-7f) noexcept
         {
             return std::shared_ptr<Optimizer<T>>(new RMSprop<T>(learning_rate, rho, epsilon));

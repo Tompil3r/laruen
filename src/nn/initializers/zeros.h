@@ -26,7 +26,7 @@ namespace laruen::nn::initializers {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Initializer<T>> shared_zeros() noexcept {
+        inline std::shared_ptr<Initializer<T>> zeros() noexcept {
             return std::shared_ptr<Initializer<T>>(new Zeros<T>());
         }
     }

@@ -97,7 +97,7 @@ namespace laruen::nn::layers {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Layer<T>> shared_sigmoid() noexcept {
+        inline std::shared_ptr<Layer<T>> sigmoid() noexcept {
             return std::shared_ptr<Layer<T>>(new Sigmoid<T>());
         }
     }

@@ -27,7 +27,7 @@ namespace laruen::nn::initializers {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Initializer<T>> shared_glorot_uni() noexcept {
+        inline std::shared_ptr<Initializer<T>> glorot_uniform() noexcept {
             return std::shared_ptr<Initializer<T>>(new GlorotUniform<T>());
         }
     }

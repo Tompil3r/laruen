@@ -53,7 +53,7 @@ namespace laruen::nn::metrics {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Metric<T>> shared_cat_acc() noexcept {
+        inline std::shared_ptr<Metric<T>> categorical_accuracy() noexcept {
             return std::shared_ptr<Metric<T>>(new CategoricalAccuracy<T>());
         }
     }

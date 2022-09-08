@@ -48,7 +48,7 @@ namespace laruen::nn::metrics {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Metric<T>> shared_bin_acc(T threshold = 0.5f) noexcept {
+        inline std::shared_ptr<Metric<T>> binary_accuracy(T threshold = 0.5f) noexcept {
             return std::shared_ptr<Metric<T>>(new BinaryAccuracy<T>(threshold));
         }
     }

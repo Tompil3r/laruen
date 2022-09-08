@@ -206,7 +206,7 @@ namespace laruen::nn::layers {
         };
 
         template <typename T = float32_t>
-        inline std::shared_ptr<Layer<T>> shared_fc(uint_fast32_t nodes,
+        inline std::shared_ptr<Layer<T>> fully_connected(uint_fast32_t nodes,
         std::shared_ptr<Initializer<T>> kernel_initializer = shared_glorot_uni(),
         std::shared_ptr<Initializer<T>> bias_initializer = shared_zeros()) noexcept
         {
