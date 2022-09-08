@@ -154,9 +154,14 @@ namespace laruen::nn::layers {
                     }
                 }
 
-                void save_weights(std::ofstream &file, int_fast64_t offset = 0) const override final {
+                inline void save_weights(std::ofstream &file, int_fast64_t offset = 0) const override final {
                     this->w_.save_buffer(file, offset);
                     this->b_.save_buffer(file);
+                }
+                
+                inline void load_weights(std::ifstream &file, int_fast64_t offset = 0) override final {
+                    this->w_.template load_buffer<T>(file, offset);
+                    this->b_.template load_buffer<T>(file);
                 }
 
                 const char* name() const noexcept override final {

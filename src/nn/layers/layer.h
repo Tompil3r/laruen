@@ -40,7 +40,10 @@ namespace laruen::nn::layers {
                     return this->forward(input);
                 }
 
-                virtual void save_weights(std::ofstream &file, int_fast64_t offset = 0) const
+                inline virtual void save_weights(std::ofstream &file, int_fast64_t offset = 0) const
+                {}
+
+                inline virtual void load_weights(std::ifstream &file, int_fast64_t offset = 0)
                 {}
 
                 virtual NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const = 0;
