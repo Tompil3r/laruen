@@ -6,6 +6,8 @@
 #include <utility>
 #include <vector>
 #include <memory>
+#include <cstdint>
+#include <fstream>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
@@ -150,6 +152,11 @@ namespace laruen::nn::layers {
                         this->opt_dw_caches_[i] = NDArray<T>(this->raw_dw_.shape(), 0);
                         this->opt_db_caches_[i] = NDArray<T>(this->raw_db_.shape(), 0);
                     }
+                }
+
+                void save_weights(std::ofstream &file, int_fast64_t offset = 0) const override final {
+                    this->w_.save_buffer(file, offset);
+                    this->b_.save_buffer(file);
                 }
 
                 const char* name() const noexcept override final {

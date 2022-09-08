@@ -4,6 +4,8 @@
 
 #include <cassert>
 #include <utility>
+#include <fstream>
+#include <cstdint>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/optimizers/optimizer.h"
@@ -37,6 +39,9 @@ namespace laruen::nn::layers {
                 inline NDArray<T> operator()(const NDArray<T> &input) {
                     return this->forward(input);
                 }
+
+                virtual void save_weights(std::ofstream &file, int_fast64_t offset = 0) const
+                {}
 
                 virtual NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const = 0;
 
