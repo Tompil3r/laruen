@@ -46,6 +46,9 @@ namespace laruen::nn::layers {
                 inline virtual void load_weights(std::ifstream &file, int_fast64_t offset = 0)
                 {}
 
+                inline virtual void compile(uint_fast64_t required_caches)
+                {};
+
                 virtual NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const = 0;
 
                 virtual NDArray<T> forward(const NDArray<T> &input) = 0;
@@ -58,8 +61,6 @@ namespace laruen::nn::layers {
                 virtual void build(const Shape &input_shape) = 0;
 
                 virtual void build(Shape::const_iterator begin, Shape::const_iterator end) = 0;
-
-                virtual void compile(uint_fast64_t required_caches) = 0;
 
                 virtual const char* name() const noexcept = 0;
 
