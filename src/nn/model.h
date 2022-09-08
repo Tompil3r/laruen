@@ -349,6 +349,18 @@ namespace laruen::nn {
                     return this->batch_outputs_.back();
                 }
 
+                void load_weights(std::ifstream &file) {
+                    // file must be opened in binary mode
+                    for(auto layer = this->layers_.cbegin();layer != this->layers_.cend();layer++) {
+                        (*layer)->load_weights(file);
+                    }
+                }
+
+                inline void load_weights(const std::string &filepath) {
+                    std::ifstream file(filepath, std::ios::binary);
+                    this->load_weights(file);
+                }
+
                 void save_weights(std::ofstream &file) const {
                     // file must be opened in binary mode
                     for(auto layer = this->layers_.cbegin();layer != this->layers_.cend();layer++) {
