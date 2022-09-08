@@ -12,6 +12,7 @@
 #include <string>
 #include <cmath>
 #include <cstring>
+#include <fstream>
 #include "src/multi/ndarray.h"
 #include "src/multi/types.h"
 #include "src/nn/layers/layer.h"
@@ -346,6 +347,18 @@ namespace laruen::nn {
                     this->forward(x, this->batch_outputs_);
 
                     return this->batch_outputs_.back();
+                }
+
+                void save_weights(std::ofstream &file) const {
+                    // file must be opened in binary mode
+                    for(auto layer = this->layers_.cbegin();layer != this->layers_.cend();layer++) {
+                        (*layer)->save_weights(file);
+                    }
+                }
+
+                inline void save_weights(const std::string &filepath) const {
+                    std::ofstream file(filepath, std::ios::binary);
+                    this->save_weights(file);
                 }
 
                 inline auto& layers() noexcept {
