@@ -192,9 +192,10 @@ namespace laruen::nn {
                     uint_fast64_t epoch;
                     uint_fast64_t batch;
                     uint_fast64_t total_batches = batches + (remaining_size > 0);
-                    uint_fast64_t str_max_len = 0; // for verbose purposes only
                     T remaining_size_ratio = batches > 0 ? (T)remaining_size / batch_size : 1;
                     T total_partial_batches = batches + remaining_size_ratio;
+                    bool last; // used only when verbose = true
+                    uint_fast64_t verbose_max_length = 0; // only used when verbose = true
 
                     const NDArray<T> x_batch_view = batch_view(x, batch_size);
                     const NDArray<T> y_batch_view = batch_view(y, batch_size);
@@ -227,8 +228,6 @@ namespace laruen::nn {
                     }
 
                     for(epoch = 0;epoch < epochs;epoch++) {
-                        bool last; // used only when verbose = true
-
                         for(batch = 0;batch < batches;batch++) {
                             this->train_batch(x_batch_view, y_batch_view, this->batch_outputs_,
                             this->batch_derivs_, this->input_batch_deriv_, true);
@@ -240,9 +239,9 @@ namespace laruen::nn {
                             }
 
                             if(verbose && ((last = !remaining_size && (batch == batches - 1)) || !(batch % verbose_rate))) {
-                                str_max_len = std::max(this->verbose(epoch, epochs, (T)(batch + 1), batch, total_batches,
-                                loss_values[epoch], metrics_values, last, str_max_len),
-                                str_max_len);
+                                verbose_max_length = std::max(this->verbose(epoch, epochs, (T)(batch + 1), batch, total_batches,
+                                loss_values[epoch], metrics_values, last, verbose_max_length),
+                                verbose_max_length);
                             }
 
                             x_batch_view.data(x_batch_view.data() + x_batch_stride);
@@ -262,9 +261,9 @@ namespace laruen::nn {
                             }
 
                             if(verbose) {
-                                str_max_len = std::max(this->verbose(epoch, epochs, total_partial_batches,
-                                (batch + 1), total_batches, loss_values[epoch], metrics_values, true, str_max_len),
-                                str_max_len);
+                                verbose_max_length = std::max(this->verbose(epoch, epochs, total_partial_batches,
+                                (batch + 1), total_batches, loss_values[epoch], metrics_values, true, verbose_max_length),
+                                verbose_max_length);
                             }
                         }
 
@@ -296,9 +295,10 @@ namespace laruen::nn {
                     uint_fast64_t remaining_size = x.shape().front() % batch_size;
                     uint_fast64_t batch;
                     uint_fast64_t total_batches = batches + (remaining_size > 0);
-                    uint_fast64_t str_max_len = 0; // for verbose purposes only
                     T remaining_size_ratio = batches > 0 ? (T)remaining_size / batch_size : 1;
                     T total_partial_batches = batches + remaining_size_ratio;
+                    bool last; // used only when verbose = true
+                    uint_fast64_t verbose_max_length = 0; // used only when verbose = true
                     
                     const NDArray<T> x_batch_view = batch_view(x, batch_size);
                     const NDArray<T> y_batch_view = batch_view(y, batch_size);
@@ -331,8 +331,6 @@ namespace laruen::nn {
                     }
 
                     for(batch = 0;batch < batches;batch++) {
-                        bool last; // used only when verbose = true
-
                         this->forward(x_batch_view, this->batch_outputs_);
 
                         loss_values.front() += (*this->loss_)(y_batch_view, this->batch_outputs_.back());
@@ -342,9 +340,9 @@ namespace laruen::nn {
                         }
 
                         if(verbose && ((last = !remaining_size && (batch == batches - 1)) || !(batch % verbose_rate))) {
-                            str_max_len = std::max(this->verbose(0, 1, (T)(batch + 1), batch, total_batches,
-                            loss_values.front(), metrics_values, last, str_max_len),
-                            str_max_len);
+                            verbose_max_length = std::max(this->verbose(0, 1, (T)(batch + 1), batch, total_batches,
+                            loss_values.front(), metrics_values, last, verbose_max_length),
+                            verbose_max_length);
                         }
 
                         x_batch_view.data(x_batch_view.data() + x_batch_stride);
@@ -363,9 +361,9 @@ namespace laruen::nn {
                         }
 
                         if(verbose) {
-                            str_max_len = std::max(this->verbose(0, 1, total_partial_batches,
-                            batch, total_batches, loss_values.front(), metrics_values, true, str_max_len),
-                            str_max_len);
+                            verbose_max_length = std::max(this->verbose(0, 1, total_partial_batches,
+                            batch, total_batches, loss_values.front(), metrics_values, true, verbose_max_length),
+                            verbose_max_length);
                         }
                     }
 
