@@ -181,6 +181,8 @@ namespace laruen::nn {
                 {
                     using laruen::nn::utils::batch_view;
 
+                    constexpr uint_fast64_t verbose_rate = 80; // used only when verbose = true
+
                     if(!this->built_ || !this->compiled_) {
                         throw std::logic_error("model must be built & compiled before calling fit");
                     }
@@ -225,6 +227,8 @@ namespace laruen::nn {
                     }
 
                     for(epoch = 0;epoch < epochs;epoch++) {
+                        bool last; // used only when verbose = true
+
                         for(batch = 0;batch < batches;batch++) {
                             this->train_batch(x_batch_view, y_batch_view, this->batch_outputs_,
                             this->batch_derivs_, this->input_batch_deriv_, true);
@@ -235,9 +239,9 @@ namespace laruen::nn {
                                 metrics_values[i][epoch] += (*this->metrics_[i])(y_batch_view, this->batch_outputs_.back());
                             }
 
-                            if(verbose) {
+                            if(verbose && ((last = !remaining_size && (batch == batches - 1)) || !(batch % verbose_rate))) {
                                 str_max_len = std::max(this->verbose(epoch, epochs, (T)(batch + 1), batch, total_batches,
-                                loss_values[epoch], metrics_values, !remaining_size && batch == (batches - 1), str_max_len),
+                                loss_values[epoch], metrics_values, last, str_max_len),
                                 str_max_len);
                             }
 
@@ -282,6 +286,8 @@ namespace laruen::nn {
                 {
                     using laruen::nn::utils::batch_view;
 
+                    constexpr uint_fast64_t verbose_rate = 80;
+
                     if(!this->built_ || !this->compiled_) {
                         throw std::logic_error("model must be built & compiled before calling evaluate");
                     }
@@ -325,6 +331,8 @@ namespace laruen::nn {
                     }
 
                     for(batch = 0;batch < batches;batch++) {
+                        bool last; // used only when verbose = true
+
                         this->forward(x_batch_view, this->batch_outputs_);
 
                         loss_values.front() += (*this->loss_)(y_batch_view, this->batch_outputs_.back());
@@ -333,9 +341,9 @@ namespace laruen::nn {
                             metrics_values[i].front() += (*this->metrics_[i])(y_batch_view, this->batch_outputs_.back());
                         }
 
-                        if(verbose) {
+                        if(verbose && ((last = !remaining_size && (batch == batches - 1)) || !(batch % verbose_rate))) {
                             str_max_len = std::max(this->verbose(0, 1, (T)(batch + 1), batch, total_batches,
-                            loss_values.front(), metrics_values, !remaining_size && batch == batches - 1, str_max_len),
+                            loss_values.front(), metrics_values, last, str_max_len),
                             str_max_len);
                         }
 
@@ -530,7 +538,7 @@ namespace laruen::nn {
                         std::cout << str << std::endl;
                     }
                     else {
-                        std::cout << str << '\r';
+                        std::cout << str << '\r' << std::flush;
                     }
 
                     return str.size();
