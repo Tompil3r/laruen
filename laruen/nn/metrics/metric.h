@@ -15,6 +15,9 @@ namespace laruen::nn::metrics {
         template <typename T = float32_t>
         class Metric {
             public:
+                virtual ~Metric()
+                {}
+
                 virtual T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const = 0;
                 virtual const char* name() const noexcept = 0;
         };
