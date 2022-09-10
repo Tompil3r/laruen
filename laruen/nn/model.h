@@ -253,7 +253,7 @@ namespace laruen::nn {
 
                             for(auto metric = this->metrics_.begin();metric != this->metrics_.end();metric++) {
                                 (*metric)->values()[epoch] += remaining_size_ratio *
-                                (**metric)(y_train_batch_view, this->batch_outputs_.back());
+                                (**metric)(y_train_remaining_view, this->remaining_outputs_.back());
                             }
 
                             if(verbose) {
@@ -345,7 +345,7 @@ namespace laruen::nn {
 
                         for(auto metric = this->metrics_.begin();metric != this->metrics_.end();metric++) {
                             (*metric)->values().front() += remaining_size_ratio *
-                            (**metric)(y_batch_view, this->batch_outputs_.back());
+                            (**metric)(y_remaining_view, this->remaining_outputs_.back());
                         }
 
                         if(verbose) {
