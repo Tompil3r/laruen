@@ -4,6 +4,7 @@
 
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/types.h"
+#include "laruen/nn/metrics/metric.h"
 
 namespace laruen::nn::losses {
 
@@ -11,9 +12,10 @@ namespace laruen::nn::losses {
 
         using laruen::multi::NDArray;
         using laruen::multi::float32_t;
+        using laruen::nn::metrics::Metric;
 
         template <typename T = float32_t>
-        class Loss {
+        class Loss : public Metric<T> {
             public:
                 virtual ~Loss()
                 {}
