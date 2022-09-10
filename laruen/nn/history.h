@@ -21,26 +21,26 @@ namespace laruen::nn {
 
             public:
                 History(const std::vector<std::shared_ptr<Metric<T>>> &metrics,
-                const std::vector<std::vector<T>> &metrics_values, const std::vector<T> &loss_values)
+                const std::vector<std::vector<T>> &metrics_values)
                 {
-                    assert(metrics.size() == metrics_values.size());
+                    assert(metrics.size() == metrics_values.size() - 1);
 
-                    this->metrics_map_.insert({"loss", loss_values});
+                    this->metrics_map_.insert({"loss", metrics_values.front()});
 
-                    for(uint_fast64_t i = 0;i < metrics.size();i++) {
-                        this->metrics_map_.insert({metrics[i]->name(), metrics_values[i]});
+                    for(uint_fast64_t i = 1;i < metrics.size();i++) {
+                        this->metrics_map_.insert({metrics[i]->name(), metrics_values[i + 1]});
                     }
                 }
 
                 History(const std::vector<std::shared_ptr<Metric<T>>> &metrics,
-                std::vector<std::vector<T>> &&metrics_values, std::vector<T> &&loss_values)
+                std::vector<std::vector<T>> &&metrics_values)
                 {
-                    assert(metrics.size() == metrics_values.size());
+                    assert(metrics.size() == metrics_values.size() - 1);
 
-                        this->metrics_map_.insert({"loss", std::move(loss_values)});
+                        this->metrics_map_.insert({"loss", std::move(metrics_values.front())});
 
                     for(uint_fast64_t i = 0;i < metrics.size();i++) {
-                        this->metrics_map_.insert({metrics[i]->name(), std::move(metrics_values[i])});
+                        this->metrics_map_.insert({metrics[i]->name(), std::move(metrics_values[i + 1])});
                     }
                 }
 
