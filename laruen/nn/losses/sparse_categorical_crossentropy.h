@@ -22,8 +22,6 @@ namespace laruen::nn::losses {
 
         template <typename T = float32_t>
         class SparseCategoricalCrossentropy : public Loss<T> {
-            static constexpr char NAME[] = "sparse categorical crossentropy";
-
             public:
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     using laruen::nn::utils::stable_nonzero;
@@ -72,7 +70,7 @@ namespace laruen::nn::losses {
                 }
 
                 const char* name() const noexcept override final {
-                    return this->NAME;
+                    return "sparse categorical crossentropy";
                 }
         };
 

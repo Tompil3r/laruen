@@ -22,8 +22,6 @@ namespace laruen::nn::metrics {
                 T threshold_;
             
             public:
-                static constexpr char NAME[] = "binary accuracy";
-
                 BinaryAccuracy(T threshold = 0.5f)
                 : threshold_(threshold)
                 {}
@@ -43,7 +41,7 @@ namespace laruen::nn::metrics {
                 }
 
                 const char* name() const noexcept override final {
-                    return this->NAME;
+                    return "binary accuracy";
                 }
         };
 

@@ -49,8 +49,6 @@ namespace laruen::nn::layers {
                 std::shared_ptr<Initializer<T>> bias_initializer_;
 
             public:
-                static constexpr char NAME[] = "Fully Connected";
-
                 FullyConnected(uint_fast32_t nodes,
                 std::shared_ptr<Initializer<T>> kernel_initializer = glorot_uniform(),
                 std::shared_ptr<Initializer<T>> bias_initializer = zeros()) noexcept
@@ -165,7 +163,7 @@ namespace laruen::nn::layers {
                 }
 
                 const char* name() const noexcept override final {
-                    return this->NAME;
+                    return "Fully Connected";
                 }
 
                 uint_fast64_t params() const noexcept override final {

@@ -25,8 +25,6 @@ namespace laruen::nn::layers {
         template <typename T = float32_t>
         class Softmax : public Layer<T> {
             public:
-                static constexpr char NAME[] = "Softmax";
-
                 Softmax() noexcept
                 {}
 
@@ -132,7 +130,7 @@ namespace laruen::nn::layers {
                 }
 
                 const char* name() const noexcept override final {
-                    return this->NAME;
+                    return "Softmax";
                 }
 
                 inline void axis(int_fast8_t axis) noexcept {

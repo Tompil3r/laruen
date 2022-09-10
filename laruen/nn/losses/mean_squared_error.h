@@ -21,8 +21,6 @@ namespace laruen::nn::losses {
         template <typename T = float32_t>
         class MeanSquaredError : public Loss<T> {
             public:
-                static constexpr char NAME[] = "mean squared error";
-
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     assert(y_true.shape() == y_pred.shape());
 
@@ -52,7 +50,7 @@ namespace laruen::nn::losses {
                 }
 
                 const char* name() const noexcept override final {
-                    return this->NAME;
+                    return "mean squared error";
                 }
         };
 

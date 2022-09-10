@@ -25,8 +25,6 @@ namespace laruen::nn::layers {
             uint_fast64_t size_;
 
             public:
-                static constexpr char NAME[] = "Flatten";
-
                 Flatten() noexcept : size_(0)
                 {}
 
@@ -70,7 +68,7 @@ namespace laruen::nn::layers {
                 }
 
                 const char* name() const noexcept override final {
-                    return this->NAME;
+                    return "flatten";
                 }
 
                 uint_fast64_t params() const noexcept override final {

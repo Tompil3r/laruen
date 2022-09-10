@@ -24,8 +24,6 @@ namespace laruen::nn::layers {
         template <typename T = float32_t>
         class ReLU : public Layer<T> {
             public:
-                static constexpr char NAME[] = "ReLU";
-
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
                     input.maximum(0, output);
                     return output;
@@ -87,7 +85,7 @@ namespace laruen::nn::layers {
                 }
 
                 const char* name() const noexcept override final {
-                    return this->NAME;
+                    return "ReLU";
                 }
 
                 uint_fast64_t params() const noexcept override final {

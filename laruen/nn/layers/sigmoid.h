@@ -23,8 +23,6 @@ namespace laruen::nn::layers {
         class Sigmoid : public Layer<T> {
             
             public:
-                static constexpr char NAME[] = "Sigmoid";
-
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
                     input.negate(output);
                     output.exp_eq();
@@ -88,7 +86,7 @@ namespace laruen::nn::layers {
                 }
 
                 const char* name() const noexcept override final {
-                    return this->NAME;
+                    return "Sigmoid";
                 }
 
                 uint_fast64_t params() const noexcept override final {
