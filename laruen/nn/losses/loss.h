@@ -20,6 +20,7 @@ namespace laruen::nn::losses {
 
                 virtual T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const = 0;
                 virtual void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred, NDArray<T> &deriv_output) const = 0;
+                virtual const char* name() const noexcept = 0;
         };
     }
 

@@ -23,6 +23,8 @@ namespace laruen::nn::losses {
         template <typename T = float32_t>
         class MeanAbsoluteError : public Loss<T> {
             public:
+                static constexpr char NAME[] = "mean absolute error";
+
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     assert(y_true.shape() == y_pred.shape());
 
@@ -53,6 +55,10 @@ namespace laruen::nn::losses {
                         // 1 if y_pred > y_true
                         output_iter.next() = sign(pred_iter.next() - true_iter.next()) / batch_size;
                     }
+                }
+
+                const char* name() const noexcept override final {
+                    return this->NAME;
                 }
         };
 
