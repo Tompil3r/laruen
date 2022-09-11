@@ -1179,8 +1179,7 @@ namespace laruen::multi {
                 return str;
             }
 
-        private:
-            // private utility functions
+            // utility functions
             const NDArray<T> expansion(const ArrayBase &expand_to) const noexcept {
                 /* expand the dimensions of this to the dimensions of expansion */
                 
@@ -1254,7 +1253,6 @@ namespace laruen::multi {
                 return reorder;
             }
 
-        public:
             // getters & setters
             inline void data(T *data) noexcept {
                 this->data_ = data;
