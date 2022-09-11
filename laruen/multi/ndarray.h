@@ -15,6 +15,7 @@
 #include <cmath>
 #include <random>
 #include <fstream>
+#include <tuple>
 #include "laruen/multi/utils.h"
 #include "laruen/multi/types.h"
 #include "laruen/multi/nditer.h"
@@ -2276,7 +2277,7 @@ namespace laruen::multi {
             }
 
             template <typename TT, typename TR>
-            inline NDArray<TR>& matmul(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
+            NDArray<TR>& matmul(const NDArray<TT> &rhs, NDArray<TR> &out) const noexcept {
                 using laruen::math::common::min, laruen::math::common::is_pow2;
                 using laruen::math::bits::lsb64;
 
@@ -2297,13 +2298,13 @@ namespace laruen::multi {
                 const NDArray<T> lhs_exp;
                 const NDArray<TT> rhs_exp;
 
-                impl::matmul(this->data_,
-                std::equal(out.shape_.cbegin(), out.shape_.cend() - 2, this->shape_.cbegin())
-                ? *this : (lhs_exp = this->matmul_expansion(out)),
-                rhs.data_,
-                std::equal(out.shape_.cbegin(), out.shape_.cend() - 2, rhs.shape_.cbegin())
-                ? rhs : (rhs_exp = rhs.matmul_expansion(out)),
-                out.data_, out, depth);
+                const NDArray<T> &lhs_exp_ref = std::equal(out.shape_.cbegin(), out.shape_.cend() - 2, this->shape_.cbegin())
+                ? *this : (lhs_exp = this->matmul_expansion(out));
+
+                const NDArray<T> &rhs_exp_ref = std::equal(out.shape_.cbegin(), out.shape_.cend() - 2, rhs.shape_.cbegin())
+                ? rhs : (rhs_exp = rhs.matmul_expansion(out));
+
+                impl::matmul(this->data_, lhs_exp_ref, rhs.data_, rhs_exp_ref, out.data_, out, depth);
 
                 return out;
             }
