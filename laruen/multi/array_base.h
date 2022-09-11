@@ -120,13 +120,13 @@ namespace laruen::multi {
                 }
             }
 
-            virtual void resize(const Shape &shape, bool contig = true) {
+            virtual void resize(const Shape &shape) {
                 this->ndim_ = shape.size();
                 this->shape_ = shape;
                 this->strides_.resize(this->ndim_);
                 this->dim_sizes_.resize(this->ndim_);
                 this->size_ = this->ndim_ > 0;
-                this->contig_ = contig;
+                this->contig_ = true;
 
                 uint_fast64_t stride = 1;
                 
