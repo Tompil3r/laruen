@@ -456,6 +456,15 @@ namespace laruen::nn {
                         (*metric)->values().assign(new_size, 0);
                     }
                 }
+
+                void free_resources() noexcept {
+                    this->batch_outputs_.clear();
+                    this->batch_derivs_.clear();
+                    this->remaining_outputs_.clear();
+                    this->remaining_derivs_.clear();
+                    this->input_batch_deriv_.resize({});
+                    this->input_remaining_deriv_.resize({});
+                }
                         
             private:
                 void construct(std::vector<NDArray<T>> &batch_outputs, std::vector<NDArray<T>> &batch_derivs,
