@@ -211,8 +211,8 @@ namespace laruen::nn {
                     this->reset_metrics(epochs);
 
                     if(batch_size && this->batch_size_ != batch_size) {
-                        this->construct(this->batch_outputs_, this->batch_derivs_, this->input_batch_deriv_,
-                        x_train_batch_view.shape(), batch_size);
+                        this->construct(this->batch_outputs_, this->batch_derivs_,
+                        this->input_batch_deriv_, x_train_batch_view.shape());
                         this->batch_size_ = batch_size;
                     }
 
@@ -222,8 +222,8 @@ namespace laruen::nn {
                         x_train_remaining_view.data(x.data() + batches * x.strides().front());
                         y_train_remaining_view.data(y.data() + batches * y.strides().front());
 
-                        this->construct(this->remaining_outputs_, this->remaining_derivs_, this->input_remaining_deriv_,
-                        x_train_remaining_view.shape(), remaining_size);
+                        this->construct(this->remaining_outputs_, this->remaining_derivs_,
+                        this->input_remaining_deriv_, x_train_remaining_view.shape());
                         
                         this->remaining_size_ = remaining_size;                    
                     }
@@ -306,8 +306,8 @@ namespace laruen::nn {
                     this->reset_metrics(1);
 
                     if(batch_size && this->batch_size_ != batch_size) {
-                        this->construct(this->batch_outputs_, this->batch_derivs_, this->input_batch_deriv_,
-                        x_batch_view.shape(), batch_size);
+                        this->construct(this->batch_outputs_, this->batch_derivs_,
+                        this->input_batch_deriv_, x_batch_view.shape());
                         this->batch_size_ = batch_size;
                     }
 
@@ -317,8 +317,8 @@ namespace laruen::nn {
                         x_remaining_view.data(x.data() + batches * x.strides().front());
                         y_remaining_view.data(y.data() + batches * y.strides().front());
 
-                        this->construct(this->remaining_outputs_, this->remaining_derivs_, this->input_remaining_deriv_,
-                        x_remaining_view.shape(), remaining_size);
+                        this->construct(this->remaining_outputs_, this->remaining_derivs_,
+                        this->input_remaining_deriv_, x_remaining_view.shape());
                         
                         this->remaining_size_ = remaining_size;                    
                     }
@@ -364,8 +364,8 @@ namespace laruen::nn {
 
                 NDArray<T>& predict(const NDArray<T> &x) {
                     if(this->batch_size_ != x.shape().front()) {
-                        this->construct(this->batch_outputs_, this->batch_derivs_, this->input_batch_deriv_,
-                        x.shape(), x.shape().front());
+                        this->construct(this->batch_outputs_, this->batch_derivs_,
+                        this->input_batch_deriv_, x.shape());
 
                         this->batch_size_ = x.shape().front();
                     }
@@ -468,18 +468,18 @@ namespace laruen::nn {
                         
             private:
                 void construct(std::vector<NDArray<T>> &batch_outputs, std::vector<NDArray<T>> &batch_derivs,
-                NDArray<T> &input_deriv, const Shape &input_shape, uint_fast64_t batch_size) noexcept
+                NDArray<T> &input_deriv, const Shape &input_batch_shape) noexcept
                 {
                     using laruen::nn::utils::add_batch_shape;
 
-                    input_deriv = NDArray<T>(input_shape);
-                    input_deriv.shape().front() = batch_size;
+                    input_deriv = NDArray<T>(input_batch_shape);
+                    input_deriv.shape().front() = input_batch_shape.front();
 
                     batch_outputs.resize(this->layers_.size());
                     batch_derivs.resize(this->layers_.size());
 
                     for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
-                        batch_outputs[i] = NDArray<T>(add_batch_shape(this->layers_[i]->output_shape(), batch_size));
+                        batch_outputs[i] = NDArray<T>(add_batch_shape(this->layers_[i]->output_shape(), input_batch_shape.front()));
                         batch_derivs[i] = NDArray<T>(batch_outputs[i].shape());
                     }
                 }
