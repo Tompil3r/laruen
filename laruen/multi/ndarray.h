@@ -1204,17 +1204,19 @@ namespace laruen::multi {
                 NDArray<T> expansion(this->data_, Shape(expand_to.shape_), Strides(expand_to.ndim_, 0),
                 Strides(expand_to.ndim_, 0), expand_to.size_, expand_to.ndim_, false, false);
                 
-                uint_fast8_t expansion_idx = expand_to.ndim_ - 1;
-                uint_fast8_t expanded_idx = this->ndim_ - 1;
+                uint_fast8_t expansion_idx = expand_to.ndim_ - 2;
+                uint_fast8_t expanded_idx = this->ndim_ - 2;
+
+                expansion.shape_.back() = this->shape_.back();
+                expansion.strides_.back() = this->strides_.back();
+                expansion.dim_sizes_.back() = this->dim_sizes_.back();
 
                 expansion.shape_[expansion_idx] = this->shape_[expanded_idx];
                 expansion.strides_[expansion_idx] = this->strides_[expanded_idx];
                 expansion.dim_sizes_[expansion_idx] = this->dim_sizes_[expanded_idx];
-                expansion_idx--;
-                expanded_idx--;
-                expansion.shape_[expansion_idx] = this->shape_[expanded_idx];
-                expansion.strides_[expansion_idx] = this->strides_[expanded_idx];
-                expansion.dim_sizes_[expansion_idx] = this->dim_sizes_[expanded_idx];
+
+                expansion.size_ = ((expansion.size_ / expand_to.shape_.back()) / expand_to.shape_[expansion_idx])
+                * expansion.shape_.back() * expansion.shape_[expansion_idx];
 
                 for(;expansion_idx--, expanded_idx-- > 0;) {
                     if(expand_to.shape_[expansion_idx] == this->shape_[expanded_idx]) {
