@@ -2304,7 +2304,38 @@ namespace laruen::multi {
                 const NDArray<T> &rhs_exp_ref = std::equal(out.shape_.cbegin(), out.shape_.cend() - 2, rhs.shape_.cbegin())
                 ? rhs : (rhs_exp = rhs.matmul_expansion(out));
 
-                impl::matmul(this->data_, lhs_exp_ref, rhs.data_, rhs_exp_ref, out.data_, out, depth);
+                if(!depth) {
+                    impl::matmul_n3(lhs_exp_ref.data(), lhs_exp_ref, rhs_exp_ref.data(),
+                    rhs_exp_ref, out.data(), out);
+                    
+                    return out;
+                }
+
+                uint_fast8_t rows_axis = out.ndim_ - 2;
+                uint_fast8_t cols_axis = out.ndim_ - 1;
+
+                std::vector<std::tuple<NDArray<T>, NDArray<TT>, NDArray<TR>>> extras(depth);
+
+                Shape lhs_shape = lhs_exp_ref.shape_;
+                Shape rhs_shape = rhs_exp_ref.shape_;
+                Shape out_shape = out.shape_;
+
+                for(uint_fast8_t i = depth;i-- > 0;) {
+                    std::tuple<NDArray<T>, NDArray<TT>, NDArray<TR>> &curr_extras = extras[i];
+
+                    lhs_shape[rows_axis] >>= 1;
+                    lhs_shape[cols_axis] >>= 1;
+                    rhs_shape[rows_axis] >>= 1;
+                    rhs_shape[cols_axis] >>= 1;
+                    out_shape[rows_axis] >>= 1;
+                    out_shape[cols_axis] >>= 1;
+
+                    std::get<0>(curr_extras).resize(lhs_shape);
+                    std::get<1>(curr_extras).resize(rhs_shape);
+                    std::get<2>(curr_extras).resize(out_shape);
+                }
+
+                impl::matmul(this->data_, lhs_exp_ref, rhs.data_, rhs_exp_ref, out.data_, out, depth, extras);
 
                 return out;
             }

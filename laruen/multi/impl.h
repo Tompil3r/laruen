@@ -3,8 +3,11 @@
 
 #include <cstdint>
 #include <cmath>
+#include <vector>
+#include <tuple>
 #include "laruen/multi/nditer.h"
 #include "laruen/multi/ndarray.h"
+#include "laruen/multi/array_base.h"
 #include "laruen/math/common.h"
 
 namespace laruen::multi {
@@ -1102,7 +1105,9 @@ namespace laruen::multi {
 
         template <typename T, typename TT, typename TR>
         TR* matmul(const T *lhs_data, const ArrayBase &lhs_base, const TT *rhs_data,
-        const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base, uint_fast8_t depth) noexcept {
+        const ArrayBase &rhs_base, TR *out_data, const ArrayBase &out_base, uint_fast8_t depth,
+        std::vector<std::tuple<NDArray<T>, NDArray<TT>, NDArray<TR>>> &extras) noexcept
+        {
             /*
                 function requirements:
                     - all arrays have already been broadcasted
@@ -1115,12 +1120,10 @@ namespace laruen::multi {
                 return out_data;
             }
 
+            depth--;
+
             uint_fast8_t rows_axis = lhs_base.ndim() - 2;
             uint_fast8_t cols_axis = lhs_base.ndim() - 1;
-
-            uint_fast64_t total_rows = out_base.shape()[rows_axis]; // or lhs_base.shape()[rows_axis]
-            uint_fast64_t total_cols = out_base.shape()[cols_axis]; // or rhs_base.shape()[cols_axis]
-            uint_fast64_t total_shared = lhs_base.shape()[cols_axis]; // or rhs_base.shape()[rows_axis]
 
             ArrayBase lhs_q_base(lhs_base);
             ArrayBase rhs_q_base(rhs_base);
@@ -1156,35 +1159,35 @@ namespace laruen::multi {
             TR* const out_q12 = out_data + out_q_base.dim_sizes()[cols_axis];
             TR* const out_q21 = out_data + out_q_base.dim_sizes()[rows_axis];
             TR* const out_q22 = out_data + out_q_base.dim_sizes()[cols_axis] + out_q_base.dim_sizes()[rows_axis];
-            
+
+            std::tuple<NDArray<T>, NDArray<TT>, NDArray<TR>> &curr_extras = extras[depth];
+
             // extra arrays for calculation memory
-            NDArray<T> lhs_ext(lhs_q_base.shape());
-            NDArray<TT> rhs_ext(rhs_q_base.shape());
-            NDArray<TR> out_ext(out_q_base.shape());
+            NDArray<T> &lhs_ext = std::get<0>(curr_extras);
+            NDArray<TT> &rhs_ext = std::get<1>(curr_extras);
+            NDArray<TR> &out_ext = std::get<2>(curr_extras);
 
-            depth--;
-
-            matmul(lhs_q11, lhs_q_base, rhs_q11, rhs_q_base, out_q11, out_q_base, depth); // r1 -> out_q11
+            matmul(lhs_q11, lhs_q_base, rhs_q11, rhs_q_base, out_q11, out_q_base, depth, extras); // r1 -> out_q11
             subtract(lhs_q11, lhs_q_base, lhs_q21, lhs_q_base, lhs_ext.data(), lhs_ext); // s3 -> lhs_ext
             subtract(rhs_q22, rhs_q_base, rhs_q12, rhs_q_base, rhs_ext.data(), rhs_ext); // t3 -> rhs_ext
-            matmul(lhs_ext.data(), lhs_ext, rhs_ext.data(), rhs_ext, out_ext.data(), out_ext, depth); // r7 -> out_ext
+            matmul(lhs_ext.data(), lhs_ext, rhs_ext.data(), rhs_ext, out_ext.data(), out_ext, depth, extras); // r7 -> out_ext
             add(lhs_q21, lhs_q_base, lhs_q22, lhs_q_base, lhs_ext.data(), lhs_ext); // s1 -> lhs_ext
             subtract(rhs_q12, rhs_q_base, rhs_q11, rhs_q_base, rhs_ext.data(), rhs_ext); // t1 -> rhs_ext
-            matmul(lhs_ext.data(), lhs_ext, rhs_ext.data(), rhs_ext, out_q22, out_q_base, depth); // r5 -> out_q22
+            matmul(lhs_ext.data(), lhs_ext, rhs_ext.data(), rhs_ext, out_q22, out_q_base, depth, extras); // r5 -> out_q22
             subtract_eq(lhs_ext.data(), lhs_ext, lhs_q11, lhs_q_base); // s2 -> lhs_ext
             subtract(rhs_q22, rhs_q_base, rhs_ext.data(), rhs_ext, rhs_ext.data(), rhs_ext); // t2 -> lhs_ext
-            matmul(lhs_ext.data(), lhs_ext, rhs_ext.data(), rhs_ext, out_q12, out_q_base, depth); // r6 -> out_q12
+            matmul(lhs_ext.data(), lhs_ext, rhs_ext.data(), rhs_ext, out_q12, out_q_base, depth, extras); // r6 -> out_q12
             subtract(lhs_q12, lhs_q_base, lhs_ext.data(), lhs_ext, lhs_ext.data(), lhs_ext); // s4 -> lhs_ext
             subtract_eq(rhs_ext.data(), rhs_ext, rhs_q21, rhs_q_base); // t4 -> rhs_ext
             add_eq(out_q12, out_q_base, out_q11, out_q_base); // c2 -> out_q12
             add_eq(out_ext.data(), out_ext, out_q12, out_q_base); // c3 -> out_ext
             add_eq(out_q12, out_q_base, out_q22, out_q_base); // c4 -> out_q12
             add_eq(out_q22, out_q_base, out_ext.data(), out_ext); // c7 -> out_q22 (DONE, 1/4)
-            matmul(lhs_ext.data(), lhs_ext, rhs_q22, rhs_q_base, out_q21, out_q_base, depth); // r3 -> out_q21
+            matmul(lhs_ext.data(), lhs_ext, rhs_q22, rhs_q_base, out_q21, out_q_base, depth, extras); // r3 -> out_q21
             add_eq(out_q12, out_q_base, out_q21, out_q_base); // c5 -> out_q12 (DONE, 2/4)
-            matmul(lhs_q12, lhs_q_base, rhs_q21, rhs_q_base, out_q21, out_q_base, depth); // r2 -> out_q21
+            matmul(lhs_q12, lhs_q_base, rhs_q21, rhs_q_base, out_q21, out_q_base, depth, extras); // r2 -> out_q21
             add_eq(out_q11, out_q_base, out_q21, out_q_base); // c1 -> out_q11 (DONE, 3/4)
-            matmul(lhs_q22, lhs_q_base, rhs_ext.data(), rhs_ext, out_q21, out_q_base, depth); // r4 -> out_q21
+            matmul(lhs_q22, lhs_q_base, rhs_ext.data(), rhs_ext, out_q21, out_q_base, depth, extras); // r4 -> out_q21
             subtract(out_ext.data(), out_ext, out_q21, out_q_base, out_q21, out_q_base); // c6 -> out_q21 (DONE, 4/4)
 
             return out_data;
