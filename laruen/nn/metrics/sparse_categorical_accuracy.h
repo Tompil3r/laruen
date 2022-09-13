@@ -3,6 +3,7 @@
 #define LARUEN_NN_METRICS_SPARSE_CATEGORICAL_ACCURACY_H_
 
 #include <memory>
+#include <string>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/types.h"
 #include "laruen/multi/nditer.h"
@@ -19,6 +20,14 @@ namespace laruen::nn::metrics {
         template <typename T = float32_t>
         class SparseCategoricalAccuracy : public Metric<T> {            
             public:
+                inline SparseCategoricalAccuracy() noexcept
+                : Metric<T>("sparse categorical accuracy")
+                {}
+
+                inline SparseCategoricalAccuracy(const std::string &name)
+                : Metric<T>(name)
+                {}
+
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     NDIter true_iter(y_true.data(), y_true);
                     NDIter pred_iter(y_pred.data(), y_pred);
@@ -41,15 +50,16 @@ namespace laruen::nn::metrics {
 
                     return (score / y_true.size());
                 }
-
-                const char* name() const noexcept override final {
-                    return "sparse categorical accuracy";
-                }
         };
 
         template <typename T = float32_t>
         inline std::shared_ptr<Metric<T>> sparse_categorical_accuracy() noexcept {
             return std::shared_ptr<Metric<T>>(new SparseCategoricalAccuracy<T>());
+        }
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Metric<T>> sparse_categorical_accuracy(const std::string &name) {
+            return std::shared_ptr<Metric<T>>(new SparseCategoricalAccuracy<T>(name));
         }
     }
 

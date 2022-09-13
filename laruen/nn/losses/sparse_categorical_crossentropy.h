@@ -6,6 +6,7 @@
 #include <cmath>
 #include <limits>
 #include <memory>
+#include <string>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/nditer.h"
 #include "laruen/multi/types.h"
@@ -23,6 +24,14 @@ namespace laruen::nn::losses {
         template <typename T = float32_t>
         class SparseCategoricalCrossentropy : public Loss<T> {
             public:
+                inline SparseCategoricalCrossentropy() noexcept
+                : Loss<T>("sparse categorical crossentropy")
+                {}
+
+                inline SparseCategoricalCrossentropy(const std::string &name) noexcept
+                : Loss<T>(name)
+                {}
+
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     using laruen::nn::utils::stable_nonzero;
 
@@ -68,15 +77,16 @@ namespace laruen::nn::losses {
                         }
                     }
                 }
-
-                const char* name() const noexcept override final {
-                    return "sparse categorical crossentropy";
-                }
         };
 
         template <typename T = float32_t>
         inline std::shared_ptr<Loss<T>> sparse_categorical_crossentropy() noexcept {
             return std::shared_ptr<Loss<T>>(new SparseCategoricalCrossentropy<T>());
+        }
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Loss<T>> sparse_categorical_crossentropy(const std::string &name) {
+            return std::shared_ptr<Loss<T>>(new SparseCategoricalCrossentropy<T>(name));
         }
     }
 

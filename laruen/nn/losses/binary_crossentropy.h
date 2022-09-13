@@ -6,6 +6,7 @@
 #include <cmath>
 #include <limits>
 #include <memory>
+#include <string>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/nditer.h"
 #include "laruen/multi/types.h"
@@ -23,6 +24,14 @@ namespace laruen::nn::losses {
         template <typename T = float32_t>
         class BinaryCrossentropy : public Loss<T> {
             public:
+                inline BinaryCrossentropy() noexcept
+                : Loss<T>("binary crossentropy")
+                {}
+
+                inline BinaryCrossentropy(const std::string &name)
+                : Loss<T>(name)
+                {}
+
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     using laruen::nn::utils::stable_nonzero;
 
@@ -62,15 +71,16 @@ namespace laruen::nn::losses {
                         pred_iter.next();
                     }
                 }
-
-                const char* name() const noexcept override final {
-                    return "binary crossentropy";
-                }
         };
 
         template <typename T = float32_t>
         inline std::shared_ptr<Loss<T>> binary_crossentropy() noexcept {
             return std::shared_ptr<Loss<T>>(new BinaryCrossentropy<T>());
+        }
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Loss<T>> binary_crossentropy(const std::string &name) {
+            return std::shared_ptr<Loss<T>>(new BinaryCrossentropy<T>(name));
         }
     }
 

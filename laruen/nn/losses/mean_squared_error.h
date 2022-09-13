@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cmath>
 #include <memory>
+#include <string>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/nditer.h"
 #include "laruen/multi/types.h"
@@ -21,6 +22,14 @@ namespace laruen::nn::losses {
         template <typename T = float32_t>
         class MeanSquaredError : public Loss<T> {
             public:
+                inline MeanSquaredError() noexcept
+                : Loss<T>("mean squared error")
+                {}
+
+                inline MeanSquaredError(const std::string &name) noexcept
+                : Loss<T>(name)
+                {}
+
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     assert(y_true.shape() == y_pred.shape());
 
@@ -48,15 +57,16 @@ namespace laruen::nn::losses {
                         output_iter.next() = 2*(pred_iter.next() - true_iter.next()) / batch_size;
                     }
                 }
-
-                const char* name() const noexcept override final {
-                    return "mean squared error";
-                }
         };
 
         template <typename T = float32_t>
         inline std::shared_ptr<Loss<T>> mean_squared_error() noexcept {
             return std::shared_ptr<Loss<T>>(new MeanSquaredError<T>());
+        }
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Loss<T>> mean_squared_error(const std::string &name) {
+            return std::shared_ptr<Loss<T>>(new MeanSquaredError<T>(name));
         }
     }
 

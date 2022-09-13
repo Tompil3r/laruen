@@ -3,6 +3,7 @@
 #define LARUEN_NN_METRICS_BINARY_ACCURACY_H_
 
 #include <memory>
+#include <string>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/types.h"
 #include "laruen/multi/nditer.h"
@@ -22,8 +23,12 @@ namespace laruen::nn::metrics {
                 T threshold_;
             
             public:
-                BinaryAccuracy(T threshold = 0.5f)
-                : threshold_(threshold)
+                inline BinaryAccuracy(T threshold = 0.5f)
+                : Metric<T>("binary accuracy"), threshold_(threshold)
+                {}
+
+                inline BinaryAccuracy(const std::string &name, T threshold = 0.5f)
+                : Metric<T>(name), threshold_(threshold)
                 {}
 
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
@@ -39,14 +44,15 @@ namespace laruen::nn::metrics {
 
                     return (score / y_pred.size());
                 }
-
-                const char* name() const noexcept override final {
-                    return "binary accuracy";
-                }
         };
 
         template <typename T = float32_t>
         inline std::shared_ptr<Metric<T>> binary_accuracy(T threshold = 0.5f) noexcept {
+            return std::shared_ptr<Metric<T>>(new BinaryAccuracy<T>(threshold));
+        }
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Metric<T>> binary_accuracy(const std::string &name, T threshold = 0.5f) {
             return std::shared_ptr<Metric<T>>(new BinaryAccuracy<T>(threshold));
         }
     }

@@ -3,6 +3,7 @@
 #define LARUEN_NN_METRICS_CATEGORICAL_ACCURACY_H_
 
 #include <memory>
+#include <string>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/types.h"
 #include "laruen/multi/nditer.h"
@@ -19,6 +20,14 @@ namespace laruen::nn::metrics {
         template <typename T = float32_t>
         class CategoricalAccuracy : public Metric<T> {            
             public:
+                inline CategoricalAccuracy() noexcept
+                : Metric<T>("categorical accuracy")
+                {}
+
+                inline CategoricalAccuracy(const std::string &name)
+                : Metric<T>(name)
+                {}
+
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     NDIter true_iter(y_true.data(), y_true);
                     NDIter pred_iter(y_pred.data(), y_pred);
@@ -44,15 +53,16 @@ namespace laruen::nn::metrics {
 
                     return (score / nb_samples);
                 }
-
-                const char* name() const noexcept override final {
-                    return "categorical accuracy";
-                }
         };
 
         template <typename T = float32_t>
         inline std::shared_ptr<Metric<T>> categorical_accuracy() noexcept {
             return std::shared_ptr<Metric<T>>(new CategoricalAccuracy<T>());
+        }
+        
+        template <typename T = float32_t>
+        inline std::shared_ptr<Metric<T>> categorical_accuracy(const std::string &name) {
+            return std::shared_ptr<Metric<T>>(new CategoricalAccuracy<T>(name));
         }
     }
 

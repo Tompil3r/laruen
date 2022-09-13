@@ -3,6 +3,7 @@
 #define LARUEN_NN_METRICS_METRIC_H_
 
 #include <vector>
+#include <string>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/types.h"
 
@@ -17,21 +18,32 @@ namespace laruen::nn::metrics {
         class Metric {
             private:
                 std::vector<T> values_;
+                std::string name_;
 
             public:
                 virtual ~Metric()
                 {}
 
-                std::vector<T>& values() noexcept {
+                inline Metric(const std::string &name) : name_(name)
+                {}
+
+                inline std::vector<T>& values() noexcept {
                     return this->values_;
                 }
 
-                const std::vector<T>& values() const noexcept {
+                inline const std::vector<T>& values() const noexcept {
                     return this->values_;
                 }
 
-                virtual T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const = 0;
-                virtual const char* name() const noexcept = 0;
+                inline const std::string& name() const noexcept {
+                    return this->name_;    
+                }
+
+                inline void name(const std::string &name) {
+                    this->name_ = name;    
+                }
+
+                virtual T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const = 0;                
         };
     }
 
