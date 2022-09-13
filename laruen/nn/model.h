@@ -465,23 +465,6 @@ namespace laruen::nn {
                 }
                         
             private:
-                void construct(std::vector<NDArray<T>> &batch_outputs, std::vector<NDArray<T>> &batch_grads,
-                NDArray<T> &input_grad, const Shape &input_batch_shape) noexcept
-                {
-                    using laruen::nn::utils::add_batch_shape;
-
-                    input_grad = NDArray<T>(input_batch_shape);
-                    input_grad.shape().front() = input_batch_shape.front();
-
-                    batch_outputs.resize(this->layers_.size());
-                    batch_grads.resize(this->layers_.size());
-
-                    for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
-                        batch_outputs[i] = NDArray<T>(add_batch_shape(this->layers_[i]->output_shape(), input_batch_shape.front()));
-                        batch_grads[i] = NDArray<T>(batch_outputs[i].shape());
-                    }
-                }
-                
                 void construct_forward(std::vector<NDArray<T>> &batch_outputs, uint_fast64_t batch_size) noexcept
                 {
                     using laruen::nn::utils::add_batch_shape;
@@ -503,6 +486,13 @@ namespace laruen::nn {
                     for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
                         batch_grads[i].resize(batch_outputs[i].shape());
                     }
+                }
+
+                inline void construct(std::vector<NDArray<T>> &batch_outputs, std::vector<NDArray<T>> &batch_grads,
+                NDArray<T> &input_grad, const Shape &input_batch_shape) noexcept
+                {
+                    this->construct_forward(batch_outputs, input_batch_shape.front());
+                    this->construct_backward(batch_outputs, batch_grads, input_grad, input_batch_shape);
                 }
 
                 uint_fast64_t verbose(uint_fast64_t epoch_index, uint_fast64_t epochs,
