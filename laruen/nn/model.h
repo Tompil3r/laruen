@@ -50,8 +50,6 @@ namespace laruen::nn {
                 std::shared_ptr<Loss<T>> loss_;
                 std::shared_ptr<Optimizer<T>> optimizer_;
                 std::vector<std::shared_ptr<Metric<T>>> metrics_;
-                uint_fast64_t batch_size_;
-                uint_fast64_t remaining_train_size_;
                 bool built_;
                 bool compiled_;
                 
@@ -59,7 +57,7 @@ namespace laruen::nn {
                 Model(const std::vector<std::shared_ptr<Layer<T>>> &layers)
                 : layers_(layers), batch_outputs_(layers.size()), batch_grads_(layers.size()),
                 remaining_train_outputs_(layers.size()), remaining_train_grads_(layers.size()),
-                batch_size_(0), remaining_train_size_(0), built_(false), compiled_(false)
+                built_(false), compiled_(false)
                 {}
                 
                 void build(Shape::const_iterator begin, Shape::const_iterator end) {
@@ -210,13 +208,12 @@ namespace laruen::nn {
 
                     this->reset_metrics(epochs);
 
-                    if(batch_size && this->batch_size_ != batch_size) {
+                    if(batch_size) {
                         this->construct(this->batch_outputs_, this->batch_grads_,
                         this->input_batch_grad_, x_train_batch_view.shape());
-                        this->batch_size_ = batch_size;
                     }
 
-                    if(remaining_train_size && this->remaining_train_size_ != remaining_train_size) {
+                    if(remaining_train_size) {
                         x_train_remaining_view = batch_view(x, remaining_train_size);
                         y_train_remaining_view = batch_view(y, remaining_train_size);
                         x_train_remaining_view.data(x.data() + batches * x.strides().front());
@@ -224,8 +221,6 @@ namespace laruen::nn {
 
                         this->construct(this->remaining_train_outputs_, this->remaining_train_grads_,
                         this->input_remaining_train_grad_, x_train_remaining_view.shape());
-                        
-                        this->remaining_train_size_ = remaining_train_size;                    
                     }
 
                     for(epoch = 0;epoch < epochs;epoch++) {
@@ -305,21 +300,18 @@ namespace laruen::nn {
 
                     this->reset_metrics(1);
 
-                    if(batch_size && this->batch_size_ != batch_size) {
+                    if(batch_size) {
                         this->construct_forward(this->batch_outputs_, x_batch_view.shape().front());
-                        this->batch_size_ = batch_size;
                     }
 
-                    if(remaining_train_size && this->remaining_train_size_ != remaining_train_size) {
+                    if(remaining_train_size) {
                         x_remaining_view = batch_view(x, remaining_train_size);
                         y_remaining_view = batch_view(y, remaining_train_size);
                         x_remaining_view.data(x.data() + batches * x.strides().front());
                         y_remaining_view.data(y.data() + batches * y.strides().front());
 
                         this->construct(this->remaining_train_outputs_, this->remaining_train_grads_,
-                        this->input_remaining_train_grad_, x_remaining_view.shape());
-                        
-                        this->remaining_train_size_ = remaining_train_size;                    
+                        this->input_remaining_train_grad_, x_remaining_view.shape());                   
                     }
 
                     for(batch = 0;batch < batches;batch++) {
@@ -362,11 +354,7 @@ namespace laruen::nn {
                 }
 
                 NDArray<T>& predict(const NDArray<T> &x) {
-                    if(this->batch_size_ != x.shape().front()) {
-                        this->construct_forward(this->batch_outputs_, x.shape().front());
-
-                        this->batch_size_ = x.shape().front();
-                    }
+                    this->construct_forward(this->batch_outputs_, x.shape().front());
 
                     this->forward(x, this->batch_outputs_);
 
@@ -440,15 +428,7 @@ namespace laruen::nn {
                 inline auto& metrics() noexcept {
                     return this->metrics_;
                 }
-
-                inline uint_fast64_t batch_size() const noexcept {
-                    return this->batch_size_;
-                }
-
-                inline uint_fast64_t remaining_train_size() const noexcept {
-                    return this->remaining_train_size_;
-                }
-
+                
                 inline void reset_metrics(uint_fast64_t new_size) {
                     for(auto metric = this->metrics_.begin();metric != this->metrics_.end();metric++) {
                         (*metric)->values().assign(new_size, 0);
