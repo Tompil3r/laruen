@@ -44,19 +44,19 @@ namespace laruen::nn::layers {
 
                 /**
                  * @brief calculates the gradient of the Loss function with respect to Z
-                 * @param deriv dA (dL / dA) (dL = dLoss)
+                 * @param grad dA (dL / dA) (dL = dLoss)
                  * @param cached_input Z
                  * @param cached_output A (ReLU(Z)) - not used in this case
-                 * @param prev_deriv_output dZ (dL / dZ)
+                 * @param prev_grad_output dZ (dL / dZ)
                  */
-                void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
-                const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept override final
+                void backward(const NDArray<T> &grad, const NDArray<T> &cached_input,
+                const NDArray<T> &cached_output, NDArray<T> &prev_grad_output) noexcept override final
                 {
-                    assert(deriv.shape() == prev_deriv_output.shape());
+                    assert(grad.shape() == prev_grad_output.shape());
 
-                    NDIter deriv_iter(deriv.data(), deriv);
+                    NDIter grad_iter(grad.data(), grad);
                     NDIter cached_input_iter(cached_input.data(), cached_input);
-                    NDIter output_iter(prev_deriv_output.data(), prev_deriv_output);
+                    NDIter output_iter(prev_grad_output.data(), prev_grad_output);
 
                     /*
                         dL / dZ = (dL / dA) * (dA / dZ)
@@ -67,9 +67,9 @@ namespace laruen::nn::layers {
 
                         ** [i] denotes the i'th element
                     */
-                    for(uint_fast64_t i = 0;i < deriv.size();i++) {
-                        output_iter.next() = cached_input_iter.next() <= 0 ? 0 : deriv_iter.current();
-                        deriv_iter.next();
+                    for(uint_fast64_t i = 0;i < grad.size();i++) {
+                        output_iter.next() = cached_input_iter.next() <= 0 ? 0 : grad_iter.current();
+                        grad_iter.next();
                     }
                 }
 

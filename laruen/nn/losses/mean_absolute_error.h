@@ -37,12 +37,12 @@ namespace laruen::nn::losses {
                     return loss / y_pred.size();
                 }
 
-                void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred, NDArray<T> &deriv_output) const override final {
+                void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred, NDArray<T> &grad_output) const override final {
                     using laruen::math::common::sign;
 
                     NDIter true_iter(y_true.data(), y_true);
                     NDIter pred_iter(y_pred.data(), y_pred);
-                    NDIter output_iter(deriv_output.data(), deriv_output);
+                    NDIter output_iter(grad_output.data(), grad_output);
 
                     uint_fast64_t batch_size = y_pred.shape().front();
 

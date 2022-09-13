@@ -79,19 +79,19 @@ namespace laruen::nn::layers {
 
                 /**
                  * @brief calculates the gradient of the Loss function with respect to A
-                 * @param deriv dZ (dL / dZ) (dL = dLoss)
+                 * @param grad dZ (dL / dZ) (dL = dLoss)
                  * @param cached_input A
                  * @param cached_output Z (A * W) (matmul)
-                 * @param prev_deriv_output dA (dL / dA)
+                 * @param prev_grad_output dA (dL / dA)
                  */
-                void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
-                const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept override final
+                void backward(const NDArray<T> &grad, const NDArray<T> &cached_input,
+                const NDArray<T> &cached_output, NDArray<T> &prev_grad_output) noexcept override final
                 {
                     /*
-                        deriv.shape = (batch_size, nodes)
+                        grad.shape = (batch_size, nodes)
                         cached_input.shape = (batch_size, nb_inputs)
                         cached_output.shape = (batch_size, nodes)
-                        prev_deriv_output.shape = (batch_size, nb_inputs)
+                        prev_grad_output.shape = (batch_size, nb_inputs)
                         this->w_.shape = (nb_inputs, nodes)
                         this->b_.shape = (nodes)
                         this->raw_dw_.shape = (nb_inputs, nodes)
@@ -100,17 +100,17 @@ namespace laruen::nn::layers {
                         this->final_db_.shape = (nodes)
                     */
 
-                    uint_fast64_t batch_size = deriv.shape().front();
+                    uint_fast64_t batch_size = grad.shape().front();
 
                     // dA[l-1]
-                    deriv.matmul(this->w_.transpose(), prev_deriv_output); // dA[l-1] = dZ[l] * W[l]
+                    grad.matmul(this->w_.transpose(), prev_grad_output); // dA[l-1] = dZ[l] * W[l]
                     
                     // dW[l]
-                    cached_input.transpose().matmul(deriv, this->raw_dw_); // dW[l] = A[l-1] * dZ[l]
+                    cached_input.transpose().matmul(grad, this->raw_dw_); // dW[l] = A[l-1] * dZ[l]
                     this->raw_dw_.divide_eq(batch_size); // dW[l] /= batch_size (* (1 / m));
                     
                     // db[l]
-                    deriv.sum({0}, this->raw_db_); // db[l] = sum of dZ (axis = 0)
+                    grad.sum({0}, this->raw_db_); // db[l] = sum of dZ (axis = 0)
                     // since (dZ / db) = 1, (dL / db) = (dL / dZ) * 1 = (dL / dZ)
                     this->raw_db_.divide_eq(batch_size); // db[l] /= batch_size
                 }

@@ -53,8 +53,8 @@ namespace laruen::nn::layers {
 
                 virtual NDArray<T> forward(const NDArray<T> &input) = 0;
 
-                virtual void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
-                const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept = 0;
+                virtual void backward(const NDArray<T> &grad, const NDArray<T> &cached_input,
+                const NDArray<T> &cached_output, NDArray<T> &prev_grad_output) noexcept = 0;
 
                 virtual void update_weights(const Optimizer<T> &optimizer) = 0;
 

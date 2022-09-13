@@ -75,30 +75,30 @@ namespace laruen::nn::layers {
 
                 /**
                  * @brief calculates the gradient of the Loss function with respect to Z
-                 * @param deriv dA (dL / dA) (dL = dLoss)
+                 * @param grad dA (dL / dA) (dL = dLoss)
                  * @param cached_input Z (unused)
                  * @param cached_output A (Softmax(Z))
-                 * @param prev_deriv_output dZ (dL / dZ)
+                 * @param prev_grad_output dZ (dL / dZ)
                  */
-                void backward(const NDArray<T> &deriv, const NDArray<T> &cached_input,
-                const NDArray<T> &cached_output, NDArray<T> &prev_deriv_output) noexcept override final
+                void backward(const NDArray<T> &grad, const NDArray<T> &cached_input,
+                const NDArray<T> &cached_output, NDArray<T> &prev_grad_output) noexcept override final
                 {
-                    const uint_fast64_t batch_size = deriv.size() / deriv.shape().back();
-                    const uint_fast8_t deriv_batch_axis = deriv.ndim() - 2;
+                    const uint_fast64_t batch_size = grad.size() / grad.shape().back();
+                    const uint_fast8_t grad_batch_axis = grad.ndim() - 2;
                     const uint_fast8_t cached_output_batch_axis = cached_output.ndim() - 2;
 
-                    NDIter deriv_iter(deriv.data(), deriv);
-                    NDIter result_iter(prev_deriv_output.data(), prev_deriv_output);
+                    NDIter grad_iter(grad.data(), grad);
+                    NDIter result_iter(prev_grad_output.data(), prev_grad_output);
                     NDIter cached_output_iter_i(cached_output.data(), cached_output);
                     NDIter cached_output_iter_j(cached_output.data(), cached_output);
 
                     for(uint_fast64_t k = 0;k < batch_size;k++) {
 
-                        for(uint_fast64_t i = 0;i < deriv.shape().back();i++) {
+                        for(uint_fast64_t i = 0;i < grad.shape().back();i++) {
                             result_iter.current() = 0;
 
-                            for(uint_fast64_t j = 0;j < deriv.shape().back();j++) {
-                                result_iter.current() += deriv_iter.next() * cached_output_iter_i.current()
+                            for(uint_fast64_t j = 0;j < grad.shape().back();j++) {
+                                result_iter.current() += grad_iter.next() * cached_output_iter_i.current()
                                 * ((i == j) - cached_output_iter_j.next());
                             }
 
@@ -106,14 +106,14 @@ namespace laruen::nn::layers {
     
                             result_iter.next();
     
-                            deriv_iter.ptr -= deriv.dim_sizes().back();
-                            deriv_iter.ndindex.back() = 0;
+                            grad_iter.ptr -= grad.dim_sizes().back();
+                            grad_iter.ndindex.back() = 0;
 
                             cached_output_iter_j.ptr -= cached_output.dim_sizes().back();
                             cached_output_iter_j.ndindex.back() = 0;
                         }
 
-                        deriv_iter.next(deriv_batch_axis);
+                        grad_iter.next(grad_batch_axis);
                         cached_output_iter_j.next(cached_output_batch_axis);
                     }
                 }
