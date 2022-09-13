@@ -40,6 +40,17 @@ namespace laruen::nn::utils {
 
             return view;
         }
+        
+        template <typename T>
+        NDArray<T> batch_view(NDArray<T> &ndarray, uint_fast64_t batch_size) {
+            NDArray<T> view = ndarray.view();
+
+            view.size() = (ndarray.size() / ndarray.shape().front()) * batch_size;
+            view.shape().front() = batch_size;
+            view.dim_sizes().front() = (ndarray.dim_sizes().front() / ndarray.shape().front()) * batch_size;
+
+            return view;
+        }
 
         template <typename T>
         inline constexpr T stable_nonzero(T num, T threshold = 1e-12) noexcept {
