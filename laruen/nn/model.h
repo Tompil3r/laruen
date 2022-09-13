@@ -493,6 +493,18 @@ namespace laruen::nn {
                     }
                 }
 
+                void construct_backward(const std::vector<NDArray<T>> &batch_outputs, std::vector<NDArray<T>> &batch_grads,
+                NDArray<T> &input_grad, const Shape &input_batch_shape) noexcept
+                {
+                    input_grad.resize(input_batch_shape);
+
+                    batch_grads.resize(this->layers_.size());
+
+                    for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
+                        batch_grads[i].resize(batch_outputs[i].shape());
+                    }
+                }
+
                 uint_fast64_t verbose(uint_fast64_t epoch_index, uint_fast64_t epochs,
                 T partial_batch, uint_fast64_t batch_index, uint_fast64_t batches, bool last, uint_fast64_t max_len)
                 {
