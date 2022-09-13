@@ -306,7 +306,7 @@ namespace laruen::nn {
                     this->reset_metrics(1);
 
                     if(batch_size && this->batch_size_ != batch_size) {
-                        this->construct_forward(this->batch_outputs_, x_batch_view.shape());
+                        this->construct_forward(this->batch_outputs_, x_batch_view.shape().front());
                         this->batch_size_ = batch_size;
                     }
 
@@ -363,7 +363,7 @@ namespace laruen::nn {
 
                 NDArray<T>& predict(const NDArray<T> &x) {
                     if(this->batch_size_ != x.shape().front()) {
-                        this->construct_forward(this->batch_outputs_, x.shape());
+                        this->construct_forward(this->batch_outputs_, x.shape().front());
 
                         this->batch_size_ = x.shape().front();
                     }
@@ -482,14 +482,14 @@ namespace laruen::nn {
                     }
                 }
                 
-                void construct_forward(std::vector<NDArray<T>> &batch_outputs, const Shape &input_batch_shape) noexcept
+                void construct_forward(std::vector<NDArray<T>> &batch_outputs, uint_fast64_t batch_size) noexcept
                 {
                     using laruen::nn::utils::add_batch_shape;
 
                     batch_outputs.resize(this->layers_.size());
 
                     for(uint_fast64_t i = 0;i < this->layers_.size();i++) {
-                        batch_outputs[i] = NDArray<T>(add_batch_shape(this->layers_[i]->output_shape(), input_batch_shape.front()));
+                        batch_outputs[i].resize(add_batch_shape(this->layers_[i]->output_shape(), batch_size));
                     }
                 }
 
