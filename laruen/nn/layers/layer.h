@@ -49,6 +49,8 @@ namespace laruen::nn::layers {
                 inline virtual void compile(uint_fast64_t required_caches)
                 {};
 
+                virtual Layer<T>* clone() const = 0;
+
                 virtual NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &out) const = 0;
 
                 virtual NDArray<T> forward(const NDArray<T> &input) = 0;

@@ -55,6 +55,10 @@ namespace laruen::nn::layers {
                 : nodes_(nodes), kernel_initializer_(kernel_initializer), bias_initializer_(bias_initializer)
                 {}
 
+                inline Layer<T>* clone() const override final {
+                    return new FullyConnected<T>(*this);
+                }
+
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
                     // input.shape = (number samples, inputs)
                     // output.shape = (number samples, nodes)

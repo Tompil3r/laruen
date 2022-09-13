@@ -21,8 +21,11 @@ namespace laruen::nn::layers {
 
         template <typename T = float32_t>
         class Sigmoid : public Layer<T> {
-            
             public:
+                inline Layer<T>* clone() const override final {
+                    return new Sigmoid<T>(*this);
+                }
+
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
                     input.negate(output);
                     output.exp_eq();

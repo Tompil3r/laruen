@@ -30,7 +30,11 @@ namespace laruen::nn::losses {
 
                 inline MeanAbsoluteError(const std::string &name) noexcept
                 : Loss<T>(name)
-                {} 
+                {}
+
+                inline Loss<T>* clone() const override final {
+                    return new MeanAbsoluteError<T>(*this);
+                }
 
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     assert(y_true.shape() == y_pred.shape());

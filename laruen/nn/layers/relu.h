@@ -24,6 +24,10 @@ namespace laruen::nn::layers {
         template <typename T = float32_t>
         class ReLU : public Layer<T> {
             public:
+                inline Layer<T>* clone() const override final {
+                    return new ReLU<T>(*this);
+                }
+
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
                     input.maximum(0, output);
                     return output;

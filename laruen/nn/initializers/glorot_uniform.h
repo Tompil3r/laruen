@@ -24,6 +24,10 @@ namespace laruen::nn::initializers {
                     T limit = std::sqrt((T)6 / (nb_inputs + nb_nodes));
                     output.rand(-limit, limit);
                 }
+
+                inline Initializer<T>* clone() const override final {
+                    return new GlorotUniform<T>(*this);
+                }
         };
 
         template <typename T = float32_t>

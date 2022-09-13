@@ -28,6 +28,10 @@ namespace laruen::nn::layers {
                 Softmax() noexcept
                 {}
 
+                inline Layer<T>* clone() const override final {
+                    return new Softmax<T>(*this);
+                }
+
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
                     NDIter input_iter(input.data(), input);
                     NDIter output_iter(output.data(), output);

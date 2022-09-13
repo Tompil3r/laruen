@@ -29,6 +29,10 @@ namespace laruen::nn::optimizers {
                 beta1_correction_(beta1), beta2_correction_(beta2)
                 {}
 
+                inline Optimizer<T>* clone() const override final {
+                    return new Adam<T>(*this);
+                }
+
                 void update_weights(NDArray<T> &weights, NDArray<T> &raw_gradients,
                 NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) const override final
                 {

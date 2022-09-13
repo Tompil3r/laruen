@@ -25,6 +25,8 @@ namespace laruen::nn::optimizers {
                 : learning_rate_(learning_rate)
                 {}
 
+                virtual Optimizer<T>* clone() const = 0;
+
                 virtual void update_weights(NDArray<T> &weights, NDArray<T> &raw_gradients,
                 NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) const = 0;
 

@@ -28,6 +28,10 @@ namespace laruen::nn::metrics {
                 : Metric<T>(name)
                 {}
 
+                inline Metric<T>* clone() const override final {
+                    return new CategoricalAccuracy<T>(*this);
+                }
+
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     NDIter true_iter(y_true.data(), y_true);
                     NDIter pred_iter(y_pred.data(), y_pred);

@@ -23,6 +23,10 @@ namespace laruen::nn::optimizers {
                 : Optimizer<T>(learning_rate), momentum_(momentum)
                 {}
 
+                inline Optimizer<T>* clone() const override final {
+                    return new GradientDescent<T>(*this);
+                }
+
                 void update_weights(NDArray<T> &weights, NDArray<T> &raw_gradients,
                 NDArray<T> &final_gradients, std::vector<NDArray<T>> &opt_caches) const override final
                 {

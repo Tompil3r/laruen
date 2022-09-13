@@ -23,6 +23,10 @@ namespace laruen::nn::initializers {
                 {
                     output.fill((T)0);
                 }
+
+                inline Initializer<T>* clone() const override final {
+                    return new Zeros<T>(*this);
+                }
         };
 
         template <typename T = float32_t>

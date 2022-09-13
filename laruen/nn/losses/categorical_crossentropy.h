@@ -30,6 +30,10 @@ namespace laruen::nn::losses {
                 : Loss<T>(name)
                 {}
 
+                inline Loss<T>* clone() const override final {
+                    return new CategoricalCrossentropy<T>(*this);
+                }
+
                 T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const override final {
                     using laruen::nn::utils::stable_nonzero;
 

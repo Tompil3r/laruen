@@ -24,6 +24,8 @@ namespace laruen::nn::losses {
                 : Metric<T>(name)
                 {}
 
+                virtual Loss<T>* clone() const = 0;
+
                 virtual T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const = 0;
                 
                 virtual void backward(const NDArray<T> &y_true, const NDArray<T> &y_pred, NDArray<T> &grad_output) const = 0;

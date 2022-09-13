@@ -43,6 +43,8 @@ namespace laruen::nn::metrics {
                     this->name_ = name;    
                 }
 
+                virtual Metric<T>* clone() const = 0;
+
                 virtual T operator()(const NDArray<T> &y_true, const NDArray<T> &y_pred) const = 0;                
         };
     }

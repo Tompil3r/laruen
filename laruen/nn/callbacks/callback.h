@@ -23,6 +23,8 @@ namespace laruen::nn::callbacks {
                 virtual ~Callback()
                 {}
 
+                virtual Callback<T>* clone() const = 0;
+
                 virtual void operator()() const = 0;
         };
     }

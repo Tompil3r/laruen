@@ -28,6 +28,10 @@ namespace laruen::nn::layers {
                 Flatten() noexcept : size_(0)
                 {}
 
+                inline Layer<T>* clone() const override final {
+                    return new Flatten<T>(*this);
+                }
+
                 NDArray<T>& forward(const NDArray<T> &input, NDArray<T> &output) const override final {
                     // input.shape = (dim0, dim1, ...)
                     // output.shape = (dim0, dim1 * ...)
