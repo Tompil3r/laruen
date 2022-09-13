@@ -468,6 +468,10 @@ namespace laruen::nn {
                 void construct_forward(std::vector<NDArray<T>> &batch_outputs, uint_fast64_t batch_size) noexcept
                 {
                     using laruen::nn::utils::add_batch_shape;
+                    
+                    if(batch_outputs.front().shape().size() && batch_outputs.front().shape().front() == batch_size) {
+                        return;
+                    }
 
                     batch_outputs.resize(this->layers_.size());
 
@@ -479,6 +483,12 @@ namespace laruen::nn {
                 void construct_backward(const std::vector<NDArray<T>> &batch_outputs, std::vector<NDArray<T>> &batch_grads,
                 NDArray<T> &input_grad, const Shape &input_batch_shape) noexcept
                 {
+                    if(batch_grads.front().shape().size() &&
+                    batch_grads.front().shape().front() == input_batch_shape.front())
+                    {
+                        return;
+                    }
+
                     input_grad.resize(input_batch_shape);
 
                     batch_grads.resize(this->layers_.size());
