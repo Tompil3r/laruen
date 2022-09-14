@@ -54,6 +54,10 @@ namespace laruen::nn {
                 bool built_;
                 bool compiled_;
                 
+                typedef
+                std::tuple<uint_fast64_t, uint_fast64_t, uint_fast64_t, uint_fast64_t, uint_fast64_t, T, T>
+                DataInfo;
+
             public:
                 Model(const std::vector<std::shared_ptr<Layer<T>>> &layers)
                 : layers_(layers), batch_outputs_(layers.size()), batch_grads_(layers.size()),
@@ -455,8 +459,7 @@ namespace laruen::nn {
                  * @return std::tuple(full_batches, remaining, batches, x_batch_stride,
                  * y_batch_stride, remaining_ratio, parital_batches)
                  */
-                std::tuple<uint_fast64_t, uint_fast64_t, uint_fast64_t, uint_fast64_t, uint_fast64_t, T, T>
-                data_info(uint_fast64_t samples, uint_fast64_t x_samples_stride,
+                DataInfo data_info(uint_fast64_t samples, uint_fast64_t x_samples_stride,
                 uint_fast64_t y_samples_stride, uint_fast64_t batch_size)
                 {
                     uint_fast64_t full_batches = samples / batch_size;
@@ -467,7 +470,7 @@ namespace laruen::nn {
                     T remaining_ratio = full_batches > 0 ? (T)remaining / batch_size : 1;
                     T partial_batches = full_batches + remaining_ratio;
 
-                    return std::tuple(full_batches, remaining, batches, x_batch_stride,
+                    return DataInfo(full_batches, remaining, batches, x_batch_stride,
                     y_batch_stride, remaining_ratio, partial_batches);
                 }
 
