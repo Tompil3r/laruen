@@ -15,6 +15,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <utility>
+#include <tuple>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/types.h"
 #include "laruen/nn/layers/layer.h"
@@ -445,6 +446,31 @@ namespace laruen::nn {
                 }
                         
             private:
+                /**
+                 * @brief returns the required info to run train / evaluate / predict on the data
+                 * @param samples the number of samples in x and y (first dimension)
+                 * @param x_samples_stride the stride of x's samples dimension (first dimension)
+                 * @param y_samples_stride the stride of y's samples dimension (first dimension)
+                 * @param batch_size the batch size used
+                 * @return std::tuple(full_batches, remaining, batches, x_batch_stride,
+                 * y_batch_stride, remaining_ratio, parital_batches)
+                 */
+                std::tuple<uint_fast64_t, uint_fast64_t, uint_fast64_t, uint_fast64_t, uint_fast64_t, T, T>
+                data_info(uint_fast64_t samples, uint_fast64_t x_samples_stride,
+                uint_fast64_t y_samples_stride, uint_fast64_t batch_size)
+                {
+                    uint_fast64_t full_batches = samples / batch_size;
+                    uint_fast64_t remaining = samples % batch_size;
+                    uint_fast64_t batches = samples + (remaining > 0);
+                    uint_fast64_t x_batch_stride = batch_size * x_samples_stride;
+                    uint_fast64_t y_batch_stride = batch_size * y_samples_stride;
+                    T remaining_ratio = full_batches > 0 ? (T)remaining / batch_size : 1;
+                    T partial_batches = full_batches + remaining_ratio;
+
+                    return std::tuple(full_batches, remaining, batches, x_batch_stride,
+                    y_batch_stride, remaining_ratio, partial_batches);
+                }
+
                 void construct_forward(std::vector<NDArray<T>> &batch_outputs, uint_fast64_t batch_size) noexcept
                 {
                     using laruen::nn::utils::add_batch_shape;
