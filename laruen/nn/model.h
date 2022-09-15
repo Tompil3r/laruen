@@ -445,8 +445,8 @@ namespace laruen::nn {
                     this->batch_grads_.clear();
                     this->remaining_train_outputs_.clear();
                     this->remaining_train_grads_.clear();
-                    this->input_batch_grad_.resize({});
-                    this->input_remaining_train_grad_.resize({});
+                    this->input_batch_grad_.free();
+                    this->input_remaining_train_grad_.free();
                 }
                         
             private:
