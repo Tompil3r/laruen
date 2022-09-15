@@ -440,6 +440,14 @@ namespace laruen::nn {
                     }
                 }
 
+                inline void calculate_metrics(std::vector<std::shared_ptr<Metric<T>>> &metrics,
+                const NDArray<T> &y_true, const NDArray<T> &y_pred, T size_ratio = 1)
+                {
+                    for(auto metric = metrics.begin();metric != metrics.end();metric++) {
+                        (*metric)->values().front() += size_ratio * (**metric)(y_true, y_pred);
+                    }
+                }
+
                 void free_resources() noexcept {
                     this->batch_outputs_.clear();
                     this->batch_grads_.clear();
