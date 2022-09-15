@@ -23,6 +23,7 @@
 #include "laruen/nn/losses/loss.h"
 #include "laruen/nn/metrics/metric.h"
 #include "laruen/nn/utils/utils.h"
+#include "laruen/nn/utils/data_info.h"
 #include "laruen/nn/history.h"
 
 namespace laruen::nn {
@@ -37,6 +38,7 @@ namespace laruen::nn {
         using laruen::nn::optimizers::Optimizer;
         using laruen::nn::losses::Loss;
         using laruen::nn::metrics::Metric;
+        using laruen::nn::utils::DataInfo;
 
         template <typename T = float32_t>
         class Model {
@@ -188,13 +190,11 @@ namespace laruen::nn {
                         throw std::logic_error("model must be built & compiled before calling fit");
                     }
 
-                    uint_fast64_t batches = x.shape().front() / batch_size;
-                    uint_fast64_t remaining_train_size = x.shape().front() % batch_size;
+                    const DataInfo<T> train_info(x, y, batch_size);
+
                     uint_fast64_t epoch;
                     uint_fast64_t batch;
-                    uint_fast64_t total_batches = batches + (remaining_train_size > 0);
-                    T remaining_train_size_ratio = batches > 0 ? (T)remaining_train_size / batch_size : 1;
-                    T total_partial_batches = batches + remaining_train_size_ratio;
+
                     bool last; // used only when verbose = true
                     uint_fast64_t verbose_max_length = 0; // only used when verbose = true
 
@@ -204,64 +204,57 @@ namespace laruen::nn {
                     const NDArray<T> x_train_remaining_view;
                     const NDArray<T> y_train_remaining_view;
 
-                    uint_fast64_t x_batch_stride = batch_size * x.strides().front();
-                    uint_fast64_t y_batch_stride = batch_size * y.strides().front();
-
                     this->reset_metrics(this->metrics_, epochs);
 
-                    if(batch_size) {
+                    if(train_info.full_batches) {
                         this->construct(this->batch_outputs_, this->batch_grads_,
                         this->input_batch_grad_, x_train_batch_view.shape());
                     }
 
-                    if(remaining_train_size) {
-                        x_train_remaining_view = batch_view(x, remaining_train_size);
-                        y_train_remaining_view = batch_view(y, remaining_train_size);
-                        x_train_remaining_view.data(x.data() + batches * x.strides().front());
-                        y_train_remaining_view.data(y.data() + batches * y.strides().front());
+                    if(train_info.remaining) {
+                        x_train_remaining_view = batch_view(x, train_info.remaining);
+                        y_train_remaining_view = batch_view(y, train_info.remaining);
+                        x_train_remaining_view.data(x.data() + train_info.full_batches * train_info.x_batch_stride);
+                        y_train_remaining_view.data(y.data() + train_info.full_batches * train_info.y_batch_stride);
 
                         this->construct(this->remaining_train_outputs_, this->remaining_train_grads_,
                         this->input_remaining_train_grad_, x_train_remaining_view.shape());
                     }
 
                     for(epoch = 0;epoch < epochs;epoch++) {
-                        for(batch = 0;batch < batches;batch++) {
+                        for(batch = 0;batch < train_info.full_batches;batch++) {
                             this->train_batch(x_train_batch_view, y_train_batch_view, this->batch_outputs_,
                             this->batch_grads_, this->input_batch_grad_, true);
 
-                            for(auto metric = this->metrics_.begin();metric != this->metrics_.end();metric++) {
-                                (*metric)->values()[epoch] += (**metric)(y_train_batch_view, this->batch_outputs_.back());
-                            }
+                            this->compute_metrics(this->metrics_, y_train_batch_view, this->batch_outputs_.back(), 1.0);
 
-                            if(verbose && ((last = !remaining_train_size && (batch == batches - 1)) || !(batch % verbose_rate))) {
+                            if(verbose && ((last = !train_info.remaining &&
+                            (batch == train_info.full_batches - 1)) || !(batch % verbose_rate)))
+                            {
                                 verbose_max_length = std::max(this->verbose(epoch, epochs, (T)(batch + 1),
-                                batch, total_batches, last, verbose_max_length),
+                                batch, train_info.batches, last, verbose_max_length),
                                 verbose_max_length);
                             }
 
-                            x_train_batch_view.data(x_train_batch_view.data() + x_batch_stride);
-                            y_train_batch_view.data(y_train_batch_view.data() + y_batch_stride);
+                            x_train_batch_view.data(x_train_batch_view.data() + train_info.x_batch_stride);
+                            y_train_batch_view.data(y_train_batch_view.data() + train_info.y_batch_stride);
                         }
 
-                        if(remaining_train_size) {
+                        if(train_info.remaining) {
                             this->train_batch(x_train_remaining_view, y_train_remaining_view, this->remaining_train_outputs_,
                             this->remaining_train_grads_, this->input_remaining_train_grad_, true);
 
-                            for(auto metric = this->metrics_.begin();metric != this->metrics_.end();metric++) {
-                                (*metric)->values()[epoch] += remaining_train_size_ratio *
-                                (**metric)(y_train_remaining_view, this->remaining_train_outputs_.back());
-                            }
+                            this->compute_metrics(this->metrics_, y_train_remaining_view,
+                            this->remaining_train_outputs_.back(), train_info.remaining_ratio);
 
                             if(verbose) {
-                                verbose_max_length = std::max(this->verbose(epoch, epochs, total_partial_batches,
-                                (batch + 1), total_batches, true, verbose_max_length),
+                                verbose_max_length = std::max(this->verbose(epoch, epochs, train_info.partial_batches,
+                                (batch + 1), train_info.batches, true, verbose_max_length),
                                 verbose_max_length);
                             }
                         }
 
-                        for(auto metric = this->metrics_.begin();metric != this->metrics_.end();metric++) {
-                            (*metric)->values()[epoch] /= total_partial_batches;
-                        }
+                        this->average_metrics(this->metrics_, train_info.partial_batches);
 
                         x_train_batch_view.data(x.data());
                         y_train_batch_view.data(y.data());
@@ -281,12 +274,9 @@ namespace laruen::nn {
                         throw std::logic_error("model must be built & compiled before calling evaluate");
                     }
 
-                    uint_fast64_t batches = x.shape().front() / batch_size;
-                    uint_fast64_t remaining_train_size = x.shape().front() % batch_size;
+                    const DataInfo<T> data_info(x, y, batch_size);
+
                     uint_fast64_t batch;
-                    uint_fast64_t total_batches = batches + (remaining_train_size > 0);
-                    T remaining_train_size_ratio = batches > 0 ? (T)remaining_train_size / batch_size : 1;
-                    T total_partial_batches = batches + remaining_train_size_ratio;
                     bool last; // used only when verbose = true
                     uint_fast64_t verbose_max_length = 0; // used only when verbose = true
                     
@@ -296,60 +286,51 @@ namespace laruen::nn {
                     const NDArray<T> x_remaining_view;
                     const NDArray<T> y_remaining_view;
 
-                    uint_fast64_t x_batch_stride = batch_size * x.strides().front();
-                    uint_fast64_t y_batch_stride = batch_size * y.strides().front();
-
                     this->reset_metrics(this->metrics_, 1);
 
-                    if(batch_size) {
+                    if(data_info.full_batches) {
                         this->construct_forward(this->batch_outputs_, x_batch_view.shape().front());
                     }
 
-                    if(remaining_train_size) {
-                        x_remaining_view = batch_view(x, remaining_train_size);
-                        y_remaining_view = batch_view(y, remaining_train_size);
-                        x_remaining_view.data(x.data() + batches * x.strides().front());
-                        y_remaining_view.data(y.data() + batches * y.strides().front());
+                    if(data_info.remaining) {
+                        x_remaining_view = batch_view(x, data_info.remaining);
+                        y_remaining_view = batch_view(y, data_info.remaining);
+                        x_remaining_view.data(x.data() + data_info.full_batches * data_info.x_batch_stride);
+                        y_remaining_view.data(y.data() + data_info.full_batches * data_info.y_batch_stride);
 
                         this->construct(this->remaining_train_outputs_, this->remaining_train_grads_,
                         this->input_remaining_train_grad_, x_remaining_view.shape());                   
                     }
 
-                    for(batch = 0;batch < batches;batch++) {
+                    for(batch = 0;batch < data_info.full_batches;batch++) {
                         this->forward(x_batch_view, this->batch_outputs_);
 
-                        for(auto metric = this->metrics_.begin();metric != this->metrics_.end();metric++) {
-                            (*metric)->values().front() += (**metric)(y_batch_view, this->batch_outputs_.back());
-                        }
+                        this->compute_metrics(this->metrics_, y_batch_view, this->batch_outputs_.back(), 1.0);
 
-                        if(verbose && ((last = !remaining_train_size && (batch == batches - 1)) || !(batch % verbose_rate))) {
+                        if(verbose && ((last = !data_info.remaining && (batch == data_info.full_batches - 1)) || !(batch % verbose_rate))) {
                             verbose_max_length = std::max(this->verbose(0, 1, (T)(batch + 1),
-                            batch, total_batches, last, verbose_max_length),
+                            batch, data_info.batches, last, verbose_max_length),
                             verbose_max_length);
                         }
 
-                        x_batch_view.data(x_batch_view.data() + x_batch_stride);
-                        y_batch_view.data(y_batch_view.data() + y_batch_stride);
+                        x_batch_view.data(x_batch_view.data() + data_info.x_batch_stride);
+                        y_batch_view.data(y_batch_view.data() + data_info.y_batch_stride);
                     }
 
-                    if(remaining_train_size) {
+                    if(data_info.remaining) {
                         this->forward(x_remaining_view, this->remaining_train_outputs_);
 
-                        for(auto metric = this->metrics_.begin();metric != this->metrics_.end();metric++) {
-                            (*metric)->values().front() += remaining_train_size_ratio *
-                            (**metric)(y_remaining_view, this->remaining_train_outputs_.back());
-                        }
+                        this->compute_metrics(this->metrics_, y_remaining_view,
+                        this->remaining_train_outputs_.back(), data_info.remaining_ratio);
 
                         if(verbose) {
-                            verbose_max_length = std::max(this->verbose(0, 1, total_partial_batches,
-                            batch, total_batches, true, verbose_max_length),
+                            verbose_max_length = std::max(this->verbose(0, 1, data_info.partial_batches,
+                            batch, data_info.batches, true, verbose_max_length),
                             verbose_max_length);
                         }
                     }
 
-                    for(auto metric = this->metrics_.begin();metric != this->metrics_.end();metric++) {
-                        (*metric)->values().front() /= total_partial_batches;
-                    }
+                    this->average_metrics(this->metrics_, data_info.partial_batches);
 
                     return History(this->metrics_);
                 }
