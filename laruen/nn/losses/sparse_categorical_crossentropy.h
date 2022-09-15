@@ -11,7 +11,7 @@
 #include "laruen/multi/nditer.h"
 #include "laruen/multi/types.h"
 #include "laruen/nn/losses/loss.h"
-#include "laruen/nn/utils.h"
+#include "laruen/nn/utils/utils.h"
 
 namespace laruen::nn::losses {
 

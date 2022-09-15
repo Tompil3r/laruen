@@ -22,7 +22,7 @@
 #include "laruen/nn/optimizers/optimizer.h"
 #include "laruen/nn/losses/loss.h"
 #include "laruen/nn/metrics/metric.h"
-#include "laruen/nn/utils.h"
+#include "laruen/nn/utils/utils.h"
 #include "laruen/nn/history.h"
 
 namespace laruen::nn {

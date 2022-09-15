@@ -1,6 +1,6 @@
 
-#ifndef LARUEN_NN_UTILS_H_
-#define LARUEN_NN_UTILS_H_
+#ifndef LARUEN_NN_UTILS_UTILS_H_
+#define LARUEN_NN_UTILS_UTILS_H_
 
 #include <cstdint>
 #include <algorithm>
