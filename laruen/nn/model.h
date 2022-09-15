@@ -211,7 +211,7 @@ namespace laruen::nn {
                     uint_fast64_t x_batch_stride = batch_size * x.strides().front();
                     uint_fast64_t y_batch_stride = batch_size * y.strides().front();
 
-                    this->reset_metrics(epochs);
+                    this->reset_metrics(this->metrics_, epochs);
 
                     if(batch_size) {
                         this->construct(this->batch_outputs_, this->batch_grads_,
@@ -303,7 +303,7 @@ namespace laruen::nn {
                     uint_fast64_t x_batch_stride = batch_size * x.strides().front();
                     uint_fast64_t y_batch_stride = batch_size * y.strides().front();
 
-                    this->reset_metrics(1);
+                    this->reset_metrics(this->metrics_, 1);
 
                     if(batch_size) {
                         this->construct_forward(this->batch_outputs_, x_batch_view.shape().front());
@@ -434,8 +434,8 @@ namespace laruen::nn {
                     return this->metrics_;
                 }
                 
-                inline void reset_metrics(uint_fast64_t new_size) {
-                    for(auto metric = this->metrics_.begin();metric != this->metrics_.end();metric++) {
+                inline void reset_metrics(std::vector<std::shared_ptr<Metric<T>>> &metrics, uint_fast64_t new_size) {
+                    for(auto metric = metrics.begin();metric != metrics.end();metric++) {
                         (*metric)->values().assign(new_size, 0);
                     }
                 }
