@@ -444,6 +444,14 @@ namespace laruen::nn {
                     }
                 }
 
+                inline void average_metrics(std::vector<std::shared_ptr<Metric<T>>> &metrics,
+                T partial_batches)
+                {
+                    for(auto metric = metrics.begin();metric != metrics.end();metric++) {
+                        (*metric)->values().front() /= partial_batches;
+                    }
+                }
+
                 void free_resources() noexcept {
                     this->batch_outputs_.clear();
                     this->batch_grads_.clear();
