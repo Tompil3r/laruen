@@ -183,7 +183,7 @@ namespace laruen::nn {
                 }
 
                 History<T> fit(const NDArray<T> &x, const NDArray<T> &y, uint_fast64_t batch_size = 32,
-                uint_fast64_t epochs = 1, bool verbose = true)
+                uint_fast64_t epochs = 1, uint_fast8_t verbose = 1)
                 {
                     using laruen::nn::utils::batch_view;
 
@@ -197,6 +197,7 @@ namespace laruen::nn {
                     uint_fast64_t batch;
 
                     bool last; // used only when verbose = true
+                    bool full_batch_last = verbose >= 1 && !train_view.remaining; // used only when verbose = true
 
                     this->reset_metrics(this->metrics_, epochs);
 
@@ -217,10 +218,10 @@ namespace laruen::nn {
 
                             this->compute_metrics(this->metrics_, train_view.y_batch, this->batch_outputs_.back(), 1.0);
 
-                            if(verbose && ((last = !train_view.remaining &&
-                            (batch == train_view.full_batches - 1)) || !(batch % this->verbose_settings.rate)))
+                            if(last = (batch == train_view.full_batches - 1),
+                            (verbose == 1 && !(batch % this->verbose_settings.rate)) || (full_batch_last && last))
                             {
-                                this->verbose(epoch, epochs, (T)(batch + 1), batch, train_view.batches, last);
+                                this->verbose(epoch, epochs, (T)(batch + 1), batch, train_view.batches, full_batch_last && last);
                             }
 
                             train_view.next_batch();
@@ -248,7 +249,7 @@ namespace laruen::nn {
                 }
 
                 History<T> evaluate(const NDArray<T> &x, const NDArray<T> &y,
-                uint_fast64_t batch_size = 32, bool verbose = true)
+                uint_fast64_t batch_size = 32, uint_fast8_t verbose = true)
                 {
                     using laruen::nn::utils::batch_view;
 
@@ -260,6 +261,7 @@ namespace laruen::nn {
 
                     uint_fast64_t batch;
                     bool last; // used only when verbose = true
+                    bool full_batch_last = verbose >= 1 && !data_view.remaining; // used only when verbose = true
                     
                     this->reset_metrics(this->metrics_, 1);
 
@@ -276,10 +278,10 @@ namespace laruen::nn {
 
                         this->compute_metrics(this->metrics_, data_view.y_batch, this->batch_outputs_.back(), 1.0);
 
-                        if(verbose && ((last = !data_view.remaining &&
-                        (batch == data_view.full_batches - 1)) || !(batch % this->verbose_settings.rate)))
+                        if(last = (batch == data_view.full_batches - 1),
+                        (verbose == 1 && !(batch % this->verbose_settings.rate)) || (full_batch_last && last))
                         {
-                            this->verbose(0, 1, (T)(batch + 1), batch, data_view.batches, last);
+                            this->verbose(0, 1, (T)(batch + 1), batch, data_view.batches, full_batch_last && last);
                         }
 
                         data_view.next_batch();
