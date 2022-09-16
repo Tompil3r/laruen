@@ -196,7 +196,6 @@ namespace laruen::nn {
                     uint_fast64_t batch;
 
                     bool last; // used only when verbose = true
-                    uint_fast64_t verbose_max_length = 0; // only used when verbose = true
 
                     this->reset_metrics(this->metrics_, epochs);
 
@@ -220,9 +219,7 @@ namespace laruen::nn {
                             if(verbose && ((last = !train_view.remaining &&
                             (batch == train_view.full_batches - 1)) || !(batch % verbose_rate)))
                             {
-                                verbose_max_length = std::max(this->verbose(epoch, epochs, (T)(batch + 1),
-                                batch, train_view.batches, last, verbose_max_length),
-                                verbose_max_length);
+                                this->verbose(epoch, epochs, (T)(batch + 1), batch, train_view.batches, last);
                             }
 
                             train_view.next_batch();
@@ -236,9 +233,7 @@ namespace laruen::nn {
                             this->remaining_train_outputs_.back(), train_view.remaining_ratio);
 
                             if(verbose) {
-                                verbose_max_length = std::max(this->verbose(epoch, epochs, train_view.partial_batches,
-                                (batch + 1), train_view.batches, true, verbose_max_length),
-                                verbose_max_length);
+                                this->verbose(epoch, epochs, train_view.partial_batches, batch, train_view.batches, true);
                             }
                         }
 
@@ -266,7 +261,6 @@ namespace laruen::nn {
 
                     uint_fast64_t batch;
                     bool last; // used only when verbose = true
-                    uint_fast64_t verbose_max_length = 0; // used only when verbose = true
                     
                     this->reset_metrics(this->metrics_, 1);
 
@@ -284,9 +278,7 @@ namespace laruen::nn {
                         this->compute_metrics(this->metrics_, data_view.y_batch, this->batch_outputs_.back(), 1.0);
 
                         if(verbose && ((last = !data_view.remaining && (batch == data_view.full_batches - 1)) || !(batch % verbose_rate))) {
-                            verbose_max_length = std::max(this->verbose(0, 1, (T)(batch + 1),
-                            batch, data_view.batches, last, verbose_max_length),
-                            verbose_max_length);
+                            this->verbose(0, 1, (T)(batch + 1), batch, data_view.batches, last);
                         }
 
                         data_view.next_batch();
@@ -299,9 +291,7 @@ namespace laruen::nn {
                         this->remaining_train_outputs_.back(), data_view.remaining_ratio);
 
                         if(verbose) {
-                            verbose_max_length = std::max(this->verbose(0, 1, data_view.partial_batches,
-                            batch, data_view.batches, true, verbose_max_length),
-                            verbose_max_length);
+                            this->verbose(0, 1, data_view.partial_batches, batch, data_view.batches, true);
                         }
                     }
 
@@ -458,20 +448,22 @@ namespace laruen::nn {
                     this->construct_backward(batch_outputs, batch_grads, input_grad, input_batch_shape);
                 }
 
-                uint_fast64_t verbose(uint_fast64_t epoch_index, uint_fast64_t epochs,
-                T partial_batch, uint_fast64_t batch_index, uint_fast64_t batches, bool last, uint_fast64_t max_len)
+                void verbose(uint_fast64_t epoch_index, uint_fast64_t epochs,
+                T partial_batch, uint_fast64_t batch_index, uint_fast64_t batches, bool last)
                 {
                     // *** written very badly ***
                     constexpr uint_fast8_t precision = 4;
                     constexpr int_fast64_t progress_bar_len = 20;
+
+                    static std::string str;
+                    static uint_fast64_t max_str_length = 0;
 
                     uint_fast64_t batch_nb = batch_index + 1;
                     uint_fast64_t epoch_nb = epoch_index + 1;
                     uint_fast16_t progress = (uint_fast16_t)std::round(((T)(batch_nb - (batch_nb < batches))) * progress_bar_len / batches);
                     uint_fast64_t remaining_bar_len = std::max((int_fast32_t)(progress_bar_len - (progress + 1)), (int_fast32_t)0);
 
-                    std::string str;
-                    str.reserve(max_len);
+                    str.clear();
 
                     str.append("epoch ");
                     str.append(std::to_string(epoch_nb));
@@ -501,8 +493,11 @@ namespace laruen::nn {
                         str.append(metric_str.cbegin(), metric_str.cbegin() + metric_str.find('.') + precision + 1);
                     }
 
-                    if(str.size() < max_len) {
-                        str.append(max_len - str.size(), ' ');
+                    if(str.size() < max_str_length) {
+                        str.append(max_str_length - str.size(), ' ');
+                    }
+                    else {
+                        max_str_length = str.size();
                     }
 
                     if(last) {
@@ -511,8 +506,6 @@ namespace laruen::nn {
                     else {
                         std::cout << str << '\r' << std::flush;
                     }
-
-                    return str.size();
                 }
         };
 
