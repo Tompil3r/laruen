@@ -1,6 +1,6 @@
 
-#ifndef LARUEN_NN_UTILS_DATA_INFO_H_
-#define LARUEN_NN_UTILS_DATA_INFO_H_
+#ifndef LARUEN_NN_UTILS_DATA_VIEW_H_
+#define LARUEN_NN_UTILS_DATA_VIEW_H_
 
 #include <cstdint>
 #include "laruen/multi/ndarray.h"
@@ -14,7 +14,7 @@ namespace laruen::nn::utils {
         using laruen::multi::float32_t;
 
         template <typename T = float32_t>
-        struct DataInfo {
+        struct DataView {
             public:
                 uint_fast64_t full_batches;
                 uint_fast64_t remaining;
@@ -24,7 +24,7 @@ namespace laruen::nn::utils {
                 T remaining_ratio;
                 T partial_batches;
 
-                DataInfo(uint_fast64_t samples, uint_fast64_t x_samples_stride,
+                DataView(uint_fast64_t samples, uint_fast64_t x_samples_stride,
                 uint_fast64_t y_samples_stride, uint_fast64_t batch_size)
                 :
                 full_batches(samples / batch_size),
@@ -36,8 +36,8 @@ namespace laruen::nn::utils {
                 partial_batches(this->full_batches + this->remaining_ratio)
                 {}
 
-                DataInfo(const NDArray<T> &x, const NDArray<T> &y, uint_fast64_t batch_size)
-                : DataInfo(x.shape().front(), x.strides().front(), y.strides().front(), batch_size)
+                DataView(const NDArray<T> &x, const NDArray<T> &y, uint_fast64_t batch_size)
+                : DataView(x.shape().front(), x.strides().front(), y.strides().front(), batch_size)
                 {}
         };
     }
