@@ -275,8 +275,7 @@ namespace laruen::nn {
                     }
 
                     if(data_view.remaining) {
-                        this->construct(this->remaining_train_outputs_, this->remaining_train_grads_,
-                        this->input_remaining_train_grad_, data_view.x_remaining.shape());                 
+                        this->construct_forward(this->remaining_train_outputs_, data_view.x_remaining.shape().front());
                     }
 
                     for(batch = 0;batch < data_view.full_batches;batch++) {
