@@ -24,6 +24,7 @@
 #include "laruen/nn/metrics/metric.h"
 #include "laruen/nn/utils/utils.h"
 #include "laruen/nn/utils/data_view.h"
+#include "laruen/nn/utils/verbose_settings.h"
 #include "laruen/nn/history.h"
 
 namespace laruen::nn {
@@ -39,6 +40,7 @@ namespace laruen::nn {
         using laruen::nn::losses::Loss;
         using laruen::nn::metrics::Metric;
         using laruen::nn::utils::DataView;
+        using laruen::nn::utils::VerboseSettings;
 
         template <typename T = float32_t>
         class Model {
@@ -55,6 +57,7 @@ namespace laruen::nn {
                 std::vector<std::shared_ptr<Metric<T>>> metrics_;
                 bool built_;
                 bool compiled_;
+                VerboseSettings verbose_settings;
 
             public:
                 Model(const std::vector<std::shared_ptr<Layer<T>>> &layers)
@@ -184,8 +187,6 @@ namespace laruen::nn {
                 {
                     using laruen::nn::utils::batch_view;
 
-                    constexpr uint_fast64_t verbose_rate = 80; // used only when verbose = true
-
                     if(!this->built_ || !this->compiled_) {
                         throw std::logic_error("model must be built & compiled before calling fit");
                     }
@@ -217,7 +218,7 @@ namespace laruen::nn {
                             this->compute_metrics(this->metrics_, train_view.y_batch, this->batch_outputs_.back(), 1.0);
 
                             if(verbose && ((last = !train_view.remaining &&
-                            (batch == train_view.full_batches - 1)) || !(batch % verbose_rate)))
+                            (batch == train_view.full_batches - 1)) || !(batch % this->verbose_settings.rate)))
                             {
                                 this->verbose(epoch, epochs, (T)(batch + 1), batch, train_view.batches, last);
                             }
@@ -251,8 +252,6 @@ namespace laruen::nn {
                 {
                     using laruen::nn::utils::batch_view;
 
-                    constexpr uint_fast64_t verbose_rate = 80;
-
                     if(!this->built_ || !this->compiled_) {
                         throw std::logic_error("model must be built & compiled before calling evaluate");
                     }
@@ -277,7 +276,9 @@ namespace laruen::nn {
 
                         this->compute_metrics(this->metrics_, data_view.y_batch, this->batch_outputs_.back(), 1.0);
 
-                        if(verbose && ((last = !data_view.remaining && (batch == data_view.full_batches - 1)) || !(batch % verbose_rate))) {
+                        if(verbose && ((last = !data_view.remaining &&
+                        (batch == data_view.full_batches - 1)) || !(batch % this->verbose_settings.rate)))
+                        {
                             this->verbose(0, 1, (T)(batch + 1), batch, data_view.batches, last);
                         }
 
@@ -452,16 +453,17 @@ namespace laruen::nn {
                 T partial_batch, uint_fast64_t batch_index, uint_fast64_t batches, bool last)
                 {
                     // *** written very badly ***
-                    constexpr uint_fast8_t precision = 4;
-                    constexpr int_fast64_t progress_bar_len = 20;
-
                     static std::string str;
                     static uint_fast64_t max_str_length = 0;
 
                     uint_fast64_t batch_nb = batch_index + 1;
                     uint_fast64_t epoch_nb = epoch_index + 1;
-                    uint_fast16_t progress = (uint_fast16_t)std::round(((T)(batch_nb - (batch_nb < batches))) * progress_bar_len / batches);
-                    uint_fast64_t remaining_bar_len = std::max((int_fast32_t)(progress_bar_len - (progress + 1)), (int_fast32_t)0);
+
+                    uint_fast16_t progress = (uint_fast16_t)std::round(((T)(batch_nb - (batch_nb < batches)))
+                    * this->verbose_settings.progress_bar_length / batches);
+
+                    uint_fast64_t remaining_bar_len = std::max((int_fast32_t)
+                    (this->verbose_settings.progress_bar_length - (progress + 1)), (int_fast32_t)0);
 
                     str.clear();
 
@@ -490,7 +492,7 @@ namespace laruen::nn {
                         str.append((*metric)->name());
                         str.push_back(':');
                         str.push_back(' ');
-                        str.append(metric_str.cbegin(), metric_str.cbegin() + metric_str.find('.') + precision + 1);
+                        str.append(metric_str.cbegin(), metric_str.cbegin() + metric_str.find('.') + this->verbose_settings.precision + 1);
                     }
 
                     if(str.size() < max_str_length) {
