@@ -190,7 +190,7 @@ namespace laruen::nn {
                         throw std::logic_error("model must be built & compiled before calling fit");
                     }
 
-                    const DataView<T> train_view(x, y, batch_size);
+                    DataView<T> train_view(x, y, batch_size);
 
                     uint_fast64_t epoch;
                     uint_fast64_t batch;
@@ -198,35 +198,24 @@ namespace laruen::nn {
                     bool last; // used only when verbose = true
                     uint_fast64_t verbose_max_length = 0; // only used when verbose = true
 
-                    const NDArray<T> x_train_batch_view = batch_view(x, batch_size);
-                    const NDArray<T> y_train_batch_view = batch_view(y, batch_size);
-
-                    const NDArray<T> x_train_remaining_view;
-                    const NDArray<T> y_train_remaining_view;
-
                     this->reset_metrics(this->metrics_, epochs);
 
                     if(train_view.full_batches) {
                         this->construct(this->batch_outputs_, this->batch_grads_,
-                        this->input_batch_grad_, x_train_batch_view.shape());
+                        this->input_batch_grad_, train_view.x_batch.shape());
                     }
 
                     if(train_view.remaining) {
-                        x_train_remaining_view = batch_view(x, train_view.remaining);
-                        y_train_remaining_view = batch_view(y, train_view.remaining);
-                        x_train_remaining_view.data(x.data() + train_view.full_batches * train_view.x_batch_stride);
-                        y_train_remaining_view.data(y.data() + train_view.full_batches * train_view.y_batch_stride);
-
                         this->construct(this->remaining_train_outputs_, this->remaining_train_grads_,
-                        this->input_remaining_train_grad_, x_train_remaining_view.shape());
+                        this->input_remaining_train_grad_, train_view.x_remaining.shape());
                     }
 
                     for(epoch = 0;epoch < epochs;epoch++) {
                         for(batch = 0;batch < train_view.full_batches;batch++) {
-                            this->train_batch(x_train_batch_view, y_train_batch_view, this->batch_outputs_,
+                            this->train_batch(train_view.x_batch, train_view.y_batch, this->batch_outputs_,
                             this->batch_grads_, this->input_batch_grad_, true);
 
-                            this->compute_metrics(this->metrics_, y_train_batch_view, this->batch_outputs_.back(), 1.0);
+                            this->compute_metrics(this->metrics_, train_view.y_batch, this->batch_outputs_.back(), 1.0);
 
                             if(verbose && ((last = !train_view.remaining &&
                             (batch == train_view.full_batches - 1)) || !(batch % verbose_rate)))
@@ -236,15 +225,14 @@ namespace laruen::nn {
                                 verbose_max_length);
                             }
 
-                            x_train_batch_view.data(x_train_batch_view.data() + train_view.x_batch_stride);
-                            y_train_batch_view.data(y_train_batch_view.data() + train_view.y_batch_stride);
+                            train_view.next_batch();
                         }
 
                         if(train_view.remaining) {
-                            this->train_batch(x_train_remaining_view, y_train_remaining_view, this->remaining_train_outputs_,
+                            this->train_batch(train_view.x_remaining, train_view.y_remaining, this->remaining_train_outputs_,
                             this->remaining_train_grads_, this->input_remaining_train_grad_, true);
 
-                            this->compute_metrics(this->metrics_, y_train_remaining_view,
+                            this->compute_metrics(this->metrics_, train_view.y_remaining,
                             this->remaining_train_outputs_.back(), train_view.remaining_ratio);
 
                             if(verbose) {
@@ -256,8 +244,8 @@ namespace laruen::nn {
 
                         this->average_metrics(this->metrics_, train_view.partial_batches);
 
-                        x_train_batch_view.data(x.data());
-                        y_train_batch_view.data(y.data());
+
+                        train_view.reset_batch_views(x.data(), y.data());
                     }
 
                     return History(this->metrics_);
@@ -274,38 +262,27 @@ namespace laruen::nn {
                         throw std::logic_error("model must be built & compiled before calling evaluate");
                     }
 
-                    const DataView<T> data_view(x, y, batch_size);
+                    DataView<T> data_view(x, y, batch_size);
 
                     uint_fast64_t batch;
                     bool last; // used only when verbose = true
                     uint_fast64_t verbose_max_length = 0; // used only when verbose = true
                     
-                    const NDArray<T> x_batch_view = batch_view(x, batch_size);
-                    const NDArray<T> y_batch_view = batch_view(y, batch_size);
-
-                    const NDArray<T> x_remaining_view;
-                    const NDArray<T> y_remaining_view;
-
                     this->reset_metrics(this->metrics_, 1);
 
                     if(data_view.full_batches) {
-                        this->construct_forward(this->batch_outputs_, x_batch_view.shape().front());
+                        this->construct_forward(this->batch_outputs_, data_view.x_batch.shape().front());
                     }
 
                     if(data_view.remaining) {
-                        x_remaining_view = batch_view(x, data_view.remaining);
-                        y_remaining_view = batch_view(y, data_view.remaining);
-                        x_remaining_view.data(x.data() + data_view.full_batches * data_view.x_batch_stride);
-                        y_remaining_view.data(y.data() + data_view.full_batches * data_view.y_batch_stride);
-
                         this->construct(this->remaining_train_outputs_, this->remaining_train_grads_,
-                        this->input_remaining_train_grad_, x_remaining_view.shape());                   
+                        this->input_remaining_train_grad_, data_view.x_remaining.shape());                 
                     }
 
                     for(batch = 0;batch < data_view.full_batches;batch++) {
-                        this->forward(x_batch_view, this->batch_outputs_);
+                        this->forward(data_view.x_batch, this->batch_outputs_);
 
-                        this->compute_metrics(this->metrics_, y_batch_view, this->batch_outputs_.back(), 1.0);
+                        this->compute_metrics(this->metrics_, data_view.y_batch, this->batch_outputs_.back(), 1.0);
 
                         if(verbose && ((last = !data_view.remaining && (batch == data_view.full_batches - 1)) || !(batch % verbose_rate))) {
                             verbose_max_length = std::max(this->verbose(0, 1, (T)(batch + 1),
@@ -313,14 +290,13 @@ namespace laruen::nn {
                             verbose_max_length);
                         }
 
-                        x_batch_view.data(x_batch_view.data() + data_view.x_batch_stride);
-                        y_batch_view.data(y_batch_view.data() + data_view.y_batch_stride);
+                        data_view.next_batch();
                     }
 
                     if(data_view.remaining) {
-                        this->forward(x_remaining_view, this->remaining_train_outputs_);
+                        this->forward(data_view.x_remaining, this->remaining_train_outputs_);
 
-                        this->compute_metrics(this->metrics_, y_remaining_view,
+                        this->compute_metrics(this->metrics_, data_view.y_remaining,
                         this->remaining_train_outputs_.back(), data_view.remaining_ratio);
 
                         if(verbose) {
