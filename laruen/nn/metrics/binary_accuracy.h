@@ -24,7 +24,7 @@ namespace laruen::nn::metrics {
             
             public:
                 inline BinaryAccuracy(T threshold = 0.5f)
-                : Metric<T>("binary accuracy"), threshold_(threshold)
+                : Metric<T>("binary_accuracy"), threshold_(threshold)
                 {}
 
                 inline BinaryAccuracy(const std::string &name, T threshold = 0.5f)

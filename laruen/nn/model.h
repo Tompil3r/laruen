@@ -99,7 +99,7 @@ namespace laruen::nn {
 
                     for(;metric != this->metrics_.cend();metric++, val_metric++) {
                         *val_metric = std::shared_ptr<Metric<T>>((*metric)->clone());
-                        (*val_metric)->name("val " + (*val_metric)->name());
+                        (*val_metric)->name("val_" + (*val_metric)->name());
                     }
 
                     uint_fast64_t required_caches = this->optimizer_->required_caches();

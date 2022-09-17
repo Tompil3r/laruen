@@ -23,7 +23,7 @@ namespace laruen::nn::losses {
         class CategoricalCrossentropy : public Loss<T> {
             public:
                 inline CategoricalCrossentropy() noexcept
-                : Loss<T>("categorical crossentropy")
+                : Loss<T>("categorical_crossentropy")
                 {}
 
                 inline CategoricalCrossentropy(const std::string &name) noexcept

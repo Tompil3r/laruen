@@ -23,7 +23,7 @@ namespace laruen::nn::losses {
         class MeanSquaredError : public Loss<T> {
             public:
                 inline MeanSquaredError() noexcept
-                : Loss<T>("mean squared error")
+                : Loss<T>("mean_squared_error")
                 {}
 
                 inline MeanSquaredError(const std::string &name) noexcept

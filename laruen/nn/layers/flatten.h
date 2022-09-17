@@ -72,7 +72,7 @@ namespace laruen::nn::layers {
                 }
 
                 const char* name() const noexcept override final {
-                    return "flatten";
+                    return "Flatten";
                 }
 
                 uint_fast64_t params() const noexcept override final {

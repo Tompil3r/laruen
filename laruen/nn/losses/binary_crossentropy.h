@@ -25,7 +25,7 @@ namespace laruen::nn::losses {
         class BinaryCrossentropy : public Loss<T> {
             public:
                 inline BinaryCrossentropy() noexcept
-                : Loss<T>("binary crossentropy")
+                : Loss<T>("binary_crossentropy")
                 {}
 
                 inline BinaryCrossentropy(const std::string &name)

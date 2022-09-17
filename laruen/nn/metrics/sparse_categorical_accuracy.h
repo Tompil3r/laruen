@@ -21,7 +21,7 @@ namespace laruen::nn::metrics {
         class SparseCategoricalAccuracy : public Metric<T> {            
             public:
                 inline SparseCategoricalAccuracy() noexcept
-                : Metric<T>("sparse categorical accuracy")
+                : Metric<T>("sparse_categorical_accuracy")
                 {}
 
                 inline SparseCategoricalAccuracy(const std::string &name)

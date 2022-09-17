@@ -25,7 +25,7 @@ namespace laruen::nn::losses {
         class SparseCategoricalCrossentropy : public Loss<T> {
             public:
                 inline SparseCategoricalCrossentropy() noexcept
-                : Loss<T>("sparse categorical crossentropy")
+                : Loss<T>("sparse_categorical_crossentropy")
                 {}
 
                 inline SparseCategoricalCrossentropy(const std::string &name) noexcept

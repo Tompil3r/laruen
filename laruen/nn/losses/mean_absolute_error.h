@@ -25,7 +25,7 @@ namespace laruen::nn::losses {
         class MeanAbsoluteError : public Loss<T> {
             public:
                 inline MeanAbsoluteError() noexcept
-                : Loss<T>("mean absolute error")
+                : Loss<T>("mean_absolute_error")
                 {} 
 
                 inline MeanAbsoluteError(const std::string &name) noexcept
