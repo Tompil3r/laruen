@@ -31,7 +31,7 @@ namespace laruen::nn::utils {
         }
 
         template <typename T>
-        inline void batch_view(const NDArray<T> &data, uint_fast64_t batch_size, const NDArray<T> &view) {
+        inline void batch_view(const NDArray<T> &ndarray, uint_fast64_t batch_size, const NDArray<T> &view) {
             view.size() = (ndarray.size() / ndarray.shape().front()) * batch_size;
             view.shape().front() = batch_size;
             view.dim_sizes().front() = (ndarray.dim_sizes().front() / ndarray.shape().front()) * batch_size;
