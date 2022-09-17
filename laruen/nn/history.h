@@ -20,8 +20,11 @@ namespace laruen::nn {
             std::map<std::string, std::vector<T>> metrics_map_;
 
             public:
-                History(const std::vector<std::shared_ptr<Metric<T>>> &metrics)
-                {
+                History(const std::vector<std::shared_ptr<Metric<T>>> &metrics) {
+                    this->add_metrics(metrics);
+                }
+
+                inline void add_metrics(const std::vector<std::shared_ptr<Metric<T>>> &metrics) {
                     for(auto metric = metrics.cbegin();metric != metrics.cend();metric++) {
                         this->metrics_map_.insert({(*metric)->name(), (*metric)->values()});
                     }
