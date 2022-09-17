@@ -30,6 +30,10 @@ namespace laruen::nn {
                     }
                 }
 
+                inline const std::map<std::string, std::vector<T>>& metrics_map() noexcept {
+                    return this->metrics_map_;
+                }
+
                 std::string str() const noexcept {
                     std::string string("History {\n");
 
