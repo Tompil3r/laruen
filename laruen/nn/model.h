@@ -310,6 +310,30 @@ namespace laruen::nn {
                     return history;
                 }
 
+                History<T> fit(const NDArray<T> &x, const NDArray<T> &y, uint_fast64_t batch_size = 32,
+                uint_fast64_t epochs = 1, T val_split = 0.0, uint_fast8_t verbose = 1)
+                {
+                    using laruen::nn::utils::batch_view;
+
+                    const NDArray<T> x_train = x.view();
+                    const NDArray<T> y_train = y.view();
+                    const NDArray<T> x_val;
+                    const NDArray<T> y_val;
+
+                    if(val_split) {
+                        uint_fast64_t val_samples = x.shape().front() * val_split;
+                        uint_fast64_t train_samples = x.shape().front() - val_samples;
+
+                        batch_view(x, train_samples, x_train);
+                        batch_view(y, train_samples, y_train);
+
+                        x_val = batch_view(x, val_samples);
+                        y_val = batch_view(y, val_samples);
+                    }
+                    
+                    return this->fit(x_train, y_train, x_val, y_val, batch_size, epochs, verbose);
+                }
+
                 History<T> evaluate(const NDArray<T> &x, const NDArray<T> &y,
                 uint_fast64_t batch_size = 32, uint_fast8_t verbose = true)
                 {
