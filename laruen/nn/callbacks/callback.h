@@ -3,6 +3,7 @@
 #define LARUEN_NN_CALLBACKS_CALLBACK_H_
 
 #include <cstdint>
+#include <string>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/types.h"
 #include "laruen/nn/model.h"
@@ -26,6 +27,7 @@ namespace laruen::nn {
                 protected:
                     Model<T> *model_ = nullptr;
                     uint_fast8_t verbose_mode_;
+                    std::string verbose_;
 
                 public:
                     virtual ~Callback()
@@ -57,7 +59,7 @@ namespace laruen::nn {
 
                     virtual Callback<T>* clone() const = 0;
 
-                    virtual void on_epoch_end(uint_fast64_t epoch) const = 0;
+                    virtual void on_epoch_end(uint_fast64_t epoch) = 0;
             };
         }
 

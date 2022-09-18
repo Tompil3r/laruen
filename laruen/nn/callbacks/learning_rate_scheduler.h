@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <string>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/types.h"
 #include "laruen/nn/model.h"
@@ -31,9 +32,16 @@ namespace laruen::nn::callbacks {
                     return new LearningRateScheduler(this->scheduler_, this->verbose_mode_);
                 }
 
-                void on_epoch_end(uint_fast64_t epoch) const override final {
+                void on_epoch_end(uint_fast64_t epoch) override final {
                     this->model_->optimizer()->learning_rate(
                         this->scheduler_(epoch, this->model_->optimizer()->learning_rate()));
+                        
+                    if(this->verbose_mode_) {
+                        std::string lr_str = std::to_string(this->model_->optimizer()->learning_rate());
+
+                        this->verbose_.append(" - learning_rate: ");
+                        this->verbose_.append(lr_str.cbegin(), lr_str.cbegin() + lr_str.find_last_not_of('0') + 1);
+                    }
                 }
         };
 
