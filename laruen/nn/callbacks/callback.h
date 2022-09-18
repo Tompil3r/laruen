@@ -29,6 +29,22 @@ namespace laruen::nn::callbacks {
                 : verbose_(verbose)
                 {}
 
+                inline void model(Model<T> *model) noexcept {
+                    this->model_ = model;
+                }
+
+                inline Model<T>* model() noexcept {
+                    return this->model_;
+                }
+
+                inline void verbose_mode(uint_fast8_t verbose) {
+                    this->verbose_ = verbose;
+                }
+
+                inline uint_fast8_t verbose_mode() const {
+                    return this->verbose_;
+                }
+
                 virtual Callback<T>* clone() const = 0;
 
                 virtual void operator()(uint_fast64_t epoch) const = 0;
