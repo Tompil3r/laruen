@@ -415,19 +415,30 @@ namespace laruen::nn {
                     return History(this->metrics_);
                 }
                 
-                NDArray<T>& predict(const NDArray<T> &x, NDArray<T> &y_pred, uint_fast32_t batch_size = 32) {
+                NDArray<T>& predict(const NDArray<T> &x, NDArray<T> &y_pred,
+                uint_fast32_t batch_size = 32, uint_fast8_t verbose = 1) {
                     // although data_view stores views as const, note that y_pred
                     // is NOT const and the data may be changed
                     DataView<T> data_view(x, y_pred, batch_size);
+
+                    bool last; // used only when verbose = true
+                    bool full_batch_last = verbose >= 1 && !data_view.remaining; // used only when verbose = true
+                    uint_fast64_t batch;
 
                     if(data_view.full_batches) {
                         this->construct_forward(this->batch_outputs_, batch_size);
                     }
 
-                    for(uint_fast64_t batch = 0;batch < data_view.full_batches;batch++) {
+                    for(batch = 0;batch < data_view.full_batches;batch++) {
                         this->forward(data_view.x_batch, this->batch_outputs_);
                         
                         const_cast<NDArray<T>&>(data_view.y_batch).copy_data_from(this->batch_outputs_.back());
+
+                        if(last = (batch == data_view.full_batches - 1),
+                        (verbose == 1 && !(batch % this->verbose_settings.rate)) || (full_batch_last && last))
+                        {
+                            this->verbose(0, 1, batch, data_view.batches, last);
+                        }
 
                         data_view.next_batch();
                     }
@@ -437,17 +448,21 @@ namespace laruen::nn {
 
                         this->forward(data_view.x_remaining, this->remaining_train_outputs_);
                         const_cast<NDArray<T>&>(data_view.y_remaining).copy_data_from(this->remaining_train_outputs_.back());
+
+                        if(verbose) {
+                            this->verbose(0, 1, batch, data_view.batches, true);
+                        }
                     }
 
                     return y_pred;
                 }
 
-                NDArray<T> predict(const NDArray<T> &x, uint_fast32_t batch_size = 32) {
+                NDArray<T> predict(const NDArray<T> &x, uint_fast32_t batch_size = 32, uint_fast8_t verbose = 1) {
                     using laruen::nn::utils::add_batch_shape;
 
                     NDArray<T> y_pred(add_batch_shape(this->layers_.back()->output_shape(), x.shape().front()));
 
-                    this->predict(x, y_pred, batch_size);
+                    this->predict(x, y_pred, batch_size, verbose);
 
                     return y_pred;
                 }
