@@ -53,6 +53,10 @@ namespace laruen::nn {
                         return this->verbose_mode_;
                     }
 
+                    inline std::string& verbose() noexcept {
+                        return this->verbose_;
+                    }
+
                     inline virtual void set(Model<T> *model) {
                         this->model_ = model;
                     }
