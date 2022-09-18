@@ -25,14 +25,14 @@ namespace laruen::nn {
             class Callback {
                 protected:
                     Model<T> *model_ = nullptr;
-                    uint_fast8_t verbose_;
+                    uint_fast8_t verbose_mode_;
 
                 public:
                     virtual ~Callback()
                     {}
 
                     Callback(uint_fast8_t verbose = 1)
-                    : verbose_(verbose)
+                    : verbose_mode_(verbose)
                     {}
 
                     inline void model(Model<T> *model) noexcept {
@@ -44,11 +44,11 @@ namespace laruen::nn {
                     }
 
                     inline void verbose_mode(uint_fast8_t verbose) {
-                        this->verbose_ = verbose;
+                        this->verbose_mode_ = verbose;
                     }
 
                     inline uint_fast8_t verbose_mode() const {
-                        return this->verbose_;
+                        return this->verbose_mode_;
                     }
 
                     inline virtual void set(Model<T> *model) {
