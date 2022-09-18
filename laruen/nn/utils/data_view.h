@@ -38,10 +38,13 @@ namespace laruen::nn::utils {
                 x_batch_stride(batch_size * x.strides().front()),
                 y_batch_stride(batch_size * y.strides().front()),
                 remaining_ratio(this->full_batches > 0 ? (T)this->remaining / batch_size : 1),
-                partial_batches(this->full_batches + this->remaining_ratio),
-                x_batch(batch_view(x, batch_size)),
-                y_batch(batch_view(y, batch_size))
+                partial_batches(this->full_batches + this->remaining_ratio)
                 {
+                    if(this->full_batches) {
+                        x_batch = batch_view(x, batch_size);
+                        y_batch = batch_view(y, batch_size);
+                    }
+
                     if(this->remaining) {
                         this->x_remaining = batch_view(x, this->remaining);
                         this->y_remaining = batch_view(y, this->remaining);
