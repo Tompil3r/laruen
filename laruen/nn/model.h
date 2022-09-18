@@ -667,7 +667,10 @@ namespace laruen::nn {
 
                     if(callbacks) {
                         for(auto callback = callbacks->begin();callback != callbacks->end();callback++) {
-                            str.append((*callback)->verbose());
+                            if((*callback)->verbose().size()) {
+                                str.append(" - ");
+                                str.append((*callback)->verbose());
+                            }
                         }
                     }
 
