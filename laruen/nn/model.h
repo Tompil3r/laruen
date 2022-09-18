@@ -344,29 +344,15 @@ namespace laruen::nn {
                     return this->fit(x_train, y_train, x_val, y_val, callbacks, batch_size, epochs, verbose);
                 }
 
-                inline History<T> fit(const NDArray<T> &x, const NDArray<T> &y, uint_fast64_t batch_size = 32,
-                uint_fast64_t epochs = 1, T val_split = 0.0, uint_fast8_t verbose = 1)
-                {
-                    std::vector<std::shared_ptr<Callback<T>>> callbacks;
-                    return this->fit(x, y, callbacks, batch_size, epochs, val_split, verbose);
-                }
-
                 inline History<T> fit(const NDArray<T> &x, const NDArray<T> &y, const NDArray<T> &x_val, const NDArray<T> &y_val,
-                uint_fast64_t batch_size = 32, uint_fast64_t epochs = 1, uint_fast8_t verbose = 1)
-                {
-                    std::vector<std::shared_ptr<Callback<T>>> callbacks;
-                    return this->fit(x, y, x_val, y_val, callbacks, batch_size, epochs, verbose);
-                }
-
-                inline History<T> fit(const NDArray<T> &x, const NDArray<T> &y, const NDArray<T> &x_val, const NDArray<T> &y_val,
-                std::vector<std::shared_ptr<Callback<T>>> &&callbacks, uint_fast64_t batch_size = 32, uint_fast64_t epochs = 1,
+                std::vector<std::shared_ptr<Callback<T>>> &&callbacks = {}, uint_fast64_t batch_size = 32, uint_fast64_t epochs = 1,
                 uint_fast8_t verbose = 1)
                 {
                     return this->fit(x, y, x_val, y_val, callbacks, batch_size, epochs, verbose);
                 }
 
                 inline History<T> fit(const NDArray<T> &x, const NDArray<T> &y,
-                std::vector<std::shared_ptr<Callback<T>>> &&callbacks, uint_fast64_t batch_size = 32,
+                std::vector<std::shared_ptr<Callback<T>>> &&callbacks = {}, uint_fast64_t batch_size = 32,
                 uint_fast64_t epochs = 1, T val_split = 0.0, uint_fast8_t verbose = 1)
                 {
                     return this->fit(x, y, callbacks, batch_size, epochs, val_split, verbose);
