@@ -242,6 +242,8 @@ namespace laruen::nn {
                     }
                     
                     for(epoch = 0;epoch < epochs;epoch++) {
+                        this->callbacks_on_epoch_start(callbacks, epoch);
+
                         for(train_batch = 0;train_batch < train_view.full_batches;train_batch++) {
                             this->train_batch(train_view.x_batch, train_view.y_batch, this->batch_outputs_,
                             this->batch_grads_, this->input_batch_grad_, true);
@@ -544,6 +546,14 @@ namespace laruen::nn {
                 inline void set_callbacks(std::vector<std::shared_ptr<Callback<T>>> &callbacks) {
                     for(auto callback = callbacks.begin();callback != callbacks.end();callback++) {
                         (*callback)->set(this);
+                    }
+                }
+
+                inline void callbacks_on_epoch_start(std::vector<std::shared_ptr<Callback<T>>> &callbacks,
+                uint_fast64_t epoch)
+                {
+                    for(auto callback = callbacks.begin();callback != callbacks.end();callback++) {
+                        (*callback)->on_epoch_start(epoch);
                     }
                 }
 
