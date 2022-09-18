@@ -567,20 +567,28 @@ namespace laruen::nn {
                     }
                 }
 
-                inline void callbacks_on_epoch_start(std::vector<std::shared_ptr<Callback<T>>> &callbacks,
+                inline bool callbacks_on_epoch_start(std::vector<std::shared_ptr<Callback<T>>> &callbacks,
                 uint_fast64_t epoch)
                 {
+                    bool stop = false;
+
                     for(auto callback = callbacks.begin();callback != callbacks.end();callback++) {
-                        (*callback)->on_epoch_start(epoch);
+                        stop = stop || (*callback)->on_epoch_start(epoch);
                     }
+
+                    return stop;
                 }
 
-                inline void callbacks_on_epoch_end(std::vector<std::shared_ptr<Callback<T>>> &callbacks,
+                inline bool callbacks_on_epoch_end(std::vector<std::shared_ptr<Callback<T>>> &callbacks,
                 uint_fast64_t epoch)
                 {
+                    bool stop = false;
+
                     for(auto callback = callbacks.begin();callback != callbacks.end();callback++) {
-                        (*callback)->on_epoch_end(epoch);
+                        stop = stop || (*callback)->on_epoch_end(epoch);
                     }
+
+                    return stop;
                 }
 
                 void free_resources() noexcept {
