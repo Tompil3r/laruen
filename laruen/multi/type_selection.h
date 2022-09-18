@@ -8,7 +8,7 @@
 
 namespace laruen::multi {
     // NDArray forward declaration
-    template <typename T> class NDArray;
+    template <typename> class NDArray;
 
     namespace types {
         template <typename T> struct next_signed;

@@ -11,6 +11,7 @@
 #include "laruen/math/common.h"
 
 namespace laruen::multi {
+    template <typename> class NDArray;
 
     namespace impl {
 
