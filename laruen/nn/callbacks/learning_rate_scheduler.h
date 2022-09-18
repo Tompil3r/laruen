@@ -39,7 +39,7 @@ namespace laruen::nn::callbacks {
                     if(this->verbose_mode_) {
                         std::string lr_str = std::to_string(this->model_->optimizer()->learning_rate());
 
-                        this->verbose_.append("learning_rate: ");
+                        this->verbose_.append(" - learning_rate: ");
                         this->verbose_.append(lr_str.cbegin(), lr_str.cbegin() + lr_str.find_last_not_of('0') + 1);
                     }
                 }
