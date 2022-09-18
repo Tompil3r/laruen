@@ -353,10 +353,6 @@ namespace laruen::nn {
                         this->construct_forward(this->batch_outputs_, data_view.x_batch.shape().front());
                     }
 
-                    if(data_view.remaining) {
-                        this->construct_forward(this->remaining_train_outputs_, data_view.x_remaining.shape().front());
-                    }
-
                     for(batch = 0;batch < data_view.full_batches;batch++) {
                         this->forward(data_view.x_batch, this->batch_outputs_);
 
@@ -372,6 +368,8 @@ namespace laruen::nn {
                     }
 
                     if(data_view.remaining) {
+                        this->construct_forward(this->remaining_train_outputs_, data_view.remaining);
+
                         this->forward(data_view.x_remaining, this->remaining_train_outputs_);
 
                         this->compute_metrics(this->metrics_, data_view.y_remaining,
