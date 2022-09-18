@@ -53,7 +53,7 @@ namespace laruen::nn {
 
                     virtual Callback<T>* clone() const = 0;
 
-                    virtual void operator()(uint_fast64_t epoch) const = 0;
+                    virtual void on_epoch_end(uint_fast64_t epoch) const = 0;
             };
         }
 
