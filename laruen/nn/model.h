@@ -253,8 +253,8 @@ namespace laruen::nn {
                             if(last = (train_batch == train_view.full_batches - 1),
                             (verbose == 1 && !(train_batch % this->verbose_settings.rate)) || (train_full_batch_last && last))
                             {
-                                this->verbose(epoch, epochs, (T)(train_batch + 1), train_batch,
-                                train_view.batches, train_full_batch_last && last, &callbacks);
+                                this->verbose(epoch, epochs, train_batch, train_view.batches, train_full_batch_last && last,
+                                &this->metrics_, (T)(train_batch + 1), nullptr, 0.0, &callbacks);
                             }
 
                             train_view.next_batch();
@@ -268,8 +268,8 @@ namespace laruen::nn {
                             this->remaining_train_outputs_.back(), epoch, train_view.remaining_ratio);
 
                             if(verbose == 1) {
-                                this->verbose(epoch, epochs, train_view.partial_batches,
-                                train_batch, train_view.batches, true, &callbacks);
+                                this->verbose(epoch, epochs, train_batch, train_view.batches, true,
+                                &this->metrics_, train_view.partial_batches, nullptr, 0.0, &callbacks);
                             }
                         }
 
@@ -282,8 +282,9 @@ namespace laruen::nn {
                                 if(last = (val_batch == val_view.full_batches - 1),
                                 (verbose == 1 && !(val_batch % this->verbose_settings.rate)) || (val_full_batch_last && last))
                                 {
-                                    this->verbose(epoch, epochs, train_view.partial_batches, val_batch, val_view.batches,
-                                    val_full_batch_last && last, &callbacks, true, (T)(val_batch + 1));
+                                    this->verbose(epoch, epochs, val_batch, val_view.batches, val_full_batch_last && last,
+                                    &this->metrics_, train_view.partial_batches, &this->val_metrics_,
+                                    (T)(val_batch + 1), &callbacks);
                                 }
 
                                 val_view.next_batch();
@@ -296,8 +297,9 @@ namespace laruen::nn {
                                 this->remaining_val_outputs_.back(), epoch, val_view.remaining_ratio);
 
                                 if(verbose >= 1) {
-                                    this->verbose(epoch, epochs, train_view.partial_batches, val_batch,
-                                    val_view.batches, true, &callbacks, true, val_view.partial_batches);
+                                    this->verbose(epoch, epochs, val_batch, val_view.batches, true,
+                                    &this->metrics_, train_view.partial_batches, &this->val_metrics_,
+                                    val_view.partial_batches, &callbacks);
                                 }
                             }
 
@@ -388,7 +390,8 @@ namespace laruen::nn {
                         if(last = (batch == data_view.full_batches - 1),
                         (verbose == 1 && !(batch % this->verbose_settings.rate)) || (full_batch_last && last))
                         {
-                            this->verbose(0, 1, (T)(batch + 1), batch, data_view.batches, full_batch_last && last);
+                            this->verbose(0, 1, batch, data_view.batches, full_batch_last && last,
+                            &this->metrics_, (T)(batch + 1));
                         }
 
                         data_view.next_batch();
@@ -403,7 +406,7 @@ namespace laruen::nn {
                         this->remaining_train_outputs_.back(), 0, data_view.remaining_ratio);
 
                         if(verbose) {
-                            this->verbose(0, 1, data_view.partial_batches, batch, data_view.batches, true);
+                            this->verbose(0, 1, batch, data_view.batches, true, &this->metrics_, data_view.partial_batches);
                         }
                     }
 
@@ -616,9 +619,25 @@ namespace laruen::nn {
                     this->construct_backward(batch_outputs, batch_grads, input_grad, input_batch_shape);
                 }
 
+                void verbose_metrics(std::string &str, const std::vector<std::shared_ptr<Metric<T>>> &metrics,
+                T partial_batches, uint_fast64_t epoch_index)
+                {
+                    for(auto metric = metrics.cbegin();metric != metrics.cend();metric++) {
+                        std::string metric_str = std::to_string((*metric)->values()[epoch_index] / partial_batches);
+
+                        str.append(" - ");
+                        str.append((*metric)->name());
+                        str.push_back(':');
+                        str.push_back(' ');
+                        str.append(metric_str.cbegin(), metric_str.cbegin() + metric_str.find('.') + this->verbose_settings.precision + 1);
+                    }
+                }
+
                 void verbose(uint_fast64_t epoch_index, uint_fast64_t epochs,
-                T train_partial_batch, uint_fast64_t batch_index, uint_fast64_t batches, bool last,
-                std::vector<std::shared_ptr<Callback<T>>> *callbacks = nullptr, bool val_metrics = false, T val_partial_batch = 0.0)
+                uint_fast64_t batch_index, uint_fast64_t batches, bool last,
+                const std::vector<std::shared_ptr<Metric<T>>> *train_metrics = nullptr, T train_partial_batches = 0.0,
+                const std::vector<std::shared_ptr<Metric<T>>> *val_metrics = nullptr, T val_partial_batches = 0.0,
+                const std::vector<std::shared_ptr<Callback<T>>> *callbacks = nullptr)
                 {
                     // *** written very badly ***
                     static std::string str;
@@ -653,26 +672,12 @@ namespace laruen::nn {
                     str.append(remaining_bar_len, ' ');
                     str.push_back(']');
 
-                    for(auto metric = this->metrics_.cbegin();metric != this->metrics_.cend();metric++) {
-                        std::string metric_str = std::to_string((*metric)->values()[epoch_index] / train_partial_batch);
-
-                        str.append(" - ");
-                        str.append((*metric)->name());
-                        str.push_back(':');
-                        str.push_back(' ');
-                        str.append(metric_str.cbegin(), metric_str.cbegin() + metric_str.find('.') + this->verbose_settings.precision + 1);
+                    if(train_metrics) {
+                        this->verbose_metrics(str, *train_metrics, train_partial_batches, epoch_index);
                     }
 
                     if(val_metrics) {
-                        for(auto metric = this->val_metrics_.cbegin();metric != this->val_metrics_.cend();metric++) {
-                            std::string metric_str = std::to_string((*metric)->values()[epoch_index] / val_partial_batch);
-
-                            str.append(" - ");
-                            str.append((*metric)->name());
-                            str.push_back(':');
-                            str.push_back(' ');
-                            str.append(metric_str.cbegin(), metric_str.cbegin() + metric_str.find('.') + this->verbose_settings.precision + 1);
-                        }
+                        this->verbose_metrics(str, *val_metrics, val_partial_batches, epoch_index);
                     }
 
                     if(callbacks) {
