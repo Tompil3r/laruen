@@ -37,6 +37,7 @@ namespace laruen::nn::callbacks {
                         this->scheduler_(epoch, this->model_->optimizer()->learning_rate()));
                         
                     if(this->verbose_mode_) {
+                        this->verbose_.clear();
                         std::string lr_str = std::to_string(this->model_->optimizer()->learning_rate());
 
                         this->verbose_.append("learning_rate: ");
