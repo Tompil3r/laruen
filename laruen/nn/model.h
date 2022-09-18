@@ -21,6 +21,7 @@
 #include "laruen/nn/layers/layer.h"
 #include "laruen/nn/optimizers/optimizer.h"
 #include "laruen/nn/losses/loss.h"
+#include "laruen/nn/callbacks/callback.h"
 #include "laruen/nn/metrics/metric.h"
 #include "laruen/nn/utils/utils.h"
 #include "laruen/nn/utils/data_view.h"
@@ -28,6 +29,10 @@
 #include "laruen/nn/history.h"
 
 namespace laruen::nn {
+
+    namespace callbacks::impl {
+        template <typename> class Callback;
+    }
 
     namespace impl {
 
@@ -39,6 +44,7 @@ namespace laruen::nn {
         using laruen::nn::optimizers::Optimizer;
         using laruen::nn::losses::Loss;
         using laruen::nn::metrics::Metric;
+        using laruen::nn::callbacks::impl::Callback;
         using laruen::nn::utils::DataView;
         using laruen::nn::utils::VerboseSettings;
 
@@ -195,7 +201,8 @@ namespace laruen::nn {
                 }
 
                 History<T> fit(const NDArray<T> &x, const NDArray<T> &y, const NDArray<T> &x_val, const NDArray<T> &y_val,
-                uint_fast64_t batch_size = 32, uint_fast64_t epochs = 1, uint_fast8_t verbose = 1)
+                std::vector<std::shared_ptr<Callback<T>>> &callbacks, uint_fast64_t batch_size = 32, uint_fast64_t epochs = 1,
+                uint_fast8_t verbose = 1)
                 {
                     if(!this->built_ || !this->compiled_) {
                         throw std::logic_error("model must be built & compiled before calling fit");
@@ -212,6 +219,7 @@ namespace laruen::nn {
                     bool train_full_batch_last = verbose >= 1 && !train_view.remaining && !val_view.batches; // used only when verbose = true
                     bool val_full_batch_last; // used only when verbose = true
 
+                    this->set_callbacks(callbacks);
                     this->reset_metrics(this->metrics_, epochs);
 
                     if(train_view.full_batches) {
@@ -297,6 +305,7 @@ namespace laruen::nn {
 
                         this->average_metrics(this->metrics_, train_view.partial_batches);
 
+                        this->callbacks_on_epoch_end(callbacks, epoch);
 
                         train_view.reset_batch_views(x.data(), y.data());
                     }
@@ -310,7 +319,8 @@ namespace laruen::nn {
                     return history;
                 }
 
-                History<T> fit(const NDArray<T> &x, const NDArray<T> &y, uint_fast64_t batch_size = 32,
+                History<T> fit(const NDArray<T> &x, const NDArray<T> &y,
+                std::vector<std::shared_ptr<Callback<T>>> &callbacks, uint_fast64_t batch_size = 32,
                 uint_fast64_t epochs = 1, T val_split = 0.0, uint_fast8_t verbose = 1)
                 {
                     using laruen::nn::utils::batch_view;
@@ -331,7 +341,35 @@ namespace laruen::nn {
                         y_val = batch_view(y, val_samples);
                     }
                     
-                    return this->fit(x_train, y_train, x_val, y_val, batch_size, epochs, verbose);
+                    return this->fit(x_train, y_train, x_val, y_val, callbacks, batch_size, epochs, verbose);
+                }
+
+                inline History<T> fit(const NDArray<T> &x, const NDArray<T> &y, uint_fast64_t batch_size = 32,
+                uint_fast64_t epochs = 1, T val_split = 0.0, uint_fast8_t verbose = 1)
+                {
+                    std::vector<std::shared_ptr<Callback<T>>> callbacks;
+                    return this->fit(x, y, callbacks, batch_size, epochs, val_split, verbose);
+                }
+
+                inline History<T> fit(const NDArray<T> &x, const NDArray<T> &y, const NDArray<T> &x_val, const NDArray<T> &y_val,
+                uint_fast64_t batch_size = 32, uint_fast64_t epochs = 1, uint_fast8_t verbose = 1)
+                {
+                    std::vector<std::shared_ptr<Callback<T>>> callbacks;
+                    return this->fit(x, y, x_val, y_val, callbacks, batch_size, epochs, verbose);
+                }
+
+                inline History<T> fit(const NDArray<T> &x, const NDArray<T> &y, const NDArray<T> &x_val, const NDArray<T> &y_val,
+                std::vector<std::shared_ptr<Callback<T>>> &&callbacks, uint_fast64_t batch_size = 32, uint_fast64_t epochs = 1,
+                uint_fast8_t verbose = 1)
+                {
+                    return this->fit(x, y, x_val, y_val, callbacks, batch_size, epochs, verbose);
+                }
+
+                inline History<T> fit(const NDArray<T> &x, const NDArray<T> &y,
+                std::vector<std::shared_ptr<Callback<T>>> &&callbacks, uint_fast64_t batch_size = 32,
+                uint_fast64_t epochs = 1, T val_split = 0.0, uint_fast8_t verbose = 1)
+                {
+                    return this->fit(x, y, callbacks, batch_size, epochs, val_split, verbose);
                 }
 
                 History<T> evaluate(const NDArray<T> &x, const NDArray<T> &y,
@@ -513,6 +551,20 @@ namespace laruen::nn {
                 {
                     for(auto metric = metrics.begin();metric != metrics.end();metric++) {
                         (*metric)->values().front() /= partial_batches;
+                    }
+                }
+
+                inline void set_callbacks(std::vector<std::shared_ptr<Callback<T>>> &callbacks) {
+                    for(auto callback = callbacks.begin();callback != callbacks.end();callback++) {
+                        (*callback)->model(this);
+                    }
+                }
+
+                inline void callbacks_on_epoch_end(std::vector<std::shared_ptr<Callback<T>>> &callbacks,
+                uint_fast64_t epoch)
+                {
+                    for(auto callback = callbacks.begin();callback != callbacks.end();callback++) {
+                        (*callback)->on_epoch_end(epoch);
                     }
                 }
 
