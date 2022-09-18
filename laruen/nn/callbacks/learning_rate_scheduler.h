@@ -32,7 +32,7 @@ namespace laruen::nn::callbacks {
                     return new LearningRateScheduler(this->scheduler_, this->verbose_mode_);
                 }
 
-                void on_epoch_end(uint_fast64_t epoch) override final {
+                void on_epoch_start(uint_fast64_t epoch) override final {
                     this->model_->optimizer()->learning_rate(
                         this->scheduler_(epoch, this->model_->optimizer()->learning_rate()));
                         
