@@ -556,7 +556,7 @@ namespace laruen::nn {
 
                 inline void set_callbacks(std::vector<std::shared_ptr<Callback<T>>> &callbacks) {
                     for(auto callback = callbacks.begin();callback != callbacks.end();callback++) {
-                        (*callback)->model(this);
+                        (*callback)->set(this);
                     }
                 }
 

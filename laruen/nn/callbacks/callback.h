@@ -51,6 +51,10 @@ namespace laruen::nn {
                         return this->verbose_;
                     }
 
+                    inline virtual void set(Model<T> *model) {
+                        this->model_ = model;
+                    }
+
                     virtual Callback<T>* clone() const = 0;
 
                     virtual void on_epoch_end(uint_fast64_t epoch) const = 0;
