@@ -306,12 +306,12 @@ namespace laruen::nn {
                                 }
                             }
 
-                            this->average_metrics(this->val_metrics_, val_view.partial_batches);
+                            this->average_metrics(this->val_metrics_, epoch, val_view.partial_batches);
 
                             val_view.reset_batch_views(x_val.data(), y_val.data());
                         }
 
-                        this->average_metrics(this->metrics_, train_view.partial_batches);
+                        this->average_metrics(this->metrics_, epoch, train_view.partial_batches);
 
                         train_view.reset_batch_views(x.data(), y.data());
                         
@@ -421,7 +421,7 @@ namespace laruen::nn {
                         }
                     }
 
-                    this->average_metrics(this->metrics_, data_view.partial_batches);
+                    this->average_metrics(this->metrics_, 0, data_view.partial_batches);
 
                     return History(this->metrics_);
                 }
@@ -571,10 +571,10 @@ namespace laruen::nn {
                 }
 
                 inline void average_metrics(std::vector<std::shared_ptr<Metric<T>>> &metrics,
-                T partial_batches)
+                uint_fast64_t epoch, T partial_batches)
                 {
                     for(auto metric = metrics.begin();metric != metrics.end();metric++) {
-                        (*metric)->values().front() /= partial_batches;
+                        (*metric)->values()[epoch] /= partial_batches;
                     }
                 }
 
