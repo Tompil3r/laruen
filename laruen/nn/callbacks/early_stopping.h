@@ -124,6 +124,14 @@ namespace laruen::nn::callbacks {
             return std::shared_ptr<Callback<T>>(new EarlyStopping<T>(monitor, mode,
             min_delta, patience, verbose));
         }
+
+        template <typename T = float32_t>
+        inline std::shared_ptr<Callback<T>> early_stopping(const Metric<T> &monitor,
+        T min_delta = 0.0, uint_fast64_t patience = 0, uint_fast8_t verbose = 1)
+        {
+            return std::shared_ptr<Callback<T>>(new EarlyStopping<T>(monitor,
+            min_delta, patience, verbose));
+        }
     }
 
     using namespace impl;
