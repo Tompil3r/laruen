@@ -214,6 +214,7 @@ namespace laruen::nn {
                     uint_fast64_t epoch;
                     uint_fast64_t train_batch;
                     uint_fast64_t val_batch;
+                    bool stop = false;
 
                     bool last; // used only when verbose = true
                     bool train_full_batch_last = verbose >= 1 && !train_view.remaining && !val_view.batches; // used only when verbose = true
@@ -241,8 +242,10 @@ namespace laruen::nn {
                         this->construct_forward(this->remaining_val_outputs_, val_view.remaining);
                     }
                     
-                    for(epoch = 0;epoch < epochs;epoch++) {
-                        this->callbacks_on_epoch_start(callbacks, epoch);
+                    for(epoch = 0;epoch < epochs && !stop;epoch++) {
+                        if(stop = this->callbacks_on_epoch_start(callbacks, epoch)) {
+                            break;
+                        }
 
                         for(train_batch = 0;train_batch < train_view.full_batches;train_batch++) {
                             this->train_batch(train_view.x_batch, train_view.y_batch, this->batch_outputs_,
@@ -310,9 +313,17 @@ namespace laruen::nn {
 
                         this->average_metrics(this->metrics_, train_view.partial_batches);
 
-                        this->callbacks_on_epoch_end(callbacks, epoch);
-
                         train_view.reset_batch_views(x.data(), y.data());
+                        
+                        stop = this->callbacks_on_epoch_end(callbacks, epoch);
+                    }
+
+                    if(stop) {
+                        this->resize_metrics_values(this->metrics_, epoch);
+
+                        if(val_view.batches) {
+                            this->resize_metrics_values(this->val_metrics_, epoch);
+                        }
                     }
 
                     History<T> history(this->metrics_);
@@ -542,6 +553,12 @@ namespace laruen::nn {
                 inline void reset_metrics(std::vector<std::shared_ptr<Metric<T>>> &metrics, uint_fast64_t new_size) {
                     for(auto metric = metrics.begin();metric != metrics.end();metric++) {
                         (*metric)->values().assign(new_size, 0);
+                    }
+                }
+
+                inline void resize_metrics_values(std::vector<std::shared_ptr<Metric<T>>> &metrics, uint_fast64_t new_size) {
+                    for(auto metric = metrics.begin();metric != metrics.end();metric++) {
+                        (*metric)->values().resize(new_size);
                     }
                 }
 
