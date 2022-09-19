@@ -81,6 +81,10 @@ namespace laruen::nn::losses {
                         }
                     }
                 }
+
+                inline T optimizing_mode() const override final {
+                    return -1.0;
+                }
         };
 
         template <typename T = float32_t>

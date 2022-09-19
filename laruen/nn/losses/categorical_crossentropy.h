@@ -64,6 +64,10 @@ namespace laruen::nn::losses {
                         / batch_size;
                     }
                 }
+
+                inline T optimizing_mode() const override final {
+                    return -1.0;
+                }
         };
 
         template <typename T = float32_t>

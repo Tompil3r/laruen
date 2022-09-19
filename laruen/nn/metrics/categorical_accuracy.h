@@ -57,6 +57,10 @@ namespace laruen::nn::metrics {
 
                     return (score / nb_samples);
                 }
+
+                inline T optimizing_mode() const override final {
+                    return 1.0;
+                }
         };
 
         template <typename T = float32_t>

@@ -48,6 +48,10 @@ namespace laruen::nn::metrics {
 
                     return (score / y_pred.size());
                 }
+
+                inline T optimizing_mode() const override final {
+                    return 1.0;
+                }
         };
 
         template <typename T = float32_t>
