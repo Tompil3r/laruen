@@ -37,7 +37,12 @@ namespace laruen::nn::callbacks {
                 : Callback<T>(verbose), monitor_(monitor), mode_(mode), min_delta_(min_delta), patience_(patience)
                 {}
 
-                Callback<T>* clone() const override final {
+                inline EarlyStopping(const Metric<T> *monitor, T min_delta = 0.0, uint_fast64_t patience = 0,
+                uint_fast8_t verbose = 1)
+                : EarlyStopping<T>(monitor, monitor->optimizing_mode(), min_delta, patience, verbose)
+                {}
+
+                inline Callback<T>* clone() const override final {
                     return new EarlyStopping(this->monitor_, this->mode_,
                     this->min_delta_, this->patience_, this->verbose_);
                 }
