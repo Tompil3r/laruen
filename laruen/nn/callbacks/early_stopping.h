@@ -32,8 +32,8 @@ namespace laruen::nn::callbacks {
                 uint_fast64_t patience_count_ = 0;
 
             public:
-                EarlyStopping(const Metric<T> &monitor, T mode, T min_delta = 0.0, uint_fast64_t patience = 0,
-                uint_fast8_t verbose = 1)
+                EarlyStopping(const Metric<T> &monitor, T mode, T min_delta, uint_fast64_t patience,
+                uint_fast8_t verbose)
                 : Callback<T>(verbose), monitor_(&monitor), mode_(mode), min_delta_(min_delta), patience_(patience)
                 {}
 
@@ -119,7 +119,7 @@ namespace laruen::nn::callbacks {
 
         template <typename T = float32_t>
         inline std::shared_ptr<Callback<T>> early_stopping(const Metric<T> &monitor,
-        T mode, T min_delta = 0.0, uint_fast64_t patience = 0, uint_fast8_t verbose = 1)
+        T mode, T min_delta, uint_fast64_t patience, uint_fast8_t verbose)
         {
             return std::shared_ptr<Callback<T>>(new EarlyStopping<T>(monitor, mode,
             min_delta, patience, verbose));
