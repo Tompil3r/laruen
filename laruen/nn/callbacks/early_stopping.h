@@ -32,6 +32,11 @@ namespace laruen::nn::callbacks {
                 uint_fast64_t patience_count_ = 0;
 
             public:
+                EarlyStopping(const Metric<T> *monitor, T mode, T min_delta, uint_fast64_t patience,
+                uint_fast8_t verbose)
+                : Callback<T>(verbose), monitor_(monitor), mode_(mode), min_delta_(min_delta), patience_(patience)
+                {}
+
                 EarlyStopping(const Metric<T> &monitor, T mode, T min_delta, uint_fast64_t patience,
                 uint_fast8_t verbose)
                 : Callback<T>(verbose), monitor_(&monitor), mode_(mode), min_delta_(min_delta), patience_(patience)
@@ -39,12 +44,12 @@ namespace laruen::nn::callbacks {
 
                 inline EarlyStopping(const Metric<T> &monitor, T min_delta = 0.0, uint_fast64_t patience = 0,
                 uint_fast8_t verbose = 1)
-                : EarlyStopping<T>(monitor, monitor->optimizing_mode(), min_delta, patience, verbose)
+                : EarlyStopping<T>(monitor, monitor.optimizing_mode(), min_delta, patience, verbose)
                 {}
 
                 inline Callback<T>* clone() const override final {
                     return new EarlyStopping(this->monitor_, this->mode_,
-                    this->min_delta_, this->patience_, this->verbose_);
+                    this->min_delta_, this->patience_, this->verbose_mode_);
                 }
 
                 inline void set(Model<T> *model) override final {
@@ -63,6 +68,9 @@ namespace laruen::nn::callbacks {
 
                     if((curr_metric_value - this->best_monitored_) * this->mode_ < this->min_delta_) {
                         this->patience_count_++;
+                    }
+                    else {
+                        this->patience_count_ = 0;
                     }
 
                     return this->patience_count_ > this->patience_;
