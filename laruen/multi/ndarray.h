@@ -915,7 +915,7 @@ namespace laruen::multi {
             }
             
             NDIndex ndindex_max() const noexcept {
-                return this->unravel_index(this->index_max());
+                return this->unravel_index(this->absolute_index_max());
             }
 
             template <typename TR>
@@ -1063,7 +1063,7 @@ namespace laruen::multi {
             }
             
             NDIndex ndindex_min() const noexcept {
-                return this->unravel_index(this->index_min());
+                return this->unravel_index(this->absolute_index_min());
             }
 
             // indexing and slicing operators
