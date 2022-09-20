@@ -1076,11 +1076,11 @@ namespace laruen::multi {
             }
 
             inline T& operator[](uint_fast64_t index) noexcept {
-                return this->data_[index];
+                return this->data_[this->contig_ ? index : this->physical_index(index)];
             }
 
             inline const T& operator[](uint_fast64_t index) const noexcept {
-                return this->data_[index];
+                return this->data_[this->contig_ ? index : this->physical_index(index)];
             }
 
             inline T& at(const NDIndex &ndindex) noexcept {
