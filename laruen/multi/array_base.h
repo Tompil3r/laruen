@@ -165,7 +165,7 @@ namespace laruen::multi {
 
                 for(uint_fast8_t dim = 0;dim < this->ndim_;dim++) {
                     ndindex[dim] = index / this->strides_[dim];
-                    index -= ndindex[dim] * this->strides_[dim];
+                    index %= this->strides_[dim];
                 }
 
                 return ndindex;
