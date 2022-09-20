@@ -855,7 +855,7 @@ namespace laruen::multi {
                 for(uint_fast64_t i = 1;i < this->size_;i++) {
                     if((value = iter.next()) > max) {
                         max = value;
-                        index_max = iter.index();
+                        index_max = i;
                     }
                 }
 
@@ -951,7 +951,7 @@ namespace laruen::multi {
                 for(uint_fast64_t i = 1;i < this->size_;i++) {
                     if((value = iter.next()) < min) {
                         min = value;
-                        index_min = iter.index();
+                        index_min = i;
                     }
                 }
 
