@@ -846,6 +846,42 @@ namespace laruen::multi {
                 return out;
             }
 
+            NDArray<uint_fast64_t>& indices_max(const Axes &axes, NDArray<uint_fast64_t> &out) const noexcept {
+                const NDArray<T> reorder = this->axes_reorder(axes);
+
+                NDIter out_iter(out.data_, out);
+                NDIter src_iter(reorder.data_, reorder);
+                uint_fast64_t sample_size = reorder.size_ / out.size_;
+                T max;
+                T current;
+                uint_fast64_t index_max;
+
+                for(uint_fast64_t i = 0;i < out.size_;i++) {
+                    index_max = 0;
+                    max = src_iter.next();
+                    
+                    for(uint_fast64_t j = 1;j < sample_size;j++) {
+                        current = src_iter.current();
+
+                        if(current > max) {
+                            max = current;
+                            index_max = j;
+                        }
+                        src_iter.next();
+                    }
+                    out_iter.next() = index_max;
+                }
+
+                return out;
+            }
+
+            NDArray<uint_fast64_t> indices_max(const Axes &axes) const noexcept {
+                NDArray<uint_fast64_t> out(laruen::multi::utils::retrieve_axes(this->shape_,
+                laruen::multi::utils::compress_axes(axes, this->ndim_)));
+                this->indices_max(axes, out);
+                return out;
+            }
+
             uint_fast64_t absolute_index_max() const noexcept {
                 NDIter iter(this->data_, *this);
                 T *ptr_max = iter.ptr;
@@ -860,6 +896,22 @@ namespace laruen::multi {
                 }
 
                 return ptr_max - this->data_;
+            }
+
+            uint_fast64_t index_max() const noexcept {
+                NDIter iter(this->data_, *this);
+                T max = iter.next();
+                uint_fast64_t index_max = 0;
+
+                for(uint_fast64_t i = 1;i < this->size_;i++) {
+                    if(iter.current() > max) {
+                        max = iter.current();
+                        index_max = i;
+                    }
+                    iter.next();
+                }
+
+                return index_max;
             }
             
             NDIndex ndindex_max() const noexcept {
@@ -941,7 +993,43 @@ namespace laruen::multi {
                 this->absolute_indices_min(axes, out);
                 return out;
             }
+            
+            NDArray<uint_fast64_t>& indices_min(const Axes &axes, NDArray<uint_fast64_t> &out) const noexcept {
+                const NDArray<T> reorder = this->axes_reorder(axes);
 
+                NDIter out_iter(out.data_, out);
+                NDIter src_iter(reorder.data_, reorder);
+                uint_fast64_t sample_size = reorder.size_ / out.size_;
+                T min;
+                T current;
+                uint_fast64_t index_min;
+
+                for(uint_fast64_t i = 0;i < out.size_;i++) {
+                    index_min = 0;
+                    min = src_iter.next();
+                    
+                    for(uint_fast64_t j = 1;j < sample_size;j++) {
+                        current = src_iter.current();
+
+                        if(current < min) {
+                            min = current;
+                            index_min = j;
+                        }
+                        src_iter.next();
+                    }
+                    out_iter.next() = index_min;
+                }
+
+                return out;
+            }
+
+            NDArray<uint_fast64_t> indices_min(const Axes &axes) const noexcept {
+                NDArray<uint_fast64_t> out(laruen::multi::utils::retrieve_axes(this->shape_,
+                laruen::multi::utils::compress_axes(axes, this->ndim_)));
+                this->indices_min(axes, out);
+                return out;
+            }
+            
             uint_fast64_t absolute_index_min() const noexcept {
                 NDIter iter(this->data_, *this);
                 T *ptr_min = iter.ptr;
@@ -956,6 +1044,22 @@ namespace laruen::multi {
                 }
 
                 return ptr_min - this->data_;
+            }
+
+            uint_fast64_t index_min() const noexcept {
+                NDIter iter(this->data_, *this);
+                T min = iter.next();
+                uint_fast64_t index_min = 0;
+
+                for(uint_fast64_t i = 1;i < this->size_;i++) {
+                    if(iter.current() < min) {
+                        min = iter.current();
+                        index_min = i;
+                    }
+                    iter.next();
+                }
+
+                return index_min;
             }
             
             NDIndex ndindex_min() const noexcept {
