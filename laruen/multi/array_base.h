@@ -140,9 +140,8 @@ namespace laruen::multi {
 
             uint_fast64_t ravel_ndindex(const NDIndex &ndindex) const noexcept {
                 uint_fast64_t index = 0;
-                uint_fast8_t ndim = ndindex.size();
 
-                for(uint_fast8_t dim = 0;dim < ndim;dim++) {
+                for(uint_fast8_t dim = 0;dim < this->ndim_;dim++) {
                     index += ndindex[dim] * this->strides_[dim];
                 }
 
