@@ -848,18 +848,18 @@ namespace laruen::multi {
 
             uint_fast64_t absolute_index_max() const noexcept {
                 NDIter iter(this->data_, *this);
-                T value;
+                T *ptr_max = iter.ptr;
                 T max = iter.next();
-                uint_fast64_t index_max = 0;
 
                 for(uint_fast64_t i = 1;i < this->size_;i++) {
-                    if((value = iter.next()) > max) {
-                        max = value;
-                        index_max = i;
+                    if(iter.current() > max) {
+                        max = iter.current();
+                        ptr_max = iter.ptr;
                     }
+                    iter.next();
                 }
 
-                return index_max;
+                return ptr_max - this->data_;
             }
             
             NDIndex ndindex_max() const noexcept {
@@ -944,18 +944,18 @@ namespace laruen::multi {
 
             uint_fast64_t absolute_index_min() const noexcept {
                 NDIter iter(this->data_, *this);
-                T value;
+                T *ptr_min = iter.ptr;
                 T min = iter.next();
-                uint_fast64_t index_min = 0;
 
                 for(uint_fast64_t i = 1;i < this->size_;i++) {
-                    if((value = iter.next()) < min) {
-                        min = value;
-                        index_min = i;
+                    if(iter.current() < min) {
+                        min = iter.current();
+                        ptr_min = iter.ptr;
                     }
+                    iter.next();
                 }
 
-                return index_min;
+                return ptr_min - this->data_;
             }
             
             NDIndex ndindex_min() const noexcept {
