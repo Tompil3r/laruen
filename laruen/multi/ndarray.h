@@ -1180,7 +1180,7 @@ namespace laruen::multi {
             }
 
             // utility functions
-            const NDArray<T> expansion(const ArrayBase &expand_to) const noexcept {
+            const NDArray<T> expansion(const ArrayBase &expand_to) const {
                 /* expand the dimensions of this to the dimensions of expansion */
                 
                 NDArray<T> expansion(this->data_, Shape(expand_to.shape_), Strides(expand_to.ndim_, 0),
@@ -1193,12 +1193,15 @@ namespace laruen::multi {
                         expansion.strides_[expansion_idx] = this->strides_[expanded_idx];
                         expansion.dim_sizes_[expansion_idx] = this->dim_sizes_[expanded_idx];
                     }
+                    else if(this->shape_[expanded_idx] != 1) {
+                        throw std::invalid_argument("invalid shapes - cannot be broadcasted");
+                    }
                 }
 
                 return expansion;
             }
 
-            const NDArray<T> matmul_expansion(const ArrayBase &expand_to) const noexcept {
+            const NDArray<T> matmul_expansion(const ArrayBase &expand_to) const {
                 /* expand the dimensions of this to the dimensions of expand_to */
                 
                 NDArray<T> expansion(this->data_, Shape(expand_to.shape_), Strides(expand_to.ndim_, 0),
@@ -1222,6 +1225,9 @@ namespace laruen::multi {
                     if(expand_to.shape_[expansion_idx] == this->shape_[expanded_idx]) {
                         expansion.strides_[expansion_idx] = this->strides_[expanded_idx];
                         expansion.dim_sizes_[expansion_idx] = this->dim_sizes_[expanded_idx];
+                    }
+                    else if(this->shape_[expanded_idx] != 1) {
+                        throw std::invalid_argument("invalid shapes - cannot be broadcasted");
                     }
                 }
 
