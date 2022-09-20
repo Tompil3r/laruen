@@ -60,7 +60,7 @@ namespace laruen::nn::utils {
         }
 
         template <typename T>
-        inline constexpr T stable_nonzero(T num, T threshold = 1e-12) noexcept {
+        inline constexpr T stable_nonzero(T num, T threshold = 1e-24) noexcept {
             return std::abs(num) >= threshold ? num : (num >= 0 ? threshold : -threshold);
         }
     }
