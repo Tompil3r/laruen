@@ -70,9 +70,6 @@ namespace laruen::nn {
                     virtual bool on_epoch_end(uint_fast64_t epoch) {
                         return false;
                     }
-
-                    virtual void on_exit(uint_fast64_t epochs_completed)
-                    {}
             };
         }
 
