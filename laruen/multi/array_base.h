@@ -138,7 +138,7 @@ namespace laruen::multi {
                 }
             }
 
-            uint_fast64_t ravel_ndindex(const NDIndex &ndindex) const noexcept {
+            uint_fast64_t physical_ravel_ndindex(const NDIndex &ndindex) const noexcept {
                 uint_fast64_t index = 0;
 
                 for(uint_fast8_t dim = 0;dim < this->ndim_;dim++) {
@@ -148,12 +148,37 @@ namespace laruen::multi {
                 return index;
             }
 
-            NDIndex unravel_index(uint_fast64_t index) const noexcept {
+            uint_fast64_t logical_ravel_ndindex(const NDIndex &ndindex) const noexcept {
+                uint_fast64_t index = 0;
+                uint_fast64_t contig_stride = this->size_;
+
+                for(uint_fast8_t dim = 0;dim < this->ndim_;dim++) {
+                    contig_stride /= this->shape_[dim];
+                    index += ndindex[dim] * contig_stride;
+                }
+
+                return index;
+            }
+
+            NDIndex physical_unravel_index(uint_fast64_t index) const noexcept {
                 NDIndex ndindex(this->ndim_);
 
                 for(uint_fast8_t dim = 0;dim < this->ndim_;dim++) {
                     ndindex[dim] = index / this->strides_[dim];
                     index -= ndindex[dim] * this->strides_[dim];
+                }
+
+                return ndindex;
+            }
+            
+            NDIndex logical_unravel_index(uint_fast64_t index) const noexcept {
+                NDIndex ndindex(this->ndim_);
+                uint_fast64_t contig_stride = this->size_;
+
+                for(uint_fast8_t dim = 0;dim < this->ndim_;dim++) {
+                    contig_stride /= this->shape_[dim];
+                    ndindex[dim] = index / contig_stride;
+                    index %= contig_stride;
                 }
 
                 return ndindex;
