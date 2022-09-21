@@ -15,6 +15,9 @@ namespace laruen::nn::initializers {
         template <typename T = float32_t>
         class Initializer {
             public:
+                virtual ~Initializer()
+                {}
+
                 virtual Initializer<T>* clone() const = 0;
 
                 virtual void operator()(uint_fast64_t nb_inputs, uint_fast64_t nb_nodes, NDArray<T> &output) = 0;
