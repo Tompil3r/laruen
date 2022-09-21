@@ -50,8 +50,8 @@ namespace laruen::nn::layers {
 
             public:
                 FullyConnected(uint_fast32_t nodes,
-                std::shared_ptr<Initializer<T>> kernel_initializer = glorot_uniform(),
-                std::shared_ptr<Initializer<T>> bias_initializer = zeros()) noexcept
+                std::shared_ptr<Initializer<T>> kernel_initializer = glorot_uniform<T>(),
+                std::shared_ptr<Initializer<T>> bias_initializer = zeros<T>()) noexcept
                 : nodes_(nodes), kernel_initializer_(kernel_initializer), bias_initializer_(bias_initializer)
                 {}
 
@@ -209,8 +209,8 @@ namespace laruen::nn::layers {
 
         template <typename T = float32_t>
         inline std::shared_ptr<Layer<T>> fully_connected(uint_fast32_t nodes,
-        std::shared_ptr<Initializer<T>> kernel_initializer = glorot_uniform(),
-        std::shared_ptr<Initializer<T>> bias_initializer = zeros()) noexcept
+        std::shared_ptr<Initializer<T>> kernel_initializer = glorot_uniform<T>(),
+        std::shared_ptr<Initializer<T>> bias_initializer = zeros<T>()) noexcept
         {
             return std::shared_ptr<Layer<T>>(new FullyConnected<T>(nodes, kernel_initializer, bias_initializer));
         }
