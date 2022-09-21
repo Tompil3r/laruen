@@ -19,7 +19,7 @@ namespace laruen::nn::initializers {
         class Ones : public Initializer<T> {
             public:
                 inline void operator()(uint_fast64_t nb_inputs, uint_fast64_t nb_nodes,
-                NDArray<T> &output) const override final
+                NDArray<T> &output) override final
                 {
                     output.fill((T)1);
                 }

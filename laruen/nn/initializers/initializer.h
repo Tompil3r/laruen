@@ -17,7 +17,7 @@ namespace laruen::nn::initializers {
             public:
                 virtual Initializer<T>* clone() const = 0;
 
-                virtual void operator()(uint_fast64_t nb_inputs, uint_fast64_t nb_nodes, NDArray<T> &output) const = 0;
+                virtual void operator()(uint_fast64_t nb_inputs, uint_fast64_t nb_nodes, NDArray<T> &output) = 0;
         };
     }
 
