@@ -38,8 +38,7 @@ namespace laruen::nn::callbacks {
                 {}
 
                 inline Callback<T>* clone() const override final {
-                    return new WeightsSaving<T>(this->monitor_, this->filepath_, this->mode_,
-                    this->save_best_only_, this->save_freq_, this->verbose_mode_);
+                    return new WeightsSaving<T>(*this);
                 }
 
                 bool on_epoch_end(uint_fast64_t epoch) override final {

@@ -29,7 +29,7 @@ namespace laruen::nn::callbacks {
                 {}
 
                 Callback<T>* clone() const override final {
-                    return new LearningRateScheduler(this->scheduler_, this->verbose_mode_);
+                    return new LearningRateScheduler<T>(*this);
                 }
 
                 bool on_epoch_start(uint_fast64_t epoch) override final {

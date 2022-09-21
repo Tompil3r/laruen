@@ -48,8 +48,7 @@ namespace laruen::nn::callbacks {
                 {}
 
                 inline Callback<T>* clone() const override final {
-                    return new EarlyStopping(this->monitor_, this->mode_,
-                    this->min_delta_, this->patience_, this->verbose_mode_);
+                    return new EarlyStopping<T>(*this);
                 }
 
                 inline void set(Model<T> *model) override final {
