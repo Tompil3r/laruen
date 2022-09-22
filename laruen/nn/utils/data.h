@@ -4,8 +4,10 @@
 #include <tuple>
 #include <cstdint>
 #include <type_traits>
+#include <random>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/types.h"
+#include "laruen/multi/rng.h"
 #include "laruen/nn/utils/utils.h"
 
 namespace laruen::nn::utils {
@@ -84,6 +86,16 @@ namespace laruen::nn::utils {
             using size_type = std::conditional_t<std::is_integral_v<TT>, uint_fast64_t, float32_t>;
 
             return train_test_val_split(data, (size_type)train_size, (size_type)test_size, (size_type)(val_size));
+        }
+
+        template <typename T>
+        inline void batch_shuffle(NDArray<T> &x, NDArray<T> &y,
+        std::mt19937::result_type seed = std::random_device{}())
+        {
+            laruen::multi::RNG.seed(seed);
+            x.shuffle(0);
+            laruen::multi::RNG.seed(seed);
+            y.shuffle(0);
         }
 
     }
