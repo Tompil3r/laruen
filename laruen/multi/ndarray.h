@@ -495,6 +495,17 @@ namespace laruen::multi {
                 this->randint(0, max);
             }
 
+            inline void random_normal(std::conditional_t<std::is_floating_point_v<T>, T, float32_t> mean = 0.0,
+            decltype(mean) stddev = 1.0) noexcept
+            {
+                std::normal_distribution<decltype(mean)> dist(mean, stddev);
+                NDIter iter(this->data_, *this);
+
+                for(uint_fast64_t i = 0;i < this->size_;i++) {
+                    iter.next() = (T)dist(laruen::multi::RNG);
+                }
+            }
+
             void shuffle() noexcept {
                 NDIter iter(this->data_, *this);
 
