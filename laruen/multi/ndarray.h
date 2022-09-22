@@ -87,7 +87,7 @@ namespace laruen::multi {
                     this->randint(min, max);
                 }
                 else if constexpr(std::is_floating_point_v<T>) {
-                    this->rand(min, max);
+                    this->random_uniform(min, max);
                 }
             }
 
@@ -465,7 +465,7 @@ namespace laruen::multi {
                 impl::swap(this->data_, *this, rhs.data_, rhs);
             }
 
-            void rand(T min, T max) noexcept {
+            void random_uniform(T min, T max) noexcept {
                 // [min, max)
                 // - min included, max excluded
                 std::uniform_real_distribution<T> dist(min, max);
@@ -476,8 +476,8 @@ namespace laruen::multi {
                 }
             }
 
-            inline void rand(T max) noexcept {
-                this->rand(0, max);
+            inline void random_uniform(T max) noexcept {
+                this->random_uniform(0, max);
             }
 
             inline void randint(T min, T max) noexcept {

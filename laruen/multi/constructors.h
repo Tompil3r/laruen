@@ -33,23 +33,23 @@ namespace laruen::multi {
     }
 
     template <typename T = float32_t>
-    inline NDArray<T> rand(const Shape &shape) {
+    inline NDArray<T> random_uniform(const Shape &shape) {
         NDArray<T> array(shape);
-        array.rand((T)0, (T)1);
+        array.random_uniform((T)0, (T)1);
         return array;
     }
 
     template <typename T = float32_t>
-    inline NDArray<T> rand(const Shape &shape, T min, T max) {
+    inline NDArray<T> random_uniform(const Shape &shape, T min, T max) {
         NDArray<T> array(shape);
-        array.rand(min, max);
+        array.random_uniform(min, max);
         return array;
     }
 
     template <typename T>
-    inline NDArray<T> rand(const Shape &shape, T max) {
+    inline NDArray<T> random_uniform(const Shape &shape, T max) {
         NDArray<T> array(shape);
-        array.rand((T)0, max);
+        array.random_uniform((T)0, max);
         return array;
     }
     

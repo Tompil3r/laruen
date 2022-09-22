@@ -36,7 +36,7 @@ namespace laruen::nn::initializers {
                     laruen::multi::RNG.discard(this->count_);
 
                     T limit = std::sqrt((T)6 / (nb_inputs + nb_nodes));
-                    output.rand(-limit, limit);
+                    output.random_uniform(-limit, limit);
 
                     this->count_ += output.size();
                 }
