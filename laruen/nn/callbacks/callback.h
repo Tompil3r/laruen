@@ -20,7 +20,7 @@ namespace laruen::nn {
 
             using laruen::multi::NDArray;
             using laruen::multi::float32_t;
-            using laruen::nn::Model;
+            using laruen::nn::impl::Model;
 
             template <typename T = float32_t>
             class Callback {
