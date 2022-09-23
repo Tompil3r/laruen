@@ -18,9 +18,9 @@ namespace laruen::nn::utils {
         template <typename T = float32_t>
         struct DataView {
             public:
-                uint_fast64_t full_batches;
-                uint_fast64_t remaining;
-                uint_fast64_t batches;
+                uint_fast64_t full_batches = 0;
+                uint_fast64_t remaining = 0;
+                uint_fast64_t batches = 0;
                 uint_fast64_t x_batch_stride;
                 uint_fast64_t y_batch_stride;
                 T remaining_ratio;
@@ -30,16 +30,19 @@ namespace laruen::nn::utils {
                 const NDArray<T> x_remaining;
                 const NDArray<T> y_remaining;
 
-                DataView(const NDArray<T> &x, const NDArray<T> &y, uint_fast64_t batch_size)
-                :
-                full_batches(x.shape().front() / batch_size),
-                remaining(x.shape().front() % batch_size),
-                batches(this->full_batches + (this->remaining > 0)),
-                x_batch_stride(batch_size * x.strides().front()),
-                y_batch_stride(batch_size * y.strides().front()),
-                remaining_ratio(this->full_batches > 0 ? (T)this->remaining / batch_size : 1),
-                partial_batches(this->full_batches + this->remaining_ratio)
-                {
+                DataView(const NDArray<T> &x, const NDArray<T> &y, uint_fast64_t batch_size) {
+                    if(!x.size()) {
+                        return;
+                    }
+
+                    this->full_batches = x.shape().front() / batch_size;
+                    this->remaining = x.shape().front() % batch_size;
+                    this->batches = this->full_batches + (this->remaining > 0);
+                    this->x_batch_stride = batch_size * x.strides().front();
+                    this->y_batch_stride = batch_size * y.strides().front();
+                    this->remaining_ratio = this->full_batches > 0 ? (T)this->remaining / batch_size : 1;
+                    this->partial_batches = this->full_batches + this->remaining_ratio;
+
                     if(this->full_batches) {
                         x_batch = batch_view(x, batch_size);
                         y_batch = batch_view(y, batch_size);
