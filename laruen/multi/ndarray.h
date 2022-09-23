@@ -53,7 +53,7 @@ namespace laruen::multi {
             }
 
             // constructors and assignment operators
-            NDArray() noexcept : ArrayBase(), data_(nullptr), data_owner_(true)
+            NDArray() noexcept : ArrayBase(), data_(nullptr), data_owner_(false)
             {}
 
             NDArray(std::initializer_list<T> init_list) noexcept
