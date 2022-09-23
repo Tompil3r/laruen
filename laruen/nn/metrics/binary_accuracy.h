@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <string>
+#include <type_traits>
 #include "laruen/multi/ndarray.h"
 #include "laruen/multi/types.h"
 #include "laruen/multi/nditer.h"
@@ -23,6 +24,7 @@ namespace laruen::nn::metrics {
                 T threshold_;
             
             public:
+                template <typename = std::enable_if_t<std::is_arithmetic_v<T>>>
                 inline BinaryAccuracy(T threshold = 0.5f)
                 : Metric<T>("binary_accuracy"), threshold_(threshold)
                 {}
@@ -54,7 +56,7 @@ namespace laruen::nn::metrics {
                 }
         };
 
-        template <typename T = float32_t>
+        template <typename T = float32_t, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
         inline std::shared_ptr<Metric<T>> binary_accuracy(T threshold = 0.5f) noexcept {
             return std::shared_ptr<Metric<T>>(new BinaryAccuracy<T>(threshold));
         }
