@@ -87,7 +87,7 @@ model.build({10}); // in this example each input will have 10 values
 
 Once your model's structure is complete, configure its learning parameters with the `.compile()` method.
 The `compile` method requires an `Optimizer` to update the weights, a `Loss` class (function) to evaluate the performance of the neural network
-and optionaly a list of `Metric`s which will be displayed during the training and evaluation processes.
+and optionally a list of `Metric`s which will be displayed during the training and evaluation processes.
 In this example, a problem of binary classification will be used to determine the `Loss` function and the `Metric`s:
 ```cpp
 model.compile(
