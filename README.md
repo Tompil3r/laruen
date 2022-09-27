@@ -3,7 +3,7 @@
 # About Laruen
 
 Laruen is a mathematical and deep learning library written in C++. Laruen provides a simple api, yet efficient implementation,
-allowing for a fast but straightforward neural network training and various multi dimensional computations.
+allowing for a fast and straightforward neural network training and various multi dimensional computations.
 With Laruen's arsenal of objects, functions and tools you will easily be able to experiment and create
 many powerful ideas. Laruen is implemented entirely in header files, removing the headache of compiling the
 necessary files.
